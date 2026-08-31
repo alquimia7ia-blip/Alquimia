@@ -1,0 +1,1104 @@
+<title>Dossier Alquimia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,500;0,600;0,700;1,500&display=swap">
+
+<style>
+:root{
+  --paper:#F5F7F5;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1EE;
+  --ink:#131A18;
+  --ink-2:#3D4946;
+
+  --muted:#5C6B66;
+  --rule:#D2DAD6;
+  --rule-strong:#B4C0BB;
+  --verdigris:#1E6B5B;
+  --verdigris-soft:#DCEAE5;
+  --copper:#A05630;
+  --copper-soft:#F2E4DA;
+  --amber:#8E6812;
+  --amber-soft:#F3EAD3;
+  --crimson:#8D332C;
+  --crimson-soft:#F4E1DE;
+  --shadow:0 1px 2px rgba(19,26,24,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1110;
+    --surface:#141B19;
+    --surface-2:#1B2422;
+    --ink:#E2EAE6;
+    --ink-2:#BAC7C2;
+    --muted:#8B9A95;
+    --rule:#28332F;
+    --rule-strong:#3A4844;
+    --verdigris:#57B79E;
+    --verdigris-soft:#152B26;
+    --copper:#D08B5C;
+    --copper-soft:#2C1F16;
+
+    --amber:#C9A040;
+    --amber-soft:#2A2415;
+    --crimson:#D97B71;
+    --crimson-soft:#2C1A18;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1110;
+  --surface:#141B19;
+  --surface-2:#1B2422;
+  --ink:#E2EAE6;
+  --ink-2:#BAC7C2;
+  --muted:#8B9A95;
+  --rule:#28332F;
+  --rule-strong:#3A4844;
+  --verdigris:#57B79E;
+  --verdigris-soft:#152B26;
+  --copper:#D08B5C;
+  --copper-soft:#2C1F16;
+  --amber:#C9A040;
+  --amber-soft:#2A2415;
+  --crimson:#D97B71;
+  --crimson-soft:#2C1A18;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:1160px;
+  margin:0 auto;
+  padding:0 24px 96px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+}
+@media (min-width:1040px){
+  .wrap{grid-template-columns:196px minmax(0,1fr);column-gap:56px;padding-right:40px}
+}
+
+/* ---------- masthead ---------- */
+.masthead{
+  grid-column:1/-1;
+  border-bottom:2px solid var(--ink);
+  padding:56px 0 22px;
+  margin-bottom:44px;
+}
+.mark{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--verdigris);
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  align-items:baseline;
+  margin-bottom:26px;
+}
+.mark .sep{color:var(--rule-strong)}
+.mark .meta{color:var(--muted);letter-spacing:.14em}
+h1{
+  font-family:"Spectral",Georgia,serif;
+  font-weight:700;
+  font-size:clamp(2.5rem,6.2vw,4.35rem);
+  line-height:1.02;
+  letter-spacing:-.02em;
+  margin:0 0 20px;
+  text-wrap:balance;
+}
+h1 em{font-style:italic;font-weight:500;color:var(--verdigris)}
+.standfirst{
+  font-size:clamp(1.05rem,2vw,1.24rem);
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:62ch;
+  margin:0;
+}
+
+/* ---------- index rail ---------- */
+.rail{display:none}
+@media (min-width:1040px){
+  .rail{
+    display:block;
+    position:sticky;
+    top:24px;
+    align-self:start;
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+    padding-bottom:24px;
+  }
+  .rail h2{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 14px;
+    font-weight:500;
+  }
+  .rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  .rail a{
+    display:grid;
+    grid-template-columns:24px 1fr;
+    gap:8px;
+    text-decoration:none;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.35;
+    padding:6px 8px 6px 0;
+    border-left:2px solid transparent;
+    padding-left:10px;
+    transition:color .15s,border-color .15s;
+  }
+  .rail a:hover,.rail a:focus-visible{color:var(--ink);border-left-color:var(--verdigris)}
+  .rail a .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--rule-strong)}
+  .rail a[aria-current="true"]{color:var(--ink);border-left-color:var(--verdigris);font-weight:600}
+  .rail a[aria-current="true"] .n{color:var(--verdigris)}
+}
+
+/* ---------- flow ---------- */
+main{grid-column:1/-1;min-width:0}
+@media (min-width:1040px){main{grid-column:2}}
+
+section{margin:0 0 76px;scroll-margin-top:24px}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--verdigris);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0 0 12px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule)}
+h2.sec{
+  font-family:"Spectral",Georgia,serif;
+  font-weight:600;
+  font-size:clamp(1.7rem,3.4vw,2.3rem);
+  line-height:1.14;
+  letter-spacing:-.015em;
+  margin:0 0 8px;
+  text-wrap:balance;
+}
+.dek{color:var(--muted);font-size:1.02rem;max-width:64ch;margin:0 0 30px}
+h3{
+  font-family:"Archivo",sans-serif;
+  font-weight:700;
+  font-size:1.06rem;
+  letter-spacing:-.005em;
+  margin:36px 0 10px;
+}
+h4{
+  font-family:"IBM Plex Mono",monospace;
+  font-weight:500;
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 10px;
+}
+p{max-width:68ch;margin:0 0 16px}
+main ul,main ol{max-width:68ch;margin:0 0 18px;padding-left:1.15em}
+main li{margin-bottom:7px}
+main li::marker{color:var(--verdigris)}
+strong{font-weight:600;color:var(--ink)}
+a{color:var(--verdigris)}
+em.q{font-style:italic;color:var(--ink-2)}
+
+/* ---------- instrument panels ---------- */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  box-shadow:var(--shadow);
+  padding:22px 24px;
+  margin:0 0 24px;
+}
+.panel.tight{padding:18px 20px}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  margin:0 0 26px;
+}
+.stat{background:var(--surface);padding:18px 18px 16px}
+.stat .v{
+  font-family:"Spectral",Georgia,serif;
+  font-weight:700;
+  font-size:1.72rem;
+  line-height:1.05;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+  display:block;
+  margin-bottom:5px;
+}
+.stat .k{font-size:12.5px;line-height:1.36;color:var(--muted)}
+.stat.up .v{color:var(--verdigris)}
+.stat.down .v{color:var(--crimson)}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  font-variant-numeric:tabular-nums;
+}
+.scroll{overflow-x:auto;margin:0 0 24px;border:1px solid var(--rule);background:var(--surface)}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10.5px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:500;
+  white-space:nowrap;
+  background:var(--surface-2);
+  border-bottom:1px solid var(--rule-strong);
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;white-space:nowrap}
+tr.lead td{background:var(--verdigris-soft)}
+tr.lead td:first-child{box-shadow:inset 3px 0 0 var(--verdigris)}
+.tot td{font-weight:700;border-top:1px solid var(--rule-strong)}
+
+.score{
+  display:inline-flex;
+  gap:2px;
+  vertical-align:middle;
+}
+.score i{width:7px;height:14px;background:var(--rule-strong);display:block;border-radius:1px}
+.score i.on{background:var(--verdigris)}
+.score.warn i.on{background:var(--copper)}
+
+/* ---------- verdict ---------- */
+.verdict{
+  border:2px solid var(--ink);
+  background:var(--surface);
+  padding:0;
+  margin:0 0 30px;
+}
+.verdict-head{
+  padding:24px 26px 20px;
+  border-bottom:1px solid var(--rule);
+}
+.verdict-head .label{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10.5px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:block;
+  margin-bottom:10px;
+}
+.verdict-head .call{
+  font-family:"Spectral",Georgia,serif;
+  font-weight:700;
+  font-size:clamp(1.55rem,3.6vw,2.15rem);
+  line-height:1.14;
+  letter-spacing:-.02em;
+  margin:0;
+  text-wrap:balance;
+}
+.verdict-head .call b{color:var(--verdigris)}
+.verdict-body{
+  display:grid;
+  grid-template-columns:1fr;
+}
+@media (min-width:640px){.verdict-body{grid-template-columns:1fr 1fr}}
+.vcol{padding:20px 26px 22px}
+.vcol+.vcol{border-top:1px solid var(--rule)}
+@media (min-width:640px){.vcol+.vcol{border-top:none;border-left:1px solid var(--rule)}}
+.vcol ul{margin:0;padding-left:1.05em;font-size:14.5px}
+.vcol li{margin-bottom:8px}
+.vcol.against li::marker{color:var(--copper)}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--copper);
+  background:var(--copper-soft);
+  padding:16px 20px;
+  margin:0 0 24px;
+  font-size:14.6px;
+  line-height:1.55;
+}
+.note p{margin:0 0 10px;max-width:66ch}
+.note p:last-child{margin:0}
+.note .tag{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--copper);
+  display:block;
+  margin-bottom:7px;
+  font-weight:500;
+}
+.note.warn{border-left-color:var(--amber);background:var(--amber-soft)}
+.note.warn .tag{color:var(--amber)}
+.note.hot{border-left-color:var(--crimson);background:var(--crimson-soft)}
+.note.hot .tag{color:var(--crimson)}
+
+/* ---------- 2x2 grid ---------- */
+.matrix{
+  display:grid;
+  grid-template-columns:auto 1fr 1fr;
+  grid-template-rows:auto auto auto auto;
+  border:1px solid var(--rule);
+  background:var(--surface);
+  margin:0 0 12px;
+  font-size:13px;
+}
+.matrix .axis-y{
+  grid-row:1/4;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 8px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:var(--surface-2);
+  border-right:1px solid var(--rule);
+}
+.cell{padding:14px 15px;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule)}
+.cell:nth-child(odd){border-right:none}
+.cell strong{display:block;font-size:12.5px;margin-bottom:5px}
+.cell span{color:var(--muted);font-size:12.5px;line-height:1.45;display:block}
+.cell.open{background:var(--verdigris-soft);border-color:var(--verdigris)}
+.cell.open strong{color:var(--verdigris)}
+.matrix .axis-x{
+  grid-column:2/4;
+  padding:9px 15px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:var(--surface-2);
+  display:flex;
+  justify-content:space-between;
+  border-right:none;
+}
+
+/* ---------- simulator ---------- */
+.sim{
+  border:1px solid var(--rule-strong);
+  background:var(--surface);
+  margin:0 0 26px;
+}
+.sim-head{
+  padding:18px 22px 16px;
+  border-bottom:1px solid var(--rule);
+  background:var(--surface-2);
+}
+.sim-head h3{margin:0 0 4px;font-size:1.02rem}
+.sim-head p{margin:0;font-size:13.4px;color:var(--muted);max-width:60ch}
+.sim-body{display:grid;grid-template-columns:1fr}
+@media (min-width:760px){.sim-body{grid-template-columns:1.05fr 1fr}}
+.controls{padding:20px 22px 22px;display:flex;flex-direction:column;gap:19px}
+@media (min-width:760px){.controls{border-right:1px solid var(--rule)}}
+.ctl label{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  font-size:13.2px;
+  margin-bottom:7px;
+  color:var(--ink-2);
+}
+.ctl label b{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:13px;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+  font-weight:500;
+}
+.ctl select{
+  width:100%;
+  font-family:"Archivo",sans-serif;
+  font-size:13.5px;
+  padding:8px 10px;
+  color:var(--ink);
+  background:var(--paper);
+  border:1px solid var(--rule-strong);
+  border-radius:0;
+}
+input[type=range]{
+  width:100%;
+  -webkit-appearance:none;
+  appearance:none;
+  height:3px;
+  background:var(--rule-strong);
+  outline:none;
+  margin:8px 0 0;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:17px;height:17px;
+  background:var(--verdigris);
+  border:2px solid var(--surface);
+  box-shadow:0 0 0 1px var(--verdigris);
+  cursor:pointer;
+  border-radius:50%;
+}
+input[type=range]::-moz-range-thumb{
+  width:15px;height:15px;
+  background:var(--verdigris);
+  border:2px solid var(--surface);
+  box-shadow:0 0 0 1px var(--verdigris);
+  cursor:pointer;
+  border-radius:50%;
+}
+input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--verdigris-soft)}
+.readout{padding:20px 22px 22px;display:flex;flex-direction:column;gap:0}
+.ro{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:14px;
+  padding:13px 0;
+  border-bottom:1px solid var(--rule);
+}
+.ro:last-child{border-bottom:none}
+.ro .k{font-size:13.2px;color:var(--muted);line-height:1.35;max-width:22ch}
+.ro .v{
+  font-family:"Spectral",Georgia,serif;
+  font-weight:700;
+  font-size:1.44rem;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.ro .v small{font-family:"Archivo",sans-serif;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0}
+.ro.ok .v{color:var(--verdigris)}
+.ro.bad .v{color:var(--crimson)}
+
+/* ---------- timeline ---------- */
+.phases{display:flex;flex-direction:column;gap:0;margin:0 0 24px;border:1px solid var(--rule);background:var(--surface)}
+.phase{padding:20px 22px;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:700px){.phase{grid-template-columns:132px 1fr;gap:24px}}
+.phase:last-child{border-bottom:none}
+.phase .when{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--verdigris);
+  line-height:1.5;
+}
+.phase .when b{display:block;color:var(--muted);font-weight:400;letter-spacing:.08em;margin-top:3px}
+.phase h4{margin:0 0 8px;font-family:"Archivo",sans-serif;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:700}
+.phase ul{margin:0;padding-left:1.05em;font-size:14.2px;max-width:64ch}
+.phase li{margin-bottom:6px}
+
+/* ---------- sources ---------- */
+.srcs{columns:2;column-gap:32px;font-size:13px;line-height:1.5;color:var(--muted)}
+@media (max-width:640px){.srcs{columns:1}}
+.srcs p{break-inside:avoid;margin:0 0 9px;max-width:none}
+footer{
+  grid-column:1/-1;
+  border-top:1px solid var(--rule);
+  padding-top:22px;
+  margin-top:8px;
+  font-size:12.6px;
+  color:var(--muted);
+}
+footer p{max-width:72ch}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="mark">
+      <span>Alquimia</span>
+      <span class="sep">/</span>
+      <span>Estrategia de entrada al mercado</span>
+      <span class="sep">/</span>
+      <span class="meta">Medellín · Agosto 2026</span>
+    </div>
+    <h1>Especialista en un dolor caro,<br><em>no generalista en muchos baratos.</em></h1>
+    <p class="standfirst">Cuatro frentes de investigación —mercado y ecosistema, ultranichos verticales, competencia y estructura financiera— convergen en una sola ruta de entrada. Este dossier documenta el hallazgo, la decisión y lo que cuesta ejecutarla.</p>
+  </header>
+
+  <nav class="rail" aria-label="Índice del dossier">
+    <h2>Índice</h2>
+    <ol>
+      <li><a href="#resumen"><span class="n">00</span> <span>Resumen ejecutivo</span></a></li>
+      <li><a href="#terreno"><span class="n">01</span> <span>El terreno</span></a></li>
+      <li><a href="#decision"><span class="n">02</span> <span>B2B o B2C</span></a></li>
+      <li><a href="#nicho"><span class="n">03</span> <span>El ultranicho</span></a></li>
+      <li><a href="#competencia"><span class="n">04</span> <span>Contra quién compites</span></a></li>
+      <li><a href="#finanzas"><span class="n">05</span> <span>Esquema financiero</span></a></li>
+      <li><a href="#plan"><span class="n">06</span> <span>Plan de 18 meses</span></a></li>
+      <li><a href="#riesgos"><span class="n">07</span> <span>Riesgos y verificación</span></a></li>
+      <li><a href="#fuentes"><span class="n">08</span> <span>Fuentes</span></a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+  <!-- ============ 00 ============ -->
+  <section id="resumen">
+    <p class="eyebrow">00 — Resumen ejecutivo</p>
+    <h2 class="sec">Cinco decisiones</h2>
+    <p class="dek">Lo que la investigación resuelve, en orden de consecuencia. El resto del documento es la evidencia.</p>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th style="width:34px">#</th><th>Decisión</th><th>El argumento que la sostiene</th></tr></thead>
+        <tbody>
+          <tr class="lead"><td>1</td><td><strong>B2B, no B2C</strong></td><td>El consumidor colombiano no sostiene suscripciones: salario mínimo de $1.750.905 y churn SaaS de 8,2% mensual en LatAm, casi el doble que en EE.UU. Merqueo, Muni y Frubana cerraron por depender de capital que dejó de llegar. Medellín, en cambio, ya se especializa en B2B SaaS y automatización empresarial.</td></tr>
+          <tr><td>2</td><td><strong>Pequeña y mediana empresa, no microempresa</strong></td><td>Las 148.014 microempresas de Antioquia son una trampa: solo 5% invierte en tecnología y por cada 100 empresas creadas en 2025 se cerraron 138. El blanco real son las <strong>10.128 empresas pequeñas y medianas</strong> del departamento, que sí tienen presupuesto y sobreviven.</td></tr>
+          <tr><td>3</td><td><strong>Dolor regulatorio o financiero, no productividad</strong></td><td>Con inflación de 6,03% y tasa del Banco de la República por encima de 12%, nadie compra "mejorar procesos". Sí compran lo que evita una sanción o recupera plata ya facturada.</td></tr>
+          <tr class="lead"><td>4</td><td><strong>Ultranicho: cartera y glosas de IPS pequeñas</strong></td><td>La deuda de las EPS con hospitales y clínicas cerró 2025 en <strong>$58 billones COP</strong>, creciendo 26,5% en un año, con el 57% de los afiliados del país en EPS intervenidas. Es el dolor más grande, más medible y peor resuelto de los doce nichos evaluados.</td></tr>
+          <tr><td>5</td><td><strong>Producto financiado con servicios, no con capital de riesgo</strong></td><td>Colombia mueve US$550-600M de venture capital al año y 82% se queda en Bogotá. Una empresa sin producto no levanta ronda. El camino realista: consultoría en el mismo vertical que financia el producto, con Fondo Emprender ($140.072.400 condonables) como palanca.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="terreno">
+    <p class="eyebrow">01 — El terreno</p>
+    <h2 class="sec">Dónde estás parado</h2>
+    <p class="dek">Medellín tiene un ecosistema real, un tejido empresarial enorme y una economía cara. Las tres cosas importan.</p>
+
+    <div class="stats">
+      <div class="stat"><span class="v">159.000</span><span class="k">empresas registradas en la Cámara de Comercio de Medellín para Antioquia (cierre 2025)</span></div>
+      <div class="stat"><span class="v">93,1%</span><span class="k">son microempresas. Solo 10.128 son pequeñas o medianas</span></div>
+      <div class="stat up"><span class="v">698</span><span class="k">startups en Medellín, con US$157M invertidos en 2025 (+406%)</span></div>
+      <div class="stat"><span class="v">37,1%</span><span class="k">índice de madurez digital de las pymes colombianas — nivel «inicial»</span></div>
+      <div class="stat down"><span class="v">138</span><span class="k">empresas cerradas por cada 100 creadas en el primer semestre de 2025</span></div>
+      <div class="stat"><span class="v">83.000</span><span class="k">profesionales de tecnología que faltan en el país</span></div>
+    </div>
+
+    <h3>La industria es grande y crece</h3>
+    <p>El software colombiano vendió <strong>$44,2 billones COP en 2024</strong> con 6.805 empresas activas, y aporta cerca del 3,5% del PIB —era menos del 1% hace una década. Las exportaciones superaron los <strong>US$1.758 millones</strong>, 10% de todas las exportaciones de servicios del país. IDC proyecta que Colombia crecerá <strong>15,3%</strong> en gasto TI, tercero en la región después de Brasil y México.</p>
+    <p>Antioquia concentra el 19% de las empresas de industria digital del país, y dentro del departamento <strong>Medellín se lleva el 83% de las ventas del sector</strong> ($5,8 billones). No estás en la periferia: estás en el segundo polo tecnológico de Colombia.</p>
+
+    <h3>Pero la economía está cara</h3>
+    <p>La inflación cerró julio de 2026 en 6,03% interanual y el Banco de la República estima cierre de año en 6,9%, con tasa de intervención por encima del 12%. El crédito empresarial tiene techo legal en la tasa de usura, hoy en <strong>29,66% E.A.</strong> Esto tiene una consecuencia directa: <em class="q">el dinero prestado es carísimo y las empresas están recortando gasto discrecional.</em> Cualquier venta que dependa de convencer a alguien de que "vale la pena invertir" pelea contra una tasa de descuento del 12% anual.</p>
+
+    <div class="note">
+      <span class="tag">Corrección de un mito costoso</span>
+      <p>La exención de renta por 7 años de <strong>economía naranja no aplica a Alquimia</strong>: exige que la sociedad se haya constituido e iniciado actividad <strong>antes del 31 de diciembre de 2021</strong>. Es un error frecuente en planes de negocio colombianos.</p>
+      <p>El incentivo que sí sirve es el <strong>descuento tributario por inversión en I+D+i</strong> (Art. 256 del Estatuto Tributario), que no tiene corte de fecha de constitución y premia precisamente el desarrollo de software propio. Confírmalo con un tributarista antes de meterlo en un modelo.</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="decision">
+    <p class="eyebrow">02 — La decisión</p>
+    <h2 class="sec">B2B o B2C</h2>
+    <p class="dek">La pregunta que originó este dossier. La evidencia no está repartida: apunta en una sola dirección.</p>
+
+    <div class="verdict">
+      <div class="verdict-head">
+        <span class="label">Veredicto</span>
+        <p class="call"><b>B2B</b>, con dolor regulatorio o financiero, vendido a empresas pequeñas y medianas, no a microempresas.</p>
+      </div>
+      <div class="verdict-body">
+        <div class="vcol">
+          <h4>A favor de B2B</h4>
+          <ul>
+            <li>El ticket es 10 a 50 veces mayor y el cliente <em>tiene</em> que comprar cuando hay una norma de por medio: el ciclo de venta se acorta porque no compites contra "lo dejamos para el otro año".</li>
+            <li>Medellín ya se especializa en <strong>B2B SaaS, automatización empresarial e infraestructura financiera</strong>, a diferencia de Bogotá (fintech de consumo). Juegas a favor de la corriente local: talento, clientes ancla y ecosistema apuntan ahí.</li>
+            <li>El descuento del 30% en I+D+i favorece producto propio.</li>
+            <li>La regulación 2025-2026 fabricó demanda obligatoria: interoperabilidad de historia clínica, nómina electrónica universal, SICE-TAC vinculante, SAGRILAFT.</li>
+          </ul>
+        </div>
+        <div class="vcol against">
+          <h4>Contra B2C</h4>
+          <ul>
+            <li>Poder adquisitivo estructuralmente bajo: salario mínimo de $1.750.905 y línea de pobreza de $460.198 per cápita. La franja que paga suscripciones es angosta.</li>
+            <li><strong>Churn de 8,2% mensual</strong> en SaaS LatAm contra 4,5% en EE.UU. Retener en Colombia cuesta el doble.</li>
+            <li>Los tres fracasos recientes —Merqueo, Muni, Frubana— comparten el mismo patrón: quemar capital para subsidiar adquisición y logística, y morir cuando se cerró la ventana de financiación.</li>
+            <li>Sin ronda grande no compites en B2C. Y sin producto no hay ronda.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>La trampa dentro del B2B</h3>
+    <p>Decir "B2B" no basta. El error simétrico es apuntarle a las 148.014 microempresas de Antioquia porque son muchas. Los números lo desaconsejan: <strong>solo el 5% de las microempresas de comercio invierte en tecnología</strong>, y la mortalidad empresarial en Colombia produjo 176.876 cierres en 2025 con las liquidaciones formales creciendo 160% en cuatro años. Un modelo de suscripción sobre esa base tiene fuga estructural por el fondo del embudo.</p>
+    <p>El segmento con presupuesto, permanencia y un problema lo bastante caro para justificar software especializado son las <strong>8.175 pequeñas y 1.953 medianas empresas</strong> de Antioquia. Diez mil clientes potenciales es más que suficiente para construir una empresa de software rentable, y es un número al que puedes llegar a pie.</p>
+
+    <div class="note warn">
+      <span class="tag">Riesgo de caja que hay que modelar desde el día uno</span>
+      <p>La Ley de Pago en Plazos Justos fija 45 días, pero la realidad reportada va de 37 a 90 días, y el 77% de las empresas latinoamericanas reportó atrasos de pago en 2025 (contra 51% en 2024). Cobra por adelantado —mensual con tarjeta, o anual con descuento— antes que facturar a 60 días a una empresa grande. Un contrato grande con pago a 90 días puede quebrarte antes de enriquecerte.</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="nicho">
+    <p class="eyebrow">03 — El ultranicho</p>
+    <h2 class="sec">Doce candidatos, uno gana</h2>
+    <p class="dek">Cada nicho se puntuó de 1 a 5 en seis ejes. En «competencia», 5 significa que el campo está despejado.</p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Ultranicho</th>
+            <th class="num">Dolor</th>
+            <th class="num">Tamaño</th>
+            <th class="num">Urgencia</th>
+            <th class="num">Pago</th>
+            <th class="num">Acceso</th>
+            <th class="num">Campo libre</th>
+            <th class="num">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="lead"><td><strong>Salud — cartera y glosas de IPS</strong></td><td class="num">5</td><td class="num">4</td><td class="num">5</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num"><strong>25</strong></td></tr>
+          <tr class="lead"><td><strong>Transporte de carga — RNDC / SICE-TAC</strong></td><td class="num">4</td><td class="num">3</td><td class="num">5</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num"><strong>23</strong></td></tr>
+          <tr><td>Nómina — reforma laboral Ley 2466 <span style="color:var(--copper)">▲</span></td><td class="num">4</td><td class="num">5</td><td class="num">5</td><td class="num">3</td><td class="num">5</td><td class="num">1</td><td class="num">23</td></tr>
+          <tr class="lead"><td><strong>Textil — piso de planta y satélites</strong></td><td class="num">4</td><td class="num">5</td><td class="num">1</td><td class="num">3</td><td class="num">5</td><td class="num">4</td><td class="num"><strong>22</strong></td></tr>
+          <tr><td>Agro — trazabilidad EUDR (café, aguacate)</td><td class="num">5</td><td class="num">4</td><td class="num">5</td><td class="num">2</td><td class="num">3</td><td class="num">2</td><td class="num">21</td></tr>
+          <tr><td>Servicios profesionales — cumplimiento</td><td class="num">3</td><td class="num">4</td><td class="num">3</td><td class="num">3</td><td class="num">5</td><td class="num">3</td><td class="num">21</td></tr>
+          <tr><td>SAGRILAFT / SARLAFT</td><td class="num">4</td><td class="num">2</td><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num">2</td><td class="num">19</td></tr>
+          <tr><td>Construcción — obra y propiedad horizontal</td><td class="num">3</td><td class="num">4</td><td class="num">2</td><td class="num">4</td><td class="num">5</td><td class="num">1</td><td class="num">19</td></tr>
+          <tr><td>Metalmecánica — OEE y mantenimiento</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="num">3</td><td class="num">4</td><td class="num">3</td><td class="num">18</td></tr>
+          <tr><td>Restaurantes, hotelería y turismo</td><td class="num">2</td><td class="num">3</td><td class="num">1</td><td class="num">3</td><td class="num">5</td><td class="num">2</td><td class="num">16</td></tr>
+          <tr><td>Comercio y retail</td><td class="num">2</td><td class="num">5</td><td class="num">1</td><td class="num">2</td><td class="num">5</td><td class="num">1</td><td class="num">16</td></tr>
+          <tr><td>Educación — colegios privados</td><td class="num">2</td><td class="num">3</td><td class="num">1</td><td class="num">3</td><td class="num">4</td><td class="num">2</td><td class="num">15</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note hot">
+      <span class="tag">▲ Por qué nómina no se recomienda pese al empate</span>
+      <p>La reforma laboral (Ley 2466 de 2025) tiene tamaño y urgencia máximos —jornada nocturna desde las 7:00 p.m., recargo dominical escalando a 100% en 2027, jornada de 42 horas desde julio de 2026. Pero <strong>Alegra, Siigo, Bitákora y Ofima ya se actualizaron y lo venden activamente</strong>. La nómina es una función dentro de un ERP, no un vertical defendible: competirías contra jugadores con más capital y base cautiva, ofreciendo lo mismo.</p>
+    </div>
+
+    <h3>El hallazgo que reordena la recomendación</h3>
+    <p>Los dos frentes de investigación coincidieron en salud, pero por razones distintas —y ahí está lo interesante. La <strong>Resolución 1888 de 2025</strong> impuso el estándar HL7 FHIR R4 y fijó plazo de integración al modelo de interoperabilidad hasta el <strong>15 de abril de 2026</strong>. Ese plazo <em>ya pasó</em>.</p>
+    <p>Esto cambia la estrategia por completo. La primera ola de migración ya ocurrió: Medifolios, Saludtools, Zeus y MedSystem ya vendieron "cumple con la 1888". Llegar hoy a vender interoperabilidad es llegar tarde a una carrera que además está comoditizada.</p>
+
+    <div class="verdict">
+      <div class="verdict-head">
+        <span class="label">La tesis afilada</span>
+        <p class="call">No vendas interoperabilidad. Vende <b>recuperación de cartera y gestión de glosas</b>, con interoperabilidad como requisito de entrada.</p>
+      </div>
+      <div class="verdict-body">
+        <div class="vcol">
+          <h4>Por qué este dolor no caduca</h4>
+          <ul>
+            <li>La deuda de las EPS con hospitales y clínicas cerró 2025 en <strong>$58 billones COP</strong> y creció 26,5% en un año. 232 IPS reportaron $25,7 billones de cartera pendiente.</li>
+            <li>El <strong>57% de los afiliados del país está en EPS intervenidas</strong>. Cada IPS pequeña de Medellín vive el riesgo real de no cobrar servicios ya prestados.</li>
+            <li>No hay fecha límite que lo apague: es un problema estructural, permanente y creciente.</li>
+            <li>Con SIIFA operativo, las glosas son trazables en tiempo real con plazos estrictos: el que responde a tiempo cobra, el que no, pierde.</li>
+          </ul>
+        </div>
+        <div class="vcol">
+          <h4>Por qué cambia tu economía</h4>
+          <ul>
+            <li>Una historia clínica se vende <strong>desde $150.000/mes</strong> porque es una categoría comparable. Un producto que <strong>recupera plata</strong> se cotiza contra el retorno, no contra el catálogo del competidor.</li>
+            <li>Permite cobrar setup más mensualidad más porcentaje sobre cartera recuperada — un modelo que alinea incentivos y sube el ticket varias veces.</li>
+            <li>El comprador cambia: no le vendes al jefe de sistemas, le vendes al <strong>gerente financiero</strong>, que tiene el problema y firma el cheque.</li>
+            <li>Zeus ofrece gestión de glosas dentro de una suite de 30 años. Nadie lo ofrece como producto enfocado para IPS de 1 a 10 sedes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>Plan B, validado en paralelo</h3>
+    <p><strong>Transporte de carga.</strong> Es el hueco más limpio del informe: desde el 30 de noviembre de 2025 es obligatorio reportar tiempos de cargue y descargue al RNDC, y el Decreto 1017 de 2025 hizo que el sistema <em>no emita el manifiesto</em> si el flete está por debajo del mínimo SICE-TAC. Los TMS internacionales —SimpliRoute y Drivin, chilenos— cobran en dólares y <strong>no cubren esta normativa</strong>. Solo actores nicho como Zarpe la atienden. Mercado más pequeño y ticket menor, pero campo más despejado.</p>
+    <p><strong>Textil.</strong> Ningún nicho tiene tanta densidad de clientes accesibles a pie desde Medellín: el clúster de moda de la Cámara de Comercio agrupa <strong>más de 14.000 empresas</strong>, con Colombiamoda y Colombiatex como canal natural. Su debilidad es que no hay norma que fuerce la compra: tendrías que demostrar retorno operativo, que es una venta más lenta.</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="competencia">
+    <p class="eyebrow">04 — Competencia</p>
+    <h2 class="sec">Contra quién compites, y contra quién no</h2>
+    <p class="dek">El mapa de precio contra especialización tiene un cuadrante vacío. Ese es tu lugar.</p>
+
+    <div class="matrix">
+      <div class="axis-y">Precio alto → bajo</div>
+      <div class="cell"><strong>Globant · EPAM · Endava</strong><span>Multinacional, genérico, cliente corporativo regional. Compiten por talento, no por tu cliente.</span></div>
+      <div class="cell"><strong>Consultoras globales de IA</strong><span>US$600-1.200/hora por estrategia, sin ejecución. Otro planeta comercial.</span></div>
+      <div class="cell"><strong>Perficient · Pragma · Ceiba · Choucair</strong><span>Fábrica mediana, banca y retail colombiano. Venden capacidad, no producto.</span></div>
+      <div class="cell"><strong>Sophos · Zeus Salud · Sinco · Medifolios</strong><span>Vertical profundo, nicho regulatorio, precio medio. Aquí está tu competencia real.</span></div>
+      <div class="cell"><strong>Boutiques de Medellín · freelancers</strong><span>Genéricos, guerra de precio, MVPs de $2-30 millones. De aquí quieres salir.</span></div>
+      <div class="cell open"><strong>El cuadrante abierto</strong><span>Precio medio-bajo + ultranicho vertical + IA nativa en el problema, no en el marketing. Nadie lo ocupa hoy.</span></div>
+      <div class="axis-x"><span>Genérico</span><span>Especializado</span></div>
+    </div>
+
+    <h3>La señal más importante del mercado</h3>
+    <p>Tres fábricas de outsourcing perdieron ingresos en 2025 —<strong>Endava -18,4%, Zemoga -11,2%, Koombea -11,1%</strong>— mientras dos que sí crecieron, <strong>Pragma +16,8% y Ceiba +14,3%</strong>, tienen relaciones verticales profundas con clientes ancla. El modelo de vender horas genéricas se está comprimiendo, probablemente por IA generativa. El modelo de conocer un dominio a fondo, no.</p>
+    <p>Esa es exactamente la tesis de Alquimia, confirmada por el estado de resultados de otras empresas. También abre una oportunidad lateral: los clientes medianos que esas fábricas están perdiendo ya tienen presupuesto y experiencia trabajando con proveedores de software.</p>
+
+    <h3>Qué tarifas manejan</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Proveedor</th><th class="num">Junior</th><th class="num">Mid</th><th class="num">Senior</th></tr></thead>
+        <tbody>
+          <tr><td>Freelance / plataforma</td><td class="num">US$20-30/h</td><td class="num">US$35-50/h</td><td class="num">hasta US$70/h</td></tr>
+          <tr><td>LatAm agregado</td><td class="num">US$29-44/h</td><td class="num">US$50-60/h</td><td class="num">US$60-74/h</td></tr>
+          <tr><td>Toptal (precio al cliente)</td><td class="num">—</td><td class="num">—</td><td class="num">US$60-150/h</td></tr>
+          <tr><td>Especialista IA / MLOps (prima 2026)</td><td class="num">—</td><td class="num">—</td><td class="num">US$46/h vs US$34 base</td></tr>
+          <tr class="tot"><td>MVP a medida para pyme colombiana</td><td class="num" colspan="3">$2-10M COP simple · $15-30M COP con backend, login y pagos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Dos huecos concretos, documentados</span>
+      <p><strong>Servinte en transición.</strong> El líder histórico de historia clínica hospitalaria fue adquirido por Osigu (Guatemala) en 2023. Los cambios de propiedad suelen generar fricción de soporte durante 12 a 24 meses. Vale la pena averiguar directamente si hay clientes evaluando alternativas.</p>
+      <p><strong>El patrón Alegra contra Siigo.</strong> Alegra ganó terreno porque Siigo cobra contabilidad, nómina, POS e inventario por separado. Ese mismo patrón de fricción —cobrar por módulos— está intacto en propiedad horizontal y en buena parte del software de salud. Empaquetar todo lo que el cliente necesita en un solo precio es una jugada probada en este mercado.</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="finanzas">
+    <p class="eyebrow">05 — Esquema financiero</p>
+    <h2 class="sec">Qué cuesta y qué necesitas</h2>
+    <p class="dek">Todos los valores en pesos colombianos de 2026. Nómina cargada con factor prestacional de 1,40x, que aplica si Alquimia es sociedad y ningún salario supera 10 SMMLV.</p>
+
+    <h3>Lo que cuesta arrancar</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Concepto</th><th class="num">Costo</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td>Matrícula mercantil S.A.S. (Cámara de Comercio de Medellín)</td><td class="num">$105.000 – $195.000</td><td>Para capital de $10-20M. Renovación anual desde $48.400</td></tr>
+          <tr><td>Impuesto de registro departamental</td><td class="num">$30.000 – $140.000</td><td>0,3%-0,7% del capital suscrito. Confirmar tarifa exacta</td></tr>
+          <tr><td>RUT, firma electrónica, facturador DIAN</td><td class="num">$0</td><td>Gratuito. Proveedor privado: $30.000-200.000/mes</td></tr>
+          <tr><td>Registro de marca ante la SIC, 1 clase</td><td class="num">$970.000 – $1.348.500</td><td>$970.000 con descuento BIC en línea. Trámite de 6-8 meses</td></tr>
+          <tr><td>SG-SST, implementación inicial</td><td class="num">$690.000 – $1.490.000</td><td>Obligatorio desde el primer trabajador</td></tr>
+          <tr class="tot"><td>Total de constitución y puesta en marcha</td><td class="num">≈ $2 – 3,2 millones</td><td>Pago único</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14px;color:var(--muted)">Lo que <strong>no</strong> aplica a Alquimia en sus primeros años: revisor fiscal (umbral de $4.270 millones en ingresos o $7.117 millones en activos), registro RNBD ante la SIC (activos superiores a ~$5.237 millones) y SAGRILAFT (ingresos o activos de 40.000 SMMLV, cerca de $70.000 millones). Sí necesitas política de tratamiento de datos aunque no debas registrarte.</p>
+
+    <h3>Lo que cuesta operar cada mes</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Escenario</th><th class="num">Nómina cargada</th><th class="num">Operación</th><th class="num">Total mensual</th><th class="num">Capital 12 meses</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Fundador solo</strong><br><span style="color:var(--muted);font-size:13px">base $3,5M</span></td><td class="num">$4.900.000</td><td class="num">$2.610.000</td><td class="num"><strong>$7.500.000</strong></td><td class="num">≈ $107.000.000</td></tr>
+          <tr class="lead"><td><strong>Fundador + 1 técnico</strong><br><span style="color:var(--muted);font-size:13px">recomendado — ver abajo</span></td><td class="num">$18.060.000</td><td class="num">$2.500.000</td><td class="num"><strong>$20.560.000</strong></td><td class="num">≈ $287.000.000</td></tr>
+          <tr><td><strong>Fundador + 2</strong></td><td class="num">$23.660.000</td><td class="num">$4.980.000</td><td class="num"><strong>$28.640.000</strong></td><td class="num">≈ $398.000.000</td></tr>
+          <tr><td><strong>Equipo de 5</strong></td><td class="num">$49.490.000</td><td class="num">$9.100.000</td><td class="num"><strong>$58.590.000</strong></td><td class="num">≈ $812.000.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14px;color:var(--muted)">Capital de 12 meses incluye colchón de 15% y constitución. Referencias salariales base en Medellín: desarrollador junior $2,5-4,8M · semi-senior $6-7,8M · senior $9-15M · diseñador UX/UI $3,1-6,5M · comercial B2B $2,7-4,2M.</p>
+
+    <div class="note">
+      <span class="tag">Las tres palancas que más mueven la aguja</span>
+      <p><strong>1. Tu propio salario.</strong> Si el fundador no se paga durante los primeros meses, el escenario en solitario baja de $7,5M a $2,6M mensuales — el capital para 12 meses cae de $107M a cerca de $35M. Es la diferencia entre necesitar un inversionista y no necesitarlo.</p>
+      <p><strong>2. Créditos cloud.</strong> Google for Startups da hasta <strong>US$200.000</strong> —o US$350.000 si el producto es AI-first— sin necesidad de referido de un fondo. Microsoft Founders Hub da hasta US$150.000 sin ceder equity. Esto elimina la línea de infraestructura del presupuesto real durante 12 a 24 meses.</p>
+      <p><strong>3. Contratistas contra nómina.</strong> La prestación de servicios reduce el costo por persona 25-30%, pero si hay subordinación, horario fijo o exclusividad, un juez puede declarar contrato realidad y cobrarte las prestaciones retroactivas. Úsalo para trabajo por entregables, no para tu equipo central.</p>
+    </div>
+
+    <h3>Simulador de punto de equilibrio</h3>
+    <p>Mueve los supuestos y mira qué necesitas. Los valores por defecto reflejan la recomendación de este dossier: fundador más un técnico, ticket de producto de $890.000 mensuales para una IPS de 1 a 3 sedes, y servicios de consultoría en el mismo vertical financiando la operación mientras el producto madura.</p>
+
+    <div class="sim">
+      <div class="sim-head">
+        <h3>Modelo de arranque de Alquimia</h3>
+        <p>Todos los valores en COP. La contribución por cliente descuenta el costo de servir (nube, soporte, APIs de IA).</p>
+      </div>
+      <div class="sim-body">
+        <div class="controls">
+          <div class="ctl">
+            <label for="s-team">Estructura del equipo <b id="v-team">$20.560.000/mes</b></label>
+            <select id="s-team">
+              <option value="7500000">Fundador solo, con salario</option>
+              <option value="2600000">Fundador solo, sin salario</option>
+              <option value="20560000" selected>Fundador + 1 técnico</option>
+              <option value="28640000">Fundador + 2</option>
+              <option value="58590000">Equipo de 5</option>
+            </select>
+          </div>
+          <div class="ctl">
+            <label for="s-arpu">Precio mensual por cliente <b id="v-arpu">$890.000</b></label>
+            <input type="range" id="s-arpu" min="150000" max="3000000" step="10000" value="890000">
+          </div>
+          <div class="ctl">
+            <label for="s-margin">Margen bruto <b id="v-margin">80%</b></label>
+            <input type="range" id="s-margin" min="50" max="92" step="1" value="80">
+          </div>
+          <div class="ctl">
+            <label for="s-serv">Ingresos por consultoría al mes <b id="v-serv">$9.000.000</b></label>
+            <input type="range" id="s-serv" min="0" max="40000000" step="500000" value="9000000">
+          </div>
+          <div class="ctl">
+            <label for="s-cac">Costo de adquirir un cliente <b id="v-cac">$2.000.000</b></label>
+            <input type="range" id="s-cac" min="200000" max="8000000" step="100000" value="2000000">
+          </div>
+          <div class="ctl">
+            <label for="s-churn">Cancelación mensual <b id="v-churn">3,0%</b></label>
+            <input type="range" id="s-churn" min="5" max="90" step="1" value="30">
+          </div>
+          <div class="ctl">
+            <label for="s-cap">Capital disponible <b id="v-cap">$140.000.000</b></label>
+            <input type="range" id="s-cap" min="0" max="500000000" step="5000000" value="140000000">
+          </div>
+        </div>
+        <div class="readout">
+          <div class="ro" id="ro-be"><span class="k">Clientes para cubrir todos los costos</span><span class="v" id="o-be">—</span></div>
+          <div class="ro" id="ro-run"><span class="k">Meses de caja sin ganar un solo cliente</span><span class="v" id="o-run">—</span></div>
+          <div class="ro"><span class="k">Capital para sobrevivir 12 meses sin producto</span><span class="v" id="o-cap">—</span></div>
+          <div class="ro" id="ro-pb"><span class="k">Meses en recuperar el costo de un cliente</span><span class="v" id="o-pb">—</span></div>
+          <div class="ro" id="ro-ltv"><span class="k">Valor de vida sobre costo de adquisición</span><span class="v" id="o-ltv">—</span></div>
+          <div class="ro"><span class="k">Ingreso anual recurrente en el equilibrio</span><span class="v" id="o-arr">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted)">Referencias para leer los resultados: la mediana de recuperación del costo de adquisición en SaaS B2B es de 8,6 meses (6,2 para pequeña empresa); la relación valor de vida sobre costo de adquisición debe superar 3:1, y el cuartil superior está entre 4:1 y 6:1; la cancelación mensual mediana es 3,5%. El margen bruto esperado en SaaS es 70-85%, y en consultoría especializada 40-60%, con 70-80% de horas facturables.</p>
+
+    <h3>Cómo cobrar</h3>
+    <p>El precio por usuario, estándar en Estados Unidos a US$20-50 mensuales, rara vez es viable para una pyme colombiana: exige 30-60% de descuento local o cobrar en pesos. Para este nicho hay una estructura mejor:</p>
+    <ul>
+      <li><strong>Implementación inicial</strong> de $3-6 millones. En Colombia el <em>setup fee</em> es habitual y reduce la resistencia a compromisos largos. También filtra clientes que no van en serio.</li>
+      <li><strong>Mensualidad por sede o por volumen de facturación</strong> —no por usuario. En una IPS todos los usuarios son necesarios; cobrar por asiento castiga la adopción, que es justo lo que necesitas.</li>
+      <li><strong>Porcentaje sobre cartera efectivamente recuperada</strong>, del 2 al 5%. Alinea incentivos, sube el techo del ticket y convierte la venta en una conversación de retorno, no de precio. Complica el flujo de caja, así que debe ser un componente adicional y nunca la base.</li>
+    </ul>
+
+    <h3>De dónde sale el dinero</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Fuente</th><th class="num">Monto</th><th>Encaje con Alquimia</th></tr></thead>
+        <tbody>
+          <tr class="lead"><td><strong>Fondo Emprender (SENA)</strong></td><td class="num">$140.072.400<br><span style="font-size:12px;color:var(--muted)">hasta 3 empleos</span></td><td><strong>El mejor encaje.</strong> Recurso condonable si se cumple el plan de negocio. Doce convocatorias en 2026 con presupuesto superior a $282.000 millones. Cubre casi exactamente el escenario recomendado. Requiere Ruta Emprendedora SENA</td></tr>
+          <tr><td>Fondo Emprender, línea ampliada</td><td class="num">$262.635.750<br><span style="font-size:12px;color:var(--muted)">hasta 5 empleos</span></td><td>Si el plan justifica cinco empleos desde el arranque</td></tr>
+          <tr><td>Google for Startups Cloud</td><td class="num">hasta US$350.000</td><td>Sin referido de fondo. El tramo alto exige ser AI-first. Elimina el costo de infraestructura</td></tr>
+          <tr><td>iNNpulsa</td><td class="num">hasta US$30.000</td><td>No reembolsable. Exige RUT y prueba de ventas — sirve en fase 2, no al arrancar</td></tr>
+          <tr><td>Capital Semilla, Alcaldía de Medellín</td><td class="num">hasta $15.000.000</td><td>700 cupos en 2026, en especie. Complemento, no base</td></tr>
+          <tr><td>Ruta N — Medellín Next</td><td class="num">sin capital directo</td><td>Mentoría y conexión con corporativos. Valioso por acceso a clientes ancla en salud, una de sus tres líneas de 2026</td></tr>
+          <tr><td>Rockstart LatAm</td><td class="num">US$125K por 6%</td><td>Solo con producto y tracción. La IA es su diferenciador declarado en 2026</td></tr>
+          <tr><td>Crédito bancario</td><td class="num">techo 29,66% E.A.</td><td>Tasa de usura vigente. Último recurso con este costo de dinero</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="plan">
+    <p class="eyebrow">06 — Ejecución</p>
+    <h2 class="sec">Dieciocho meses</h2>
+    <p class="dek">Tres fases con criterios de salida explícitos. Si una fase no cumple su criterio, no se avanza: se corrige o se cambia de nicho.</p>
+
+    <div class="phases">
+      <div class="phase">
+        <div class="when">Meses 1–4<b>Descubrimiento pagado</b></div>
+        <div>
+          <h4>Aprender el dominio cobrando por aprenderlo</h4>
+          <ul>
+            <li>Constituir la S.A.S., registrar la marca, montar el SG-SST. Presupuesto: $2-3,2 millones.</li>
+            <li><strong>Cuarenta conversaciones con gerentes financieros y administrativos de IPS</strong> de 1 a 10 sedes en el Valle de Aburrá. No demos: entrevistas sobre cómo gestionan glosas hoy, cuánta cartera tienen vencida y qué hacen cuando una EPS intervenida no paga.</li>
+            <li>Vender <strong>3 a 5 proyectos de consultoría</strong> a esas mismas IPS: auditoría de glosas, migración de RIPS a JSON, diagnóstico de cumplimiento de la Resolución 1888. Esto financia la operación y te da acceso a los datos reales.</li>
+            <li>Postular a Fondo Emprender y a los créditos de Google for Startups.</li>
+          </ul>
+          <p style="font-size:13.5px;color:var(--verdigris);margin:12px 0 0"><strong>Criterio de salida:</strong> tres clientes de consultoría pagando y un patrón de dolor repetido en al menos 15 de las 40 entrevistas.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="when">Meses 5–11<b>Producto con socios</b></div>
+        <div>
+          <h4>Construir con cinco clientes adentro, no para un mercado imaginario</h4>
+          <ul>
+            <li>Contratar al primer técnico. Costo mensual sube a ~$20,6 millones, cubierto parcialmente por consultoría.</li>
+            <li>Construir el producto mínimo con <strong>cinco IPS como socias de diseño</strong>, con descuento a cambio de acceso y retroalimentación semanal.</li>
+            <li>Alcance mínimo defendible: seguimiento de radicación y respuesta a glosas dentro de los plazos, tablero de cartera por EPS y por edad de vencimiento, y alertas antes de que venza el término. Interoperabilidad como requisito de entrada, no como argumento de venta.</li>
+            <li>La IA entra donde ahorra trabajo medible: clasificar la causal de glosa y redactar el borrador de respuesta. No como eslogan.</li>
+          </ul>
+          <p style="font-size:13.5px;color:var(--verdigris);margin:12px 0 0"><strong>Criterio de salida:</strong> cinco IPS en producción, al menos tres pagando precio de lista, y un caso documentado de cartera recuperada con cifra concreta.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="when">Meses 12–18<b>Repetición</b></div>
+        <div>
+          <h4>Convertir el caso en un canal</h4>
+          <ul>
+            <li>Sumar comercial B2B. El caso documentado de recuperación es el activo de venta: en este mercado se vende con cifras de retorno, no con funcionalidades.</li>
+            <li>Canales: gremios de salud, ANDICOM (1-4 de septiembre), INMERXIA en Medellín (9-13 de noviembre de 2026, primera semana de IA del país), y referidos entre gerentes de IPS, que se conocen entre sí.</li>
+            <li>Reducir consultoría a medida que la suscripción cubra costos. Objetivo: <strong>29 clientes</strong> para equilibrio a $890.000 mensuales con 80% de margen, sin un peso de consultoría.</li>
+            <li>Con equilibrio alcanzado y 30+ clientes, ahí sí una ronda tiene sentido — no antes.</li>
+          </ul>
+          <p style="font-size:13.5px;color:var(--verdigris);margin:12px 0 0"><strong>Criterio de salida:</strong> ingreso recurrente que cubra la estructura sin depender de consultoría, con cancelación mensual por debajo de 3%.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="riesgos">
+    <p class="eyebrow">07 — Riesgos</p>
+    <h2 class="sec">Qué puede salir mal y qué falta verificar</h2>
+    <p class="dek">Este dossier se construyó sobre fuentes públicas. Antes de comprometer capital, estos puntos necesitan confirmación de primera mano.</p>
+
+    <h3>Riesgos del nicho recomendado</h3>
+    <ul>
+      <li><strong>El cliente no tiene plata.</strong> Es el riesgo central y es irónico: le vendes a IPS que no cobran. Mitigación: el precio debe salir del retorno, y la implementación inicial cobrarse por adelantado. Si una IPS no puede pagar $890.000 mensuales, tampoco sobrevivirá como cliente.</li>
+      <li><strong>Reforma a la salud.</strong> El sistema colombiano está en disputa política activa, con EPS intervenidas y una reforma pensional ya suspendida por la Corte Constitucional. Un cambio estructural podría reordenar el flujo de pagos. Contrapeso: cualquier reforma vuelve la gestión de cartera <em>más</em> compleja, no menos.</li>
+      <li><strong>Zeus u otro incumbente reacciona.</strong> Zeus ya tiene módulo de glosas dentro de una suite de 30 años. Tu defensa es el enfoque: producto para IPS de 1 a 10 sedes, con implementación en días y no en meses.</li>
+      <li><strong>Profundidad normativa.</strong> Cumplir cinco requisitos simultáneos —RIPS JSON con CUV, transmisión en HL7 FHIR R4, registro SIIFA con CUCON, CIE-11 y prescripción vía RDA— es una barrera de entrada real. Te protege una vez adentro, pero te cuesta entrar.</li>
+    </ul>
+
+    <h3>Datos que este dossier no pudo confirmar</h3>
+    <ul>
+      <li><strong>Cuántas IPS hay realmente en Antioquia.</strong> La cifra manejada —cerca de 808 privadas y 129 públicas— no se pudo confirmar contra el REPS del Ministerio de Salud. Es la variable que define el tamaño de tu mercado: verifícala antes que cualquier otra cosa.</li>
+      <li><strong>Empresas de transporte de carga en Antioquia</strong> (se manejó ~1.838, sin confirmar contra el RNDC o la Superintendencia de Transporte), relevante solo si tomas el plan B.</li>
+      <li><strong>Tarifa exacta del impuesto de registro departamental</strong> y porcentajes vigentes del beneficio de I+D+i ante Minciencias.</li>
+      <li>Rangos salariales de QA, product owner y líder técnico, y el costo real de un revisor fiscal, son estimaciones de mercado y no cifras de fuente primaria.</li>
+    </ul>
+
+    <div class="note warn">
+      <span class="tag">Antes de firmar nada</span>
+      <p>Las cifras de constitución, salario mínimo, ICA de Medellín, retención en la fuente, tasa de usura y créditos de nube están confirmadas en fuente directa de 2026. Todo lo demás debe pasar por tu contador y tu abogado corporativo antes de comprometer dinero. La conclusión estratégica de este documento no cambia con esas verificaciones; el modelo financiero sí.</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="fuentes">
+    <p class="eyebrow">08 — Fuentes</p>
+    <h2 class="sec">De dónde salen las cifras</h2>
+    <p class="dek">Investigación de agosto de 2026 sobre fuentes públicas. Los cuatro informes completos, con enlace a cada fuente, están en el repositorio del proyecto.</p>
+    <div class="panel">
+      <div class="srcs">
+        <p><strong>Mercado y sector.</strong> Fedesoft (El Pulso del Software en Colombia), MinTIC, IDC vía ITSitio, Portafolio, El Colombiano, Bloomberg Línea, Forbes Colombia.</p>
+        <p><strong>Tejido empresarial.</strong> Cámara de Comercio de Medellín para Antioquia (Estudio Económico 2024, informe de gestión 2025), Confecámaras, DANE, La República, ANDI/CINTEL.</p>
+        <p><strong>Ecosistema e inversión.</strong> Ruta N (Informe de Proyectos 2025), Alcaldía de Medellín, Créame (ISEM 2025), LAVCA, El Ecosistema Startup, StartupBlink.</p>
+        <p><strong>Salud.</strong> Resolución 1888 de 2025, Resolución 948 de 2026, Ley 2015 de 2020, ACHC, Contraloría vía Semana, Infobae, El Colombiano.</p>
+        <p><strong>Transporte.</strong> Ministerio de Transporte (SICE-TAC), Decreto 1017 de 2025, RNDC, Semana.</p>
+        <p><strong>Laboral y tributario.</strong> Ley 2466 de 2025, Decretos 1469 y 1470 de 2025, Estatuto Tributario, Actualícese, Buk, Deel, PwC Colombia, Holland &amp; Knight, Alcaldía de Medellín (régimen tarifario ICA).</p>
+        <p><strong>Costos y financiación.</strong> Cámara de Comercio de Medellín (tarifas 2026), SIC, Fondo Emprender, Bancóldex, Superintendencia Financiera, AWS Activate, Google for Startups, Quokka, Properati.</p>
+        <p><strong>Benchmarks.</strong> Maxio (2025 B2B SaaS Benchmarks), SaaSHero, State of SaaS LATAM, Coface, Fedesarrollo.</p>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer>
+    <p><strong>Dossier Alquimia</strong> · Estrategia de entrada al mercado · Medellín, agosto de 2026. Documento de trabajo interno. Los datos marcados como estimados en los informes fuente deben verificarse antes de usarse en un plan de negocio formal, una postulación a convocatoria o una presentación a inversionistas.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var cop = new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0});
+  var el = function(id){return document.getElementById(id);};
+
+  var team=el('s-team'), arpu=el('s-arpu'), margin=el('s-margin'),
+      serv=el('s-serv'), cac=el('s-cac'), churn=el('s-churn'), cap=el('s-cap');
+
+  function setState(node, cls){
+    node.classList.remove('ok','bad');
+    if(cls) node.classList.add(cls);
+  }
+
+  function compute(){
+    var costo = +team.value;
+    var precio = +arpu.value;
+    var m = (+margin.value)/100;
+    var servicios = +serv.value;
+    var costoCac = +cac.value;
+    var ch = (+churn.value)/10/100;   // slider 5..90 -> 0.5%..9.0%
+    var capital = +cap.value;
+
+    var contrib = precio * m;
+    var deficit = costo - servicios;
+
+    // readouts on the controls
+    el('v-team').textContent = cop.format(costo)+'/mes';
+    el('v-arpu').textContent = cop.format(precio);
+    el('v-margin').textContent = (+margin.value)+'%';
+    el('v-serv').textContent = cop.format(servicios);
+    el('v-cac').textContent = cop.format(costoCac);
+    el('v-churn').textContent = (ch*100).toFixed(1).replace('.',',')+'%';
+    el('v-cap').textContent = cop.format(capital);
+
+    // 1. clientes para equilibrio
+    var be;
+    if(deficit <= 0){
+      be = 0;
+      el('o-be').innerHTML = '0 <small>la consultoría ya cubre todo</small>';
+      setState(el('ro-be'),'ok');
+    } else {
+      be = Math.ceil(deficit / contrib);
+      el('o-be').innerHTML = be + ' <small>clientes</small>';
+      setState(el('ro-be'), be <= 40 ? 'ok' : 'bad');
+    }
+
+    // 2. runway
+    if(deficit <= 0){
+      el('o-run').innerHTML = '∞ <small>no quemas caja</small>';
+      setState(el('ro-run'),'ok');
+    } else {
+      var meses = capital / deficit;
+      el('o-run').innerHTML = meses.toFixed(1).replace('.',',') + ' <small>meses</small>';
+      setState(el('ro-run'), meses >= 12 ? 'ok' : (meses >= 6 ? null : 'bad'));
+    }
+
+    // 3. capital para 12 meses
+    var cap12 = deficit > 0 ? (deficit*12*1.15 + 3000000) : 3000000;
+    el('o-cap').textContent = cop.format(Math.round(cap12/1000000)*1000000);
+
+    // 4. payback del CAC
+    var pb = costoCac / contrib;
+    el('o-pb').innerHTML = pb.toFixed(1).replace('.',',') + ' <small>meses</small>';
+    setState(el('ro-pb'), pb <= 8.6 ? 'ok' : 'bad');
+
+    // 5. LTV / CAC
+    var vida = 1/ch;
+    var ltv = contrib * vida;
+    var ratio = ltv / costoCac;
+    el('o-ltv').innerHTML = ratio.toFixed(1).replace('.',',') + ':1 <small>vida de ' + Math.round(vida) + ' meses</small>';
+    setState(el('ro-ltv'), ratio >= 3 ? 'ok' : 'bad');
+
+    // 6. ARR en el equilibrio
+    var arr = be * precio * 12;
+    el('o-arr').textContent = cop.format(arr);
+  }
+
+  [team,arpu,margin,serv,cac,churn,cap].forEach(function(node){
+    node.addEventListener('input', compute);
+    node.addEventListener('change', compute);
+  });
+  compute();
+
+  // índice activo
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        var i = secs.indexOf(e.target);
+        if(i < 0) return;
+        links.forEach(function(a){ a.removeAttribute('aria-current'); });
+        links[i].setAttribute('aria-current','true');
+      });
+    }, {rootMargin:'-10% 0px -75% 0px'});
+    secs.forEach(function(s){ if(s) io.observe(s); });
+  }
+})();
+</script>
