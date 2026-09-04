@@ -30,6 +30,7 @@ La versión navegable con simulador financiero interactivo está en
 | [`docs/investigacion/02-ultranichos.md`](docs/investigacion/02-ultranichos.md) | Doce ultranichos verticales evaluados y puntuados |
 | [`docs/investigacion/03-competencia.md`](docs/investigacion/03-competencia.md) | Fábricas de software, SaaS vertical colombiano, tarifas y huecos de mercado |
 | [`docs/finanzas/04-esquema-financiero.md`](docs/finanzas/04-esquema-financiero.md) | Constitución, costo laboral, impuestos, opex, financiación y unit economics |
+| [`docs/investigacion/05-mercado-mascotas.md`](docs/investigacion/05-mercado-mascotas.md) | Vertical mascotas: mercado, consumidor, competencia, PESTEL, mapa de oportunidades y top 5 microapps |
 
 Cada informe marca explícitamente con `[ESTIMADO]` o `[NO VERIFICADO]` los datos
 que no se pudieron confirmar en fuente primaria. Verificar antes de usarlos en un
