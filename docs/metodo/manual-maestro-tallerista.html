@@ -1,0 +1,576 @@
+<title>Manual del Tallerista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root{
+    --ink:#16202A; --ink-soft:#48555F; --ink-faint:#7C8891;
+    --paper:#EDF0EE; --surface:#FFFFFF; --line:#D3D9D6; --line-strong:#B4BDB9;
+    --accent:#0B6E5F; --accent-soft:#D9E8E4; --graphite:#5B6770;
+    --signal:#B98A16; --signal-soft:#F7F0DD; --signal-line:#E0C97F;
+    --shadow:0 1px 2px rgba(22,32,42,.06);
+    --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+    --step:clamp(1rem,.92rem + .42vw,1.18rem);
+    --measure:66ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ink:#E4E9E7; --ink-soft:#A9B4B1; --ink-faint:#7C8A88;
+      --paper:#11171B; --surface:#181F24; --line:#2B3439; --line-strong:#3D4850;
+      --accent:#4FBFA8; --accent-soft:#17322E; --graphite:#8C989E;
+      --signal:#D8AC4A; --signal-soft:#241E10; --signal-line:#4A3D1B;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E4E9E7; --ink-soft:#A9B4B1; --ink-faint:#7C8A88;
+    --paper:#11171B; --surface:#181F24; --line:#2B3439; --line-strong:#3D4850;
+    --accent:#4FBFA8; --accent-soft:#17322E; --graphite:#8C989E;
+    --signal:#D8AC4A; --signal-soft:#241E10; --signal-line:#4A3D1B;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--f-body);
+       font-size:var(--step);line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:62rem;margin:0 auto;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.1rem,4vw,2.5rem) 4rem}
+
+  h1,h2,h3,h4,.eyebrow,.rail,.tag,th,.lbl{font-family:var(--f-display)}
+  h1{font-size:clamp(2.4rem,1.9rem + 3vw,4rem);font-weight:800;letter-spacing:-.035em;
+     line-height:.96;margin:.2em 0 0;text-wrap:balance}
+  h2{font-size:clamp(1.3rem,1.12rem + .65vw,1.65rem);font-weight:800;letter-spacing:-.02em;
+     line-height:1.15;margin:0;text-wrap:balance}
+  h3{font-size:1.02rem;font-weight:600;letter-spacing:-.005em;margin:0}
+  p{margin:0}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:1.4rem}
+  .masthead .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;align-items:baseline;
+    font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-faint)}
+  .lede{font-size:clamp(1.08rem,1rem + .4vw,1.3rem);color:var(--ink-soft);max-width:54ch;margin-top:1.05rem}
+  .stack{border-left:3px solid var(--accent);padding:.15rem 0 .15rem 1rem;margin-top:1.3rem;
+    max-width:56ch;font-size:.96rem;color:var(--ink-soft)}
+  .stack b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
+
+  section{margin-top:clamp(2.4rem,4.5vw,3.4rem)}
+  .sec-head{display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid var(--line-strong);
+    padding-bottom:.5rem;margin-bottom:1.4rem}
+  .sec-head .num{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:600;letter-spacing:.08em}
+  .prose{max-width:var(--measure)}
+  .prose + .prose{margin-top:.85rem}
+
+  /* rol */
+  .role{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));margin-top:1.2rem}
+  .role div{background:var(--surface);border:1px solid var(--line);padding:1rem 1.1rem 1.1rem;box-shadow:var(--shadow)}
+  .role .verb{font-family:var(--f-display);font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:var(--accent)}
+  .role p{font-size:.95rem;color:var(--ink-soft);margin-top:.3rem;line-height:1.5}
+  .nots{margin-top:1.1rem;max-width:var(--measure);font-size:.95rem;color:var(--ink-soft)}
+  .nots b{font-family:var(--f-display);color:var(--ink);font-weight:600}
+
+  /* timeline */
+  .tl{display:grid;gap:0;margin-top:1.2rem;border-top:1px solid var(--line)}
+  .tl .row{display:grid;grid-template-columns:7rem 1fr 8rem;gap:1rem;padding:.75rem 0;
+    border-bottom:1px solid var(--line);align-items:baseline}
+  .tl .t{font-family:var(--f-mono);font-size:.82rem;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+  .tl .who{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-faint);text-align:right}
+  .tl .what{font-size:.96rem;line-height:1.5}
+  .tl .row.key .what{font-weight:600}
+  @media(max-width:640px){.tl .row{grid-template-columns:1fr;gap:.15rem}.tl .who{text-align:left}}
+
+  /* tablero */
+  .board{background:var(--surface);border:1px solid var(--line-strong);box-shadow:var(--shadow);
+    padding:1.2rem;margin-top:1.3rem;overflow-x:auto}
+  .board-inner{min-width:34rem}
+  .board .top{display:flex;flex-wrap:wrap;gap:.6rem 2rem;font-family:var(--f-mono);font-size:.78rem;
+    font-weight:600;letter-spacing:.04em;padding-bottom:.9rem;border-bottom:2px solid var(--ink);margin-bottom:1rem}
+  .board .top i{font-style:normal;color:var(--ink-faint);font-weight:400}
+  table.grid{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:.8rem}
+  table.grid th{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+    font-weight:600;text-align:left;padding:0 .7rem .45rem 0;border-bottom:1px solid var(--line-strong)}
+  table.grid th.d{color:var(--accent)}
+  table.grid td{padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--line);color:var(--ink-faint)}
+  table.grid td.team{color:var(--ink);font-weight:600}
+  table.grid td.blank::after{content:"__________";letter-spacing:.05em}
+  table.grid td.d{color:var(--accent)}
+  .board .cols{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:1.3rem}
+  .board .lbl{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .board ol{margin:.5rem 0 0;padding-left:1.1rem;font-family:var(--f-mono);font-size:.78rem;
+    color:var(--ink-faint);line-height:2}
+  .board .park{margin-top:1.3rem;border-top:1px dashed var(--line-strong);padding-top:.8rem}
+  .note{margin-top:.9rem;font-size:.95rem;color:var(--ink-soft);max-width:var(--measure)}
+
+  /* tarjetas */
+  .cards{display:grid;gap:1.2rem;margin-top:1.4rem}
+  .card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .card-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem .9rem;
+    padding:.9rem 1.25rem;border-bottom:1px solid var(--line);background:linear-gradient(to bottom,var(--accent-soft),transparent)}
+  .card-head .n{font-family:var(--f-display);font-weight:800;font-size:1.5rem;letter-spacing:-.04em;
+    color:var(--accent);line-height:1}
+  .card-head .clock{font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;margin-left:auto}
+  .card-head .pc{font-family:var(--f-mono);font-size:.7rem;color:var(--ink-faint)}
+  .track{display:flex;height:3px;background:var(--line)}
+  .track b{display:block;background:var(--accent)}
+  .card-body{padding:1.15rem 1.25rem 1.3rem;display:grid;gap:1.05rem}
+  .split{font-family:var(--f-mono);font-size:.74rem;color:var(--ink-faint);margin-top:-.4rem}
+
+  .blk > .lbl{font-size:.68rem;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-faint);display:block;margin-bottom:.5rem}
+  .script{list-style:none;margin:0;padding:0;display:grid;gap:.5rem;counter-reset:line}
+  .script li{display:grid;grid-template-columns:1.3rem 1fr;gap:.6rem;font-size:.98rem;line-height:1.5}
+  .script li::before{counter-increment:line;content:counter(line);font-family:var(--f-mono);
+    font-size:.72rem;color:var(--accent);font-weight:600;padding-top:.28rem}
+  .say{border-left:2px solid var(--accent);padding-left:.6rem;display:block}
+  .say + .stage{display:block;color:var(--ink-faint);font-size:.88rem;margin-top:.15rem;padding-left:.6rem}
+  .slot{font-family:var(--f-mono);font-size:.85em;background:var(--accent-soft);color:var(--ink);
+    padding:.05em .3em;border-radius:2px;white-space:nowrap}
+  .doing{list-style:none;margin:0;padding:0;display:grid;gap:.45rem}
+  .doing li{display:grid;grid-template-columns:.9rem 1fr;gap:.6rem;font-size:.96rem;line-height:1.5}
+  .doing li::before{content:"";width:.42rem;height:.42rem;background:var(--graphite);margin-top:.55rem}
+  .doing li.no::before{background:var(--signal)}
+  .watch{font-size:.95rem;color:var(--ink-soft)}
+  .watch b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
+
+  .alarms{background:var(--signal-soft);border:1px solid var(--signal-line);padding:.9rem 1rem}
+  .alarms > .lbl{color:var(--signal)}
+  .alarms dl{margin:0;display:grid;gap:.6rem}
+  .alarms .pair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start;font-size:.94rem;line-height:1.45}
+  .alarms dt{color:var(--ink-soft)}
+  .alarms dd{margin:0;font-weight:600;position:relative;padding-left:1rem}
+  .alarms dd::before{content:"→";position:absolute;left:0;color:var(--signal);font-weight:400}
+  @media(max-width:680px){.alarms .pair{grid-template-columns:1fr;gap:.1rem}.alarms dd{padding-left:1rem}}
+
+  .gate{border-top:1px dashed var(--line-strong);padding-top:.85rem;display:grid;
+    grid-template-columns:7.5rem 1fr;gap:1rem;align-items:start}
+  .gate .tag{font-size:.68rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);display:flex;align-items:center;gap:.4rem;padding-top:.15rem}
+  .gate .tag::before{content:"";width:.5rem;height:.5rem;background:var(--accent);flex:none}
+  .gate p{font-size:.96rem;font-weight:600;line-height:1.5}
+  @media(max-width:640px){.gate{grid-template-columns:1fr;gap:.2rem}}
+
+  /* frases */
+  .swap{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.96rem}
+  .swap th{font-family:var(--f-display);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:left;padding:0 1rem .5rem 0;border-bottom:1px solid var(--line-strong);font-weight:600}
+  .swap td{padding:.6rem 1rem .6rem 0;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+  .swap td:first-child{color:var(--ink-faint);width:42%}
+  .swap td:last-child{font-weight:600;padding-right:0}
+  .swap tr:last-child td{border-bottom:0}
+
+  /* excepciones */
+  .exc{display:grid;gap:.7rem;margin-top:1.2rem;max-width:var(--measure)}
+  .exc div{display:grid;grid-template-columns:14rem 1fr;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--line)}
+  .exc dt,.exc .case{font-family:var(--f-display);font-weight:600;font-size:.95rem}
+  .exc .fix{font-size:.95rem;color:var(--ink-soft);line-height:1.5}
+  @media(max-width:640px){.exc div{grid-template-columns:1fr;gap:.15rem}}
+  .sacrifice{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--signal);
+    padding:1.05rem 1.15rem;margin-top:1.3rem;max-width:var(--measure)}
+  .sacrifice .lbl{font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;color:var(--signal);
+    font-weight:600;display:block;margin-bottom:.5rem}
+  .sacrifice ol{margin:0;padding-left:1.2rem;font-size:.96rem;line-height:1.6}
+  .sacrifice ol li::marker{font-family:var(--f-mono);font-size:.85rem;color:var(--ink-faint)}
+  .sacrifice b{font-family:var(--f-display);font-weight:600}
+
+  /* conversion */
+  .map{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.94rem}
+  .map th{font-family:var(--f-display);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:left;padding:0 1rem .5rem 0;border-bottom:1px solid var(--line-strong);font-weight:600}
+  .map td{padding:.55rem 1rem .55rem 0;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+  .map td:first-child{color:var(--ink-soft);width:44%}
+  .map td:last-child{padding-right:0}
+  .map tr.cut td{background:var(--signal-soft)}
+  .map tr.cut td:last-child{font-weight:600}
+
+  /* rubrica */
+  .rub{display:grid;gap:.5rem;margin-top:1.2rem;max-width:var(--measure);counter-reset:r}
+  .rub li{list-style:none;display:grid;grid-template-columns:1.6rem 1fr;gap:.7rem;
+    font-size:.96rem;line-height:1.5;padding:.35rem 0;border-bottom:1px solid var(--line)}
+  .rub li::before{counter-increment:r;content:counter(r);font-family:var(--f-mono);font-size:.78rem;
+    color:var(--ink-faint);font-weight:600;padding-top:.2rem}
+  .rub li.kill{font-weight:600}
+  .rub li.kill::before{color:var(--accent)}
+  .rub li .mark{font-family:var(--f-mono);font-size:.68rem;color:var(--accent);letter-spacing:.08em;
+    text-transform:uppercase;margin-left:.4rem}
+  .gate-note{margin-top:1.1rem;max-width:var(--measure);font-size:.96rem;color:var(--ink-soft)}
+  .gate-note b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
+
+  .src{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);
+    font-family:var(--f-mono);font-size:.72rem;line-height:1.7;color:var(--ink-faint)}
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .card,.board,.sacrifice,.role div{break-inside:avoid;box-shadow:none}
+    section{margin-top:1.5rem}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="meta"><span>Fábrica de Aprendizaje</span><span>Método Delta</span><span>Versión 01</span></div>
+    <h1>Manual del Tallerista</h1>
+    <p class="lede">Cómo se ejecuta un taller, minuto a minuto: qué digo, qué hago, qué mido y qué hago cuando algo se sale del guion.</p>
+    <div class="stack">
+      <b>El método</b> dice qué pasos existen. <b>La ficha</b> dice con qué contenido.
+      <b>Este manual</b> dice cómo se ejecutan. La ficha llena los espacios del guion: si está bien llena, el tallerista no improvisa una sola frase.
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="num">01</span><h2>El rol del tallerista</h2></div>
+    <p class="prose">No es expositor. Es operador del ejercicio y responsable del dato. Tres conductas, en orden de importancia:</p>
+    <div class="role">
+      <div><span class="verb">Mide.</span><p>Si no queda un número escrito, no hubo taller.</p></div>
+      <div><span class="verb">Devuelve.</span><p>Ante una pregunta, responde con otra pregunta o con un dato. Nunca con la solución.</p></div>
+      <div><span class="verb">Corta.</span><p>Sostiene el reloj aunque la conversación esté buena. El tiempo se le quita a la teoría, jamás a las corridas.</p></div>
+    </div>
+    <p class="nots"><b>Lo que no hace:</b> no arma, no corrige durante la corrida, no rescata al equipo que va perdiendo, no adelanta conceptos, no llena silencios.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">02</span><h2>Línea de tiempo de la operación</h2></div>
+    <div class="tl">
+      <div class="row"><span class="t">T−7 días</span><span class="what">Ficha llena y aprobada. Cada concepto verificado con su anclaje a un dato que el ejercicio sí produce.</span><span class="who">Tallerista</span></div>
+      <div class="row"><span class="t">T−2 días</span><span class="what">Kits contados con repuestos. Guías impresas, una por persona. Tarjetas de rol listas.</span><span class="who">Tallerista · auxiliar</span></div>
+      <div class="row key"><span class="t">T−1 día</span><span class="what">El tallerista corre el ejercicio completo, solo, y anota el tiempo objetivo real. Sin esto no se dicta.</span><span class="who">Tallerista</span></div>
+      <div class="row"><span class="t">T−30 min</span><span class="what">Estaciones montadas, tablero dibujado, cronómetros en cero, guía y tarjeta de rol en cada puesto.</span><span class="who">Tallerista · auxiliar</span></div>
+      <div class="row key"><span class="t">T−0</span><span class="what">Arranca el paso 1.</span><span class="who">Tallerista</span></div>
+      <div class="row"><span class="t">T+30 min</span><span class="what">Foto del tablero completo. Kits contados y guardados.</span><span class="who">Tallerista · auxiliar</span></div>
+      <div class="row"><span class="t">T+1 día</span><span class="what">Datos y encuesta tabulados. Ficha versionada con tiempo real contra planeado.</span><span class="who">Tallerista</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">03</span><h2>El tablero estándar</h2></div>
+    <p class="prose">Se dibuja antes de que entre el primer participante. Es el único instrumento del taller: aquí viven la meta, los datos, los conceptos y el delta.</p>
+    <div class="board">
+      <div class="board-inner">
+        <div class="top"><span><i>META:</i> __________</span><span><i>MÉTRICA:</i> __________</span><span><i>INICIO:</i> __:__</span></div>
+        <table class="grid">
+          <thead><tr><th>Equipo</th><th>Corrida 1</th><th>Meta C2</th><th>Corrida 2</th><th class="d">Δ</th></tr></thead>
+          <tbody>
+            <tr><td class="team">A</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="d">____%</td></tr>
+            <tr><td class="team">B</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="d">____%</td></tr>
+            <tr><td class="team">C</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="d">____%</td></tr>
+          </tbody>
+        </table>
+        <div class="cols">
+          <div><span class="lbl">Cuellos de botella</span><ol><li>________________</li><li>________________</li><li>________________</li></ol></div>
+          <div><span class="lbl">Conceptos · máx. 3</span><ol><li>________ ← se vio en ________</li><li>________ ← se vio en ________</li><li>________ ← se vio en ________</li></ol></div>
+        </div>
+        <div class="park"><span class="lbl">Parqueadero de preguntas</span><ol><li>______________________________________</li></ol></div>
+      </div>
+    </div>
+    <p class="note">El concepto se escribe <strong>físicamente al lado del dato que lo evidencia</strong>. Si no hay dato al lado, el concepto sobra.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">04</span><h2>Las siete tarjetas de ejecución</h2></div>
+    <p class="prose">Se leen una vez en la preparación y se tienen a la mano durante el taller. Los espacios marcados se llenan desde la ficha de diseño. Reloj de referencia: taller de 180 minutos.</p>
+
+    <div class="cards">
+
+      <article class="card">
+        <div class="track"><b style="width:7%"></b></div>
+        <div class="card-head"><span class="n">1</span><h2>Desafío</h2><span class="pc">7%</span><span class="clock">0:00 → 0:15</span></div>
+        <div class="card-body">
+          <div class="blk"><span class="lbl">Qué digo</span>
+            <ol class="script">
+              <li><span class="say">«Hoy no les voy a explicar <span class="slot">TEMA</span>. Lo van a descubrir produciendo.»</span></li>
+              <li><span class="say">«Esto es lo que vamos a producir.»</span><span class="stage">Muestro el producto terminado y lo hago circular.</span></li>
+              <li><span class="say">«La meta: <span class="slot">CANTIDAD</span> en <span class="slot">TIEMPO</span>, con <span class="slot">N</span> personas.»</span></li>
+              <li><span class="say">«Voy a medir <span class="slot">MÉTRICA</span>.»</span></li>
+              <li><span class="say">«Cada uno tiene un rol. Aquí nadie mira.»</span></li>
+              <li><span class="say">«Antes de empezar, escriban en su guía: ¿vamos a cumplir la meta? Sí o no, y por qué.»</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Reparto guía y tarjeta de rol por estación.</li>
+              <li>Escribo en el tablero: meta · métrica · hora de inicio.</li>
+              <li class="no">No respondo preguntas de contenido.</li>
+            </ul>
+          </div>
+          <p class="watch"><b>Qué observo:</b> que nadie quede sin rol y que todos hayan escrito la predicción.</p>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Preguntan teoría</dt><dd>«Anótala. La respondemos en el minuto 75, con sus datos.»</dd></div>
+              <div class="pair"><dt>Alguien dice que ya sabe hacerlo</dt><dd>Se le asigna rol de medidor, no de operario.</dd></div>
+              <div class="pair"><dt>Me paso de los 15 minutos</dt><dd>Corto y arranco. El tiempo sale de este paso, nunca de las corridas.</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Meta escrita y visible · todos con rol · predicción registrada.</p></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="track"><b style="width:27%"></b></div>
+        <div class="card-head"><span class="n">2</span><h2>Corrida 1</h2><span class="pc">20%</span><span class="clock">0:15 → 0:50</span></div>
+        <div class="card-body">
+          <p class="split">5 min familiarización · 20 min corrida · 10 min registro</p>
+          <div class="blk"><span class="lbl">Qué digo</span>
+            <ol class="script">
+              <li><span class="say">«Cinco minutos para reconocer las piezas y su puesto.»</span></li>
+              <li><span class="say">«Desde que arranque el cronómetro yo no ayudo. Si algo se traba, resuélvanlo entre ustedes.»</span></li>
+              <li><span class="say">«Cronómetro corre en 3, 2, 1.»</span></li>
+              <li><span class="say">«Alto. Nadie toca nada. Cada estación reporta su número.»</span><span class="stage">Al cerrar el tiempo.</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Cronómetro a la vista de todos.</li>
+              <li>Recorro las estaciones anotando dónde se acumula producto en proceso, quién espera y quién corre.</li>
+              <li>Anoto el minuto del primer bloqueo y del primer defecto.</li>
+              <li>Escribo los datos de la Corrida 1 en el tablero.</li>
+              <li class="no">No toco material. No señalo el error. No doy pistas.</li>
+            </ul>
+          </div>
+          <p class="watch"><b>Qué observo</b> — es la materia prima del paso 3: estación donde se acumula el trabajo · estación que espera · defectos y retrabajos · quién abandonó su rol.</p>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Cumplen la meta rápido y sin esfuerzo</dt><dd>Aplico de una vez la variación de la ficha y corro otra vez. El taller necesita una corrida que no cumpla.</dd></div>
+              <div class="pair"><dt>No entienden cómo se arma el producto</dt><dd>Repito solo la instrucción de armado, nunca la solución de flujo.</dd></div>
+              <div class="pair"><dt>Riesgo o lesión</dt><dd>Se detiene todo. Es la única razón para parar.</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Datos en el tablero, con el cuello de botella ya observado por el tallerista: anotado, todavía no dicho.</p></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="track"><b style="width:40%"></b></div>
+        <div class="card-head"><span class="n">3</span><h2>Evidencia</h2><span class="pc">13%</span><span class="clock">0:50 → 1:15</span></div>
+        <div class="card-body">
+          <p class="split">3 min individual en silencio · 10 min en equipo · 12 min en plenaria</p>
+          <div class="blk"><span class="lbl">Qué digo</span>
+            <ol class="script">
+              <li><span class="say">«Tres minutos, en silencio, cada uno solo: ¿qué pasó y por qué?»</span></li>
+              <li><span class="say">«Ahora en equipo: un solo cuello de botella y dos causas. Escríbanlos.»</span></li>
+              <li><span class="say">«¿Qué resultado dio?» · «¿Dónde se detuvo el flujo?» · «¿Por qué?»</span><span class="stage">Las tres preguntas fijas, en ese orden.</span></li>
+              <li><span class="say">«¿Con qué dato lo sustentas?»</span><span class="stage">Ante cada respuesta, sin excepción.</span></li>
+              <li><span class="say">«Tenemos dos versiones. ¿Cuál dato decide?»</span><span class="stage">Si dos equipos difieren.</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Escribo las respuestas en el tablero tal cual las dicen, aunque estén equivocadas. El dato las corrige, no yo.</li>
+              <li>Guardo mi propia observación de la corrida. Solo la uso si el grupo no llega.</li>
+            </ul>
+          </div>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Silencio</dt><dd>No lo lleno. Espero. A los veinte segundos pregunto a la estación con más acumulación: «¿qué te llegaba y a qué ritmo?»</dd></div>
+              <div class="pair"><dt>Un participante domina</dt><dd>«Gracias. Quiero oír a la estación <span class="slot">X</span>.»</dd></div>
+              <div class="pair"><dt>Culpan a una persona</dt><dd>«¿El problema es la persona o el puesto que le diseñamos?»</dd></div>
+              <div class="pair"><dt>Llegan a la conclusión en cinco minutos</dt><dd>No alargo. Paso al 4 y devuelvo el tiempo a la Corrida 2.</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Cuello de botella y dos causas por equipo, escritos y expuestos.</p></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="track"><b style="width:50%"></b></div>
+        <div class="card-head"><span class="n">4</span><h2>Concepto</h2><span class="pc">10% · techo</span><span class="clock">1:15 → 1:30</span></div>
+        <div class="card-body">
+          <div class="blk"><span class="lbl">Qué digo — estructura fija, máximo 3 veces, 4–5 min cada una</span>
+            <ol class="script">
+              <li><span class="say">«Lo que ustedes midieron aquí…»</span><span class="stage">Señalo el dato en el tablero.</span></li>
+              <li><span class="say">«…se llama <span class="slot">CONCEPTO</span>.»</span></li>
+              <li><span class="say">«Se define así: <span class="slot">UNA FRASE</span>.»</span></li>
+              <li><span class="say">«En su corrida se vio así: <span class="slot">DATO</span>.»</span></li>
+              <li><span class="say">«En una empresa real esto cuesta: <span class="slot">CONSECUENCIA</span>.»</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Escribo el término al lado del dato que lo evidencia. Quedan juntos en el tablero.</li>
+              <li>Cronómetro a la vista. Al minuto 15 corto, aunque falte un concepto.</li>
+            </ul>
+          </div>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Me estoy extendiendo</dt><dd>Regla del reloj: se corta en el techo, sin excepción.</dd></div>
+              <div class="pair"><dt>Un concepto no tiene dato que lo respalde</dt><dd>No lo explico. Lo marco en la ficha como «concepto sin anclaje» y se retira del taller.</dd></div>
+              <div class="pair"><dt>Preguntan algo fuera de alcance</dt><dd>«Va al parqueadero.»</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Cada equipo reescribió su hallazgo con el término técnico.</p></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="track"><b style="width:63%"></b></div>
+        <div class="card-head"><span class="n">5</span><h2>Rediseño</h2><span class="pc">13%</span><span class="clock">1:30 → 1:55</span></div>
+        <div class="card-body">
+          <div class="blk"><span class="lbl">Qué digo</span>
+            <ol class="script">
+              <li><span class="say">«Cambia el escenario: <span class="slot">VARIACIÓN</span>.»</span></li>
+              <li><span class="say">«Tienen <span class="slot">X</span> minutos para decidir máximo tres cambios. Cada cambio con responsable.»</span></li>
+              <li><span class="say">«Y me comprometen un número: ¿en cuánto van a quedar?»</span></li>
+              <li><span class="say">«Ese número va al tablero antes de correr.»</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Escribo la meta comprometida de cada equipo al lado de su resultado de la Corrida 1.</li>
+              <li class="no">Rechazo cambios vagos. «Mejorar la comunicación» no es un cambio: pido qué, quién y dónde.</li>
+              <li class="no">Rechazo el cuarto cambio. Con tres, el delta es atribuible.</li>
+            </ul>
+          </div>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Proponen «trabajar más rápido»</dt><dd>«Eso no es diseño, es pedir esfuerzo. ¿Qué cambia en el puesto, en el orden o en el flujo?»</dd></div>
+              <div class="pair"><dt>Piden más recursos</dt><dd>Solo si la ficha lo permite. Si no: «Los recursos son los que hay.»</dd></div>
+              <div class="pair"><dt>No se ponen de acuerdo</dt><dd>Decide el supervisor del equipo, y se anota que fue por autoridad y no por consenso. También es un dato del taller.</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Tres cambios con responsable y meta numérica en el tablero, antes de correr.</p></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="track"><b style="width:83%"></b></div>
+        <div class="card-head"><span class="n">6</span><h2>Corrida 2</h2><span class="pc">20%</span><span class="clock">1:55 → 2:30</span></div>
+        <div class="card-body">
+          <div class="blk"><span class="lbl">Qué digo</span>
+            <ol class="script">
+              <li><span class="say">«Mismas reglas, misma medición. Cronómetro en 3, 2, 1.»</span></li>
+              <li><span class="say">«Alto. Cada estación su número.»</span></li>
+              <li><span class="say">«Corrida 1: <span class="slot">DATO</span>. Corrida 2: <span class="slot">DATO</span>. Delta: <span class="slot">%</span>.»</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Mido exactamente igual que en la Corrida 1: mismo instrumento, mismo criterio de unidad conforme.</li>
+              <li>Calculo el delta en el tablero, a la vista de todos.</li>
+              <li>Si queda tiempo, pido traducir el delta a dinero con los datos de la ficha: costo hora, precio unitario, costo de material.</li>
+            </ul>
+          </div>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Delta nulo o negativo</dt><dd>No se esconde y no se repite la corrida. «¿Cuál de los tres cambios lo causó?» Un delta negativo bien explicado es un taller exitoso.</dd></div>
+              <div class="pair"><dt>Cambian la métrica para verse mejor</dt><dd>Se invalida y se usa la métrica original.</dd></div>
+              <div class="pair"><dt>Un equipo se salta el control de calidad</dt><dd>Se cuentan solo unidades conformes. Es el aprendizaje más barato del día.</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Delta medido y escrito en el tablero.</p></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="track"><b style="width:100%"></b></div>
+        <div class="card-head"><span class="n">7</span><h2>Transferencia y cierre</h2><span class="pc">17%</span><span class="clock">2:30 → 3:00</span></div>
+        <div class="card-body">
+          <div class="blk"><span class="lbl">Qué digo</span>
+            <ol class="script">
+              <li><span class="say">«Una sola pregunta: ¿dónde está este mismo cuello de botella en su trabajo real?»</span></li>
+              <li><span class="say">«Escriban una acción, con métrica y fecha. Una sola.»</span></li>
+              <li><span class="say">«Cada uno la dice en treinta segundos.»</span></li>
+              <li><span class="say">«Empezaron en <span class="slot">DATO 1</span>. Terminaron en <span class="slot">DATO 2</span>. Eso es <span class="slot">X%</span>, y lo hicieron ustedes en <span class="slot">TIEMPO</span>.»</span><span class="stage">El cierre. Se dice en voz alta, siempre.</span></li>
+            </ol>
+          </div>
+          <div class="blk"><span class="lbl">Qué hago</span>
+            <ul class="doing">
+              <li>Recojo guías y encuesta de dos preguntas.</li>
+              <li>Foto del tablero completo.</li>
+              <li>Anoto el tiempo real de cada bloque contra el planeado.</li>
+              <li>Vacío el parqueadero de preguntas si queda tiempo.</li>
+            </ul>
+          </div>
+          <div class="alarms"><span class="lbl">Alarma → corrección</span>
+            <dl>
+              <div class="pair"><dt>Compromisos genéricos: «aplicar lo aprendido»</dt><dd>«¿Qué vas a medir, y cuándo?»</dd></div>
+              <div class="pair"><dt>Se acabó el tiempo</dt><dd>Se sacrifica la socialización en voz alta. Nunca la escritura del compromiso ni el cierre con el delta.</dd></div>
+            </dl>
+          </div>
+          <div class="gate"><span class="tag">Puerta</span><p>Guías · un compromiso por participante con métrica y fecha · encuesta · foto del tablero.</p></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">05</span><h2>Kit de frases</h2></div>
+    <p class="prose">La disciplina del método se sostiene en el lenguaje. Estas frases reemplazan el impulso de resolver.</p>
+    <table class="swap">
+      <thead><tr><th>En vez de…</th><th>Diga</th></tr></thead>
+      <tbody>
+        <tr><td>Responder la pregunta</td><td>«¿Con qué dato lo sustentas?»</td></tr>
+        <tr><td>Corregir una hipótesis</td><td>«Córranlo y lo medimos.»</td></tr>
+        <tr><td>Rescatar a un equipo</td><td>«Es su decisión. Yo mido.»</td></tr>
+        <tr><td>Dar su opinión</td><td>«¿Qué dice el tablero?»</td></tr>
+        <tr><td>Dejar que uno hable por todos</td><td>«Quiero oír a la estación X.»</td></tr>
+        <tr><td>Entrar en teoría fuera de tiempo</td><td>«Va al parqueadero.»</td></tr>
+        <tr><td>Aceptar que culpen a una persona</td><td>«¿Es la persona o el puesto?»</td></tr>
+        <tr><td>Cerrar un debate con autoridad</td><td>«¿Cuál dato decide?»</td></tr>
+        <tr><td>Aceptar «trabajar más rápido»</td><td>«¿Qué cambia en el puesto, el orden o el flujo?»</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">06</span><h2>Protocolos de excepción</h2></div>
+    <div class="exc">
+      <div><span class="case">Grupo menor al mínimo</span><span class="fix">Se reducen estaciones, nunca corridas. Un participante puede cubrir dos puestos.</span></div>
+      <div><span class="case">Grupo mayor al máximo</span><span class="fix">Se abre un equipo espejo que corre en paralelo y compite con datos. Nunca se crean observadores.</span></div>
+      <div><span class="case">Falta material o piezas</span><span class="fix">Se baja la meta, se corrige en el tablero antes de arrancar y se anota en la ficha. No se cancela la corrida.</span></div>
+      <div><span class="case">Grupo experto en el tema</span><span class="fix">Se sube la meta hasta que falle. El fracaso es el insumo.</span></div>
+      <div><span class="case">Participante que se niega</span><span class="fix">Rol de medidor o de control de calidad. Todos aportan un dato.</span></div>
+    </div>
+    <div class="sacrifice">
+      <span class="lbl">Se perdió tiempo de sala — orden de sacrificio</span>
+      <ol>
+        <li>La socialización en voz alta del cierre.</li>
+        <li>La plenaria del paso 3, que se acorta.</li>
+        <li>El tercer concepto.</li>
+        <li><b>Nunca la Corrida 2 ni el delta.</b> Si la Corrida 2 no cabe, el taller se reprograma: sin delta no hay taller.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">07</span><h2>Conversión de una guía existente</h2></div>
+    <p class="prose">Las guías actuales contienen casi todo lo necesario, pero organizado para leerse, no para ejecutarse. La conversión es mecánica.</p>
+    <table class="map">
+      <thead><tr><th>Sección de la guía actual</th><th>A dónde va</th></tr></thead>
+      <tbody>
+        <tr><td>Identificación: código, tiempo, asignaturas</td><td>Encabezado de la ficha</td></tr>
+        <tr><td>Indicadores de logro</td><td>Resultado observable, una sola frase</td></tr>
+        <tr><td>Contenido temático</td><td>Se recorta a máximo 3 conceptos, cada uno con su anclaje</td></tr>
+        <tr><td>Competencias</td><td>Pregunta de transferencia, paso 7</td></tr>
+        <tr class="cut"><td>Fundamento teórico y pertinencia</td><td>Sale del tiempo de taller: queda como lectura previa opcional. Solo sobreviven las tres definiciones de una frase</td></tr>
+        <tr><td>Recursos requeridos</td><td>Kit y montaje del T−30</td></tr>
+        <tr><td>Los ocho momentos del aprendizaje experiencial</td><td>Las siete tarjetas de ejecución</td></tr>
+        <tr><td>Ejercicio práctico con toma de tiempos</td><td>Corrida 1</td></tr>
+        <tr><td>Preguntas de cálculo: capacidad, costos, utilidad</td><td>Traducción del delta a dinero, paso 6</td></tr>
+        <tr><td>Cuellos de botella y tres mejoras</td><td>Pasos 3 y 5</td></tr>
+        <tr><td>Escenario más complejo: nueva referencia, pedido mayor</td><td>Variación de la Corrida 2</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Lo único que se elimina es la exposición teórica extensa dentro del taller. No se pierde: se convierte en tres definiciones ancladas a datos, que es lo que el participante efectivamente retiene.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">08</span><h2>Habilitación de un tallerista</h2></div>
+    <p class="prose">Queda habilitado cuando cumple tres cosas: corrió el ejercicio completo solo al menos una vez, dictó un taller con observador presente, y el observador marcó 8 de 10 en la rúbrica.</p>
+    <ol class="rub">
+      <li>Empezó a la hora y respetó los siete bloques con margen de ±5 minutos.</li>
+      <li>No explicó teoría antes del paso 4.</li>
+      <li class="kill">No rescató a ningún equipo durante la Corrida 1.<span class="mark">eliminatorio</span></li>
+      <li class="kill">Midió y escribió en el tablero los datos de ambas corridas.<span class="mark">eliminatorio</span></li>
+      <li>Expuso máximo tres conceptos, cada uno anclado a un dato visible.</li>
+      <li>Su exposición total no superó el 10% del tiempo, cronometrada por el observador.</li>
+      <li>Devolvió preguntas en vez de responderlas, al menos tres veces.</li>
+      <li>Exigió responsable y número en el rediseño.</li>
+      <li class="kill">Cerró con el delta escrito y dicho en voz alta.<span class="mark">eliminatorio</span></li>
+      <li>Recogió guías, compromisos y encuesta.</li>
+    </ol>
+    <p class="gate-note">Menos de 8: repite con observador. <b>Los ítems 3, 4 y 9 son eliminatorios por sí solos</b> — sin ellos no hubo Método Delta.</p>
+    <p class="src">Complementa el Método Delta y su ficha de diseño. Construido sobre las guías LF001-CP y LF002-DT de la Fábrica de Aprendizaje, convertidas de hoja de ruta docente a herramienta de ejecución.</p>
+  </section>
+
+</div>
