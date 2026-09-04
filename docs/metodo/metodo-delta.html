@@ -1,0 +1,564 @@
+<title>Método Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root{
+    --ink:#16202A;
+    --ink-soft:#48555F;
+    --ink-faint:#7C8891;
+    --paper:#EDF0EE;
+    --surface:#FFFFFF;
+    --line:#D3D9D6;
+    --line-strong:#B4BDB9;
+    --accent:#0B6E5F;
+    --accent-soft:#D9E8E4;
+    --graphite:#5B6770;
+    --signal:#B98A16;
+    --signal-soft:#F4EAD0;
+    --shadow:0 1px 2px rgba(22,32,42,.06);
+
+    --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+
+    --step:clamp(1rem,.9rem + .5vw,1.25rem);
+    --measure:66ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ink:#E4E9E7;
+      --ink-soft:#A9B4B1;
+      --ink-faint:#7C8A88;
+      --paper:#11171B;
+      --surface:#181F24;
+      --line:#2B3439;
+      --line-strong:#3D4850;
+      --accent:#4FBFA8;
+      --accent-soft:#17322E;
+      --graphite:#8C989E;
+      --signal:#D8AC4A;
+      --signal-soft:#2E2716;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E4E9E7;
+    --ink-soft:#A9B4B1;
+    --ink-faint:#7C8A88;
+    --paper:#11171B;
+    --surface:#181F24;
+    --line:#2B3439;
+    --line-strong:#3D4850;
+    --accent:#4FBFA8;
+    --accent-soft:#17322E;
+    --graphite:#8C989E;
+    --signal:#D8AC4A;
+    --signal-soft:#2E2716;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--f-body);
+    font-size:var(--step);
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:60rem;margin:0 auto;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.1rem,4vw,2.5rem) 4rem}
+
+  h1,h2,h3,.eyebrow,.rail,.badge,th,.tag{font-family:var(--f-display)}
+  h1{
+    font-size:clamp(2.6rem,2rem + 3.4vw,4.4rem);
+    font-weight:800;letter-spacing:-.035em;line-height:.95;
+    margin:.2em 0 0;text-wrap:balance;
+  }
+  h1 .delta{color:var(--accent)}
+  h2{
+    font-size:clamp(1.35rem,1.15rem + .7vw,1.75rem);
+    font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0;text-wrap:balance;
+  }
+  h3{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;margin:0}
+  p{margin:0}
+
+  .eyebrow{
+    font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:1.4rem}
+  .masthead .meta{
+    display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;align-items:baseline;
+    font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .lede{
+    font-size:clamp(1.1rem,1rem + .45vw,1.35rem);
+    color:var(--ink-soft);max-width:52ch;margin-top:1.1rem;
+  }
+
+  section{margin-top:clamp(2.6rem,5vw,3.8rem)}
+  .sec-head{
+    display:flex;align-items:baseline;gap:1rem;
+    border-bottom:1px solid var(--line-strong);padding-bottom:.5rem;margin-bottom:1.5rem;
+  }
+  .sec-head .num{
+    font-family:var(--f-mono);font-size:.78rem;color:var(--accent);
+    font-weight:600;letter-spacing:.08em;
+  }
+  .prose{max-width:var(--measure)}
+  .prose + .prose{margin-top:.9rem}
+
+  /* ---------- principio ---------- */
+  .creed{
+    background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);
+    padding:1.5rem 1.6rem;box-shadow:var(--shadow);
+  }
+  .creed p{
+    font-family:var(--f-display);font-weight:800;letter-spacing:-.02em;
+    font-size:clamp(1.4rem,1.2rem + 1vw,2rem);line-height:1.15;text-wrap:balance;
+  }
+  .creed .why{
+    font-family:var(--f-body);font-weight:400;font-size:1rem;letter-spacing:0;
+    color:var(--ink-soft);line-height:1.6;margin-top:.9rem;max-width:58ch;
+  }
+  .rules{list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:.75rem}
+  .rules li{
+    display:grid;grid-template-columns:1.6rem 1fr;gap:.75rem;align-items:start;
+    max-width:var(--measure);
+  }
+  .rules b{font-family:var(--f-display);font-weight:600}
+  .rules .k{
+    font-family:var(--f-mono);font-size:.8rem;font-weight:600;color:var(--accent);
+    padding-top:.22rem;
+  }
+
+  /* ---------- reparto de tiempo ---------- */
+  .bar{
+    display:flex;width:100%;height:2.6rem;border:1px solid var(--line-strong);
+    background:var(--surface);overflow:hidden;
+  }
+  .bar span{
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--f-mono);font-size:.7rem;font-weight:600;color:#fff;
+    border-right:1px solid rgba(255,255,255,.35);overflow:hidden;
+  }
+  .bar span:last-child{border-right:0}
+  .seg-do{background:var(--accent)}
+  .seg-think{background:var(--graphite)}
+  .seg-tell{background:var(--signal);color:#1B1405}
+  .legend{
+    display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:.7rem;
+    font-family:var(--f-mono);font-size:.74rem;color:var(--ink-soft);
+  }
+  .legend i{display:inline-block;width:.7rem;height:.7rem;margin-right:.45rem;vertical-align:baseline}
+  .tbl-scroll{overflow-x:auto;margin-top:1.5rem}
+  table{border-collapse:collapse;width:100%;min-width:30rem;font-family:var(--f-mono);font-size:.85rem}
+  th{
+    text-align:left;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:600;padding:0 .8rem .5rem 0;
+    border-bottom:1px solid var(--line-strong);
+  }
+  td{padding:.55rem .8rem .55rem 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  td.name{font-family:var(--f-display);font-weight:600;font-size:.95rem}
+  tr:last-child td{border-bottom:0}
+  tfoot td{border-top:1px solid var(--ink);border-bottom:0;font-weight:600;padding-top:.6rem}
+
+  /* ---------- pasos ---------- */
+  .steps{display:grid;gap:1.1rem;margin-top:1.5rem}
+  .step{
+    background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+    display:grid;grid-template-columns:5.5rem 1fr;
+  }
+  .rail{
+    border-right:1px solid var(--line);padding:1.15rem .85rem;
+    display:flex;flex-direction:column;gap:.15rem;
+    background:linear-gradient(to right,var(--accent-soft),transparent);
+  }
+  .rail .n{font-size:2rem;font-weight:800;line-height:1;letter-spacing:-.05em;color:var(--accent)}
+  .rail .pc{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--ink-soft)}
+  .rail .min{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-faint)}
+  .body{padding:1.15rem 1.3rem 1.25rem}
+  .body h2{margin-bottom:.75rem}
+  .fields{display:grid;gap:.6rem}
+  .field{display:grid;grid-template-columns:8.5rem 1fr;gap:1rem;align-items:start}
+  .field dt{
+    font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ink-faint);padding-top:.28rem;
+  }
+  .field dd{margin:0;font-size:.98rem;line-height:1.55}
+  .gate{
+    margin-top:.95rem;border-top:1px dashed var(--line-strong);padding-top:.8rem;
+    display:grid;grid-template-columns:8.5rem 1fr;gap:1rem;align-items:start;
+  }
+  .gate .tag{
+    font-size:.68rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);display:flex;align-items:center;gap:.4rem;padding-top:.2rem;
+  }
+  .gate .tag::before{content:"";width:.55rem;height:.55rem;background:var(--accent);flex:none}
+  .gate p{font-size:.98rem;font-weight:600;line-height:1.5}
+  .step em{font-style:normal;background:var(--accent-soft);padding:0 .18em;font-weight:600}
+  @media (max-width:640px){
+    .step{grid-template-columns:1fr}
+    .rail{
+      border-right:0;border-bottom:1px solid var(--line);flex-direction:row;
+      align-items:baseline;gap:.8rem;padding:.7rem .9rem;
+      background:linear-gradient(to bottom,var(--accent-soft),transparent);
+    }
+    .rail .n{font-size:1.4rem}
+    .field,.gate{grid-template-columns:1fr;gap:.15rem}
+  }
+
+  /* ---------- fases ---------- */
+  .phases{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));align-items:start}
+  .phase{background:var(--surface);border:1px solid var(--line);padding:1.1rem 1.2rem 1.3rem;box-shadow:var(--shadow)}
+  .phase.during{border-color:var(--signal);background:var(--signal-soft)}
+  .phase h3{margin-bottom:.2rem}
+  .phase .when{
+    font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:.85rem;display:block;
+  }
+  .phase ul{list-style:none;padding:0;margin:0;display:grid;gap:.55rem;font-size:.93rem;line-height:1.5}
+  .phase li{display:grid;grid-template-columns:1.15rem 1fr;gap:.55rem}
+  .phase li::before{
+    content:"";width:.78rem;height:.78rem;margin-top:.36rem;
+    border:1.5px solid var(--line-strong);background:transparent;
+  }
+  .phase.during li::before{
+    content:counter(rule);counter-increment:rule;border:0;width:auto;height:auto;margin-top:0;
+    font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--signal);
+  }
+  .phase.during ul{counter-reset:rule}
+  .phase strong{font-weight:600}
+
+  /* ---------- ficha ---------- */
+  .form{
+    background:var(--surface);border:1px solid var(--line-strong);box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  .form-head{
+    border-bottom:1px solid var(--line-strong);padding:.9rem 1.2rem;
+    display:flex;flex-wrap:wrap;gap:.3rem 1rem;align-items:baseline;
+  }
+  .form-head strong{font-family:var(--f-display);font-weight:800;letter-spacing:-.01em}
+  .form-head span{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-faint);letter-spacing:.06em;text-transform:uppercase}
+  .form pre{
+    margin:0;padding:1.2rem;font-family:var(--f-mono);font-size:.8rem;line-height:1.75;
+    white-space:pre;color:var(--ink-soft);
+  }
+  .form pre b{color:var(--ink);font-weight:600}
+
+  /* ---------- flujo ---------- */
+  .flow{
+    display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:1.4rem;
+    font-family:var(--f-display);font-weight:600;font-size:.9rem;
+  }
+  .flow .node{border:1px solid var(--line-strong);background:var(--surface);padding:.5rem .85rem}
+  .flow .node.end{background:var(--accent);border-color:var(--accent);color:#fff}
+  .flow .arrow{color:var(--ink-faint);font-family:var(--f-mono)}
+  .close{
+    margin-top:1.6rem;border-top:2px solid var(--ink);padding-top:1.1rem;max-width:var(--measure);
+  }
+  .close b{font-family:var(--f-display);font-weight:800}
+  .src{
+    margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);
+    font-family:var(--f-mono);font-size:.72rem;line-height:1.7;color:var(--ink-faint);
+  }
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .step,.phase,.form,.creed{break-inside:avoid;box-shadow:none}
+    section{margin-top:1.6rem}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="meta">
+      <span>Fábrica de Aprendizaje</span>
+      <span>Método estándar de talleres</span>
+      <span>Versión 01</span>
+    </div>
+    <h1>Método <span class="delta">Delta</span></h1>
+    <p class="lede">Cómo se diseña y se dicta cualquier taller práctico, sin importar el tema. Siete pasos, una ficha de una página y un número al final.</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="num">01</span><h2>Principio central</h2></div>
+    <div class="creed">
+      <p>Ningún taller termina sin un delta medible.</p>
+      <p class="why">El delta (Δ) es la diferencia entre la primera y la segunda corrida del ejercicio. El participante no aprende porque le expliquen: aprende porque produce un resultado real, lo mide, entiende por qué salió así, lo rediseña y lo vuelve a producir mejor. Todo paso que no aporte a ese delta se elimina del taller.</p>
+    </div>
+    <ol class="rules">
+      <li><span class="k">01</span><span><b>La práctica genera la teoría, no al revés.</b> El concepto llega después de la corrida, para nombrar lo que ya vivieron.</span></li>
+      <li><span class="k">02</span><span><b>Sin dato no hay avance.</b> Cada corrida se mide y el número queda escrito a la vista de todos.</span></li>
+      <li><span class="k">03</span><span><b>El tallerista habla máximo el 10% del tiempo.</b> Si hay que recortar, se recorta teoría, nunca práctica.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">02</span><h2>Reparto del tiempo</h2></div>
+    <p class="prose">Los tiempos se fijan como porcentaje del total, para que el mismo método sirva en un taller de 90 minutos, de 3 horas o de un día completo. El participante hace, mide o decide durante el 83% del taller.</p>
+    <div class="bar" style="margin-top:1.4rem" role="img" aria-label="Reparto del tiempo: 53% ejecutar, 37% analizar y decidir, 10% exposición del tallerista">
+      <span class="seg-think" style="width:7%">7</span>
+      <span class="seg-do" style="width:20%">20</span>
+      <span class="seg-think" style="width:13%">13</span>
+      <span class="seg-tell" style="width:10%">10</span>
+      <span class="seg-do" style="width:13%">13</span>
+      <span class="seg-do" style="width:20%">20</span>
+      <span class="seg-think" style="width:17%">17</span>
+    </div>
+    <div class="legend">
+      <span><i class="seg-do" style="background:var(--accent)"></i>Ejecutar y medir · 53%</span>
+      <span><i class="seg-think" style="background:var(--graphite)"></i>Analizar y decidir · 37%</span>
+      <span><i class="seg-tell" style="background:var(--signal)"></i>Exposición del tallerista · 10% (techo)</span>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Paso</th><th>% del total</th><th>Taller de 180 min</th><th>Taller de 90 min</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="name">Desafío</td><td>7%</td><td>15 min</td><td>7 min</td></tr>
+          <tr><td>2</td><td class="name">Corrida 1</td><td>20%</td><td>35 min</td><td>18 min</td></tr>
+          <tr><td>3</td><td class="name">Evidencia</td><td>13%</td><td>25 min</td><td>12 min</td></tr>
+          <tr><td>4</td><td class="name">Concepto</td><td>10%</td><td>15 min</td><td>9 min</td></tr>
+          <tr><td>5</td><td class="name">Rediseño</td><td>13%</td><td>25 min</td><td>12 min</td></tr>
+          <tr><td>6</td><td class="name">Corrida 2</td><td>20%</td><td>35 min</td><td>18 min</td></tr>
+          <tr><td>7</td><td class="name">Transferencia y cierre</td><td>17%</td><td>30 min</td><td>14 min</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td></td><td class="name">Total</td><td>100%</td><td>180 min</td><td>90 min</td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">03</span><h2>Los siete pasos</h2></div>
+    <p class="prose">El orden es obligatorio: cada paso produce la materia prima del siguiente. La <em>puerta</em> de cada paso es lo único que autoriza avanzar.</p>
+
+    <div class="steps">
+
+      <article class="step">
+        <div class="rail"><span class="n">1</span><span class="pc">7%</span><span class="min">15 min / 180</span></div>
+        <div class="body">
+          <h2>Desafío</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Que el grupo sepa, en minutos, qué van a producir, contra qué meta numérica y cómo se mide. Nada más.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Enuncia el reto en una frase con número y tiempo —«ensamblar 10 cilindros en 10 minutos»—, muestra el producto terminado, asigna roles y estaciones, y escribe la meta en el tablero. <em>No define conceptos ni anticipa la respuesta.</em></dd></div>
+            <div class="field"><dt>Participante</dt><dd>Toma su rol, revisa su estación y su kit, y escribe en su guía la meta y su predicción: ¿la vamos a cumplir? Sí o no, y por qué.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Meta escrita y visible, todos con rol asignado y la predicción individual registrada.</p></div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="rail"><span class="n">2</span><span class="pc">20%</span><span class="min">35 min / 180</span></div>
+        <div class="body">
+          <h2>Corrida 1</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Producir el resultado real sin ayuda. Los datos de esta corrida son la materia prima de todo el taller.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Da un tiempo corto de familiarización con el objeto, arranca el cronómetro y mide: tiempo total, unidades conformes, defectos y tiempo por estación. Observa dónde se acumula el trabajo. <em>No corrige, no sugiere, no rescata.</em></dd></div>
+            <div class="field"><dt>Participante</dt><dd>Ejecuta su rol, completa el ciclo y registra su propio tiempo y sus unidades.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Tablero con los datos de la Corrida 1: tiempo total, unidades conformes, defectos y cuello de botella observado. Sin datos no se avanza.</p></div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="rail"><span class="n">3</span><span class="pc">13%</span><span class="min">25 min / 180</span></div>
+        <div class="body">
+          <h2>Evidencia</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Que el grupo explique con sus propios datos qué pasó, antes de recibir ningún concepto.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Pregunta, no responde. Tres preguntas fijas: ¿qué resultado dio?, ¿dónde se detuvo el flujo?, ¿por qué? Modera y exige que cada afirmación se sustente en un dato del tablero.</dd></div>
+            <div class="field"><dt>Participante</dt><dd>Escribe primero su conclusión individual, en silencio. Después el equipo consolida y expone: un cuello de botella y dos causas.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Cada equipo con su cuello de botella y sus causas escritas y expuestas, y al menos una discrepancia entre equipos puesta sobre la mesa.</p></div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="rail"><span class="n">4</span><span class="pc">10%</span><span class="min">15 min / 180</span></div>
+        <div class="body">
+          <h2>Concepto</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Entregar el lenguaje técnico que nombra lo que ya vivieron. Máximo tres conceptos.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Expone máximo tres conceptos y ancla cada uno a un dato de la Corrida 1 del propio grupo: «esto que midieron aquí se llama capacidad efectiva». Nunca más del 10% del tiempo total.</dd></div>
+            <div class="field"><dt>Participante</dt><dd>Toma nota y reescribe su hallazgo del paso anterior usando los términos correctos.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Cada equipo reescribió su hallazgo con el vocabulario técnico. Si un concepto no se puede anclar a un dato del ejercicio, sobra: se elimina del taller.</p></div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="rail"><span class="n">5</span><span class="pc">13%</span><span class="min">25 min / 180</span></div>
+        <div class="body">
+          <h2>Rediseño</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Convertir el diagnóstico en decisiones concretas y en una meta comprometida para la Corrida 2.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Fija la restricción o la variación: más volumen, mezcla de referencias, menos personal, menos visibilidad, cliente nuevo. Exige máximo tres cambios y una meta numérica comprometida. <em>Ningún cambio sin responsable.</em></dd></div>
+            <div class="field"><dt>Participante</dt><dd>Decide en equipo tres cambios —qué, quién, dónde—, los escribe y compromete la meta numérica de la Corrida 2.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Plan de tres cambios con responsable y meta numérica escrita en el tablero <em>antes</em> de correr.</p></div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="rail"><span class="n">6</span><span class="pc">20%</span><span class="min">35 min / 180</span></div>
+        <div class="body">
+          <h2>Corrida 2</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Probar el rediseño con la misma medición. Aquí se genera el delta, que es el resultado del taller.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Corre el ejercicio con las mismas reglas de medición del paso 2 y calcula el delta en el tablero: antes → después → % de mejora. No cambia la métrica a mitad de camino.</dd></div>
+            <div class="field"><dt>Participante</dt><dd>Ejecuta el rediseño, mide y traduce el impacto a sus términos: tiempo, unidades, costo, utilidad.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Delta medido y escrito. Si es nulo o negativo, se analiza por qué: también es un resultado válido, pero debe quedar explicado.</p></div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="rail"><span class="n">7</span><span class="pc">17%</span><span class="min">30 min / 180</span></div>
+        <div class="body">
+          <h2>Transferencia y cierre</h2>
+          <dl class="fields">
+            <div class="field"><dt>Objetivo</dt><dd>Sacar el aprendizaje del taller y meterlo en el trabajo real del participante.</dd></div>
+            <div class="field"><dt>Tallerista</dt><dd>Hace una sola pregunta de transferencia: «¿dónde está este mismo problema en tu empresa o tu proceso, y qué vas a medir el lunes?». Recoge las guías y la encuesta, y cierra recordando el delta logrado.</dd></div>
+            <div class="field"><dt>Participante</dt><dd>Escribe una aplicación concreta a su contexto real, con métrica y fecha, y la dice en voz alta.</dd></div>
+          </dl>
+          <div class="gate"><span class="tag">Para avanzar</span><p>Guía diligenciada, un compromiso por participante con métrica y fecha, y encuesta entregada. Taller cerrado.</p></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">04</span><h2>Checklist mínimo</h2></div>
+    <div class="phases">
+
+      <div class="phase">
+        <h3>Antes del taller</h3>
+        <span class="when">Preparación · no se dicta sin esto</span>
+        <ul>
+          <li>Resultado observable en una frase: «al terminar, el participante será capaz de ___».</li>
+          <li>Reto con número y tiempo, y meta de la Corrida 1 definida.</li>
+          <li>Una métrica principal y su instrumento de medición.</li>
+          <li>Máximo tres conceptos, cada uno anclado a un dato que el ejercicio sí produce.</li>
+          <li>Variación o restricción de la Corrida 2 definida.</li>
+          <li>Objeto de práctica y kits completos, contados y con repuestos.</li>
+          <li>Estaciones montadas, roles impresos, tablero y cronómetros listos.</li>
+          <li>Guía del participante impresa, una por persona.</li>
+          <li><strong>El tallerista corrió el ejercicio completo al menos una vez</strong> y conoce el tiempo objetivo real.</li>
+          <li>Mínimo y máximo de participantes, y qué hacer si sobran o faltan personas.</li>
+          <li>Riesgos revisados y elementos de protección disponibles.</li>
+          <li>Los siete bloques con hora de inicio y de fin escritos.</li>
+        </ul>
+      </div>
+
+      <div class="phase during">
+        <h3>Durante el taller</h3>
+        <span class="when">Reglas que todo tallerista cumple</span>
+        <ul>
+          <li><strong>No se explica antes de que hagan.</strong> El concepto llega en el paso 4, nunca antes.</li>
+          <li><strong>Toda corrida se mide y el dato se escribe visible.</strong> Sin dato no hay paso siguiente.</li>
+          <li><strong>El tallerista pregunta; no resuelve.</strong> Si el equipo se traba, se le devuelve una pregunta, no una solución.</li>
+          <li><strong>La Corrida 1 puede fracasar y no se rescata.</strong> El fracaso medido es el contenido.</li>
+          <li><strong>Nadie observa sin rol.</strong> Todos hacen.</li>
+          <li><strong>Cada participante escribe su conclusión antes del debate en equipo.</strong></li>
+          <li><strong>La exposición no supera el 10% del tiempo.</strong> Si hay que recortar, se recorta teoría.</li>
+          <li><strong>Los tiempos de cada bloque se respetan</strong> a la vista de todos.</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <h3>Después del taller</h3>
+        <span class="when">Qué debe quedar terminado</span>
+        <ul>
+          <li>Registro de datos por equipo: Corrida 1, Corrida 2 y delta, con foto del tablero.</li>
+          <li>Guías diligenciadas, recogidas o fotografiadas.</li>
+          <li>Compromisos de transferencia consolidados, uno por participante.</li>
+          <li>Encuesta tabulada: «¿el ejercicio explicó el concepto?» (1–5) y «¿qué sobró o faltó?» (abierta).</li>
+          <li>Ficha del taller actualizada a nueva versión: tiempo real contra tiempo planeado por bloque, y qué se cambia la próxima vez.</li>
+          <li>Kit repuesto, contado y guardado.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">05</span><h2>Ficha de diseño de taller</h2></div>
+    <p class="prose">Una página. Se llena antes de dictar y se versiona después de cada ejecución. Es lo único que cambia entre un taller y otro.</p>
+    <div class="form" style="margin-top:1.4rem">
+      <div class="form-head"><strong>Ficha de diseño · Método Delta</strong><span>Imprimir y llenar a mano</span></div>
+<pre><b>TEMA:</b> ______________________  <b>CÓDIGO:</b> ______  <b>VERSIÓN:</b> ____  <b>FECHA:</b> ________
+<b>DURACIÓN:</b> ______ min          <b>PARTICIPANTES:</b> mín ____ / máx ____
+
+<b>RESULTADO OBSERVABLE</b>
+Al terminar, el participante será capaz de: _______________________________
+
+<b>RETO</b>  · paso 1
+Producir ______________ en ______________ con ____ personas.
+Meta declarada: ______________
+
+<b>EJERCICIO</b>
+Objeto de práctica: _______________________________________________________
+Estaciones: ____   Roles: _________________________________________________
+Materiales y kit: _________________________________________________________
+
+<b>MEDICIÓN</b>
+Métrica principal: ______________   Instrumento: ______________
+También se registra:  defectos ___  tiempo por estación ___  otro: ________
+
+<b>CONCEPTOS</b>  · paso 4 — máximo 3, cada uno anclado a un dato del ejercicio
+1. ______________________ → se evidencia en: ______________________
+2. ______________________ → se evidencia en: ______________________
+3. ______________________ → se evidencia en: ______________________
+
+<b>PREGUNTAS DE EVIDENCIA</b>  · paso 3
+Fijas:  1. ¿Qué resultado dio?   2. ¿Dónde se detuvo el flujo?   3. ¿Por qué?
+Propia del tema: __________________________________________________________
+
+<b>VARIACIÓN DE LA CORRIDA 2</b>  · paso 5
+Restricción o cambio de escenario: ________________________________________
+Delta esperado: ______ %
+
+<b>PREGUNTA DE TRANSFERENCIA</b>  · paso 7
+___________________________________________________________________________
+
+<b>ENTREGABLE DEL PARTICIPANTE</b>
+___________________________________________________________________________
+
+<b>TIEMPOS</b>
+Desafío 7% ____ | Corrida 1 20% ____ | Evidencia 13% ____ | Concepto 10% ____
+Rediseño 13% ____ | Corrida 2 20% ____ | Cierre 17% ____
+
+<b>CRITERIO DE ÉXITO</b>
+[ ] Delta medido y escrito en el tablero
+[ ] Cada participante con un compromiso con métrica y fecha
+[ ] Encuesta ≥ 4 de 5 en «el ejercicio explicó el concepto»</pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="num">06</span><h2>Cómo se usa</h2></div>
+    <div class="flow">
+      <span class="node">Tema</span><span class="arrow">→</span>
+      <span class="node">Ficha de diseño</span><span class="arrow">→</span>
+      <span class="node">Los 7 pasos</span><span class="arrow">→</span>
+      <span class="node end">Taller estandarizado</span>
+    </div>
+    <p class="prose" style="margin-top:1.2rem">El tallerista no diseña la experiencia: llena la ficha y ejecuta los siete pasos.</p>
+    <div class="close">
+      <p><b>El método pasa la prueba con dos condiciones:</b> que ningún taller se dicte sin la ficha llena y ensayada, y que ningún taller se cierre sin el delta escrito en el tablero. Sin esas dos, el método se vuelve una recomendación y vuelve la improvisación.</p>
+    </div>
+    <p class="src">Construido sobre el contexto de la Fábrica de Aprendizaje: guías LF001-CP (Capacidad de Producción) y LF002-DT (Diseño del Trabajo y Métodos de Trabajo), y la metodología de diseño y desarrollo de guías de docencia y práctica. Dos correcciones frente al modelo de ocho momentos: la exposición teórica pasa a después de la práctica, y la validación deja de ser opcional.</p>
+  </section>
+
+</div>
