@@ -1,0 +1,681 @@
+<title>Gemelo del Taller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F7F6F3; --ink:#191817; --muted:#6E6A64; --faint:#9A958D;
+    --rule:#E2DFD8; --accent:#C9431C; --accent-soft:#F6E7E0; --card:#FFFFFF;
+    --floor:#17161A; --floor-2:#201E24; --floor-line:#33303A; --floor-ink:#EDEAE4; --floor-dim:#75707C;
+    --ok:#2E7D5B; --ok-soft:#E0EFE8;
+    --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+    --serif:"Instrument Serif",Georgia,serif;
+    --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#131211; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F;
+    --rule:#2D2A26; --accent:#FF7A4F; --accent-soft:#2A1A13; --card:#1B1917;
+    --floor:#0D0C10; --floor-2:#17161B; --floor-line:#2A2830; --floor-ink:#EDEAE4; --floor-dim:#6E6A76;
+    --ok:#5FBF95; --ok-soft:#12271F;
+  }}
+  :root[data-theme="dark"]{
+    --paper:#131211; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F;
+    --rule:#2D2A26; --accent:#FF7A4F; --accent-soft:#2A1A13; --card:#1B1917;
+    --floor:#0D0C10; --floor-2:#17161B; --floor-line:#2A2830; --floor-ink:#EDEAE4; --floor-dim:#6E6A76;
+    --ok:#5FBF95; --ok-soft:#12271F;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:clamp(1rem,.96rem + .22vw,1.1rem);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:52rem;margin:0 auto;padding:clamp(1.6rem,4vw,3rem) clamp(1rem,4vw,2rem) 5rem}
+  p{margin:0}
+  button{font-family:inherit;font-size:inherit;cursor:pointer}
+  [hidden]{display:none!important}
+
+  /* ── hero ── */
+  .hero .eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  h1{font-weight:700;letter-spacing:-.035em;line-height:1.02;margin:.7rem 0 0;
+     font-size:clamp(2.2rem,1.7rem + 2.6vw,3.4rem);text-wrap:balance}
+  .hero .say{font-family:var(--serif);font-size:clamp(1.2rem,1.05rem + .8vw,1.65rem);
+    line-height:1.28;margin-top:1rem;max-width:30ch;color:var(--muted)}
+  .hero .say b{color:var(--ink);font-weight:400}
+
+  /* ── reloj / timeline ── */
+  .clockbar{margin-top:2.2rem;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+    padding:1rem 0;position:sticky;top:0;background:var(--paper);z-index:5}
+  .tl{display:flex;gap:2px;height:.72rem}
+  .tl div{background:var(--rule);border-radius:1px;transition:background .4s ease}
+  .tl div.done{background:var(--faint)}
+  .tl div.now{background:var(--accent)}
+  .tlmeta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+    margin-top:.6rem;font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.02em}
+  .tlmeta b{color:var(--ink);font-weight:700}
+
+  /* ── escena ── */
+  .stage{margin-top:1.8rem;min-height:16rem}
+  .beat{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .mno{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--accent);letter-spacing:.04em}
+  .mtitle{font-weight:700;font-size:clamp(1.3rem,1.15rem + .6vw,1.7rem);letter-spacing:-.025em;margin:.3rem 0 .8rem}
+  .mtext{color:var(--muted);max-width:42rem}
+  .mtext + .mtext{margin-top:.75rem}
+  .mtext b{color:var(--ink);font-weight:600}
+
+  .quote{margin-top:1.3rem;background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--accent);
+    padding:1.15rem 1.3rem;max-width:38rem;font-size:1.05rem;line-height:1.55}
+  .quote .tag{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:.55rem}
+
+  .go{margin-top:1.9rem;display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:2px;padding:.72rem 1.4rem;
+    font-weight:600;letter-spacing:.01em;transition:transform .12s ease,filter .2s ease}
+  .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;filter:none;transform:none}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--rule)}
+  .btn.ghost:hover{color:var(--ink);border-color:var(--faint);filter:none}
+  .btn:focus-visible,.op b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ── planta ── */
+  .plant{margin-top:1.5rem;background:var(--floor);border-radius:4px;padding:1.2rem 1.1rem 1.3rem;
+    color:var(--floor-ink);overflow-x:auto}
+  .plant-hd{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;align-items:baseline;
+    font-family:var(--mono);font-size:.72rem;color:var(--floor-dim);letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:1.1rem}
+  .plant-hd b{color:var(--floor-ink);font-weight:700;font-size:1.05rem;letter-spacing:0;
+    font-variant-numeric:tabular-nums}
+  .plant-hd .sep{margin-left:auto}
+  .line{display:flex;align-items:stretch;gap:.4rem;min-width:34rem}
+  .stn{flex:1;background:var(--floor-2);border:1px solid var(--floor-line);border-radius:3px;
+    padding:.6rem .6rem .55rem;display:flex;flex-direction:column;gap:.5rem;position:relative;
+    transition:border-color .25s ease,box-shadow .25s ease}
+  .stn.work{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset,0 0 18px -6px var(--accent)}
+  .stn.block{border-color:var(--floor-dim);border-style:dashed}
+  .queue{display:flex;flex-wrap:wrap-reverse;gap:2px;min-height:1.15rem;align-content:flex-end}
+  .queue i{display:block;width:.42rem;height:.42rem;background:var(--floor-line);border-radius:1px;
+    transition:background .18s ease,transform .18s ease}
+  .queue i.on{background:var(--accent);transform:scale(1.12)}
+  .sname{font-size:.78rem;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+  .scyc{font-family:var(--mono);font-size:.68rem;color:var(--floor-dim);letter-spacing:.03em}
+  .ops{display:flex;gap:.2rem;flex-wrap:wrap}
+  .ops i{width:.5rem;height:.5rem;border-radius:50%;background:var(--floor-dim);transition:background .25s ease}
+  .stn.work .ops i{background:var(--accent)}
+  .bar{height:3px;background:var(--floor-line);border-radius:2px;overflow:hidden}
+  .bar span{display:block;height:100%;width:0;background:var(--accent)}
+  .smeta{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem;margin-top:.15rem}
+  .stt{font-family:var(--mono);font-size:.56rem;letter-spacing:.09em;color:var(--floor-dim);
+    text-transform:uppercase;white-space:nowrap}
+  .stn.block .stt{color:var(--accent)}
+  .out{flex:0 0 5.2rem;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    gap:.15rem;border-left:1px dashed var(--floor-line);padding-left:.7rem}
+  .out b{font-family:var(--mono);font-size:1.75rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .out span{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--floor-dim)}
+
+  /* ── asignación ── */
+  .assign{margin-top:1.4rem;display:grid;gap:.55rem;max-width:38rem}
+  .op{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center;
+    background:var(--card);border:1px solid var(--rule);padding:.6rem .8rem;border-radius:2px}
+  .op .n{font-weight:600;font-size:.95rem}
+  .op .n em{font-style:normal;font-family:var(--mono);font-size:.76rem;color:var(--muted);margin-left:.5rem}
+  .op .ctl{display:flex;align-items:center;gap:.55rem}
+  .op b{width:1.9rem;height:1.9rem;border:1px solid var(--rule);background:transparent;color:var(--ink);
+    border-radius:2px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;user-select:none;font-size:1.05rem;transition:all .15s ease}
+  .op b:hover{border-color:var(--accent);color:var(--accent)}
+  .op b[aria-disabled="true"]{opacity:.3;pointer-events:none}
+  .op .v{font-family:var(--mono);font-weight:700;min-width:1.2rem;text-align:center;font-variant-numeric:tabular-nums}
+  .pool{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-top:.3rem}
+  .pool b{color:var(--accent);font-weight:700}
+
+  /* ── resultados ── */
+  .verdict{margin-top:1.4rem;border:1px solid var(--rule);background:var(--card);padding:1.2rem 1.3rem;max-width:42rem}
+  .verdict .big{font-family:var(--mono);font-size:2.1rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .verdict .lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .verdict .row{display:flex;flex-wrap:wrap;gap:1.6rem;align-items:flex-end;margin-bottom:.9rem}
+  .verdict.fail{border-left:3px solid var(--accent)}
+  .verdict.pass{border-left:3px solid var(--ok)}
+  .verdict.pass .big{color:var(--ok)}
+  .verdict p{color:var(--muted);font-size:.97rem}
+  .verdict p b{color:var(--ink);font-weight:600}
+
+  table.tel{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.9rem;min-width:26rem}
+  table.tel th{font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+    text-align:left;font-weight:600;padding:0 .8rem .45rem 0;border-bottom:1px solid var(--rule)}
+  table.tel th.r,table.tel td.r{text-align:right;padding-right:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  table.tel td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);padding-left:0}
+  table.tel th:last-child,table.tel td:last-child{width:6rem;padding-right:0}
+  table.tel tr.bn td{color:var(--accent);font-weight:700}
+  .idle{display:inline-block;height:.5rem;background:var(--accent);opacity:.35;border-radius:1px;vertical-align:middle;
+    transition:width .8s cubic-bezier(.2,.7,.3,1)}
+  .scroll{overflow-x:auto}
+
+  .delta{display:grid;gap:.6rem;margin-top:1.3rem;max-width:34rem}
+  .dbar{display:grid;grid-template-columns:5.2rem 1fr auto;gap:.8rem;align-items:center;font-size:.9rem}
+  .dbar .t{color:var(--muted);font-family:var(--mono);font-size:.78rem}
+  .dbar .track{height:1.3rem;background:var(--rule);border-radius:2px;overflow:hidden}
+  .dbar .track span{display:block;height:100%;width:0;background:var(--faint);
+    transition:width 1.1s cubic-bezier(.2,.7,.3,1)}
+  .dbar.two .track span{background:var(--accent)}
+  .dbar .v{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
+
+  /* ── tarjeta final ── */
+  .keep{margin-top:1.6rem;background:var(--card);border:1px solid var(--rule);padding:1.5rem 1.6rem;max-width:34rem}
+  .keep .kh{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+    border-bottom:1px solid var(--rule);padding-bottom:.7rem;margin-bottom:1.1rem}
+  .keep .kh b{font-weight:700;font-size:1.1rem;letter-spacing:-.02em}
+  .keep .kh span{font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+  .keep .f{margin-bottom:1rem}
+  .keep .f > span{display:block;font-family:var(--mono);font-size:.63rem;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
+  .keep .w{border-bottom:1px dashed var(--rule);padding-bottom:.3rem;font-size:.97rem;min-height:1.5rem}
+  textarea{width:100%;font-family:inherit;font-size:.97rem;color:var(--ink);background:transparent;
+    border:0;border-bottom:1px dashed var(--rule);padding:.3rem 0;resize:vertical;min-height:2.6rem;line-height:1.5}
+  textarea:focus{outline:0;border-bottom-color:var(--accent)}
+  .ai{margin-top:.9rem;font-size:.92rem;line-height:1.5;color:var(--muted);
+    background:var(--accent-soft);border-radius:2px;padding:.75rem .9rem}
+  .ai b{color:var(--ink);font-weight:600}
+
+  footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--rule);
+    color:var(--faint);font-size:.87rem;line-height:1.6}
+  footer a{color:var(--muted)}
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+  @media(max-width:560px){
+    .clockbar{position:static}
+    .op{grid-template-columns:1fr;gap:.5rem}
+    .op .ctl{justify-content:flex-start}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Fábrica de Aprendizaje · Gemelo digital</p>
+    <h1>El taller, en cinco minutos</h1>
+    <p class="say">Tres horas de planta, comprimidas. Va a recibir la misma instrucción
+      incompleta que reciben ellos, <b>va a fallar la meta</b>, va a ver los datos, y va a
+      volver a correr la línea.</p>
+  </header>
+
+  <div class="clockbar">
+    <div class="tl" id="tl" role="img" aria-label="Línea de tiempo del taller, 180 minutos en diez momentos"></div>
+    <div class="tlmeta">
+      <span id="tlnow">Sin arrancar</span>
+      <span><b id="tlmin">0</b> / 180 min</span>
+    </div>
+  </div>
+
+  <main class="stage" id="stage"></main>
+
+  <footer>
+    Simulación de una línea de cinco estaciones en serie, con capacidad de amortiguación de 8
+    unidades entre estaciones. Los tiempos de ciclo, el bloqueo por cola llena y la capacidad
+    ociosa se calculan, no se guionizan. Construido sobre el método de los ocho momentos de la
+    Fábrica de Aprendizaje.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ════════ modelo de la línea ════════ */
+  const ST = [
+    {id:"E1", n:"Preparar base",      w:18},
+    {id:"E2", n:"Tornillería",        w:42},
+    {id:"E3", n:"Montar cubierta",    w:25},
+    {id:"E4", n:"Ajuste con herramienta", w:30},
+    {id:"E5", n:"Calidad y empaque",  w:15}
+  ];
+  const POOL = 7, CAP = 8, DUR = 1500, META = 45;   // 7 operarios · cola 8 · 25 min · meta 45
+
+  function nuevoSim(ops){
+    return { ops: ops.slice(), out:0, clock:0, raw:400,
+      st: ST.map(()=>({hold:false,done:false,t:0,buf:0,busy:0,wait:0,block:0})) };
+  }
+  function tick(s, dt){
+    s.clock += dt;
+    for(let i=ST.length-1;i>=0;i--){
+      const e = s.st[i], cyc = ST[i].w / s.ops[i];
+      if(e.done){
+        if(i===ST.length-1){ s.out++; e.done=false; }
+        else if(s.st[i+1].buf < CAP){ s.st[i+1].buf++; e.done=false; }
+        else { e.block += dt; continue; }
+      }
+      if(!e.hold){
+        if(i===0){ if(s.raw>0){ s.raw--; e.hold=true; e.t=0; } }
+        else if(e.buf>0){ e.buf--; e.hold=true; e.t=0; }
+      }
+      if(e.hold){
+        e.t += dt; e.busy += dt;
+        if(e.t >= cyc){
+          e.hold=false; e.t=0;
+          if(i===ST.length-1) s.out++;
+          else if(s.st[i+1].buf < CAP) s.st[i+1].buf++;
+          else e.done=true;
+        }
+      } else if(!e.done){ e.wait += dt; }
+    }
+  }
+  function telemetria(ops){
+    const cyc = ST.map((e,i)=> e.w/ops[i]);
+    const bn  = cyc.indexOf(Math.max.apply(null,cyc));
+    return {cyc, bn, ocio: cyc.map(c=> Math.round(100*(1-c/cyc[bn]))) };
+  }
+
+  /* ════════ estado ════════ */
+  const S = {
+    paso: 0,
+    ops1: [2,1,1,2,1],
+    ops2: [2,1,1,2,1],
+    r1: null, r2: null,
+    accion: ""
+  };
+
+  const MOM = [
+    {n:"00", t:"Bienvenida",        min:10},
+    {n:"01", t:"Conectar",          min:10},
+    {n:"02", t:"Prestar atención",  min:10},
+    {n:"03", t:"Imagen",            min:15},
+    {n:"04", t:"Informar",          min:15},
+    {n:"05", t:"Practicar",         min:45},
+    {n:"06", t:"Extender",          min:15},
+    {n:"07", t:"Refinar",           min:10},
+    {n:"08", t:"Ejecutar",          min:40},
+    {n:"09", t:"Cierre",            min:10}
+  ];
+
+  const $ = s => document.querySelector(s);
+  const tl = $("#tl"), stage = $("#stage");
+
+  MOM.forEach(m => { const d=document.createElement("div"); d.style.flex = m.min; tl.appendChild(d); });
+
+  function pintarReloj(){
+    const idx = S.paso - 1;
+    [].forEach.call(tl.children, (d,i)=>{
+      d.className = i < idx ? "done" : (i === idx ? "now" : "");
+    });
+    if(idx < 0){ $("#tlnow").textContent = "Sin arrancar"; $("#tlmin").textContent = "0"; return; }
+    const m = MOM[idx];
+    $("#tlnow").textContent = m.n + " · " + m.t.toUpperCase();
+    let acum = 0; for(let i=0;i<idx;i++) acum += MOM[i].min;
+    animarNum($("#tlmin"), parseInt($("#tlmin").textContent,10)||0, acum + m.min, 500);
+  }
+
+  function animarNum(el, de, a, ms){
+    const t0 = performance.now();
+    (function f(t){
+      const k = Math.min(1,(t-t0)/ms), e = 1-Math.pow(1-k,3);
+      el.textContent = Math.round(de + (a-de)*e);
+      if(k<1) requestAnimationFrame(f);
+    })(t0);
+  }
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+  function cabecera(i, extra){
+    const m = MOM[i];
+    return '<p class="mno">MOMENTO '+m.n+' · '+m.min+' MIN</p><h2 class="mtitle">'+m.t+(extra||"")+'</h2>';
+  }
+
+  function avanzar(txt){
+    return '<div class="go"><button class="btn" data-go>'+(txt||"Continuar")+'</button></div>';
+  }
+
+  /* ════════ guiones ════════ */
+  const RELATO = {
+    1:{h:"", p:["Entran a la planta. No es un salón: hay estaciones, herramienta y producto real.",
+                "Se arman los equipos y se dicen las reglas. <b>Aquí nadie observa: todos tienen un rol.</b>"]},
+    2:{h:"", p:["Ven un video de una planta funcionando. Anotan materiales, operaciones, procesos y secuencias.",
+                "Nadie les ha explicado nada todavía."]},
+    3:{h:"", p:["El tallerista pregunta. No explica.",
+                "Lo que ellos contestan queda escrito en el tablero <b>con las palabras de ellos</b>, sin corregir."],
+       q:{tag:"Lo que se oye en la sala", txt:"«¿Qué saben ustedes de esto? ¿Cómo lo han visto en su día a día, o en su empresa?»"}},
+    4:{h:"", p:["Dibujan el concepto en equipo. Sin textos y sin números. Lo presentan y lo sustentan.",
+                "Nadie ha dicho todavía la palabra <b>cuello de botella</b>."]},
+    8:{h:"", p:["Escriben los cuellos de botella que <b>ellos</b> vivieron, no los que se imaginan.",
+                "Intercambian la guía con un compañero y le proponen tres mejoras a las suyas.",
+                "«Mejorar la comunicación» se devuelve: qué, quién, dónde."]}
+  };
+
+  /* ════════ render por paso ════════ */
+  function render(){
+    pintarReloj();
+    const p = S.paso;
+    if(p === 0)  return pintarIntro();
+    if(RELATO[p]) return pintarRelato(p);
+    if(p === 5)  return pintarInformar();
+    if(p === 6)  return pintarPracticar();
+    if(p === 7)  return pintarExtender();
+    if(p === 9)  return pintarEjecutar();
+    if(p === 10) return pintarCierre();
+  }
+
+  function poner(html){
+    stage.innerHTML = '<div class="beat">'+html+'</div>';
+    const b = stage.querySelector("[data-go]");
+    if(b) b.addEventListener("click", ()=>{ S.paso++; render(); window.scrollTo({top:0,behavior:"smooth"}); });
+  }
+
+  function pintarIntro(){
+    poner('<p class="mtext">La línea tiene <b>cinco estaciones en serie</b> y usted tiene '
+      + '<b>siete operarios</b> para repartir entre ellas. La meta son <b>'+META+' unidades en 25 minutos</b>.</p>'
+      + '<p class="mtext">Como en el taller real, va a tener que decidir <b>sin saber cuánto tarda cada estación</b>. '
+      + 'Esa es toda la gracia.</p>'
+      + avanzar("Entrar a la planta"));
+  }
+
+  function pintarRelato(i){
+    const r = RELATO[i];
+    let h = cabecera(i-1) + r.p.map(x=>'<p class="mtext">'+x+'</p>').join("");
+    if(r.q) h += '<div class="quote"><span class="tag">'+r.q.tag+'</span>'+r.q.txt+'</div>';
+    poner(h + avanzar());
+  }
+
+  function pintarInformar(){
+    poner(cabecera(4)
+      + '<p class="mtext">Aquí sí les explican. <b>Por encima, y a propósito.</b> Reciben esto y nada más:</p>'
+      + '<div class="quote"><span class="tag">La instrucción completa que reciben</span>'
+      + '«Van a ensamblar el producto en cinco estaciones. Tienen siete personas y veinticinco '
+      + 'minutos. La meta son '+META+' unidades. Organícense.»</div>'
+      + '<p class="mtext">No les dicen cuánto tarda cada estación. No les dicen cómo repartirse. '
+      + 'A partir de aquí, usted es el equipo.</p>'
+      + avanzar("Organizar el equipo"));
+  }
+
+  /* ─── momento 5 · practicar ─── */
+  function pintarPracticar(){
+    poner(cabecera(5, " · primera corrida")
+      + '<p class="mtext">Reparta los siete operarios. Mínimo uno por estación.</p>'
+      + bloqueAsignacion(1)
+      + planta(1)
+      + '<div class="go"><button class="btn" id="run1">Arrancar la corrida</button>'
+      + '<button class="btn ghost" data-go id="skip1" hidden>Ver qué pasó</button></div>');
+    montarAsignacion(1);
+    dibujarPlanta(nuevoSim(S.ops1), false);
+    $("#run1").addEventListener("click", ()=> correr(1));
+  }
+
+  function bloqueAsignacion(fase){
+    const ops = fase===1 ? S.ops1 : S.ops2;
+    const rev = fase===2;
+    const tel = rev ? telemetria(ops) : null;
+    let h = '<div class="assign" id="asg">';
+    ST.forEach((e,i)=>{
+      h += '<div class="op"><div class="n">'+e.n
+        + (rev ? '<em>'+e.w+'s de trabajo</em>' : '<em>tiempo desconocido</em>')
+        + '</div><div class="ctl">'
+        + '<b role="button" tabindex="0" data-d="-1" data-i="'+i+'" aria-label="Quitar operario de '+esc(e.n)+'">−</b>'
+        + '<span class="v" data-v="'+i+'">'+ops[i]+'</span>'
+        + '<b role="button" tabindex="0" data-d="1" data-i="'+i+'" aria-label="Agregar operario a '+esc(e.n)+'">+</b>'
+        + '</div></div>';
+    });
+    h += '</div><p class="pool">Sin asignar: <b id="pool">0</b> de '+POOL+' operarios</p>';
+    return h;
+  }
+
+  function montarAsignacion(fase){
+    const ops = ()=> fase===1 ? S.ops1 : S.ops2;
+    function sync(){
+      const o = ops(), usados = o.reduce((a,b)=>a+b,0);
+      o.forEach((v,i)=> stage.querySelector('[data-v="'+i+'"]').textContent = v);
+      $("#pool").textContent = POOL - usados;
+      [].forEach.call(stage.querySelectorAll("#asg b"), b=>{
+        const i = +b.dataset.i, d = +b.dataset.d;
+        const bad = d>0 ? usados >= POOL : o[i] <= 1;
+        b.setAttribute("aria-disabled", bad ? "true" : "false");
+      });
+      dibujarPlanta(nuevoSim(o), fase===2);
+    }
+    function golpe(el){
+      const i = +el.dataset.i, d = +el.dataset.d, o = ops();
+      const usados = o.reduce((a,b)=>a+b,0);
+      if(d>0 && usados >= POOL) return;
+      if(d<0 && o[i] <= 1) return;
+      o[i] += d; sync();
+    }
+    [].forEach.call(stage.querySelectorAll("#asg b"), b=>{
+      b.addEventListener("click", ()=>golpe(b));
+      b.addEventListener("keydown", ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); golpe(b); }});
+    });
+    sync();
+  }
+
+  /* ─── planta ─── */
+  function planta(fase){
+    let h = '<div class="plant"><div class="plant-hd"><span>Corrida '+fase+'</span>'
+      + '<span class="sep">Reloj <b id="pclock">00:00</b></span>'
+      + '<span>Meta <b>'+META+'</b></span></div><div class="line" id="line"></div></div>';
+    return h;
+  }
+
+  function dibujarPlanta(sim, revelar){
+    const line = $("#line"); if(!line) return;
+    if(line.children.length !== ST.length + 1){
+      line.innerHTML = "";
+      ST.forEach((e,i)=>{
+        const d = document.createElement("div");
+        d.className = "stn"; d.dataset.i = i;
+        d.innerHTML = '<div class="queue"></div>'
+          + '<div><div class="sname">'+esc(e.n)+'</div>'
+          + '<div class="smeta"><span class="scyc"></span><span class="stt"></span></div></div>'
+          + '<div class="ops"></div><div class="bar"><span></span></div>';
+        line.appendChild(d);
+        const q = d.querySelector(".queue");
+        for(let k=0;k<CAP;k++) q.appendChild(document.createElement("i"));
+      });
+      const o = document.createElement("div");
+      o.className = "out"; o.innerHTML = '<b id="pout">0</b><span>unidades</span>';
+      line.appendChild(o);
+    }
+    ST.forEach((e,i)=>{
+      const d = line.children[i], e2 = sim.st[i];
+      const cyc = e.w / sim.ops[i];
+      d.querySelector(".scyc").textContent = revelar ? cyc.toFixed(1)+" s/u" : "· · ·";
+      const ops = d.querySelector(".ops");
+      if(ops.children.length !== sim.ops[i]){
+        ops.innerHTML = "";
+        for(let k=0;k<sim.ops[i];k++) ops.appendChild(document.createElement("i"));
+      }
+      const q = d.querySelector(".queue").children;
+      for(let k=0;k<CAP;k++) q[k].className = k < e2.buf ? "on" : "";
+      d.querySelector(".bar span").style.width = (e2.hold ? 100*e2.t/cyc : 0)+"%";
+      d.className = "stn" + (e2.hold ? " work" : "") + (e2.done ? " block" : "");
+      d.querySelector(".stt").textContent = e2.done ? "bloqueado" : (e2.hold ? "" : "espera");
+    });
+    const po = document.getElementById("pout"); if(po) po.textContent = sim.out;
+    const pc = document.getElementById("pclock");
+    if(pc){
+      const m = Math.floor(sim.clock/60), s = Math.floor(sim.clock%60);
+      pc.textContent = (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    }
+  }
+
+  function correr(fase){
+    const ops = (fase===1 ? S.ops1 : S.ops2).slice();
+    const sim = nuevoSim(ops);
+    const btn = $("#run"+fase); btn.disabled = true; btn.textContent = "Corriendo…";
+    [].forEach.call(stage.querySelectorAll("#asg b"), b=> b.setAttribute("aria-disabled","true"));
+    const REAL = 14;                 // segundos reales que dura la corrida en pantalla
+    const accel = DUR / REAL;        // 1500 s simulados / 14 s reales ≈ 107x
+    let last = performance.now(), acumulado = 0;
+    (function frame(now){
+      let dt = (now - last)/1000 * accel; last = now;
+      if(dt > 6) dt = 6;
+      const paso = 0.25;
+      acumulado += dt;
+      while(acumulado > 0 && sim.clock < DUR){
+        const d = Math.min(paso, acumulado, DUR - sim.clock);
+        tick(sim, d); acumulado -= d;
+      }
+      dibujarPlanta(sim, fase===2);
+      if(sim.clock < DUR) requestAnimationFrame(frame);
+      else terminar(fase, sim, ops);
+    })(last);
+  }
+
+  function terminar(fase, sim, ops){
+    const tel = telemetria(ops);
+    const res = {u:sim.out, ops:ops, tel:tel, sim:sim};
+    if(fase===1) S.r1 = res; else S.r2 = res;
+    const btn = $("#run"+fase); btn.hidden = true;
+    const sk = $("#skip"+fase); if(sk){ sk.hidden = false; sk.classList.remove("ghost"); sk.classList.add("btn"); }
+    const paso = document.createElement("div");
+    paso.className = "beat";
+    paso.innerHTML = veredicto(fase, res);
+    stage.querySelector(".beat").insertBefore(paso, $("#run"+fase).parentNode);
+    if(fase===2) animarDelta();
+  }
+
+  function veredicto(fase, r){
+    const ok = r.u >= META;
+    const bn = ST[r.tel.bn];
+    let h = '<div class="verdict '+(ok?"pass":"fail")+'"><div class="row">'
+      + '<div><div class="lbl">Producidas</div><div class="big">'+r.u+'</div></div>'
+      + '<div><div class="lbl">Meta</div><div class="big" style="color:var(--faint)">'+META+'</div></div>'
+      + '<div><div class="lbl">Cuello de botella</div><div class="big" style="font-size:1.15rem;color:var(--accent)">'
+      + esc(bn.n)+'</div></div></div>';
+    if(fase===1){
+      h += ok
+        ? '<p>Le alcanzó. Pasa poco, y casi siempre por suerte: usted no sabía los tiempos. '
+          + 'Mire ahora los datos y vuelva a decidir, esta vez sabiendo.</p>'
+        : '<p>No alcanzó. <b>Es lo que pasa en el taller real</b>, y no es un fracaso: es el material '
+          + 'del momento que sigue. Nadie podía decidir bien sin saber cuánto tarda cada estación.</p>';
+    } else {
+      const d = S.r1 ? r.u - S.r1.u : 0;
+      const pc = S.r1 && S.r1.u ? Math.round(100*d/S.r1.u) : 0;
+      h += '<p>' + (d>0
+        ? 'Subió <b>'+d+' unidades</b>, un <b>'+pc+'%</b> más que la primera corrida, con la misma gente y el mismo tiempo. '
+        : (d===0 ? 'Quedó igual que la primera corrida. ' : 'Bajó '+Math.abs(d)+' unidades frente a la primera. '))
+        + 'Lo único que cambió fue dónde estaba parada la gente.</p>';
+      h += '<div class="delta">'
+        + '<div class="dbar"><span class="t">Corrida 1</span><div class="track"><span data-w="'+(S.r1?S.r1.u:0)+'"></span></div><span class="v">'+(S.r1?S.r1.u:0)+'</span></div>'
+        + '<div class="dbar two"><span class="t">Corrida 2</span><div class="track"><span data-w="'+r.u+'"></span></div><span class="v">'+r.u+'</span></div>'
+        + '</div>';
+    }
+    h += '</div>';
+    return h;
+  }
+
+  function animarDelta(){
+    const max = Math.max(S.r1?S.r1.u:0, S.r2.u, META) * 1.05;
+    setTimeout(()=>{
+      [].forEach.call(stage.querySelectorAll(".dbar .track span"), s=>{
+        s.style.width = (100 * (+s.dataset.w) / max) + "%";
+      });
+    }, 80);
+  }
+
+  /* ─── momento 6 · extender ─── */
+  function pintarExtender(){
+    const r = S.r1, tel = r.tel, bn = tel.bn;
+    S.ops2 = r.ops.slice();
+    let filas = "";
+    const maxOcio = Math.max.apply(null, tel.ocio) || 1;
+    ST.forEach((e,i)=>{
+      filas += '<tr'+(i===bn?' class="bn"':'')+'><td>'+esc(e.n)+'</td>'
+        + '<td class="r">'+r.ops[i]+'</td>'
+        + '<td class="r">'+tel.cyc[i].toFixed(1)+'</td>'
+        + '<td class="r">'+tel.ocio[i]+'%</td>'
+        + '<td><i class="idle" data-w="'+Math.round(100*tel.ocio[i]/maxOcio)+'" style="width:0"></i></td></tr>';
+    });
+    poner(cabecera(6, " · las conclusiones y la segunda corrida")
+      + '<p class="mtext">Primero salen las conclusiones. La primera que tiene que salir no es sobre el tema: '
+      + '<b>es que no preguntaron cuánto tardaba cada estación.</b> Arrancaron a producir sin saberlo.</p>'
+      + '<p class="mtext">Y ahora sí, la información que corrige. Estos son los datos que su propia corrida produjo:</p>'
+      + '<div class="scroll"><table class="tel"><thead><tr><th>Estación</th><th class="r">Op.</th>'
+      + '<th class="r">Ciclo s/u</th><th class="r">Ocio</th><th>&nbsp;</th></tr></thead><tbody>'+filas+'</tbody></table></div>'
+      + '<p class="mtext" style="margin-top:1.1rem">La línea entera va al ritmo de <b>'+esc(ST[bn].n)+'</b>. '
+      + 'Todo lo demás espera. Reparta otra vez, ahora sabiendo.</p>'
+      + bloqueAsignacion(2)
+      + planta(2)
+      + '<div class="go"><button class="btn" id="run2">Correr otra vez</button>'
+      + '<button class="btn ghost" data-go id="skip2" hidden>Seguir</button></div>');
+    montarAsignacion(2);
+    dibujarPlanta(nuevoSim(S.ops2), true);
+    setTimeout(()=>{
+      [].forEach.call(stage.querySelectorAll(".idle"), el=> el.style.width = el.dataset.w + "%");
+    }, 120);
+    $("#run2").addEventListener("click", ()=> correr(2));
+  }
+
+  /* ─── momento 8 · ejecutar ─── */
+  function pintarEjecutar(){
+    const u = S.r2 ? S.r2.u : (S.r1 ? S.r1.u : 0);
+    const turnos = u ? Math.ceil(120/u) : 0;
+    poner(cabecera(8, " · la decisión")
+      + '<p class="mtext">Cambia el escenario. La gerencia no pregunta por conceptos: pregunta por un número.</p>'
+      + '<div class="quote"><span class="tag">El escenario</span>«Nos piden <b>120 unidades diarias</b>. '
+      + '¿Alcanzamos con la línea que acaban de correr, o hay que contratar?»</div>'
+      + '<p class="mtext" style="margin-top:1.2rem">Con la capacidad que usted logró —<b>'+u+' unidades cada 25 minutos</b>— '
+      + 'la respuesta sale sola: hacen falta <b>'+turnos+' corridas de 25 minutos</b>, es decir '
+      + '<b>'+(turnos*25)+' minutos</b> de línea al día, sin contar alistamiento ni paradas.</p>'
+      + '<p class="mtext">Ese es el entregable del momento 8: una recomendación con un número detrás. '
+      + 'No «hay que mejorar el proceso».</p>'
+      + avanzar("Cerrar el taller"));
+  }
+
+  /* ─── cierre ─── */
+  function pintarCierre(){
+    const r1 = S.r1, r2 = S.r2;
+    const bn1 = r1 ? ST[r1.tel.bn].n : "—";
+    poner(cabecera(9)
+      + '<p class="mtext">El tallerista señala el tablero: <b>empezaron en '+(r1?r1.u:0)+' y terminaron en '
+      + (r2?r2.u:0)+'</b>. Eso lo hicieron ellos, no él.</p>'
+      + '<p class="mtext">Y reparte la tarjeta. La llenan a mano y no se recoge.</p>'
+      + '<div class="keep"><div class="kh"><b>Lo que me llevo</b><span>Fábrica de Aprendizaje</span></div>'
+      + '<div class="f"><span>El reto</span><div class="w">Producir '+META+' unidades en 25 minutos con 7 operarios.</div>'
+      + '<div class="w" style="margin-top:.5rem">Empezamos en <b>'+(r1?r1.u:0)+'</b> · Terminamos en <b>'+(r2?r2.u:0)+'</b></div></div>'
+      + '<div class="f"><span>Lo que aprendí, y dónde lo vi con mis ojos</span>'
+      + '<div class="w">Cuello de botella — lo vi cuando la cola se apiló frente a <b>'+esc(bn1)+'</b></div>'
+      + '<div class="w" style="margin-top:.5rem">Capacidad ociosa — lo vi cuando <b>había operarios parados esperando</b></div>'
+      + '<div class="w" style="margin-top:.5rem">La mejora se mide — lo vi cuando <b>los mismos 7 operarios dieron otro número</b></div></div>'
+      + '<div class="f"><span>Lo que voy a hacer con esto</span>'
+      + '<textarea id="acc" rows="2" placeholder="Una acción concreta, cómo la va a medir y para cuándo."></textarea></div>'
+      + '<div id="aiwrap" hidden><button class="btn ghost" id="aibtn" style="font-size:.88rem;padding:.5rem 1rem">Revisar mi compromiso</button><div class="ai" id="aiout" hidden></div></div>'
+      + '</div>'
+      + '<p class="mtext" style="margin-top:1.6rem">Eso es el taller. Tres horas, y el único momento en que '
+      + 'alguien expuso teoría duró quince minutos —y llegó <b>después</b> de que ustedes fallaran.</p>'
+      + '<div class="go"><button class="btn ghost" id="otra">Volver a empezar</button></div>');
+    $("#otra").addEventListener("click", ()=>{
+      S.paso = 0; S.ops1=[2,1,1,2,1]; S.ops2=[2,1,1,2,1]; S.r1=null; S.r2=null;
+      $("#tlmin").textContent = "0";
+      render(); window.scrollTo({top:0,behavior:"smooth"});
+    });
+    prepararIA();
+  }
+
+  /* ─── la parte inteligente: Claude revisa el compromiso ─── */
+  function prepararIA(){
+    if(!(window.claude && typeof window.claude.use === "function")) return;
+    window.claude.use("sample").then(function(sample){
+      if(!sample) return;
+      const wrap = $("#aiwrap"), btn = $("#aibtn"), out = $("#aiout"), ta = $("#acc");
+      if(!wrap) return;
+      wrap.hidden = false;
+      btn.addEventListener("click", function(){
+        const txt = (ta.value||"").trim();
+        if(!txt){ ta.focus(); return; }
+        btn.disabled = true; btn.textContent = "Revisando…";
+        out.hidden = false; out.textContent = "Pensando…";
+        sample([{role:"user", content:
+          "Eres el tallerista de una Fábrica de Aprendizaje. Un participante acaba de escribir su compromiso "
+          + "al cerrar un taller sobre capacidad de producción y cuellos de botella.\n\n"
+          + "Compromiso: \"" + txt + "\"\n\n"
+          + "Un buen compromiso tiene tres cosas: una acción concreta, una métrica con la que se mide, y una fecha. "
+          + "Si le falta alguna, devuélveselo pidiendo exactamente lo que falta, en una sola frase corta y directa, "
+          + "como haría un tallerista en la sala. Si las tres están, dilo en una frase y no adornes. "
+          + "Responde en español, máximo 40 palabras, sin saludos ni listas."
+        }], {modelTier:"quick", onText:function(ev){ out.textContent = ev.text; }})
+        .then(function(res){ out.textContent = res.text; })
+        .catch(function(){ out.textContent = "No se pudo revisar ahora. El criterio es el mismo: acción, métrica y fecha."; })
+        .finally(function(){ btn.disabled = false; btn.textContent = "Revisar otra vez"; });
+      });
+    }).catch(function(){});
+  }
+
+  render();
+})();
+</script>
