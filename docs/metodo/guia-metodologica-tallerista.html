@@ -1,658 +1,377 @@
 <title>Guía del Tallerista</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap">
 <style>
   :root{
-    --ink:#16202A; --ink-soft:#48555F; --ink-faint:#7C8891;
-    --paper:#EDF0EE; --surface:#FFFFFF; --line:#D3D9D6; --line-strong:#B4BDB9;
-    --accent:#0B6E5F; --accent-soft:#D9E8E4; --graphite:#5B6770;
-    --signal:#B98A16; --signal-soft:#F7F0DD; --signal-line:#E0C97F;
-    --shadow:0 1px 2px rgba(22,32,42,.06);
-    --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
-    --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
-    --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
-    --step:clamp(1rem,.92rem + .42vw,1.16rem);
-    --measure:66ch;
+    --paper:#F7F6F3;
+    --ink:#191817;
+    --muted:#6E6A64;
+    --faint:#9A958D;
+    --rule:#E2DFD8;
+    --accent:#C9431C;
+    --accent-tint:#F6E7E0;
+    --card:#FFFFFF;
+    --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+    --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
-      --ink:#E4E9E7; --ink-soft:#A9B4B1; --ink-faint:#7C8A88;
-      --paper:#11171B; --surface:#181F24; --line:#2B3439; --line-strong:#3D4850;
-      --accent:#4FBFA8; --accent-soft:#17322E; --graphite:#8C989E;
-      --signal:#D8AC4A; --signal-soft:#241E10; --signal-line:#4A3D1B;
-      --shadow:0 1px 2px rgba(0,0,0,.4);
+      --paper:#141312; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F;
+      --rule:#2D2A26; --accent:#FF7A4F; --accent-tint:#2A1A13; --card:#1C1A18;
     }
   }
   :root[data-theme="dark"]{
-    --ink:#E4E9E7; --ink-soft:#A9B4B1; --ink-faint:#7C8A88;
-    --paper:#11171B; --surface:#181F24; --line:#2B3439; --line-strong:#3D4850;
-    --accent:#4FBFA8; --accent-soft:#17322E; --graphite:#8C989E;
-    --signal:#D8AC4A; --signal-soft:#241E10; --signal-line:#4A3D1B;
-    --shadow:0 1px 2px rgba(0,0,0,.4);
+    --paper:#141312; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F;
+    --rule:#2D2A26; --accent:#FF7A4F; --accent-tint:#2A1A13; --card:#1C1A18;
   }
 
   *{box-sizing:border-box}
-  body{background:var(--paper);color:var(--ink);font-family:var(--f-body);
-       font-size:var(--step);line-height:1.62;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:60rem;margin:0 auto;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.1rem,4vw,2.5rem) 4rem}
-
-  h1,h2,h3,.eyebrow,.tag,th,.lbl{font-family:var(--f-display)}
-  h1{font-size:clamp(2.3rem,1.8rem + 3vw,3.8rem);font-weight:800;letter-spacing:-.035em;
-     line-height:.97;margin:.2em 0 0;text-wrap:balance}
-  h2{font-size:clamp(1.28rem,1.1rem + .62vw,1.58rem);font-weight:800;letter-spacing:-.02em;
-     line-height:1.15;margin:0;text-wrap:balance}
-  h3{font-size:1.02rem;font-weight:600;margin:0;letter-spacing:-.01em}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:clamp(1.02rem,.97rem + .28vw,1.14rem);line-height:1.62;
+       -webkit-font-smoothing:antialiased;font-weight:400}
+  .page{max-width:46rem;margin:0 auto;padding:clamp(2rem,5vw,4.5rem) clamp(1.2rem,5vw,2.5rem) 5rem}
   p{margin:0}
 
-  .masthead{border-bottom:2px solid var(--ink);padding-bottom:1.4rem}
-  .masthead .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;align-items:baseline;
-    font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--ink-faint)}
-  .keeps{border-left:3px solid var(--accent);padding:.15rem 0 .15rem 1rem;margin-top:1.35rem;
-    max-width:58ch;font-size:.96rem;color:var(--ink-soft)}
-  .keeps b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
+  /* ── encabezado ── */
+  .top{margin-bottom:clamp(2.6rem,6vw,4rem)}
+  .top .kicker{font-size:.82rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:.85rem}
+  h1{font-family:var(--sans);font-weight:700;letter-spacing:-.035em;
+     font-size:clamp(2.4rem,1.9rem + 2.6vw,3.5rem);line-height:1.02;margin:0;text-wrap:balance}
+  .top .sub{margin-top:.9rem;color:var(--muted);font-size:1.05rem}
 
-  section{margin-top:clamp(2.4rem,4.5vw,3.4rem)}
-  .sec-head{display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid var(--line-strong);
-    padding-bottom:.5rem;margin-bottom:1.35rem}
-  .sec-head .num{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:600;letter-spacing:.08em}
-  .prose{max-width:var(--measure)}
-  .prose + .prose{margin-top:.85rem}
-  .note{margin-top:1rem;font-size:.94rem;color:var(--ink-soft);max-width:var(--measure)}
-  .scroll{overflow-x:auto}
+  /* ── secciones ── */
+  section{margin-top:clamp(2.8rem,6vw,4rem)}
+  h2{font-family:var(--sans);font-weight:700;letter-spacing:-.02em;
+     font-size:clamp(1.3rem,1.15rem + .5vw,1.55rem);line-height:1.2;margin:0 0 1.3rem;
+     display:flex;align-items:baseline;gap:.75rem}
+  h2 .no{color:var(--accent);font-weight:600;font-size:.78em;font-variant-numeric:tabular-nums}
+  .lead{max-width:36rem}
+  .lead + .lead{margin-top:1rem}
 
-  /* ── tesis ── */
-  .thesis{font-family:var(--f-display);font-weight:800;letter-spacing:-.022em;
-    font-size:clamp(1.35rem,1.1rem + 1.15vw,1.95rem);line-height:1.2;max-width:24ch;
-    text-wrap:balance;margin-bottom:.4rem}
-  .thesis em{font-style:normal;color:var(--accent)}
-  .cycle{margin-top:1.6rem;min-width:38rem}
-  .cycle svg{display:block;width:100%;height:auto}
-  .cy-box{fill:var(--surface);stroke:var(--line-strong)}
-  .cy-run{fill:var(--accent);stroke:var(--accent)}
-  .cy-info{fill:var(--signal-soft);stroke:var(--signal)}
-  .cy-t{font-family:"Archivo",Arial,sans-serif;font-size:13px;font-weight:600;fill:var(--ink-soft);
-    text-anchor:middle;letter-spacing:.01em}
-  .cy-t.on{fill:#fff;font-weight:800;letter-spacing:.05em}
-  .cy-t.sig{fill:var(--ink);font-weight:800;letter-spacing:.05em}
-  .cy-arrow{stroke:var(--line-strong);stroke-width:1.5;fill:none}
-  .cy-back{stroke:var(--accent);stroke-width:1.5;fill:none}
-  .cy-cap{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--accent);text-anchor:middle;letter-spacing:.06em}
+  /* ── tesis y regla de oro ── */
+  .thesis{font-family:var(--serif);font-weight:400;
+    font-size:clamp(1.6rem,1.3rem + 1.5vw,2.35rem);line-height:1.22;letter-spacing:-.012em;
+    max-width:22ch;text-wrap:balance;margin-bottom:1.8rem}
+  .thesis span{color:var(--accent)}
 
-  ol.rules{list-style:none;margin:1.7rem 0 0;padding:0;display:grid;gap:.95rem;counter-reset:r;max-width:var(--measure)}
-  ol.rules li{position:relative;padding-left:2.35rem;font-size:.99rem;line-height:1.5}
-  ol.rules li::before{counter-increment:r;content:counter(r);position:absolute;left:0;top:.24rem;
-    font-family:var(--f-mono);font-weight:600;font-size:.78rem;color:var(--accent)}
-  ol.rules b{font-family:var(--f-display);font-weight:600}
-  .kicker{margin-top:1.7rem;border-top:1px solid var(--line-strong);padding-top:1rem;
-    font-family:var(--f-display);font-weight:800;font-size:1.06rem;letter-spacing:-.015em;max-width:var(--measure)}
+  .cycle{font-weight:600;font-size:clamp(1rem,.95rem + .3vw,1.12rem);line-height:1.85;
+    letter-spacing:-.01em;max-width:34rem;margin-bottom:2rem}
+  .cycle i{font-style:normal;color:var(--accent);padding:0 .3em;font-weight:400}
 
-  /* ── reloj ── */
-  table.clock{border-collapse:collapse;width:100%;min-width:30rem;font-family:var(--f-mono);font-size:.85rem}
-  table.clock th{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
-    text-align:left;font-weight:600;padding:0 .85rem .45rem 0;border-bottom:1px solid var(--line-strong);font-family:var(--f-display)}
-  table.clock td{padding:.46rem .85rem .46rem 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-  table.clock td.mm{font-family:var(--f-display);font-weight:800;font-size:.98rem;width:2.2rem;color:var(--accent)}
-  table.clock td.nm{font-family:var(--f-display);font-weight:600;font-size:.95rem;white-space:nowrap}
-  table.clock td.sub{color:var(--ink-faint);font-family:var(--f-body);font-size:.9rem}
-  table.clock td.min{text-align:right;padding-right:0;font-weight:600}
-  table.clock th.min{text-align:right;padding-right:0}
-  table.clock tfoot td{border-top:1px solid var(--ink);border-bottom:0;font-weight:800;padding-top:.55rem}
-  table.clock tr.add td{background:var(--accent-soft)}
-  table.clock tr.add td.mm{color:var(--ink)}
+  .rulelist{display:grid;gap:1.15rem;max-width:36rem}
+  .rulelist p b{font-weight:700}
+  .rulelist p{color:var(--muted)}
+  .rulelist p b{color:var(--ink)}
 
-  /* ── tarjetas ── */
-  .cards{display:grid;gap:1.1rem;margin-top:1.4rem}
-  .card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
-  .card.bookend{border-left:4px solid var(--accent)}
-  .card-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem .9rem;padding:.85rem 1.2rem;
-    border-bottom:1px solid var(--line);background:linear-gradient(to bottom,var(--accent-soft),transparent)}
-  .card-head .n{font-family:var(--f-display);font-weight:800;font-size:1.4rem;letter-spacing:-.04em;
-    color:var(--accent);line-height:1;min-width:1.1rem}
-  .card-head .min{font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--ink-soft);margin-left:auto}
-  .card-head .sub{font-family:var(--f-body);font-style:italic;color:var(--ink-faint);font-size:.91rem;width:100%}
-  .card-body{padding:1.05rem 1.2rem 1.15rem;display:grid;gap:.95rem}
+  .golden{margin-top:2.2rem;padding:1.5rem 0;border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);font-weight:700;letter-spacing:-.02em;
+    font-size:clamp(1.12rem,1.02rem + .45vw,1.35rem);line-height:1.3;max-width:30ch}
 
-  .blk > .lbl{font-size:.665rem;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
-    color:var(--ink-faint);display:block;margin-bottom:.5rem}
-  .say{list-style:none;margin:0;padding:0;display:grid;gap:.42rem}
-  .say li{border-left:2px solid var(--accent);padding-left:.65rem;font-size:.97rem;line-height:1.47}
-  .doing{font-size:.96rem;line-height:1.53;color:var(--ink-soft)}
-  .doing b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
-  .steps{list-style:none;margin:0;padding:0;display:grid;gap:.65rem}
-  .steps li{font-size:.96rem;line-height:1.5}
-  .steps .st{font-family:var(--f-display);font-weight:800;font-size:.7rem;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.1rem}
-  .slot{font-family:var(--f-mono);font-size:.84em;background:var(--accent-soft);padding:.05em .3em;border-radius:2px;white-space:nowrap}
-  .split{font-family:var(--f-mono);font-size:.73rem;color:var(--ink-faint);letter-spacing:.02em}
-
-  .warn{background:var(--signal-soft);border:1px solid var(--signal-line);padding:.8rem .95rem}
-  .warn > .lbl{color:var(--signal);font-size:.665rem;font-weight:600;letter-spacing:.11em;
-    text-transform:uppercase;display:block;margin-bottom:.4rem}
-  .warn p{font-size:.94rem;line-height:1.5}
-  .warn b{font-family:var(--f-display);font-weight:600}
-
-  .gate{border-top:1px dashed var(--line-strong);padding-top:.75rem;display:grid;
-    grid-template-columns:7.2rem 1fr;gap:1rem;align-items:start}
-  .gate .tag{font-size:.665rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--accent);display:flex;align-items:center;gap:.4rem;padding-top:.12rem}
-  .gate .tag::before{content:"";width:.5rem;height:.5rem;background:var(--accent);flex:none}
-  .gate p{font-size:.94rem;font-weight:600;line-height:1.47}
-  @media(max-width:640px){.gate{grid-template-columns:1fr;gap:.2rem}}
-
-  /* ── monoespaciados ── */
-  pre.board{font-family:var(--f-mono);font-size:.76rem;line-height:1.62;background:var(--surface);
-    border:1px solid var(--line-strong);padding:1.1rem 1.2rem;margin:1.3rem 0 0;overflow-x:auto;color:var(--ink-soft)}
-  pre.take{font-family:var(--f-mono);font-size:.74rem;line-height:1.6;background:var(--surface);
-    border:1px solid var(--line-strong);padding:1.1rem 1.2rem;margin:1.2rem 0 0;overflow-x:auto;color:var(--ink)}
+  /* ── momentos ── */
+  .moments{margin-top:1.9rem}
+  .m{display:grid;grid-template-columns:3.6rem 1fr;gap:0 1.4rem;
+    padding:1.05rem 0;border-top:1px solid var(--rule)}
+  .m:last-of-type{border-bottom:1px solid var(--rule)}
+  .m .num{font-weight:600;font-size:1.05rem;color:var(--accent);
+    font-variant-numeric:tabular-nums;line-height:1.5;letter-spacing:.02em}
+  .m .hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .7rem;margin-bottom:.15rem}
+  .m .nm{font-weight:700;font-size:1.1rem;letter-spacing:-.015em}
+  .m .min{color:var(--muted);font-size:.88rem;font-weight:500;font-variant-numeric:tabular-nums;
+    margin-left:auto;white-space:nowrap}
+  .m .txt{color:var(--muted);max-width:36rem}
+  .m .txt b{color:var(--ink);font-weight:600}
+  .m.key .nm{color:var(--accent)}
+  @media(max-width:520px){
+    .m{grid-template-columns:2.8rem 1fr;gap:0 1rem}
+    .m .min{margin-left:0;width:100%}
+  }
+  .cut{margin-top:1.3rem;color:var(--muted);font-size:.95rem;max-width:36rem;line-height:1.55}
+  .cut b{color:var(--ink);font-weight:600}
 
   /* ── checklist ── */
-  .lists{display:grid;gap:1.1rem;margin-top:1.4rem;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr))}
-  .clist{background:var(--surface);border:1px solid var(--line);padding:1rem 1.15rem 1.1rem}
-  .clist h3{font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
-  .clist ul{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
-  .clist li{position:relative;padding-left:1.55rem;font-size:.93rem;line-height:1.45;color:var(--ink-soft)}
-  .clist li::before{content:"";position:absolute;left:0;top:.32rem;width:.8rem;height:.8rem;
-    border:1.5px solid var(--line-strong)}
-  .clist li b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
+  .blocks{display:grid;gap:1.9rem;margin-top:.5rem}
+  .blocks h3{font-size:.82rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 .85rem}
+  .blocks ul{list-style:none;margin:0;padding:0;display:grid;gap:.62rem;max-width:38rem}
+  .blocks li{position:relative;padding-left:1.9rem;color:var(--muted);line-height:1.5}
+  .blocks li::before{content:"";position:absolute;left:0;top:.42em;width:.82rem;height:.82rem;
+    border:1.5px solid var(--faint);border-radius:2px}
+  .blocks li b{color:var(--ink);font-weight:600}
 
-  /* ── entregables ── */
-  .deliv{display:grid;gap:1.1rem;margin-top:1.3rem;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr))}
-  .deliv div{border-top:2px solid var(--ink);padding-top:.8rem}
-  .deliv h3{font-size:1.02rem;margin-bottom:.4rem}
-  .deliv p{font-size:.95rem;color:var(--ink-soft);line-height:1.55}
+  /* ── entregable ── */
+  .fields{list-style:none;margin:1.4rem 0 0;padding:0;display:grid;gap:.75rem;
+    counter-reset:f;max-width:38rem}
+  .fields li{position:relative;padding-left:2rem;color:var(--muted);line-height:1.5}
+  .fields li::before{counter-increment:f;content:counter(f);position:absolute;left:0;top:0;
+    font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+  .fields b{color:var(--ink);font-weight:600}
 
-  /* ── excepciones ── */
-  table.data{border-collapse:collapse;width:100%;min-width:32rem;font-size:.94rem;margin-top:1.2rem}
-  table.data th{font-family:var(--f-display);font-size:.665rem;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-faint);text-align:left;padding:0 1.1rem .5rem 0;border-bottom:1px solid var(--line-strong);font-weight:600}
-  table.data td{padding:.55rem 1.1rem .55rem 0;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
-  table.data td:last-child,table.data th:last-child{padding-right:0}
-  table.data tr:last-child td{border-bottom:0}
-  table.data td.k{font-family:var(--f-display);font-weight:600;white-space:nowrap}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+    padding:1.6rem 1.7rem 1.5rem;margin-top:1.9rem;max-width:32rem}
+  .card .ch{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+    padding-bottom:.9rem;margin-bottom:1.2rem;border-bottom:1px solid var(--rule)}
+  .card .ch b{font-weight:700;font-size:1.12rem;letter-spacing:-.02em}
+  .card .ch span{font-size:.76rem;color:var(--faint);letter-spacing:.05em;text-transform:uppercase}
+  .card .f{margin-bottom:1.15rem}
+  .card .f:last-of-type{margin-bottom:0}
+  .card .f span{display:block;font-size:.74rem;font-weight:600;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+  .card .ln{border-bottom:1px dashed var(--rule);height:1.45rem;margin-bottom:.35rem;
+    font-size:.85rem;color:var(--faint);line-height:1.5}
+  .card .qr{display:flex;align-items:center;gap:.85rem;margin-top:1.3rem;padding-top:1rem;
+    border-top:1px solid var(--rule);font-size:.87rem;color:var(--faint)}
+  .card .qr i{display:block;width:2.4rem;height:2.4rem;border:1.5px solid var(--rule);
+    border-radius:2px;flex:none}
 
-  ol.sac{list-style:none;margin:1.4rem 0 0;padding:0;counter-reset:s;display:grid;gap:.5rem;max-width:var(--measure)}
-  ol.sac li{position:relative;padding-left:2.2rem;font-size:.95rem;line-height:1.47;color:var(--ink-soft)}
-  ol.sac li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:.2rem;
-    font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--ink-faint)}
-  ol.sac li.never{color:var(--ink)}
-  ol.sac li.never::before{color:var(--signal)}
-  ol.sac b{font-family:var(--f-display);font-weight:600;color:var(--ink)}
-
-  footer{margin-top:3.2rem;border-top:1px solid var(--line-strong);padding-top:1.1rem;
-    font-size:.9rem;color:var(--ink-faint);max-width:var(--measure)}
-  footer code{font-family:var(--f-mono);font-size:.88em;color:var(--ink-soft)}
-  footer .src{margin-top:.8rem;font-family:var(--f-mono);font-size:.72rem;line-height:1.7}
+  footer{margin-top:3.5rem;padding-top:1.3rem;border-top:1px solid var(--rule);
+    color:var(--faint);font-size:.9rem;line-height:1.6;max-width:38rem}
+  footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,monospace;font-size:.9em}
 
   @media print{
-    body{background:#fff}
-    .wrap{max-width:none;padding:0}
-    .card,.clist,pre.board,pre.take{break-inside:avoid;box-shadow:none}
-    section{break-before:auto}
+    @page{margin:14mm 16mm}
+    body{background:#fff;font-size:9.6pt;line-height:1.45}
+    .page{max-width:none;padding:0}
+    section{margin-top:1.5rem;break-inside:avoid}
+    #antes{break-before:page}
+    h1{font-size:24pt}
+    .thesis{font-size:15pt;margin-bottom:.8rem}
+    .m{padding:.4rem 0}
+    .blocks{gap:1rem}
+    .blocks ul{gap:.3rem}
+    .blocks h3{margin-bottom:.45rem}
+    .card{break-inside:avoid;padding:1rem 1.1rem;margin-top:1.1rem}
+    .card .f{margin-bottom:.65rem}
+    .card .ln{height:1.1rem;margin-bottom:.2rem}
+    .card .ch{padding-bottom:.5rem;margin-bottom:.7rem}
+    .card .qr{margin-top:.8rem;padding-top:.6rem}
+    .card .qr i{width:1.8rem;height:1.8rem}
+    .golden{margin-top:1rem;padding:.7rem 0}
+    footer{margin-top:1.4rem}
   }
 </style>
 
-<div class="wrap">
+<div class="page">
 
-  <header class="masthead">
-    <div class="meta"><span>Fábrica de Aprendizaje</span><span>Versión 02</span></div>
-    <h1>Guía metodológica<br>del tallerista</h1>
-    <p class="keeps">El método es el de las guías <b>LF001-CP</b> y <b>LF002-DT</b>: los ocho
-      momentos del Aprendizaje Experiencial, con sus nombres y sus tiempos. Esta guía dice
-      <b>cómo se ejecutan</b>. El contenido de cada taller se define aparte, en la ficha de diseño.</p>
+  <header class="top">
+    <p class="kicker">Fábrica de Aprendizaje · Versión 03</p>
+    <h1>Guía del tallerista</h1>
+    <p class="sub">Para preparar un taller. Léala antes de dictar.</p>
   </header>
 
   <section>
-    <div class="sec-head"><span class="num">01</span><h2>Cómo funciona un taller de la Fábrica</h2></div>
-    <p class="prose note" style="margin-top:0">Lo primero que hay que entender, y lo único que no se
-      deduce leyendo las guías:</p>
-    <p class="thesis">El taller no explica y después practica. Hace fallar, y <em>la teoría llega como
-      la corrección de la falla.</em></p>
+    <h2><span class="no">01</span> Cómo funciona un taller</h2>
 
-    <div class="scroll"><div class="cycle">
-      <svg viewBox="0 0 872 196" role="img" aria-label="Ciclo del taller: instrucción incompleta, planean, caos, corrida, conclusiones, información, y de vuelta a la corrida.">
-        <defs>
-          <marker id="ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="7" orient="auto">
-            <path d="M0 0 L10 4 L0 8 z" fill="var(--line-strong)"/>
-          </marker>
-          <marker id="ahb" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="7" orient="auto">
-            <path d="M0 0 L10 4 L0 8 z" fill="var(--accent)"/>
-          </marker>
-        </defs>
+    <p class="thesis">El taller no explica y después practica. Hace fallar, y <span>la teoría
+      llega como la corrección de la falla.</span></p>
 
-        <rect class="cy-box" x="1" y="26" width="168" height="50"/>
-        <text class="cy-t" x="85" y="56">instrucción incompleta</text>
+    <p class="cycle">Instrucción incompleta <i>→</i> caos <i>→</i> corrida <i>→</i> conclusiones
+      <i>→</i> información <i>→</i> otra corrida</p>
 
-        <rect class="cy-box" x="193" y="26" width="98" height="50"/>
-        <text class="cy-t" x="242" y="56">planean</text>
-
-        <rect class="cy-box" x="315" y="26" width="78" height="50"/>
-        <text class="cy-t" x="354" y="56">caos</text>
-
-        <rect class="cy-run" x="417" y="26" width="118" height="50"/>
-        <text class="cy-t on" x="476" y="56">CORRIDA</text>
-
-        <rect class="cy-box" x="559" y="26" width="126" height="50"/>
-        <text class="cy-t" x="622" y="56">conclusiones</text>
-
-        <rect class="cy-info" x="709" y="26" width="162" height="50"/>
-        <text class="cy-t sig" x="790" y="56">INFORMACIÓN</text>
-
-        <path class="cy-arrow" d="M170 51 H190" marker-end="url(#ah)"/>
-        <path class="cy-arrow" d="M292 51 H312" marker-end="url(#ah)"/>
-        <path class="cy-arrow" d="M394 51 H414" marker-end="url(#ah)"/>
-        <path class="cy-arrow" d="M536 51 H556" marker-end="url(#ah)"/>
-        <path class="cy-arrow" d="M686 51 H706" marker-end="url(#ah)"/>
-
-        <path class="cy-back" d="M790 78 V128 H476 V80" marker-end="url(#ahb)"/>
-        <text class="cy-cap" x="633" y="150">Y OTRA VEZ — EN CADA CORRIDA EL DATO MEJORA</text>
-      </svg>
-    </div></div>
-
-    <ol class="rules">
-      <li><b>La instrucción se da por encima, a propósito.</b> Se dice qué hay que producir, no cómo
-        organizarse. Después se les da tiempo para planear.</li>
-      <li><b>No se aclara.</b> Van a tener problemas de comunicación, van a pelear por quién manda y van
-        a arrancar sin saber para dónde van. Eso <i>es</i> el ejercicio.</li>
-      <li><b>La primera conclusión no es sobre el tema: es que no preguntaron.</b> Hacerla salir es
-        trabajo del tallerista, y abre la puerta a todo lo que sigue.</li>
-    </ol>
-
-    <p class="kicker">Si el tallerista explica bien al principio, el taller no funciona.</p>
-  </section>
-
-  <section>
-    <div class="sec-head"><span class="num">02</span><h2>El reloj</h2></div>
-    <div class="scroll">
-      <table class="clock">
-        <thead><tr><th></th><th>Momento</th><th>Qué es</th><th class="min">Min</th></tr></thead>
-        <tbody>
-          <tr class="add"><td class="mm">0</td><td class="nm">Bienvenida</td><td class="sub">Dónde están y qué va a pasar hoy</td><td class="min">10</td></tr>
-          <tr><td class="mm">1</td><td class="nm">Conectar</td><td class="sub">Crear la experiencia</td><td class="min">10</td></tr>
-          <tr><td class="mm">2</td><td class="nm">Prestar atención</td><td class="sub">Reflexión y análisis a través de preguntas</td><td class="min">10</td></tr>
-          <tr><td class="mm">3</td><td class="nm">Imagen</td><td class="sub">Síntesis preliminar a través del análisis</td><td class="min">15</td></tr>
-          <tr><td class="mm">4</td><td class="nm">Informar</td><td class="sub">Los conceptos y la dinámica</td><td class="min">15</td></tr>
-          <tr><td class="mm">5</td><td class="nm">Practicar</td><td class="sub">El ejercicio experiencial: hacer</td><td class="min">45</td></tr>
-          <tr><td class="mm">6</td><td class="nm">Extender</td><td class="sub">Consolidar agregando conclusiones propias</td><td class="min">15</td></tr>
-          <tr><td class="mm">7</td><td class="nm">Refinar</td><td class="sub">Analizar la utilidad de lo aprendido</td><td class="min">10</td></tr>
-          <tr><td class="mm">8</td><td class="nm">Ejecutar</td><td class="sub">Una experiencia nueva, más compleja</td><td class="min">40</td></tr>
-          <tr class="add"><td class="mm">C</td><td class="nm">Cierre</td><td class="sub">El entregable y la transferencia</td><td class="min">10</td></tr>
-        </tbody>
-        <tfoot><tr><td></td><td></td><td>Total</td><td class="min">180</td></tr></tfoot>
-      </table>
+    <div class="rulelist">
+      <p><b>La instrucción se da por encima, a propósito.</b> Se dice qué hay que producir, no
+        cómo organizarse. Después se les da tiempo para planear.</p>
+      <p><b>No se aclara.</b> Van a tener problemas de comunicación, van a pelear por quién
+        manda y van a arrancar sin saber para dónde van. Eso es el ejercicio.</p>
+      <p><b>La primera conclusión no es sobre el tema: es que no preguntaron.</b> Hacerla salir
+        es trabajo suyo, y es lo que abre todo lo demás.</p>
     </div>
-    <p class="note">Los momentos 1 a 8 suman los <b>160 minutos</b> que ya traen las guías. Los otros
-      20 son los que sobraban de las tres horas: ahí entran la bienvenida y el cierre, sin quitarle
-      tiempo a ningún momento.</p>
+
+    <p class="golden">Si el tallerista explica bien al principio, el taller no funciona.</p>
   </section>
 
   <section>
-    <div class="sec-head"><span class="num">03</span><h2>El paso a paso</h2></div>
-    <p class="prose note" style="margin-top:0">Los corchetes <span class="slot">[ ]</span> se llenan
-      desde la ficha.</p>
+    <h2><span class="no">02</span> Los diez momentos</h2>
+    <p class="lead">Tres horas. Los momentos 1 a 8 son los de las guías LF001-CP y LF002-DT;
+      la bienvenida y el cierre ocupan los 20 minutos que sobraban.</p>
 
-    <div class="cards">
+    <div class="moments">
 
-      <article class="card bookend">
-        <div class="card-head"><span class="n">0</span><h3>Bienvenida</h3><span class="min">10 min</span></div>
-        <div class="card-body">
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«Esto no es un salón: es una planta de producción a escala, con producto real.»</li>
-              <li>«En una clase se explica cómo funciona un proceso. Aquí lo van a operar ustedes, y las decisiones que tomen se van a medir.»</li>
-              <li>«Hoy van a ver, preguntar, dibujar, producir, calcular, corregir y volver a producir.»</li>
-              <li>Seguridad y salidas · cuidado del equipo · <b>«aquí nadie observa: todos tienen un rol»</b>.</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Armo equipos, entrego guías, señalo riesgos, escribo la hora de inicio.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Grupo frío. No fuerzo dinámicas de calentamiento — paso al detonante.</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Equipos armados, guías repartidas, reglas dichas.</p></div>
+      <div class="m">
+        <div class="num">00</div>
+        <div>
+          <div class="hd"><span class="nm">Bienvenida</span><span class="min">10 min</span></div>
+          <p class="txt">Qué es la Fábrica y qué va a pasar hoy. Se arman los equipos y se dicen
+            las reglas de sala.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">1</span><h3>Conectar</h3><span class="min">10 min</span>
-          <span class="sub">Crear la experiencia.</span></div>
-        <div class="card-body">
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«Van a ver <span class="slot">[VIDEO / IMAGEN / HISTORIA]</span> sobre <span class="slot">[TEMA]</span>.»</li>
-              <li>«Véanlo como si tuvieran que operar eso mañana, no como espectadores.»</li>
-              <li>«Anoten los cuatro campos de la guía: materiales, operaciones, procesos, secuencias.»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Presento el detonante completo, sin pausarlo ni comentarlo. Puede ser un
-              video, una imagen o <b>una historia que yo cuento</b>: los tres sirven igual, y la ficha
-              dice cuál.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si falla el proyector, cuento la historia. <b>El momento no se salta.</b></p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Los cuatro campos tienen algo escrito.</p></div>
+      <div class="m">
+        <div class="num">01</div>
+        <div>
+          <div class="hd"><span class="nm">Conectar</span><span class="min">10 min</span></div>
+          <p class="txt">Un video, una imagen o una historia que usted cuenta. Ellos anotan
+            materiales, operaciones, procesos y secuencias.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">2</span><h3>Prestar atención</h3><span class="min">10 min</span>
-          <span class="sub">Reflexión y análisis a través de preguntas.</span></div>
-        <div class="card-body">
-          <p class="doing">Aquí se revisan los temas teóricos, <b>en forma de pregunta</b>. Nunca de exposición.</p>
-          <div class="blk"><span class="lbl">Qué digo — de tres a cinco, en escalera</span>
-            <ul class="say">
-              <li>«¿Qué entendieron? ¿Qué les pareció?»</li>
-              <li>«¿Qué saben ustedes de esto?»</li>
-              <li>«¿Cómo lo han visto en su día a día, o en su empresa?»</li>
-              <li>«¿Qué creen que va a pasar cuando lo hagamos aquí?»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Pregunto por equipo, con nombre, no al aire. Espero: el silencio es del grupo,
-              no mío. <b>Escribo en el tablero las palabras que ellos usan, tal cual.</b> No corrijo las
-              definiciones equivocadas — quedan ahí para el momento 4.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si se vuelve clase magistral, corto: «eso lo vemos ahora».</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Las palabras del grupo están en el tablero.</p></div>
+      <div class="m">
+        <div class="num">02</div>
+        <div>
+          <div class="hd"><span class="nm">Prestar atención</span><span class="min">10 min</span></div>
+          <p class="txt">Aquí se revisa la teoría, pero <b>preguntando</b>: qué entendieron, qué
+            saben del tema, cómo lo han visto en su día a día o en su empresa. Las palabras que
+            ellos usen van al tablero.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">3</span><h3>Imagen</h3><span class="min">15 min</span>
-          <span class="sub">Síntesis preliminar a través del análisis.</span></div>
-        <div class="card-body">
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«En equipo, un dibujo que exprese <span class="slot">[CONCEPTO]</span>. <b>Sin textos y sin números.</b>»</li>
-              <li>«Después lo presentan y lo sustentan.»</li>
-              <li>«Escriban sus conclusiones, y aparte lo que digan los otros equipos: lo que apoya, lo que complementa y lo que contradice.»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Reparto papel y marcadores, cronometro, modero.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si escriben palabras en el dibujo, se borran — la restricción <b>es</b> el ejercicio.
-              Si el debate se alarga: «eso lo resolvemos produciendo».</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Cada equipo presentó y escribió sus dos cuadros.</p></div>
+      <div class="m">
+        <div class="num">03</div>
+        <div>
+          <div class="hd"><span class="nm">Imagen</span><span class="min">15 min</span></div>
+          <p class="txt">Un dibujo del concepto, sin textos ni números. Lo presentan y lo
+            sustentan.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">4</span><h3>Informar</h3><span class="min">15 min</span>
-          <span class="sub">Los conceptos y la dinámica.</span></div>
-        <div class="card-body">
-          <p class="doing">Único bloque expositivo, y <b>deliberadamente incompleto</b>. Doy los conceptos
-            y explico la dinámica por encima: qué hay que producir y con qué meta. <b>No explico cómo
-            organizarse.</b> Esa es la parte que tienen que descubrir fallando.</p>
-          <div class="blk"><span class="lbl">Qué digo — un concepto a la vez, misma estructura</span>
-            <ul class="say">
-              <li>«Ustedes dijeron <span class="slot">[SU PALABRA]</span>.» — señalo el tablero.</li>
-              <li>«El término es <span class="slot">[CONCEPTO]</span>, y se define así: <span class="slot">[UNA FRASE]</span>.»</li>
-              <li>«Lo van a ver en <span class="slot">[DÓNDE DEL EJERCICIO]</span>.»</li>
-              <li>Y cierro: «La dinámica es esta: <span class="slot">[QUÉ HAY QUE PRODUCIR]</span>, meta
-                <span class="slot">[CANTIDAD]</span> en <span class="slot">[TIEMPO]</span>. Tienen
-                <span class="slot">[N]</span> minutos para planear cómo lo van a hacer.»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Escribo cada término al lado de la palabra que ellos usaron. Máximo tres
-              conceptos, cronómetro a la vista.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si me paso, el tiempo sale de aquí, <b>nunca de Practicar</b>. Lo que se salga del alcance
-              va al parqueadero.</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Los conceptos están junto a las palabras
-            del grupo, y el grupo sabe qué tiene que producir.</p></div>
+      <div class="m">
+        <div class="num">04</div>
+        <div>
+          <div class="hd"><span class="nm">Informar</span><span class="min">15 min</span></div>
+          <p class="txt">Los conceptos, máximo tres, cada uno junto a la palabra que ellos
+            usaron. Y la dinámica, explicada por encima: qué hay que producir y con qué meta.
+            <b>No se explica cómo organizarse.</b></p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">5</span><h3>Practicar</h3><span class="min">45 min</span>
-          <span class="sub">El ejercicio experiencial: hacer.</span></div>
-        <div class="card-body">
-          <p class="split">5 demostración · 10 planeación · 25 corrida · 5 registro</p>
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«Así se arma y así se desarma <span class="slot">[OBJETO]</span>. Cuidados: <span class="slot">[CUIDADOS]</span>.»</li>
-              <li>«Tienen 10 minutos para organizarse. <b>Cómo lo hagan es decisión de ustedes.</b>»</li>
-              <li>«Desde que arranque el cronómetro yo no ayudo. Corre en 3, 2, 1.»</li>
-              <li>«Alto. Nadie toca nada. Cada estación reporta su número.»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Demuestro el armado, no el flujo. Durante la planeación <b>no aclaro nada</b>
-              más de lo dicho: si preguntan, respondo literal lo que preguntaron. Cronometro y recorro
-              anotando dónde se acumula el trabajo y quién espera. Escribo los tiempos en el tablero.
-              <b>No toco material, no señalo el error, no rescato.</b></p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Que no pregunten, que discutan quién manda y que arranquen sin saber para dónde van
-              <b>es lo esperado</b>. No lo corrijo — lo anoto, porque es el material del momento 6.
-              La única razón para detener todo es un riesgo de lesión.</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Los tiempos de la corrida están en el
-            tablero, por equipo.</p></div>
+      <div class="m key">
+        <div class="num">05</div>
+        <div>
+          <div class="hd"><span class="nm">Practicar</span><span class="min">45 min</span></div>
+          <p class="txt">Diez minutos para que planeen y veinticinco de corrida cronometrada.
+            Los tiempos van al tablero. <b>Durante la corrida el tallerista no ayuda.</b></p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">6</span><h3>Extender</h3><span class="min">15 min</span>
-          <span class="sub">Consolidar agregando conclusiones propias.</span></div>
-        <div class="card-body">
-          <p class="doing">Aquí la teoría hace su trabajo. Tres pasos, en orden:</p>
-          <ol class="steps">
-            <li><span class="st">a · Conclusiones</span>«¿Qué pasó? ¿Por qué les pasó?» La primera que
-              tiene que salir es <i>no preguntamos, arrancamos sin saber qué había que hacer</i>. Si no
-              sale sola: «¿en qué momento supieron ustedes qué había que hacer?»</li>
-            <li><span class="st">b · Información para corregir</span>Ahora entra el concepto completo,
-              contra lo que acaban de vivir: «esto que les pasó se llama <span class="slot">[CONCEPTO]</span>,
-              y se corrige así». Es la misma teoría del momento 4, pero ahora tienen una razón para quererla.</li>
-            <li><span class="st">c · Segunda corrida</span>«Implementen las mejoras. Volvemos a correr.»
-              Al terminar: «primera <span class="slot">[DATO]</span>, segunda <span class="slot">[DATO]</span>,
-              diferencia <span class="slot">[%]</span>».</li>
-          </ol>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Escribo la comparación en el tablero y verifico que cada equipo use <b>sus</b>
-              datos. Si la ficha pide cálculos —capacidad instalada, efectiva, pico, ociosa—, van aquí.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si no alcanza para todo, primero la segunda corrida. Si el resultado empeora, no se esconde:
-              «¿cuál de los cambios lo causó?». Un retroceso explicado enseña más que una mejora accidental.</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Las dos corridas están comparadas en el tablero.</p></div>
+      <div class="m key">
+        <div class="num">06</div>
+        <div>
+          <div class="hd"><span class="nm">Extender</span><span class="min">15 min</span></div>
+          <p class="txt">El momento fuerte. Primero las conclusiones de lo que pasó. Después la
+            información que corrige. Y con eso, la segunda corrida y la comparación de tiempos.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">7</span><h3>Refinar</h3><span class="min">10 min</span>
-          <span class="sub">Analizar la utilidad de lo aprendido.</span></div>
-        <div class="card-body">
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«Escriban los cuellos de botella que <b>ustedes</b> vivieron, no los que se imaginan.»</li>
-              <li>«Intercambien la guía con un compañero y propónganle tres mejoras a lo que él escribió.»</li>
-              <li>«¿Por qué es importante saber esto?»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Obligo el intercambio, exijo mejoras específicas.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>«Mejorar la comunicación» se devuelve — qué, quién, dónde. Si culpan a una persona:
-              «¿es la persona, o el puesto que le diseñamos?». Si dicen «trabajar más rápido»:
-              «eso es pedir esfuerzo, no rediseñar».</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Cada guía tiene cuellos de botella y
-            tres mejoras escritas por otro.</p></div>
+      <div class="m">
+        <div class="num">07</div>
+        <div>
+          <div class="hd"><span class="nm">Refinar</span><span class="min">10 min</span></div>
+          <p class="txt">Los cuellos de botella que ellos vivieron. Intercambian la guía con un
+            compañero y le proponen tres mejoras.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-head"><span class="n">8</span><h3>Ejecutar</h3><span class="min">40 min</span>
-          <span class="sub">Una experiencia nueva, más compleja.</span></div>
-        <div class="card-body">
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«Cambia el escenario: <span class="slot">[ESCENARIO DE LA FICHA]</span>.»</li>
-              <li>«La gerencia necesita una respuesta, y necesita un número.»</li>
-              <li>«Cada equipo presenta en dos minutos: qué le dice a la gerencia y con qué sustento.»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Entrego el escenario por escrito, cronometro las presentaciones.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si se quedan en el cálculo: «¿qué le dice a la gerencia: sí o no, y con qué número?».
-              Si no terminan, presentan hasta donde llegaron.</p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Cada equipo tiene una recomendación
-            sustentada en un número.</p></div>
+      <div class="m">
+        <div class="num">08</div>
+        <div>
+          <div class="hd"><span class="nm">Ejecutar</span><span class="min">40 min</span></div>
+          <p class="txt">Un escenario más complejo. La respuesta tiene que ser una decisión con
+            un número.</p>
         </div>
-      </article>
+      </div>
 
-      <article class="card bookend">
-        <div class="card-head"><span class="n">C</span><h3>Cierre</h3><span class="min">10 min</span></div>
-        <div class="card-body">
-          <div class="blk"><span class="lbl">Qué digo</span>
-            <ul class="say">
-              <li>«Miren el tablero: empezaron en <span class="slot">[DATO]</span> y terminaron en
-                <span class="slot">[DATO]</span>, en <span class="slot">[TIEMPO]</span>.»</li>
-              <li>«Llenen la tarjeta <i>Lo que me llevo</i>. Es de ustedes, no la recojo.»</li>
-              <li>«Una sola aplicación a su trabajo, con métrica y fecha.»</li>
-            </ul></div>
-          <div class="blk"><span class="lbl">Qué hago</span>
-            <p class="doing">Reparto la tarjeta, tomo la foto del tablero, recojo guías y encuesta, anoto
-              el tiempo real contra el planeado.</p></div>
-          <div class="warn"><span class="lbl">Cuidado</span>
-            <p>Si se acabó el tiempo, se sacrifica la socialización en voz alta. <b>Nunca la tarjeta ni
-              el cierre con el dato.</b></p></div>
-          <div class="gate"><span class="tag">Listo cuando</span><p>Tarjetas llenas, foto tomada, guías recogidas.</p></div>
+      <div class="m">
+        <div class="num">09</div>
+        <div>
+          <div class="hd"><span class="nm">Cierre</span><span class="min">10 min</span></div>
+          <p class="txt">El dato del día: empezaron en tanto, terminaron en tanto. Llenan la
+            tarjeta <i>Lo que me llevo</i>, y usted toma la foto del tablero.</p>
         </div>
-      </article>
+      </div>
 
     </div>
+
+    <p class="cut">Si falta tiempo, se recorta el debate del momento 3 y los cálculos del 6.
+      <b>Nunca el momento 5 ni el cierre:</b> sin corrida y sin tarjeta no hubo taller.</p>
   </section>
 
-  <section>
-    <div class="sec-head"><span class="num">04</span><h2>El tablero</h2></div>
-    <p class="prose">Se dibuja antes de que entre el primer participante. Hace visible el puente entre
-      lo que el grupo dijo y el término técnico, y entre la primera corrida y la segunda.</p>
-<pre class="board">TEMA: ______________     META: ____________     INICIO: __:__
+  <section id="antes">
+    <h2><span class="no">03</span> Antes del taller</h2>
+    <div class="blocks">
 
-SUS PALABRAS (momento 2)          EL TÉRMINO (momento 4)
-_______________________     →     _______________________
-_______________________     →     _______________________
-_______________________     →     _______________________
-
-TIEMPOS                CORRIDA 1     CORRIDA 2     DIFERENCIA
-   EQUIPO A            ________      ________      ________
-   EQUIPO B            ________      ________      ________
-   EQUIPO C            ________      ________      ________
-
-CUELLOS DE BOTELLA                PARQUEADERO DE PREGUNTAS
-1. __________________________     ____________________________
-2. __________________________     ____________________________
-3. __________________________     ____________________________</pre>
-  </section>
-
-  <section>
-    <div class="sec-head"><span class="num">05</span><h2>Checklist del tallerista</h2></div>
-    <div class="lists">
-      <div class="clist">
-        <h3>Antes · T−7 a T−1</h3>
+      <div>
+        <h3>La semana anterior</h3>
         <ul>
           <li>Ficha de diseño llena.</li>
-          <li>Detonante listo y probado —video, imagen o historia— y qué hacer si falla.</li>
-          <li>Las 3 a 5 preguntas del momento 2, escritas.</li>
-          <li>Máximo tres conceptos, cada uno con su definición de una frase y dónde se verá.</li>
-          <li>Escenario del momento 8 redactado, listo para entregar por escrito.</li>
-          <li>Guías y tarjetas <i>Lo que me llevo</i> impresas, una por participante.</li>
-          <li><b>Corrí el ejercicio completo, solo, al menos una vez.</b> Sé el tiempo real.</li>
+          <li>Detonante conseguido y probado: video, imagen o la historia que va a contar.</li>
+          <li>Las preguntas del momento 2, escritas.</li>
+          <li>Máximo tres conceptos, cada uno con su definición de una frase.</li>
+          <li>El escenario del momento 8, redactado.</li>
+          <li>Guías y tarjetas impresas, una por participante.</li>
+          <li><b>Corrió el ejercicio completo, usted solo, al menos una vez.</b></li>
         </ul>
       </div>
-      <div class="clist">
-        <h3>Kit de materiales</h3>
+
+      <div>
+        <h3>El material</h3>
         <ul>
-          <li>TV o videobeam con audio probado · tablero, marcadores y papel periódico.</li>
-          <li>Objeto de práctica y sus piezas, <b>contados, con repuestos</b>.</li>
-          <li>Herramienta y sistema de transporte de insumos.</li>
-          <li>Cronómetros: uno por equipo más el mío.</li>
+          <li>Videobeam con audio probado. Tablero, marcadores y papel periódico.</li>
+          <li>El objeto de práctica y sus piezas, contados, con repuestos.</li>
+          <li>Herramienta y transporte de insumos.</li>
+          <li>Cronómetros: uno por equipo y el suyo.</li>
           <li>Elementos de protección personal.</li>
         </ul>
       </div>
-      <div class="clist">
-        <h3>Montaje · T−30 min</h3>
+
+      <div>
+        <h3>Media hora antes</h3>
         <ul>
-          <li>Estaciones montadas y numeradas · rutas de evacuación despejadas.</li>
-          <li>Tablero dibujado con la plantilla de arriba.</li>
-          <li>Guía y tarjeta de rol en cada puesto · detonante cargado.</li>
+          <li>Estaciones montadas y numeradas, rutas de evacuación despejadas.</li>
+          <li>Tablero dibujado: sus palabras junto al término técnico, y los tiempos por equipo
+            de las dos corridas.</li>
+          <li>Guía en cada puesto y detonante cargado.</li>
         </ul>
       </div>
-      <div class="clist">
-        <h3>Después · T+30 min</h3>
+
+      <div>
+        <h3>Al terminar</h3>
         <ul>
-          <li>Foto del tablero · guías y encuesta recogidas.</li>
-          <li>Kit contado, repuesto y guardado.</li>
+          <li>Foto del tablero. Guías y encuesta recogidas.</li>
+          <li>Kit contado y repuesto.</li>
           <li>Tiempo real contra planeado, momento por momento.</li>
-          <li>Ficha versionada con lo que se cambia la próxima vez.</li>
+          <li>Ficha versionada con lo que cambia la próxima vez.</li>
         </ul>
       </div>
+
     </div>
   </section>
 
   <section>
-    <div class="sec-head"><span class="num">06</span><h2>Lo que se lleva el estudiante</h2></div>
-    <div class="deliv">
-      <div>
-        <h3>La guía de trabajo diligenciada</h3>
-        <p>Apuntes, respuestas, dibujo, tiempos, cálculos, cuellos de botella y mejoras.
-          Es el registro del taller.</p>
-      </div>
-      <div>
-        <h3>La tarjeta «Lo que me llevo»</h3>
-        <p>Media carta, se llena <b>a mano</b> en el cierre y <b>no se recoge</b>. Un resumen impreso
-          por nosotros no se recuerda; se recuerda lo que uno mismo escribió. El «lo vi cuando ___»
-          es la parte que hace el trabajo: es lo que le devuelve el concepto meses después.</p>
-      </div>
-    </div>
-<pre class="take">┌──────────────────────────────────────────────────────────────┐
-│  LO QUE ME LLEVO                    Fábrica de Aprendizaje   │
-│  Taller: ________________________   Fecha: ____________      │
-│                                                              │
-│  EL RETO                                                     │
-│  Teníamos que ______________________________________________ │
-│  Empezamos en __________  Terminamos en __________           │
-│                                                              │
-│  LO QUE APRENDÍ — el concepto y dónde lo vi con mis ojos      │
-│  1. ______________________  lo vi cuando ___________________ │
-│  2. ______________________  lo vi cuando ___________________ │
-│  3. ______________________  lo vi cuando ___________________ │
-│                                                              │
-│  EL CUELLO DE BOTELLA QUE ENCONTRÉ                           │
-│  ___________________________________________________________ │
-│                                                              │
-│  LO QUE VOY A HACER CON ESTO                                 │
-│  Acción: ___________________________________________________ │
-│  Lo voy a medir así: ______________  Antes del: ____________ │
-│                                                              │
-│  [ QR ]  La foto del tablero de hoy                          │
-└──────────────────────────────────────────────────────────────┘</pre>
-  </section>
+    <h2><span class="no">04</span> Lo que se lleva el estudiante</h2>
 
-  <section>
-    <div class="sec-head"><span class="num">07</span><h2>Cuando se sale del guion</h2></div>
-    <div class="scroll">
-      <table class="data">
-        <thead><tr><th>Pasa esto</th><th>Hago esto</th></tr></thead>
-        <tbody>
-          <tr><td class="k">Falla el detonante</td><td>Cuento la historia. El momento no se salta</td></tr>
-          <tr><td class="k">Falta material</td><td>Bajo la meta, la corrijo en el tablero antes de arrancar, lo anoto en la ficha</td></tr>
-          <tr><td class="k">Grupo bajo el mínimo</td><td>Reduzco estaciones, nunca momentos</td></tr>
-          <tr><td class="k">Grupo sobre el máximo</td><td>Abro un equipo espejo en paralelo. Nunca creo observadores</td></tr>
-          <tr><td class="k">Cumplen sin esfuerzo</td><td>Subo la meta o bajo recursos, y corro otra vez</td></tr>
-          <tr><td class="k">Alguien no participa</td><td>Control de calidad o tomador de tiempos. Todos aportan un dato</td></tr>
-        </tbody>
-      </table>
+    <p class="lead"><b>La guía de trabajo diligenciada.</b> Es el registro del taller: apuntes,
+      dibujo, tiempos, cálculos, cuellos de botella y mejoras.</p>
+    <p class="lead"><b>La tarjeta <i>Lo que me llevo</i>.</b> Media carta, la llena a mano en el
+      cierre y no se recoge. Un resumen impreso por nosotros no se recuerda; se recuerda lo que
+      uno mismo escribió. El «lo vi cuando» es la parte que hace el trabajo: es lo que le
+      devuelve el concepto meses después.</p>
+
+    <div class="card">
+      <div class="ch"><b>Lo que me llevo</b><span>Fábrica de Aprendizaje</span></div>
+      <div class="f"><span>El reto</span>
+        <div class="ln">Teníamos que</div>
+        <div class="ln">Empezamos en ____________   Terminamos en ____________</div>
+      </div>
+      <div class="f"><span>Lo que aprendí, y dónde lo vi con mis ojos</span>
+        <div class="ln">1. ________________  lo vi cuando</div>
+        <div class="ln">2. ________________  lo vi cuando</div>
+        <div class="ln">3. ________________  lo vi cuando</div>
+      </div>
+      <div class="f"><span>El cuello de botella que encontré</span>
+        <div class="ln"></div>
+      </div>
+      <div class="f"><span>Lo que voy a hacer con esto</span>
+        <div class="ln">Acción:</div>
+        <div class="ln">Lo voy a medir así: __________   Antes del: __________</div>
+      </div>
+      <div class="qr"><i></i><span>El código lleva a la foto del tablero de hoy.</span></div>
     </div>
-    <p class="note"><b>Si se pierde tiempo, se sacrifica en este orden:</b></p>
-    <ol class="sac">
-      <li>El debate del momento 3.</li>
-      <li>El tercer concepto del momento 4.</li>
-      <li>Los cálculos del momento 6 — pasan a trabajo posterior; la segunda corrida se hace.</li>
-      <li>El momento 8 se reduce a plantear el escenario y resolverlo por fuera.</li>
-      <li class="never"><b>Nunca el momento 5 ni el cierre.</b> Sin corrida y sin tarjeta no hubo taller.</li>
-    </ol>
   </section>
 
   <footer>
-    <p>El contenido de cada taller —tema, detonante, preguntas, conceptos, meta, escenario— se define en
-      la ficha de diseño: <code>ficha-diseno-taller.md</code>.</p>
-    <p class="src">Construida sobre el modelo de Aprendizaje Experiencial adoptado por la Fábrica de
-      Aprendizaje y sobre las guías LF001-CP · Capacidad de Producción y LF002-DT · Diseño del Trabajo
-      y Métodos de Trabajo.</p>
+    El contenido de cada taller —tema, detonante, preguntas, conceptos, meta y escenario— se
+    define en la ficha de diseño: <code>ficha-diseno-taller.md</code>.
   </footer>
 
 </div>
