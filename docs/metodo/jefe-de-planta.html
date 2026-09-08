@@ -616,7 +616,8 @@
       +'por ganar es <b>balanceo</b>: la línea entera va al ritmo de la estación más lenta, y toda la '
       +'holgura de las demás es tiempo pagado que no produce. Ahí vive el resto de su OEE, y por eso '
       +'el balanceo es lo primero que se toca, no lo último.</p></div>';
-      +'<button class="btn ghost" id="reset">Empezar de nuevo</button>';
+
+    h+='<button class="btn ghost" id="reset">Empezar de nuevo</button>';
 
     stage.innerHTML=h; pintarBarra(); pintarPie();
     $("#reset").addEventListener("click",()=>{
