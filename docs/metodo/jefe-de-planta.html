@@ -1,0 +1,638 @@
+<title>Jefe de Planta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --paper:#F7F6F3; --ink:#191817; --muted:#6E6A64; --faint:#9A958D; --rule:#E2DFD8;
+    --accent:#C9431C; --tint:#F6E7E0; --card:#FFFFFF;
+    --panel:#17161A; --panel2:#211F24; --pink:#3A363E; --pmuted:#8E8892; --pink2:#F0EDE8;
+    --ok:#2F7D4F; --warn:#B8860B; --bad:#B3341A;
+    --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+    --serif:"Instrument Serif",Georgia,serif;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#131211; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F; --rule:#2C2926;
+      --accent:#FF7A4F; --tint:#2A1A13; --card:#1C1A18;
+      --panel:#0E0D10; --panel2:#1A181D; --ok:#4FA873; --warn:#D6A32B; --bad:#E46448;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131211; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F; --rule:#2C2926;
+    --accent:#FF7A4F; --tint:#2A1A13; --card:#1C1A18;
+    --panel:#0E0D10; --panel2:#1A181D; --ok:#4FA873; --warn:#D6A32B; --bad:#E46448;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+    -webkit-tap-highlight-color:transparent}
+  .wrap{max-width:34rem;margin:0 auto;padding:1.1rem 1rem 4rem}
+  p{margin:0}
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+
+  /* ───── barra superior ───── */
+  .bar{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+  .bar .ttl{font-weight:700;letter-spacing:-.02em;font-size:1.02rem;white-space:nowrap}
+  .bar .pts{margin-left:auto;font-family:var(--mono);font-weight:600;font-size:.9rem;
+    color:var(--accent);font-variant-numeric:tabular-nums}
+  .dots{display:flex;gap:.32rem}
+  .dots i{width:.62rem;height:.62rem;border-radius:50%;background:var(--rule);
+    border:1.5px solid var(--rule);transition:all .25s}
+  .dots i.now{background:var(--accent);border-color:var(--accent);transform:scale(1.25)}
+  .dots i.ok{background:var(--ok);border-color:var(--ok)}
+  .dots i.no{background:transparent;border-color:var(--bad)}
+
+  h1{font-family:var(--sans);font-weight:700;letter-spacing:-.035em;
+    font-size:2.1rem;line-height:1.05;margin:0 0 .5rem;text-wrap:balance}
+  .kick{font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:.6rem}
+  .lead{color:var(--muted);margin-bottom:1.2rem}
+  h2{font-size:1.25rem;font-weight:700;letter-spacing:-.025em;margin:0 0 .3rem;line-height:1.2}
+
+  .box{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+    padding:.95rem 1rem;margin-bottom:.85rem}
+  .box .k{display:block;font-size:.68rem;font-weight:700;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:.42rem}
+  .box p{color:var(--muted);font-size:.95rem;line-height:1.5}
+
+  /* ───── la planta ───── */
+  .plant{background:var(--panel);border-radius:12px;padding:.85rem .8rem .9rem;
+    color:var(--pink2);margin-bottom:.85rem;overflow:hidden}
+  .phd{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.7rem;padding:0 .15rem}
+  .phd b{font-size:.8rem;font-weight:700;letter-spacing:.04em}
+  .phd .clock{margin-left:auto;font-family:var(--mono);font-size:.78rem;color:var(--pmuted);
+    font-variant-numeric:tabular-nums}
+  .phd .pool{font-family:var(--mono);font-size:.78rem;color:var(--pmuted)}
+  .phd .pool b{color:var(--accent);font-family:var(--mono)}
+
+  .stn{display:grid;grid-template-columns:1fr auto;gap:.3rem .6rem;align-items:center;
+    padding:.5rem .5rem;border-radius:8px;background:var(--panel2);margin-bottom:.34rem;
+    transition:box-shadow .2s,background .2s}
+  .stn.down{background:#2A1512;box-shadow:inset 0 0 0 1px var(--bad)}
+  .stn.blk{background:#2A2412}
+  .stn .nm{font-size:.83rem;font-weight:600;letter-spacing:-.01em;display:flex;
+    align-items:baseline;gap:.4rem;min-width:0}
+  .stn .nm span{color:var(--pmuted);font-family:var(--mono);font-size:.7rem;font-weight:400;
+    white-space:nowrap}
+  .stn .crew{display:flex;align-items:center;gap:.22rem;justify-self:end}
+  .track .crew{justify-self:start}
+
+  /* operario */
+  .op{width:19px;height:26px;flex:none;display:block}
+  .op .hat{fill:var(--accent)}
+  .op .bod{fill:#6E6870}
+  .op .hed{fill:#C9BFAE}
+  .stn.work .op{animation:bob .62s ease-in-out infinite}
+  .stn.work .op:nth-child(2){animation-delay:.2s}
+  .stn.work .op:nth-child(3){animation-delay:.4s}
+  .stn.wait .op{opacity:.32}
+  .stn.down .op .hat{fill:var(--bad)}
+  .stn.blk .op .hat{fill:var(--warn)}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+  .track{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:.55rem;
+    align-items:center}
+  .prog{height:5px;border-radius:3px;background:var(--pink);overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px}
+  .stn.wait .prog i{background:var(--pink)}
+  .stn.down .prog i{background:var(--bad)}
+  .stn.blk .prog i{background:var(--warn)}
+  .q{display:flex;gap:2px;align-items:center;min-height:7px}
+  .q i{width:5px;height:7px;border-radius:1px;background:var(--pmuted);opacity:.75}
+  .q i.b{background:var(--bad);opacity:1}
+  .stt{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--pmuted);white-space:nowrap;justify-self:end}
+  .stn.down .stt{color:var(--bad)}
+  .stn.blk .stt{color:var(--warn)}
+
+  /* botones +/- de asignación */
+  .adj{display:flex;align-items:center;gap:.3rem;justify-self:end}
+  .adj button{width:26px;height:26px;border-radius:6px;background:var(--pink);
+    color:var(--pink2);font-weight:700;font-size:.95rem;line-height:1;
+    display:grid;place-items:center}
+  .adj button:disabled{opacity:.28;cursor:default}
+  .adj .n{font-family:var(--mono);font-size:.8rem;width:1.1rem;text-align:center;font-weight:600}
+
+  /* bandeja de salida */
+  .bins{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.55rem}
+  .bin{background:var(--panel2);border-radius:8px;padding:.45rem .6rem}
+  .bin .lb{font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;color:var(--pmuted)}
+  .bin .v{font-family:var(--mono);font-size:1.15rem;font-weight:600;line-height:1.3}
+  .bin.g .v{color:var(--ok)} .bin.b .v{color:var(--bad)}
+  .bin .strip{display:flex;flex-wrap:wrap;gap:2px;margin-top:.28rem;min-height:6px}
+  .bin .strip i{width:4px;height:6px;border-radius:1px;background:var(--ok)}
+  .bin.b .strip i{background:var(--bad)}
+
+  /* ───── palancas ───── */
+  .lev{display:flex;align-items:flex-start;gap:.7rem;padding:.75rem .85rem;
+    border:1px solid var(--rule);border-radius:10px;background:var(--card);margin-bottom:.5rem;
+    width:100%;text-align:left}
+  .lev.on{border-color:var(--accent);background:var(--tint)}
+  .lev .sw{width:38px;height:22px;border-radius:11px;background:var(--rule);flex:none;
+    position:relative;transition:background .2s;margin-top:.1rem}
+  .lev .sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;
+    border-radius:50%;background:var(--card);transition:transform .2s;
+    box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .lev.on .sw{background:var(--accent)}
+  .lev.on .sw::after{transform:translateX(16px)}
+  .lev .tx b{display:block;font-size:.93rem;font-weight:700;letter-spacing:-.01em}
+  .lev .tx span{display:block;color:var(--muted);font-size:.85rem;line-height:1.45}
+
+  /* ───── la apuesta ───── */
+  .bet{border:1px solid var(--accent);border-radius:10px;padding:.9rem .95rem;
+    margin-bottom:.85rem;background:var(--card)}
+  .bet .k{display:block;font-size:.68rem;font-weight:700;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:.15rem}
+  .bet .qq{font-size:.9rem;font-weight:600;margin:.6rem 0 .42rem}
+  .bet .qq:first-of-type{margin-top:.35rem}
+  .opts{display:grid;gap:.35rem}
+  .opts.two{grid-template-columns:1fr 1fr}
+  .opt{border:1px solid var(--rule);border-radius:8px;padding:.5rem .6rem;
+    font-size:.86rem;line-height:1.3;text-align:left;transition:all .15s}
+  .opt b{font-weight:700;display:block}
+  .opt span{color:var(--muted);font-size:.78rem}
+  .opt.sel{border-color:var(--accent);background:var(--tint);box-shadow:inset 0 0 0 1px var(--accent)}
+
+  .btn{display:block;width:100%;background:var(--accent);color:#fff;font-weight:700;
+    border-radius:10px;padding:.85rem 1rem;font-size:1rem;letter-spacing:-.01em;
+    margin-top:.25rem}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+  .hint{color:var(--faint);font-size:.8rem;text-align:center;margin-top:.5rem}
+
+  /* ───── veredicto ───── */
+  .hero{text-align:center;padding:.4rem 0 .2rem}
+  .hero .n{font-family:var(--sans);font-weight:700;letter-spacing:-.05em;
+    font-size:4.2rem;line-height:1;font-variant-numeric:tabular-nums}
+  .hero .n.pass{color:var(--ok)} .hero .n.fail{color:var(--bad)}
+  .hero .u{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+    margin-top:.15rem}
+  .hero .vs{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-top:.35rem}
+
+  .meters{display:grid;gap:.6rem;margin:1rem 0 .2rem}
+  .mt .hd{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem}
+  .mt .hd b{font-weight:600}
+  .mt .hd i{font-family:var(--mono);font-style:normal;font-variant-numeric:tabular-nums;
+    font-weight:600}
+  .mt .tr{height:8px;border-radius:4px;background:var(--rule);overflow:hidden;margin-top:.28rem}
+  .mt .tr i{display:block;height:100%;border-radius:4px;
+    background:color-mix(in srgb,var(--accent) 30%,var(--rule));
+    transition:width .8s cubic-bezier(.2,.7,.2,1)}
+  .mt.low .hd b{font-weight:700}
+  .mt.low .hd i{color:var(--accent);font-weight:700}
+  .mt.low .tr i{background:var(--accent)}
+  .mt.low .why{color:var(--accent)}
+  .mt .why{font-size:.78rem;color:var(--faint);margin-top:.2rem}
+
+  .split{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-top:.3rem;
+    background:var(--rule)}
+  .split i{display:block;height:100%}
+  .split .g{background:var(--ok)} .split .b{background:var(--bad)}
+
+  .card{border:1px solid var(--rule);border-radius:10px;padding:.9rem 1rem;
+    margin:.85rem 0;background:var(--card)}
+  .card.win{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 7%,transparent)}
+  .card.lose{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent)}
+  .card h3{margin:0 0 .3rem;font-size:.98rem;font-weight:700;letter-spacing:-.01em}
+  .card p{font-size:.9rem;color:var(--muted);line-height:1.5}
+  .scr{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+  .chip{font-family:var(--mono);font-size:.74rem;font-weight:600;padding:.22rem .5rem;
+    border-radius:5px;background:var(--rule);color:var(--muted)}
+  .chip.y{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+  .chip.n{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+
+  table{width:100%;border-collapse:collapse;font-size:.86rem;margin-top:.5rem}
+  th,td{text-align:left;padding:.45rem .3rem;border-bottom:1px solid var(--rule)}
+  th{font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+    font-weight:600}
+  td.n{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+  td.y{color:var(--ok);font-weight:600} td.x{color:var(--bad)}
+
+  .rank{text-align:center;padding:1.1rem 0 .4rem}
+  .rank .g{font-family:var(--mono);font-size:2.6rem;font-weight:600;letter-spacing:-.03em;
+    color:var(--accent);line-height:1}
+  .rank .t{font-family:var(--serif);font-size:1.5rem;margin-top:.3rem;line-height:1.2}
+
+  footer{margin-top:1.6rem;padding-top:.9rem;border-top:1px solid var(--rule);
+    color:var(--faint);font-size:.78rem;line-height:1.55}
+
+  @media(min-width:34rem){
+    .wrap{max-width:40rem;padding:1.8rem 1.5rem 4rem}
+    h1{font-size:2.6rem}
+    .stn{grid-template-columns:1.5fr auto auto;gap:.4rem .8rem}
+    .track{grid-column:1/-1}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .stn.work .op{animation:none}
+    .mt .tr i{transition:none}
+  }
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <span class="ttl">Jefe de Planta</span>
+    <span class="dots" id="dots"></span>
+    <span class="pts" id="pts">0 pts</span>
+  </div>
+  <div id="stage"></div>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ═══════════ modelo calibrado — no tocar sin recalibrar ═══════════ */
+  const NOM=["Preparar base","Tornillería","Montar cubierta","Ajuste con herramienta","Calidad y empaque"];
+  const W0=[20,40,22,30,18], W5=[30,20,40,22,18];
+  const POOL=7, CAP=8, T=1500, CI=130/7, META=.65, N=5;
+  const REL=[[2400,25],[230,55],[220,55],[210,58],[2400,25]];
+  const DEF=[.004,.018,.004,.022,.004];
+  const PM_COST=60, PM_MTBF=5, FK=.8, FD=5, FM=.4;
+  const REAL=12, SEED=11, STEP=.25;
+
+  const NIV=[
+    {n:1,t:"La línea limpia",W:W0,fallas:false,defectos:false,rel:1,pm:false,ritmo:false,
+     nuevo:"Una sola palanca: cómo reparte los siete operarios. Ninguna máquina falla y ninguna pieza sale mala.",
+     pista:"El ciclo de una estación es su trabajo dividido entre la gente que le ponga. La línea entera va al ritmo de la estación más lenta."},
+    {n:2,t:"Las máquinas fallan",W:W0,fallas:true,defectos:false,rel:1,pm:true,ritmo:false,
+     nuevo:"Las máquinas se averían. Puede hacer mantenimiento preventivo antes de arrancar: cuesta un minuto de los veinticinco y multiplica por cinco el tiempo entre averías.",
+     pista:"Ese minuto también cuenta como parada. La pregunta es si le devuelve más de lo que le cuesta."},
+    {n:3,t:"Aparecen los defectos",W:W0,fallas:true,defectos:true,rel:1,pm:true,ritmo:true,
+     nuevo:"Las piezas salen malas y solo se descubren en Calidad. Puede forzar el ritmo: los ciclos bajan un 20%, pero los defectos se multiplican por cinco y las máquinas se averían más.",
+     pista:"Forzar el ritmo siempre produce más unidades. Mire cuántas de esas unidades sirven."},
+    {n:4,t:"Equipo viejo",W:W0,fallas:true,defectos:true,rel:.5,pm:true,ritmo:true,
+     nuevo:"Misma línea, mismas palancas, pero las máquinas tienen el doble de averías. La meta no baja.",
+     pista:"Aquí no hay margen: las tres decisiones tienen que estar bien."},
+    {n:5,t:"Producto nuevo",W:W5,fallas:true,defectos:true,rel:.5,pm:true,ritmo:true,
+     nuevo:"Entra otra referencia. El trabajo total es el mismo, pero repartido distinto entre las estaciones. Su asignación de ayer ya no sirve.",
+     pista:"Vuelva a mirar los ciclos antes de correr. El cuello de botella se mudó de estación."}
+  ];
+
+  const FACT=[
+    {k:"D",n:"Disponibilidad",d:"la máquina para"},
+    {k:"R",n:"Rendimiento",d:"la línea va lenta"},
+    {k:"Q",n:"Calidad",d:"las piezas salen malas"}
+  ];
+  const RANGOS=[
+    [450,"Ingeniero de mejora","Diagnostica antes de correr y acierta. Este es el nivel al que se llega leyendo los tres factores, no el número grande."],
+    [370,"Jefe de planta","Sabe dónde está la pérdida casi siempre. Le falta afinar la lectura en los niveles apretados."],
+    [280,"Supervisor","Ya sospecha del número grande, pero todavía decide después de correr en vez de antes."],
+    [170,"Operario con criterio","Llega a la meta, pero por ensayo y error. El diagnóstico es lo que falta."],
+    [0,"Le creyó al indicador","Un OEE alto no es una buena planta: es un producto de tres factores. Vuelva a empezar mirando cuál se le está cayendo."]
+  ];
+
+  /* ═══════════ motor ═══════════ */
+  function mk(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;
+    t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+  function nuevoSim(ops,cfg){
+    const k=cfg.forzado?FK:1;
+    const mb=(cfg.pm?PM_MTBF:1)*(cfg.forzado?FM:1)*cfg.rel;
+    const cyc=cfg.W.map((w,i)=>w/ops[i]*k);
+    let bn=0; for(let i=1;i<N;i++) if(cyc[i]>cyc[bn]) bn=i;
+    return {ops:ops.slice(),cyc:cyc,bn:bn,cfg:cfg,rng:mk(SEED),
+      mtbf:REL.map(r=>r[0]*mb), mttr:REL.map(r=>r[1]),
+      st:NOM.map(()=>({h:false,dn:false,t:0,buf:0,qb:0,dt:0,bad:false,down:0,op:0})),
+      nxt:NOM.map((x,i)=>cfg.fallas?REL[i][0]*mb:1e18),
+      clock:cfg.pm?PM_COST:0, pmCost:cfg.pm?PM_COST:0, out:0, good:0};
+  }
+
+  function push(s,i,bad){
+    if(i===N-1){ s.out++; if(!bad) s.good++; return true; }
+    if(s.st[i+1].buf<CAP){ s.st[i+1].buf++; if(bad) s.st[i+1].qb++; return true; }
+    return false;
+  }
+
+  function tick(s,dt){
+    s.clock+=dt;
+    for(let i=N-1;i>=0;i--){
+      const e=s.st[i];
+      if(e.dt>0){ e.dt-=dt; e.down+=dt; continue; }
+      if(e.dn){ if(push(s,i,e.bad)) e.dn=false; else continue; }
+      if(!e.h){
+        if(i===0){ e.h=true; e.t=0; e.bad=false; }
+        else if(e.buf>0){ e.buf--; e.h=true; e.t=0; e.bad=e.qb>0; if(e.qb>0) e.qb--; }
+      }
+      if(e.h){
+        e.t+=dt; e.op+=dt;
+        if(s.cfg.fallas && e.op>=s.nxt[i]){ e.dt=s.mttr[i]; s.nxt[i]=e.op+s.mtbf[i]; }
+        if(e.t>=s.cyc[i]){
+          e.h=false; e.t=0;
+          if(s.cfg.defectos && s.rng()<DEF[i]*(s.cfg.forzado?FD:1)) e.bad=true;
+          if(!push(s,i,e.bad)) e.dn=true;
+        }
+      }
+    }
+  }
+
+  function medir(s){
+    const down=s.st[s.bn].down+s.pmCost;
+    const D=(T-down)/T;
+    const R=down<T?(CI*s.out)/(T-down):0;
+    const Q=s.out?s.good/s.out:0;
+    return {D:D,R:R,Q:Q,OEE:CI*s.good/T,out:s.out,good:s.good,bn:NOM[s.bn],down:down};
+  }
+  /* factor más bajo; empate técnico si el 2º está a menos de 3 puntos */
+  function bajo(m){
+    const a=[["D",m.D],["R",m.R],["Q",m.Q]].sort((x,y)=>x[1]-y[1]);
+    return {k:a[0][0], cerca:(a[1][1]-a[0][1])<.03?a[1][0]:null};
+  }
+
+  /* ═══════════ estado ═══════════ */
+  const S={ nivel:0, ops:[2,1,1,2,1], pm:false, forzado:false,
+            apPasa:null, apFact:null, intentos:0, puntos:0, hist:[], corriendo:false };
+  const $=q=>document.querySelector(q), stage=$("#stage");
+  const pct=v=>(v*100).toFixed(1)+"%";
+  const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const cfgDe=v=>({W:v.W,fallas:v.fallas,defectos:v.defectos,rel:v.rel,pm:S.pm,forzado:S.forzado});
+
+  function pintarBarra(){
+    $("#dots").innerHTML=NIV.map((v,i)=>{
+      const h=S.hist[i];
+      return '<i class="'+(h?(h.pass?"ok":"no"):(i===S.nivel?"now":""))+'"></i>';
+    }).join("");
+    $("#pts").textContent=S.puntos+" pts";
+  }
+
+  const HAT='<svg class="op" viewBox="0 0 16 22" aria-hidden="true">'
+    +'<rect class="bod" x="1.5" y="12.2" width="2" height="6" rx="1"/>'
+    +'<rect class="bod" x="12.5" y="12.2" width="2" height="6" rx="1"/>'
+    +'<path class="bod" d="M5.2 11.3h5.6a2.6 2.6 0 0 1 2.6 2.6V22H2.6v-8.1a2.6 2.6 0 0 1 2.6-2.6Z"/>'
+    +'<circle class="hed" cx="8" cy="8.7" r="2.7"/>'
+    +'<rect class="hat" x="1.4" y="5" width="13.2" height="1.5" rx=".75"/>'
+    +'<path class="hat" d="M8 .9a4.2 4.2 0 0 1 4.2 4.2H3.8A4.2 4.2 0 0 1 8 .9Z"/></svg>';
+
+  function crew(k){ let h=""; for(let i=0;i<k;i++) h+=HAT; return h; }
+
+  /* ═══════════ pantalla de nivel ═══════════ */
+  function pintarNivel(){
+    const v=NIV[S.nivel];
+    stage.innerHTML=
+      '<p class="kick">Nivel '+v.n+' de 5 · meta 65% de OEE</p>'
+      +'<h2>'+esc(v.t)+'</h2>'
+      +'<p class="lead">'+esc(v.nuevo)+'</p>'
+      +'<div id="plant"></div>'
+      +'<div id="palancas"></div>'
+      +'<div class="bet" id="bet"></div>'
+      +'<button class="btn" id="run" disabled>Arrancar la corrida</button>'
+      +'<p class="hint" id="hint">Reparta los siete operarios y haga su apuesta.</p>'
+      +'<div class="box" style="margin-top:1.1rem"><span class="k">Pista</span><p>'+esc(v.pista)+'</p></div>';
+    pintarPlanta(); pintarPalancas(); pintarApuesta(); pintarBarra(); pintarPie();
+  }
+
+  function pintarPlanta(){
+    const v=NIV[S.nivel], k=S.forzado?FK:1;
+    const cyc=v.W.map((w,i)=>w/S.ops[i]*k);
+    let bn=0; for(let i=1;i<N;i++) if(cyc[i]>cyc[bn]) bn=i;
+    const usados=S.ops.reduce((a,b)=>a+b,0), libres=POOL-usados;
+    let h='<div class="plant"><div class="phd"><b>La línea</b>'
+      +'<span class="pool">operarios libres <b>'+libres+'</b> de '+POOL+'</span></div>';
+    for(let i=0;i<N;i++){
+      const cuello=i===bn;
+      h+='<div class="stn">'
+        +'<div class="nm">'+esc(NOM[i])+' <span>'+v.W[i]+'s · ciclo '+cyc[i].toFixed(1)+'s'
+          +'</span></div>'
+        +'<div class="adj"><button data-m="'+i+'"'+(S.ops[i]<=1?' disabled':'')+'>−</button>'
+          +'<span class="n">'+S.ops[i]+'</span>'
+          +'<button data-p="'+i+'"'+(libres<=0?' disabled':'')+'>+</button></div>'
+        +'<div class="track"><div class="crew">'+crew(S.ops[i])+'</div>'
+          +'<div class="stt">'+(cuello?"restricción":"holgura "+Math.round((1-cyc[i]/cyc[bn])*100)+"%")+'</div></div>'
+        +'</div>';
+    }
+    h+='</div>';
+    $("#plant").innerHTML=h;
+    $("#plant").querySelectorAll("[data-m]").forEach(b=>b.addEventListener("click",()=>{
+      const i=+b.dataset.m; if(S.ops[i]>1){ S.ops[i]--; pintarPlanta(); refrescarRun(); }}));
+    $("#plant").querySelectorAll("[data-p]").forEach(b=>b.addEventListener("click",()=>{
+      const i=+b.dataset.p;
+      if(S.ops.reduce((a,c)=>a+c,0)<POOL){ S.ops[i]++; pintarPlanta(); refrescarRun(); }}));
+  }
+
+  function pintarPalancas(){
+    const v=NIV[S.nivel]; let h="";
+    if(v.pm) h+='<button class="lev'+(S.pm?" on":"")+'" id="lpm"><span class="sw"></span>'
+      +'<span class="tx"><b>Mantenimiento preventivo</b>'
+      +'<span>Cuesta 60 s de los 1500 planeados. Multiplica por cinco el tiempo entre averías.</span></span></button>';
+    if(v.ritmo) h+='<button class="lev'+(S.forzado?" on":"")+'" id="lrt"><span class="sw"></span>'
+      +'<span class="tx"><b>Forzar el ritmo</b>'
+      +'<span>Los ciclos bajan 20%. Los defectos se multiplican por cinco y las máquinas fallan más.</span></span></button>';
+    $("#palancas").innerHTML=h;
+    const a=$("#lpm"); if(a) a.addEventListener("click",()=>{S.pm=!S.pm;pintarPalancas();pintarPlanta();});
+    const b=$("#lrt"); if(b) b.addEventListener("click",()=>{S.forzado=!S.forzado;pintarPalancas();pintarPlanta();});
+  }
+
+  function pintarApuesta(){
+    $("#bet").innerHTML='<span class="k">Su apuesta, antes de correr</span>'
+      +'<p class="qq">¿Con estas decisiones llega al 65%?</p>'
+      +'<div class="opts two">'
+        +'<button class="opt'+(S.apPasa===true?" sel":"")+'" data-b="1"><b>Sí, paso</b></button>'
+        +'<button class="opt'+(S.apPasa===false?" sel":"")+'" data-b="0"><b>No llego</b></button>'
+      +'</div>'
+      +'<p class="qq">¿Cuál de los tres factores va a quedar más abajo?</p>'
+      +'<div class="opts">'+FACT.map(f=>'<button class="opt'+(S.apFact===f.k?" sel":"")+'" data-f="'+f.k+'">'
+        +'<b>'+f.n+'</b><span>'+f.d+'</span></button>').join("")+'</div>';
+    $("#bet").querySelectorAll("[data-b]").forEach(b=>b.addEventListener("click",()=>{
+      S.apPasa=b.dataset.b==="1"; pintarApuesta(); refrescarRun(); }));
+    $("#bet").querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{
+      S.apFact=b.dataset.f; pintarApuesta(); refrescarRun(); }));
+    refrescarRun();
+  }
+
+  function refrescarRun(){
+    const r=$("#run"); if(!r) return;
+    const listo=S.apPasa!==null && S.apFact!==null && S.ops.reduce((a,b)=>a+b,0)===POOL;
+    r.disabled=!listo;
+    const hh=$("#hint");
+    if(hh) hh.textContent = listo ? "La corrida dura 25 minutos simulados."
+      : (S.ops.reduce((a,b)=>a+b,0)!==POOL ? "Le faltan operarios por asignar."
+        : "Responda las dos preguntas para arrancar.");
+    if(!r.dataset.on){ r.dataset.on="1"; r.addEventListener("click",correr); }
+  }
+
+  /* ═══════════ la corrida ═══════════ */
+  function correr(){
+    if(S.corriendo) return;
+    S.corriendo=true; S.intentos++;
+    const v=NIV[S.nivel], s=nuevoSim(S.ops,cfgDe(v));
+    stage.innerHTML='<p class="kick">Nivel '+v.n+' · corriendo</p>'
+      +'<h2>'+esc(v.t)+'</h2>'
+      +'<div id="plant"></div>';
+    let acc=0, t0=null;
+    const accel=T/REAL;
+
+    function marco(ts){
+      if(t0===null) t0=ts;
+      const d=Math.min(.05,(ts-t0)/1000)*accel; t0=ts;
+      acc+=d;
+      /* paso fijo de 0,25 s: idéntico al modelo con el que se calibraron los niveles */
+      while(acc>=STEP && s.clock<T){ tick(s,STEP); acc-=STEP; }
+      pintarCorrida(s);
+      if(s.clock<T) requestAnimationFrame(marco); else fin(s);
+    }
+    requestAnimationFrame(marco);
+  }
+
+  function pintarCorrida(s){
+    const v=NIV[S.nivel];
+    let h='<div class="plant"><div class="phd"><b>La línea</b>'
+      +'<span class="clock">'+Math.floor(s.clock/60)+':'+String(Math.floor(s.clock%60)).padStart(2,"0")
+      +' / 25:00</span></div>';
+    for(let i=0;i<N;i++){
+      const e=s.st[i];
+      let cls="", st="trabajando";
+      if(e.dt>0){ cls="down"; st="avería"; }
+      else if(e.dn){ cls="blk"; st="bloqueado"; }
+      else if(!e.h){ cls="wait"; st="sin material"; }
+      else cls="work";
+      const p=e.h?Math.min(100,e.t/s.cyc[i]*100):0;
+      let q=""; const nq=Math.min(e.buf,CAP);
+      for(let j=0;j<nq;j++) q+='<i class="'+(j<e.qb?"b":"")+'"></i>';
+      h+='<div class="stn '+cls+'">'
+        +'<div class="nm">'+esc(NOM[i])+' <span>ciclo '+s.cyc[i].toFixed(1)+'s</span></div>'
+        +'<div class="crew">'+crew(s.ops[i])+'</div>'
+        +'<div class="track"><div class="prog"><i style="width:'+p.toFixed(0)+'%"></i></div>'
+          +'<div class="stt">'+st+'</div></div>'
+        +'<div class="q">'+q+'</div>'
+        +'</div>';
+    }
+    const malas=s.out-s.good;
+    const tira=k=>{ let x=""; for(let j=0;j<Math.min(k,64);j++) x+='<i></i>'; return x; };
+    h+='<div class="bins">'
+      +'<div class="bin g"><div class="lb">Buenas</div><div class="v">'+s.good+'</div>'
+        +'<div class="strip">'+tira(s.good)+'</div></div>'
+      +'<div class="bin b"><div class="lb">Malas</div><div class="v">'+malas+'</div>'
+        +'<div class="strip">'+tira(malas)+'</div></div>'
+      +'</div></div>';
+    $("#plant").innerHTML=h;
+  }
+
+  /* ═══════════ veredicto ═══════════ */
+  function fin(s){
+    S.corriendo=false;
+    const v=NIV[S.nivel], m=medir(s), pasa=m.OEE>=META, b=bajo(m);
+    const acertoPasa = S.apPasa===pasa;
+    const acertoFact = S.apFact===b.k || S.apFact===b.cerca;
+    const pIntento = Math.max(0, 20 - (S.intentos-1)*20);
+    const gan = (pasa?50:0) + (acertoPasa?15:0) + (acertoFact?15:0) + (pasa?pIntento:0);
+
+    const prev=S.hist[S.nivel];
+    if(!prev || gan>prev.gan) S.puntos += gan - (prev?prev.gan:0);
+    S.hist[S.nivel]={OEE:m.OEE,pass:pasa,gan:Math.max(gan,prev?prev.gan:0),
+      ops:S.ops.slice(),pm:S.pm,forzado:S.forzado,bajo:b.k,out:m.out,good:m.good};
+
+    const nf=FACT.find(f=>f.k===b.k);
+    let h='<p class="kick">Nivel '+v.n+' · resultado</p>'
+      +'<div class="hero"><div class="n '+(pasa?"pass":"fail")+'">'+(m.OEE*100).toFixed(1)+'</div>'
+      +'<div class="u">% de OEE</div>'
+      +'<div class="vs">meta 65,0 · '+(pasa?"pasa por "+((m.OEE-META)*100).toFixed(1)+" puntos"
+        :"le faltan "+((META-m.OEE)*100).toFixed(1)+" puntos")+'</div></div>'
+      +'<div class="meters">'
+      + FACT.map(f=>{
+          const val=f.k==="D"?m.D:f.k==="R"?m.R:m.Q;
+          const low=f.k===b.k;
+          return '<div class="mt'+(low?" low":"")+'"><div class="hd"><b>'+f.n+'</b><i>'+pct(val)+'</i></div>'
+            +'<div class="tr"><i style="width:'+(val*100).toFixed(1)+'%"></i></div>'
+            +(low?'<div class="why">Aquí está su pérdida: '+f.d+'.</div>':'')+'</div>';
+        }).join("")
+      +'</div>'
+      +'<div class="card"><h3>'+m.out+' producidas · '+m.good+' buenas</h3>'
+      +'<div class="split"><i class="g" style="width:'+(m.out?m.good/m.out*100:0).toFixed(1)+'%"></i>'
+      +'<i class="b" style="width:'+(m.out?(m.out-m.good)/m.out*100:0).toFixed(1)+'%"></i></div>'
+      +'<p style="margin-top:.45rem">Restricción: '+esc(m.bn)+' · paradas '+Math.round(m.down)+' s de 1500.</p></div>';
+
+    h+='<div class="card '+(acertoPasa&&acertoFact?"win":(acertoPasa||acertoFact?"":"lose"))+'">'
+      +'<h3>Su apuesta</h3><p>'
+      +'Dijo que <b>'+(S.apPasa?"sí pasaba":"no llegaba")+'</b> y '+(acertoPasa?"acertó":"no fue así")+'. '
+      +'Apostó a que el factor más bajo sería <b>'+esc(FACT.find(f=>f.k===S.apFact).n)+'</b>'
+      +(acertoFact?" y así fue.":" pero fue <b>"+esc(nf.n)+"</b>.")
+      +'</p><div class="scr">'
+      +'<span class="chip '+(pasa?"y":"n")+'">meta '+(pasa?"+50":"0")+'</span>'
+      +'<span class="chip '+(acertoPasa?"y":"n")+'">pronóstico '+(acertoPasa?"+15":"0")+'</span>'
+      +'<span class="chip '+(acertoFact?"y":"n")+'">diagnóstico '+(acertoFact?"+15":"0")+'</span>'
+      +'<span class="chip '+(pasa&&pIntento?"y":"n")+'">corrida '+S.intentos+' '+(pasa?"+"+pIntento:"0")+'</span>'
+      +'<span class="chip">total '+gan+'</span></div></div>';
+
+    if(!pasa){
+      h+='<button class="btn" id="again">Volver a intentar el nivel '+v.n+'</button>'
+        +'<p class="hint">Cada corrida de más le quita 20 puntos del nivel.</p>';
+    }else{
+      h+= S.nivel<NIV.length-1
+        ? '<button class="btn" id="next">Pasar al nivel '+(v.n+1)+'</button>'
+        : '<button class="btn" id="next">Ver el resumen</button>';
+      h+='<button class="btn ghost" id="again" style="margin-top:.5rem">Repetir este nivel</button>';
+    }
+    stage.innerHTML=h;
+    pintarBarra(); pintarPie();
+    const nx=$("#next");
+    if(nx) nx.addEventListener("click",()=>{
+      if(S.nivel<NIV.length-1){ S.nivel++; S.intentos=0; S.apPasa=null; S.apFact=null;
+        S.pm=false; S.forzado=false; pintarNivel(); window.scrollTo(0,0); }
+      else resumen();
+    });
+    const ag=$("#again");
+    if(ag) ag.addEventListener("click",()=>{ S.apPasa=null; S.apFact=null; pintarNivel(); window.scrollTo(0,0); });
+    window.scrollTo(0,0);
+  }
+
+  /* ═══════════ resumen ═══════════ */
+  function resumen(){
+    const total=S.puntos;
+    const r=RANGOS.find(x=>total>=x[0]);
+    const mejor=S.hist[S.hist.length-1];
+    const fallos={};
+    S.hist.forEach(h=>{ if(h) fallos[h.bajo]=(fallos[h.bajo]||0)+1; });
+    const dom=Object.keys(fallos).sort((a,b)=>fallos[b]-fallos[a])[0];
+    const nd=FACT.find(f=>f.k===dom);
+
+    let h='<p class="kick">Fin del turno</p>'
+      +'<div class="rank"><div class="g">'+total+' / 500</div>'
+      +'<div class="t">'+esc(r[1])+'</div></div>'
+      +'<p class="lead" style="text-align:center">'+esc(r[2])+'</p>'
+      +'<table><thead><tr><th>Nivel</th><th class="n">OEE</th><th class="n">Factor bajo</th><th class="n">Pts</th></tr></thead><tbody>'
+      + NIV.map((v,i)=>{ const x=S.hist[i];
+          return '<tr><td>'+v.n+' · '+esc(v.t)+'</td>'
+            +'<td class="n '+(x?(x.pass?"y":"x"):"")+'">'+(x?pct(x.OEE):"—")+'</td>'
+            +'<td class="n">'+(x?esc(FACT.find(f=>f.k===x.bajo).n):"—")+'</td>'
+            +'<td class="n">'+(x?x.gan:0)+'</td></tr>'; }).join("")
+      +'</tbody></table>';
+
+    if(mejor) h+='<div class="card" style="margin-top:1.1rem"><h3>Lo que se lleva a la corrida física</h3>'
+      +'<p>La asignación con la que cerró: <b>'+mejor.ops.join(" · ")+'</b> operarios por estación, '
+      +(mejor.pm?"con":"sin")+' mantenimiento preventivo y a ritmo '+(mejor.forzado?"forzado":"normal")+'. '
+      +'El factor que más lo castigó en el turno fue <b>'+esc(nd.n)+'</b> — '+nd.d+'. '
+      +'Móntelo así en la línea real y compare el dato.</p></div>';
+
+    h+='<div class="card"><h3>La trampa</h3><p>El OEE es un producto, no un promedio: '
+      +'<b>Disponibilidad × Rendimiento × Calidad</b>. Por eso la decisión que sube el número que usted '
+      +'ve —más unidades— puede hundir el que importa. Forzar el ritmo produce más piezas y menos piezas buenas. '
+      +'El número grande no le dice qué hacer; <b>el factor más bajo sí</b>.</p></div>';
+
+    if(dom==="R") h+='<div class="card"><h3>Por qué le salió Rendimiento casi siempre</h3>'
+      +'<p>No es casualidad. Cuando el mantenimiento y la calidad están resueltos, lo único que queda '
+      +'por ganar es <b>balanceo</b>: la línea entera va al ritmo de la estación más lenta, y toda la '
+      +'holgura de las demás es tiempo pagado que no produce. Ahí vive el resto de su OEE, y por eso '
+      +'el balanceo es lo primero que se toca, no lo último.</p></div>';
+      +'<button class="btn ghost" id="reset">Empezar de nuevo</button>';
+
+    stage.innerHTML=h; pintarBarra(); pintarPie();
+    $("#reset").addEventListener("click",()=>{
+      S.nivel=0; S.ops=[2,1,1,2,1]; S.pm=false; S.forzado=false; S.hist=[];
+      S.puntos=0; S.intentos=0; S.apPasa=null; S.apFact=null; pintarNivel(); window.scrollTo(0,0);
+    });
+    window.scrollTo(0,0);
+  }
+
+  function pintarPie(){
+    $("#foot").innerHTML='Cinco estaciones en serie · 7 operarios · cola de 8 · 25 minutos de tiempo planeado · '
+      +'ciclo ideal 18,57 s por unidad. Las averías ocurren a intervalo fijo y los defectos con semilla fija: '
+      +'la misma decisión da siempre el mismo resultado. La disponibilidad se mide sobre la restricción, '
+      +'como manda la práctica estándar.';
+  }
+
+  pintarNivel();
+})();
+</script>

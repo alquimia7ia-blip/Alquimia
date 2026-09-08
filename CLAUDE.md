@@ -25,6 +25,7 @@ funciona.*
 | `docs/metodo/Guia-del-Tallerista.docx` | La guía en Word, carta, editable |
 | `docs/metodo/gemelo-taller.html` | Gemelo digital · Capacidad de Producción. Artifact: `c9cbbb64-221d-4273-b8f5-772f85203e6a` |
 | `docs/metodo/gemelo-oee.html` | **La Trampa del OEE** — gemelo de indicadores, 4 niveles. Artifact: `ed68e2c7-0dfe-4686-be84-aa8b489fa097` |
+| `docs/metodo/jefe-de-planta.html` | **Jefe de Planta** — el mismo tema, jugable en celular, 5 niveles con puntaje. Artifact: `PENDIENTE` |
 
 ### Preferencias de forma, aprendidas a los golpes
 
@@ -178,3 +179,96 @@ palanca que sube un factor y hunde otro, y esconder el daño hasta el veredicto.
   de parte-a-todo para producidas contra buenas.
 - Verificar siempre con `drive3.mjs`: maneja los cuatro niveles y compara contra los
   valores esperados.
+
+
+---
+
+## «Jefe de Planta» — la versión jugable · `docs/metodo/jefe-de-planta.html`
+
+Clon de La Trampa del OEE, para que **los participantes lo jueguen en su celular antes de la
+corrida física**. Mismo motor, misma calibración, mismo indicador. Lo que cambia es quién lo
+usa y cómo se puntúa.
+
+### Lo que decidió el negocio
+
+- **Público:** estudiantes y empresarios del taller, en su propio celular o en grupo desde un
+  computador de la Fábrica. **Móvil primero**, no adaptado después.
+- **La secuencia es virtual → física.** Se juega, se falla barato, y después se monta en la
+  línea real. Por eso la pantalla de cierre entrega **la asignación con la que cerró y el
+  factor que más lo castigó**: es la hoja de ruta para la corrida física.
+- **El puntaje premia entender, no correr.** Ver «reglas del puntaje» abajo.
+
+### La apuesta — el mecanismo que hace que enseñe
+
+Antes de cada corrida el jugador **se compromete con dos respuestas**:
+
+1. ¿Con estas decisiones llega al 65%? — sí / no
+2. ¿Cuál de los tres factores va a quedar más abajo? — Disponibilidad / Rendimiento / Calidad
+
+Sin las dos respuestas el botón de arrancar no se habilita. Esto convierte el juego de
+«probar hasta que pase» en **diagnosticar antes de actuar**, que es exactamente la pregunta
+que el usuario quiere que el taller responda: *cómo sé si el indicador es vanidoso o me está
+mostrando una falla real.*
+
+**Empate técnico:** si el segundo factor más bajo está a menos de 3 puntos del primero, se
+acepta cualquiera de los dos. Sin esa regla el nivel 2 sin preventivo era injusto — ahí
+Rendimiento (78,8) y Disponibilidad (81,7) quedan a 2,8 puntos.
+
+**Ojo con esto:** jugando bien, el factor más bajo es **siempre Rendimiento**. No es un
+defecto del diseño, es la lección —cuando el mantenimiento y la calidad están resueltos, lo
+único que queda por ganar es balanceo— pero el resumen tiene que decirlo explícitamente o el
+jugador lo descubre como truco para farmear puntos. Por eso existe la tarjeta «Por qué le
+salió Rendimiento casi siempre».
+
+### Reglas del puntaje — 100 por nivel, 500 en total
+
+| Concepto | Puntos |
+|---|---|
+| Pasar la meta | 50 |
+| Acertar si pasaba o no | 15 |
+| Acertar el factor más bajo | 15 |
+| Pasar en la primera corrida | 20 (−20 por cada corrida extra) |
+
+Rangos al cierre: 450 Ingeniero de mejora · 370 Jefe de planta · 280 Supervisor ·
+170 Operario con criterio · 0 «Le creyó al indicador».
+
+### El nivel 5 — producto nuevo
+
+**Descartado primero:** bajar a 6 operarios. El máximo alcanzable es 45,8% contra una meta de
+65%: nivel imposible. Se verificó antes de escribir interfaz.
+
+**Lo que quedó:** una referencia nueva con el **mismo trabajo total, otro reparto**.
+
+```
+W nivel 5 = [30, 20, 40, 22, 18]   (contra [20,40,22,30,18] de los niveles 1-4)
+correcto: [2,1,2,1,1] + preventivo + ritmo normal  ->  65,6%   (+0,6 sobre la meta)
+copiar la asignación del nivel 4 [1,2,1,2,1]       ->  34,7%
+```
+
+El cuello se muda de Montar cubierta a **Ajuste con herramienta**. Se buscó por fuerza bruta
+entre las permutaciones de los contenidos de trabajo, con tres condiciones: ganable pero
+justo, cuello en una máquina que se avería, y que copiar la asignación anterior fallara feo.
+
+**La escalera completa, margen sobre la meta:** +14,2 → +8,0 → +4,3 → +1,9 → **+0,6**.
+
+### Diseño
+
+- **El avatar es el operario que usted asigna**, no un adorno. Figuras SVG con casco que
+  aparecen en la estación a la que las manda; se mecen cuando trabajan, se apagan al 32% de
+  opacidad cuando esperan, y el casco se pone rojo en avería y ámbar en bloqueo. Así el
+  desbalanceo **se ve**: dos operarios quietos en una estación rápida mientras uno solo suda
+  en el cuello.
+- Cada estación muestra su contenido de trabajo, su ciclo calculado en vivo y su holgura
+  contra el cuello. Es el profesor de balanceo.
+- Barra de progreso por estación, cola en cuadritos, y **dos bandejas —buenas y malas— que se
+  llenan durante la corrida**. El daño se ve acumularse.
+- Medidores: un solo tono; los dos factores sanos al 30% de intensidad y **el más bajo en
+  acento pleno**. El color marca dónde mirar, no la categoría.
+- Sin librerías, un archivo, 12 s reales por corrida, paso fijo de 0,25 s.
+
+### Verificación — `drive5.mjs`
+
+Maneja el juego en una pantalla de 390 px y contrasta los diez casos contra `cal5.py`.
+Los cinco niveles de la jugada correcta y las cinco jugadas equivocadas coinciden **al
+decimal**. Comprueba además que no haya desborde horizontal en celular. Los únicos errores de
+consola son las fuentes de Google, que el contenedor no alcanza.
