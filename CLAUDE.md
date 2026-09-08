@@ -31,6 +31,9 @@ funciona.*
 - Sin ASCII art, sin rúbricas, sin «kit de frases», sin tablas de correspondencia.
 - Nada de roles múltiples: **un** rol, el del tallerista.
 - El checklist es **una sola lista**, no dividido por semana/día/hora.
+- La sección 01 abre con **el rol del tallerista** —Mide · Devuelve · Corta—, no con
+  «cómo funciona un taller». El taller se narra momento por momento en la sección 02;
+  repetir el ciclo en la 01 era redundante.
 
 ---
 

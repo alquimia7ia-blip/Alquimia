@@ -6,23 +6,23 @@ Para preparar un taller. Léala antes de dictar.
 
 ---
 
-## 1. Cómo funciona un taller
+## 1. El rol del tallerista
 
-El taller no explica y después practica. **Hace fallar, y la teoría llega como la
-corrección de la falla.**
+El tallerista no es expositor: **es operador del ejercicio y responsable del dato.**
 
-**Instrucción incompleta → caos → corrida → conclusiones → información → otra corrida**
+El taller no explica y después practica: hace fallar, y la teoría llega como la corrección de
+la falla. Por eso el rol es este.
 
-Tres reglas salen de ahí:
+**MIDE.** Si no queda un número escrito, no hubo taller.
 
-**La instrucción se da por encima, a propósito.** Se dice qué hay que producir, no cómo
-organizarse. Después se les da tiempo para planear.
+**DEVUELVE.** Ante una pregunta, responde con otra pregunta o con un dato. Nunca con la
+solución.
 
-**No se aclara.** Van a tener problemas de comunicación, van a pelear por quién manda y van
-a arrancar sin saber para dónde van. Eso es el ejercicio.
+**CORTA.** Sostiene el reloj aunque la conversación esté buena. El tiempo se le quita a la
+teoría, jamás a las corridas.
 
-**La primera conclusión no es sobre el tema: es que no preguntaron.** Hacerla salir es
-trabajo suyo, y es lo que abre todo lo demás.
+*Lo que no hace: no arma, no corrige durante la corrida, no rescata a un equipo que va
+perdiendo, no adelanta conceptos, no llena silencios.*
 
 > **Si el tallerista explica bien al principio, el taller no funciona.**
 
@@ -53,12 +53,14 @@ explicada por encima: qué hay que producir y con qué meta. **No se explica có
 organizarse.**
 
 **05 · Practicar — 45 min**
-Diez minutos para que planeen y veinticinco de corrida cronometrada. Los tiempos van al
-tablero. Durante la corrida el tallerista no ayuda.
+Diez minutos para que planeen y veinticinco de corrida cronometrada. Van a discutir quién
+manda y a arrancar sin saber para dónde van: eso es el ejercicio. Los tiempos van al tablero.
+Durante la corrida el tallerista no ayuda.
 
 **06 · Extender — 15 min**
-El momento fuerte. Primero las conclusiones de lo que pasó. Después la información que
-corrige. Y con eso, la segunda corrida y la comparación de tiempos.
+El momento fuerte. Primero las conclusiones de lo que pasó: la primera que tiene que salir
+es que no preguntaron. Después la información que corrige. Y con eso, la segunda corrida y la
+comparación de tiempos.
 
 **07 · Refinar — 10 min**
 Los cuellos de botella que ellos vivieron. Intercambian la guía con un compañero y le
