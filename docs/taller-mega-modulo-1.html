@@ -1,0 +1,1219 @@
+<title>Bitácora MEGA Módulo 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#EFEFF4; --surface:#FFFFFF; --surface-2:#F7F6FB; --line:#DEDCE8; --line-2:#EAE8F2;
+  --text:#1C1A2E; --muted:#615D7A; --faint:#8C88A6;
+  --accent:#4B3FA6; --accent-2:#6B5DD3; --accent-soft:#E8E5F8; --accent-line:#C7C0EE;
+  --gold:#9C5F22; --gold-soft:#F7EADC; --gold-line:#E4CBAC;
+  --fav:#2E7D4F; --fav-soft:#E3F1E9; --fav-line:#B6DAC5;
+  --med:#A9740A; --med-soft:#FBF0D9; --med-line:#E8D19A;
+  --des:#B93E2B; --des-soft:#FAE6E2; --des-line:#EEBCB2;
+  --na:#7C7A93;  --na-soft:#EDECF3;  --na-line:#D6D4E1;
+  --shadow-sm:0 1px 2px rgba(28,26,46,.05);
+  --shadow:0 1px 2px rgba(28,26,46,.05), 0 10px 28px -16px rgba(28,26,46,.35);
+  --radius:14px;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#131220; --surface:#1B1A2B; --surface-2:#222134; --line:#333148; --line-2:#2A2940;
+    --text:#EAE8F6; --muted:#A5A2BE; --faint:#807DA0;
+    --accent:#A79AFF; --accent-2:#8C7DF0; --accent-soft:#282444; --accent-line:#413A6B;
+    --gold:#E0A45C; --gold-soft:#33261A; --gold-line:#5A422A;
+    --fav:#63C692; --fav-soft:#172E23; --fav-line:#2C523E;
+    --med:#E4B54A; --med-soft:#312712; --med-line:#584A22;
+    --des:#F0806F; --des-soft:#361D1A; --des-line:#5E332C;
+    --na:#9895B0;  --na-soft:#26253A;  --na-line:#3B3952;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#131220; --surface:#1B1A2B; --surface-2:#222134; --line:#333148; --line-2:#2A2940;
+  --text:#EAE8F6; --muted:#A5A2BE; --faint:#807DA0;
+  --accent:#A79AFF; --accent-2:#8C7DF0; --accent-soft:#282444; --accent-line:#413A6B;
+  --gold:#E0A45C; --gold-soft:#33261A; --gold-line:#5A422A;
+  --fav:#63C692; --fav-soft:#172E23; --fav-line:#2C523E;
+  --med:#E4B54A; --med-soft:#312712; --med-line:#584A22;
+  --des:#F0806F; --des-soft:#361D1A; --des-line:#5E332C;
+  --na:#9895B0;  --na-soft:#26253A;  --na-line:#3B3952;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -18px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--text);
+  font-family:var(--body); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--display); text-wrap:balance; margin:0; line-height:1.15; letter-spacing:-.015em}
+button,input,textarea,select{font:inherit; color:inherit}
+:focus-visible{outline:2.5px solid var(--accent); outline-offset:2px; border-radius:6px}
+
+/* ---------- estructura ---------- */
+.app{display:grid; grid-template-columns:272px minmax(0,1fr); min-height:100vh}
+.rail{
+  border-right:1px solid var(--line); background:var(--surface);
+  padding:18px 14px 40px; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.main{min-width:0; display:flex; flex-direction:column}
+
+/* ---------- marca ---------- */
+.brand{display:flex; gap:11px; align-items:flex-start; padding:0 6px 16px}
+.flask{flex:none; width:34px; height:38px}
+.brand-t{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.02em; line-height:1.05}
+.brand-s{font-size:11.5px; color:var(--faint); letter-spacing:.06em; text-transform:uppercase; font-weight:500; margin-top:3px}
+
+/* ---------- medidor de elixir ---------- */
+.elixir{
+  margin:0 6px 18px; padding:13px 14px; border-radius:var(--radius);
+  background:var(--surface-2); border:1px solid var(--line-2);
+}
+.elixir-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px}
+.lvl{font-family:var(--display); font-weight:700; font-size:14.5px}
+.xp{font-family:var(--mono); font-size:11.5px; color:var(--gold); font-weight:600; font-variant-numeric:tabular-nums}
+.tube{height:9px; border-radius:99px; background:var(--line-2); margin-top:9px; overflow:hidden; position:relative}
+.tube-fill{
+  height:100%; width:0%; border-radius:99px;
+  background:linear-gradient(90deg,var(--accent-2),var(--gold));
+  transition:width .7s cubic-bezier(.2,.9,.25,1);
+}
+.tube-fill::after{
+  content:""; position:absolute; inset:0; border-radius:99px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:translateX(-100%); animation:sheen 2.6s ease-in-out infinite;
+}
+@keyframes sheen{0%{transform:translateX(-100%)}60%,100%{transform:translateX(200%)}}
+.elixir-sub{margin-top:7px; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+
+/* ---------- ruta ---------- */
+.ruta-h{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--faint); font-weight:600; padding:0 8px; margin-bottom:7px}
+.ruta{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px}
+.st{
+  display:grid; grid-template-columns:30px 1fr auto; gap:9px; align-items:center;
+  width:100%; text-align:left; background:none; border:0; cursor:pointer;
+  padding:8px; border-radius:10px; color:var(--muted); position:relative;
+  transition:background .18s ease, color .18s ease;
+}
+.st:hover{background:var(--surface-2); color:var(--text)}
+.st[aria-current="true"]{background:var(--accent-soft); color:var(--text)}
+.st[aria-current="true"]::before{
+  content:""; position:absolute; left:-14px; top:8px; bottom:8px; width:3px;
+  border-radius:0 3px 3px 0; background:var(--accent);
+}
+.st-n{font-family:var(--mono); font-size:11px; font-weight:600; color:var(--faint)}
+.st[aria-current="true"] .st-n{color:var(--accent)}
+.st-t{font-size:13.2px; font-weight:500; line-height:1.25}
+.ring{width:22px; height:22px; flex:none; transform:rotate(-90deg)}
+.ring circle{fill:none; stroke-width:3.2}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:var(--accent); stroke-linecap:round; transition:stroke-dashoffset .6s cubic-bezier(.2,.9,.25,1)}
+.st.done .ring .fg{stroke:var(--fav)}
+.st.done .st-t{color:var(--text)}
+.seal{width:22px; height:22px; display:grid; place-items:center; color:var(--fav)}
+
+.rail-foot{margin-top:16px; padding:0 8px; display:flex; flex-direction:column; gap:7px}
+.mini{
+  display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; cursor:pointer;
+  background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  font-size:12.5px; font-weight:500; color:var(--muted); transition:.18s ease;
+}
+.mini:hover{border-color:var(--accent-line); color:var(--text); background:var(--surface-2)}
+
+/* ---------- barra superior ---------- */
+.top{
+  position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  padding:11px 30px; display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+}
+.ident{display:flex; gap:8px; align-items:center; flex:1 1 300px; min-width:220px}
+.ident input{
+  border:1px solid transparent; background:transparent; border-radius:8px; padding:5px 9px;
+  font-family:var(--display); font-weight:700; font-size:16px; letter-spacing:-.02em; width:100%;
+  transition:.18s ease;
+}
+.ident input::placeholder{color:var(--faint); font-weight:600}
+.ident input:hover{background:var(--surface-2)}
+.ident input:focus{background:var(--surface); border-color:var(--accent-line); outline:none}
+.saved{
+  font-size:11.5px; font-family:var(--mono); color:var(--muted); display:flex; align-items:center; gap:6px;
+  white-space:nowrap;
+}
+.dot{width:7px; height:7px; border-radius:99px; background:var(--fav); flex:none}
+.dot.busy{background:var(--med); animation:pulse .9s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.btn{
+  border:1px solid var(--line); background:var(--surface); border-radius:9px; padding:7px 13px;
+  font-size:13px; font-weight:600; cursor:pointer; transition:.18s ease; white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent-line); background:var(--surface-2)}
+.btn.pri{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn.pri:hover{background:var(--accent-2); border-color:var(--accent-2)}
+:root[data-theme="dark"] .btn.pri, :root:not([data-theme="light"]) .btn.pri{color:#16142A}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .btn.pri{color:#fff}}
+
+/* ---------- escenario ---------- */
+.stage{padding:30px 30px 90px; max-width:1000px; width:100%; margin:0 auto; flex:1}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600;
+  background:var(--accent-soft); border:1px solid var(--accent-line); padding:4px 10px; border-radius:99px;
+}
+.h-taller{font-size:clamp(25px,3.6vw,34px); font-weight:800; margin:14px 0 0; max-width:22ch}
+.lead{color:var(--muted); font-size:15.5px; max-width:64ch; margin:10px 0 0}
+.head{margin-bottom:26px}
+
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px 20px; box-shadow:var(--shadow-sm);
+}
+.grid{display:grid; gap:12px}
+.stack{display:flex; flex-direction:column; gap:14px}
+
+/* entrada escalonada */
+.anim > *{animation:rise .5s cubic-bezier(.2,.9,.25,1) both}
+@keyframes rise{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+
+/* ---------- tarjeta de tendencia ---------- */
+.trend{
+  display:grid; grid-template-columns:1fr; gap:11px; padding:15px 17px;
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.trend:hover{border-color:var(--accent-line)}
+.trend.set{border-left:4px solid var(--mark, var(--accent))}
+.trend-t{font-family:var(--display); font-weight:700; font-size:15.5px}
+.trend-d{color:var(--muted); font-size:13.6px; margin-top:2px}
+.chips{display:flex; flex-wrap:wrap; gap:7px}
+.chip{
+  border:1px solid var(--line); background:var(--surface-2); border-radius:99px;
+  padding:5px 13px; font-size:12.6px; font-weight:600; cursor:pointer; color:var(--muted);
+  transition:transform .14s cubic-bezier(.2,.9,.25,1), background .16s, color .16s, border-color .16s;
+}
+.chip:hover{transform:translateY(-1.5px); color:var(--text)}
+.chip:active{transform:translateY(0) scale(.96)}
+.chip[aria-pressed="true"]{color:#fff; border-color:transparent}
+.chip[data-v="fav"][aria-pressed="true"]{background:var(--fav)}
+.chip[data-v="med"][aria-pressed="true"]{background:var(--med)}
+.chip[data-v="des"][aria-pressed="true"]{background:var(--des)}
+.chip[data-v="na"][aria-pressed="true"]{background:var(--na)}
+.chip[data-v="pos"][aria-pressed="true"]{background:var(--fav)}
+.chip[data-v="neu"][aria-pressed="true"]{background:var(--med)}
+.chip[data-v="neg"][aria-pressed="true"]{background:var(--des)}
+.chip[data-v="alto"][aria-pressed="true"]{background:var(--des)}
+.chip[data-v="medio"][aria-pressed="true"]{background:var(--med)}
+.chip[data-v="bajo"][aria-pressed="true"]{background:var(--fav)}
+.chip.rank{min-width:36px;font-family:var(--mono)}
+.chip.rank[aria-pressed="true"]{background:var(--accent)}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#16142A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#16142A}}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .chip[aria-pressed="true"]{color:#fff}}
+
+/* ---------- campos ---------- */
+textarea.f, input.f{
+  width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+  padding:9px 12px; font-size:14.2px; resize:none; transition:.18s ease; font-family:var(--body);
+}
+textarea.f{min-height:44px; overflow:hidden; line-height:1.5}
+textarea.f:hover, input.f:hover{border-color:var(--accent-line)}
+textarea.f:focus, input.f:focus{background:var(--surface); border-color:var(--accent); outline:none; box-shadow:0 0 0 3px var(--accent-soft)}
+input.f.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.lbl{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); font-weight:600; display:block; margin-bottom:6px}
+.row-n{
+  display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start;
+}
+.row-n > .idx{
+  font-family:var(--mono); font-size:12px; color:var(--faint); font-weight:600;
+  padding-top:11px; text-align:right; font-variant-numeric:tabular-nums;
+}
+
+/* ---------- nota guía ---------- */
+.hint{
+  border-left:3px solid var(--gold); background:var(--gold-soft); border-radius:0 10px 10px 0;
+  padding:12px 15px; font-size:13.6px; color:var(--text);
+}
+.hint b{font-weight:600; color:var(--gold)}
+details.ayuda{border:1px dashed var(--line); border-radius:10px; padding:0 14px; background:var(--surface-2)}
+details.ayuda summary{
+  cursor:pointer; padding:10px 0; font-size:13px; font-weight:600; color:var(--accent); list-style:none;
+  display:flex; align-items:center; gap:7px;
+}
+details.ayuda summary::-webkit-details-marker{display:none}
+details.ayuda summary::before{content:"▸"; transition:transform .2s ease; display:inline-block}
+details.ayuda[open] summary::before{transform:rotate(90deg)}
+details.ayuda p{margin:0 0 12px; font-size:13.3px; color:var(--muted)}
+
+/* ---------- tablas ---------- */
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:640px}
+th{
+  text-align:left; font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--muted); padding:11px 12px; border-bottom:1px solid var(--line);
+  background:var(--surface-2); white-space:nowrap; vertical-align:bottom;
+}
+td{padding:7px 9px; border-bottom:1px solid var(--line-2); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td .f{background:transparent; border-color:transparent}
+td .f:hover{background:var(--surface-2); border-color:var(--line)}
+.del{
+  border:0; background:transparent; color:var(--faint); cursor:pointer; font-size:16px; line-height:1;
+  padding:6px 8px; border-radius:7px; transition:.15s ease;
+}
+.del:hover{color:var(--des); background:var(--des-soft)}
+
+/* ---------- DOFA ---------- */
+.dofa{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px}
+.q{border-radius:var(--radius); padding:15px 17px; border:1px solid}
+.q h3{font-size:14px; letter-spacing:.05em; text-transform:uppercase; margin-bottom:3px}
+.q .qs{font-size:12.3px; margin-bottom:12px}
+.q.f-{background:var(--fav-soft); border-color:var(--fav-line)}   .q.f- h3{color:var(--fav)}
+.q.d-{background:var(--des-soft); border-color:var(--des-line)}   .q.d- h3{color:var(--des)}
+.q.o-{background:var(--accent-soft); border-color:var(--accent-line)} .q.o- h3{color:var(--accent)}
+.q.a-{background:var(--med-soft); border-color:var(--med-line)}   .q.a- h3{color:var(--med)}
+.q .qs{color:var(--muted)}
+.q textarea.f{background:var(--surface); border-color:transparent}
+
+.sugs{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px}
+.sug{
+  border:1px dashed var(--line); background:transparent; border-radius:99px; padding:4px 11px;
+  font-size:12px; cursor:pointer; color:var(--muted); transition:.15s ease;
+}
+.sug:hover{border-style:solid; border-color:var(--accent); color:var(--accent); background:var(--surface)}
+
+/* ---------- fuerzas ---------- */
+.force{display:grid; grid-template-columns:52px 1fr; gap:15px; padding:17px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface)}
+.force-n{
+  width:52px; height:52px; border-radius:14px; display:grid; place-items:center;
+  font-family:var(--display); font-size:22px; font-weight:800;
+  background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent-line);
+}
+.force h3{font-size:15.5px; font-weight:700}
+.force p{margin:5px 0 0; color:var(--muted); font-size:13.6px}
+.mini-lbl{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); font-weight:600; margin-right:2px; align-self:center}
+.ctrl{display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-top:12px}
+
+/* ---------- procesos ---------- */
+.plist{display:flex; flex-wrap:wrap; gap:8px}
+.ptag{display:flex; align-items:center; gap:6px; background:var(--surface-2); border:1px solid var(--line); border-radius:99px; padding:5px 6px 5px 13px; font-size:13.2px; font-weight:500}
+.ptag button{border:0; background:none; cursor:pointer; color:var(--faint); font-size:15px; line-height:1; padding:2px 5px; border-radius:99px}
+.ptag button:hover{color:var(--des); background:var(--des-soft)}
+.padd{border:1px dashed var(--accent-line); background:transparent; border-radius:99px; padding:5px 14px; font-size:13.2px; font-weight:600; color:var(--accent); cursor:pointer}
+.padd:hover{background:var(--accent-soft)}
+
+/* ---------- hitos ---------- */
+.tl{position:relative; padding-left:26px}
+.tl::before{content:""; position:absolute; left:7px; top:6px; bottom:6px; width:2px; background:linear-gradient(var(--accent-line),var(--gold-line))}
+.hito{position:relative; display:grid; grid-template-columns:84px 1fr auto; gap:10px; align-items:start; margin-bottom:9px}
+.hito::before{content:""; position:absolute; left:-23px; top:14px; width:9px; height:9px; border-radius:99px; background:var(--accent); border:2px solid var(--surface)}
+
+/* ---------- pie de estación ---------- */
+.nav{display:flex; justify-content:space-between; gap:12px; margin-top:30px; padding-top:20px; border-top:1px solid var(--line)}
+
+/* ---------- brindis / logro ---------- */
+#fx{position:fixed; inset:0; pointer-events:none; z-index:60}
+.toast{
+  position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(calc(100% + 52px));
+  background:var(--text); color:var(--ground); padding:12px 20px; border-radius:99px; z-index:70;
+  font-weight:600; font-size:14px; box-shadow:var(--shadow); display:flex; gap:9px; align-items:center;
+  transition:transform .45s cubic-bezier(.2,1.2,.3,1); max-width:90vw;
+}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ---------- resumen ---------- */
+.sum-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:11px}
+.tile{border:1px solid var(--line); border-radius:12px; padding:13px 15px; background:var(--surface)}
+.tile .n{font-family:var(--display); font-size:27px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1}
+.tile .k{font-size:11.5px; color:var(--muted); margin-top:4px; letter-spacing:.03em}
+.bars{display:flex; flex-direction:column; gap:8px}
+.bar-row{display:grid; grid-template-columns:1fr minmax(90px,190px) 42px; gap:10px; align-items:center; font-size:13.3px}
+.bar{height:7px; border-radius:99px; background:var(--line-2); overflow:hidden}
+.bar i{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .6s cubic-bezier(.2,.9,.25,1)}
+.bar-row .pc{font-family:var(--mono); font-size:11.5px; color:var(--muted); text-align:right; font-variant-numeric:tabular-nums}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); padding-bottom:16px}
+  .ruta{flex-direction:row; overflow-x:auto; gap:6px; padding-bottom:6px; scrollbar-width:thin}
+  .st{grid-template-columns:auto; min-width:132px; align-items:flex-start; gap:6px}
+  .st[aria-current="true"]::before{left:8px; right:8px; top:auto; bottom:2px; width:auto; height:3px; border-radius:3px}
+  .st .ring, .st .seal{display:none}
+  .stage{padding:22px 18px 70px}
+  .top{padding:10px 18px}
+  .dofa{grid-template-columns:1fr}
+  .force{grid-template-columns:1fr}
+  .force-n{width:42px; height:42px; font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+}
+@media print{
+  .rail,.top,.nav,#fx,.toast,.sug,.padd,.del,.mini{display:none !important}
+  body{background:#fff}
+  .app{display:block}
+  .stage{max-width:none; padding:0}
+}
+</style>
+
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <svg class="flask" viewBox="0 0 34 38" aria-hidden="true">
+        <path d="M13 3h8v11.5l7.6 15.1A4 4 0 0 1 25 36H9a4 4 0 0 1-3.6-6.4L13 14.5V3Z"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M9.4 23.5h15.2l4 8.1A4 4 0 0 1 25 36H9a4 4 0 0 1-3.6-6.4l4-6.1Z" fill="var(--accent)" opacity=".85"/>
+        <circle cx="14" cy="29" r="1.7" fill="var(--gold)"/>
+        <circle cx="20.5" cy="31.5" r="1.2" fill="var(--gold)"/>
+        <path d="M11 3h12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div class="brand-t">Bitácora MEGA</div>
+        <div class="brand-s">Módulo 1 · Análisis</div>
+      </div>
+    </div>
+
+    <div class="elixir">
+      <div class="elixir-top">
+        <span class="lvl" id="lvl">Aprendiz</span>
+        <span class="xp" id="xp">0 XP</span>
+      </div>
+      <div class="tube"><div class="tube-fill" id="tube"></div></div>
+      <div class="elixir-sub" id="esub">0 de 0 campos resueltos</div>
+    </div>
+
+    <div class="ruta-h">Ruta del módulo</div>
+    <nav><ul class="ruta" id="ruta"></ul></nav>
+
+    <div class="rail-foot">
+      <button class="mini" id="btn-tema" type="button">◐ Cambiar tema</button>
+      <button class="mini" id="btn-reset" type="button">↺ Empezar de nuevo</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div class="ident">
+        <input id="nombre" class="ident-in" placeholder="Nombre de tu empresa" autocomplete="organization">
+      </div>
+      <span class="saved"><span class="dot" id="dot"></span><span id="estado">Listo</span></span>
+      <button class="btn" id="btn-json" type="button">Respaldo</button>
+      <button class="btn pri" id="btn-informe" type="button">Descargar informe</button>
+    </header>
+    <main class="stage" id="stage"></main>
+  </div>
+</div>
+
+<canvas id="fx"></canvas>
+<div class="toast" id="toast"><span id="toast-t"></span></div>
+
+<script>
+/* ============================================================
+   DATOS DEL TALLER — transcritos del Módulo 1 "Entorno Empresarial"
+   Programa Empresas con Propósito MEGA · Cámara de Comercio Aburrá Sur
+   ============================================================ */
+
+const TENDENCIAS = [
+  ["esp","Espiritualidad","Vivir en armonía propia y con los demás."],
+  ["sin","Singularidad","Recibir trato personalizado y único."],
+  ["pso","Prácticas sociales","Cambios en las formas de trabajar, la concepción del bienestar y en las relaciones interpersonales."],
+  ["gob","Gobernanza y gobernabilidad","Cambios políticos en la forma de gobernar la voluntad ciudadana y de las organizaciones de la sociedad civil."],
+  ["sos","Sostenibilidad","Conciencia sobre la necesidad de garantizar los recursos sociales, económicos y naturales."],
+  ["cli","Variabilidad y adaptación climática","Conciencia sobre los factores de riesgo asociados a fenómenos climáticos: deforestación, contaminación del aire y del agua, sobreexplotación de recursos, especies invasoras."],
+  ["dig","Digitalización e Inteligencia Artificial","Apropiación y aplicación de tecnologías a los procesos empresariales."],
+  ["hip","Hiperconectividad","Interacción de y entre las personas, las organizaciones y las tecnologías."],
+  ["red","Redes de colaboración","Sentido de colaboración entre personas y organizaciones."],
+  ["dem","Cambios demográficos y estilos de vida","Nuevas formas y configuraciones de las personas y grupos poblacionales."],
+  ["ssa","Sostenibilidad social, ambiental y económica","Conciencia de la necesidad de hacer perdurable los distintos ecosistemas."],
+  ["urb","Urbanización, migración e inmigración","Procesos de concentración y desplazamiento interno y externo a los territorios."],
+  ["aut","Autocuidado","Concientización de las personas de hacerse responsables de sí mismas de manera integral."],
+  ["pro","Vivir con propósito","Concientización de las personas sobre su función o proyecto de vida."],
+  ["inm","Inmediatez","Urgencia de las personas por obtener aspiraciones, productos o servicios con prontitud."]
+];
+
+const PESTEL = [
+  ["dg","Demográfico","#", [
+    "Cambios socioeconómicos",
+    "Matrimonios y uniones más tardías, familias pequeñas",
+    "Cambios en hábitos de consumo",
+    "Aumento en la expectativa de vida",
+    "Ciudades más urbanas que rurales",
+    "Nueva concepción de las personas sobre el trabajo",
+    "Hogares multigeneracionales",
+    "Inmigración por búsqueda de oportunidades",
+    "Población más educada, informada y exigente",
+    "Conciencia e inclusión ambiental, social y económica"
+  ]],
+  ["sc","Sociocultural","#", [
+    "Pensamiento comunitario",
+    "Flexibilidad en horarios y tiempos de trabajo",
+    "Las personas eligen la empresa para la que trabajan",
+    "Trabajar desde cualquier lugar",
+    "Nuevos estilos de vida y valores diferentes",
+    "Las redes sociales como canal de información",
+    "Sensibilidad social, inclusión e igualdad"
+  ]],
+  ["ec","Económico","#", [
+    "Multiplicidad de monedas",
+    "Mejores salarios, ingresos y poder adquisitivo",
+    "Tasas de desempleo y cambio en expectativas laborales",
+    "Cambios en el consumo y desigualdad en ingresos"
+  ]],
+  ["pl","Político · gobernabilidad · legal","#", [
+    "Inseguridad jurídica: fiscal y laboral",
+    "Mayores exigencias en seguridad y salud en el trabajo",
+    "Certificaciones obligatorias exigentes",
+    "Patentes y mayor importancia de las alianzas",
+    "Dominio de normas internacionales",
+    "Clima político no favorable para los negocios",
+    "Protección de la identidad personal y empresarial",
+    "Marco jurídico del país: laboral, pensional y salud"
+  ]],
+  ["tc","Tecnológico","#", [
+    "Convergencia entre tecnología y medio ambiente",
+    "Big data y digitalización",
+    "Robotización, realidad virtual e IA frente a productividad",
+    "Energías alternativas",
+    "Mundo digital y reingeniería digital",
+    "Plataformas de e-learning y aprendizaje en casa"
+  ]],
+  ["gl","Global","#", [
+    "Guerra comercial",
+    "Ética en los negocios globales",
+    "Conocimiento en crecimiento y continua evolución",
+    "Ciberseguridad",
+    "Trazabilidad y transparencia en las transacciones",
+    "Moneda global única",
+    "Corrupción"
+  ]]
+];
+
+const FUERZAS = [
+  ["riv","Rivalidad entre competidores existentes",
+   "Examine la intensidad de la competencia actual en el mercado: número de competidores, sus capacidades, activos estratégicos, formas de competir y decisiones para lograr mayor participación.",
+   "Grado de concentración; interés estratégico de la empresa; crecimiento del sector; falta de diferenciación en la solución total; costos de cambio; economías de escala y capacidad ociosa; relevancia de la marca y reputación; similitud o diferenciación de propuestas; rol corporativo de la empresa; barreras de salida."],
+  ["pro","Poder negociador de los proveedores",
+   "Concluya qué tanto poder tiene la empresa para negociar con sus proveedores los precios y calidades de las materias primas e insumos de su cadena productiva. El grado de dependencia y la imposibilidad de sustituir es determinante.",
+   "Posibilidad de integración hacia adelante; grado de importancia del insumo o materia prima; porcentaje y grado de concentración sobre las compras."],
+  ["com","Poder negociador de los compradores",
+   "Concluya qué tanto poder tiene la empresa para imponer precios en el mercado, el grado de diferenciación de su propuesta y la sensibilidad de los clientes a los cambios de precio.",
+   "Grado de concentración; posibilidad de integrarse hacia atrás; costo de cambio; peso de la compra en los costos del comprador; conflicto de intereses en el proceso; importancia de la reputación del proveedor; sensibilidad al precio; impacto en cumplimiento, calidad y desempeño."],
+  ["nue","Amenaza de nuevos competidores",
+   "Evalúe qué tan fácil es para nuevos competidores entrar al mercado en el que participa la empresa y cómo puede afectar su participación y su margen de rentabilidad.",
+   "Requerimientos de capital; costos de cambio; economías de escala; curva de aprendizaje; diferenciación de soluciones; represalias esperadas y competencia por precio; acceso a clientes; barreras de entrada; desventajas de costos; políticas y facilidades gubernamentales."],
+  ["sus","Amenaza de productos o servicios sustitutos",
+   "Concluya cuántos productos hay en el mercado que puedan reemplazar fácilmente el producto o servicio que vende la empresa.",
+   "Costos de cambio reducidos o altos; desempeño superior; exigencias y regulaciones ambientales; energías renovables; impacto en la propuesta de valor."]
+];
+
+const IND_SUGERIDOS = ["Nivel de ventas","Margen de utilidad total","Margen por línea de producto",
+  "Número de clientes","Gastos totales","Gastos por línea de producto","Costos de impuestos","Inversiones"];
+const VALORES_SUGERIDOS = ["Honestidad","Respeto","Lealtad","Transparencia","Compromiso","Servicio","Innovación","Responsabilidad","Puntualidad","Trabajo en equipo"];
+const PROC_PROD = ["Gestión de clientes","Gestión de la producción"];
+const PROC_SOP  = ["Talento humano","Financiera y contable"];
+</script>
+
+<script>
+/* ============================================================
+   ESTADO
+   ============================================================ */
+const KEY = "bitacora-mega-m1";
+const nuevo = () => ({
+  empresa:"",
+  t1:{ tend:{}, extra:[] },
+  t1b:{},
+  t2:{},
+  t3:["","","","",""],
+  t4:{ hab:["","","","",""], mot:["","","","",""] },
+  t5:[{n:"",f:"",d:"",p:"",a:""},{n:"",f:"",d:"",p:"",a:""},{n:"",f:"",d:"",p:"",a:""}],
+  t6:["","","","",""],
+  t7:{ prod:PROC_PROD.slice(), sop:PROC_SOP.slice() },
+  t8:{ anios:["2023","2024","2025"], filas:[{n:"",v:["","",""]},{n:"",v:["","",""]},{n:"",v:["","",""]}] },
+  t9:[{a:"",h:""},{a:"",h:""},{a:"",h:""},{a:"",h:""},{a:"",h:""}],
+  t10:[{v:"",s:""},{v:"",s:""},{v:"",s:""},{v:"",s:""}],
+  t11:{ F:["","",""], D:["","",""], A:["","",""], O:["","",""] },
+  _ts:0
+});
+let S = nuevo();
+let actual = 0;
+let listos = new Set();   // talleres ya celebrados
+
+/* -------- acceso por ruta "t5.0.n" -------- */
+const get = p => p.split(".").reduce((o,k)=> (o==null?o:o[k]), S);
+function set(p,v){
+  const ks = p.split("."); let o = S;
+  for (let i=0;i<ks.length-1;i++){ if(o[ks[i]]==null) o[ks[i]] = /^\d+$/.test(ks[i+1])?[]:{}; o = o[ks[i]]; }
+  o[ks[ks.length-1]] = v;
+}
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lleno = v => typeof v === "string" ? v.trim() !== "" : v != null && v !== "";
+
+/* ============================================================
+   COMPONENTES
+   ============================================================ */
+function ta(path, ph, rows){
+  return `<textarea class="f" data-path="${path}" rows="${rows||1}" placeholder="${esc(ph||"")}">${esc(get(path)||"")}</textarea>`;
+}
+function inp(path, ph, extra){
+  return `<input class="f ${extra||""}" data-path="${path}" placeholder="${esc(ph||"")}" value="${esc(get(path)||"")}">`;
+}
+function chips(path, opts){
+  const cur = get(path) || "";
+  return `<div class="chips">` + opts.map(([v,l]) =>
+    `<button type="button" class="chip" data-path="${path}" data-v="${v}" aria-pressed="${cur===v}">${esc(l)}</button>`
+  ).join("") + `</div>`;
+}
+function lineas(base, n, ph){
+  let h = `<div class="grid">`;
+  for (let i=0;i<n;i++) h += `<div class="row-n"><span class="idx">${i+1}</span>${ta(base+"."+i, ph)}</div>`;
+  return h + `</div>`;
+}
+
+const ESC_TEND = [["fav","Alto · favorable"],["med","Medio"],["des","Alto · no favorable"],["na","No aplica"]];
+const ESC_PEST = [["pos","Positivo"],["neu","Neutro"],["neg","Negativo"],["na","No aplica"]];
+const ESC_IMP  = [["alto","Muy alto"],["medio","Medio"],["bajo","Bajo"]];
+const COLOR = {fav:"var(--fav)",med:"var(--med)",des:"var(--des)",na:"var(--na)",pos:"var(--fav)",neu:"var(--med)",neg:"var(--des)"};
+
+/* ============================================================
+   LOS ONCE TALLERES
+   ============================================================ */
+const T = [
+{
+  id:"t1", n:1, corto:"Grandes tendencias",
+  titulo:"¿Qué olas del entorno van a mover tu empresa?",
+  lead:"Marca el grado de relación e impacto que cada gran tendencia puede tener sobre el modelo de operación de la empresa. Después baja al tablero PESTEL y califica cada fuerza del entorno.",
+  render(){
+    let h = `<div class="stack">`;
+    h += `<div class="hint">Puedes <b>agregar tendencias propias</b> de tu sector al final de la lista. Si una tendencia no toca tu negocio, márcala como <b>No aplica</b>: descartar también es analizar.</div>`;
+    h += `<div class="grid" style="gap:10px">`;
+    TENDENCIAS.forEach(([id,t,d])=>{
+      const v = (S.t1.tend[id]||{}).v || "";
+      h += `<div class="trend ${v?"set":""}" style="--mark:${COLOR[v]||"var(--accent)"}">
+        <div><div class="trend-t">${esc(t)}</div><div class="trend-d">${esc(d)}</div></div>
+        ${chips(`t1.tend.${id}.v`, ESC_TEND)}
+        ${ta(`t1.tend.${id}.nota`,"¿Cómo se traduce esta tendencia en tu operación? (opcional)")}
+      </div>`;
+    });
+    S.t1.extra.forEach((e,i)=>{
+      const v = e.v || "";
+      h += `<div class="trend ${v?"set":""}" style="--mark:${COLOR[v]||"var(--accent)"}">
+        <div style="display:flex;gap:8px;align-items:center">
+          ${inp(`t1.extra.${i}.t`,"Tendencia propia de tu sector")}
+          <button class="del" data-act="del-tend" data-i="${i}" title="Eliminar" type="button">×</button>
+        </div>
+        ${chips(`t1.extra.${i}.v`, ESC_TEND)}
+        ${ta(`t1.extra.${i}.nota`,"¿Cómo se traduce en tu operación? (opcional)")}
+      </div>`;
+    });
+    h += `</div><div><button class="padd" data-act="add-tend" type="button">+ Agregar una tendencia de mi sector</button></div>`;
+
+    h += `<h2 style="font-size:20px;margin-top:16px">Tablero PESTEL · cómo altera cada fuerza tu operación</h2>
+          <p class="lead" style="margin-top:4px">Seis frentes del entorno, con los hechos que el módulo pone sobre la mesa. Un clic por fila.</p>`;
+    PESTEL.forEach(([cid,nom,,items])=>{
+      const hechos = items.filter((_,i)=> lleno(S.t1b[cid+i])).length;
+      h += `<div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px">
+          <h3 style="font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)">${esc(nom)}</h3>
+          <span class="xp" style="color:var(--muted)">${hechos}/${items.length}</span>
+        </div>
+        <div class="grid" style="gap:9px">`;
+      items.forEach((it,i)=>{
+        h += `<div style="display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding-bottom:9px;border-bottom:1px solid var(--line-2)">
+          <span style="font-size:13.8px;flex:1 1 260px">${esc(it)}</span>
+          ${chips(`t1b.${cid}${i}`, ESC_PEST)}
+        </div>`;
+      });
+      h += `</div></div>`;
+    });
+    return h + `</div>`;
+  },
+  stats(){
+    let d=0,t=TENDENCIAS.length;
+    TENDENCIAS.forEach(([id])=> lleno((S.t1.tend[id]||{}).v) && d++);
+    S.t1.extra.forEach(e=>{ t++; if(lleno(e.v)&&lleno(e.t)) d++; });
+    PESTEL.forEach(([cid,,,items])=> items.forEach((_,i)=>{ t++; if(lleno(S.t1b[cid+i])) d++; }));
+    return [d,t];
+  }
+},
+{
+  id:"t2", n:2, corto:"Cinco fuerzas",
+  titulo:"¿Quién manda en la rentabilidad de tu mercado?",
+  lead:"Ordena las cinco fuerzas de 1 a 5 según su importancia para tu empresa —1 la más importante— y califica el efecto que cada una tiene sobre tu rentabilidad.",
+  render(){
+    const usados = FUERZAS.map(([id])=> (S.t2[id]||{}).rank).filter(Boolean);
+    let h = `<div class="stack">`;
+    FUERZAS.forEach(([id,nom,desc,ayuda],idx)=>{
+      const f = S.t2[id]||{};
+      h += `<div class="force">
+        <div class="force-n">${f.rank||idx+1}</div>
+        <div>
+          <h3>${esc(nom)}</h3>
+          <p>${esc(desc)}</p>
+          <div class="ctrl">
+            <span class="mini-lbl">Prioridad</span>
+            ${[1,2,3,4,5].map(r=>{
+              const on = String(f.rank||"")===String(r);
+              const dup = !on && usados.includes(String(r));
+              return `<button type="button" class="chip rank" data-path="t2.${id}.rank" data-v="${r}" aria-pressed="${on}"
+                style="${dup?"opacity:.45":""}">${r}</button>`;
+            }).join("")}
+          </div>
+          <div class="ctrl">
+            <span class="mini-lbl">Efecto en rentabilidad</span>
+            ${chips(`t2.${id}.imp`, ESC_IMP)}
+          </div>
+          <div style="margin-top:11px">${ta(`t2.${id}.nota`,"¿Por qué? Nombra las variables concretas que miden esta fuerza en tu negocio.",2)}</div>
+          <details class="ayuda" style="margin-top:10px"><summary>Variables que ayudan a medirla</summary><p>${esc(ayuda)}</p></details>
+        </div>
+      </div>`;
+    });
+    return h + `</div>`;
+  },
+  stats(){ let d=0; FUERZAS.forEach(([id])=>{ const f=S.t2[id]||{}; if(lleno(f.rank))d++; if(lleno(f.imp))d++; }); return [d, FUERZAS.length*2]; }
+},
+{
+  id:"t3", n:3, corto:"Rasgos del mercado",
+  titulo:"¿Cómo es, en cifras, el mercado donde estás?",
+  lead:"Describe los rasgos del mercado en el que participa la empresa: tamaño en ventas o volúmenes, competidores, normatividad y nivel de tecnificación.",
+  render(){
+    return `<div class="stack">
+      <div class="hint">Busca cifras de magnitud —una <b>estimación educada</b> basta— en revistas especializadas, gremios, entrevistas o trabajos de grado: pesos o unidades, por segmento de precio, por geografía y por canal. <b>Asigna a alguien del área comercial</b> la tarea de construir y actualizar esta información.</div>
+      ${lineas("t3",5,"Un rasgo del mercado por línea: tamaño, competidores, normatividad, tecnificación…")}
+    </div>`;
+  },
+  stats(){ return [S.t3.filter(lleno).length, 5]; }
+},
+{
+  id:"t4", n:4, corto:"Perfil del cliente",
+  titulo:"¿Qué mueve a la gente que te compra?",
+  lead:"Acuerden los rasgos del perfil de sus clientes: por un lado los hábitos, por otro lo que realmente los motiva a comprar.",
+  render(){
+    return `<div class="stack">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+        <div class="card"><span class="lbl">Hábitos de los clientes</span>${lineas("t4.hab",5,"Frecuencia, ocasión, canal, forma de pago…")}</div>
+        <div class="card"><span class="lbl">Motivadores de compra</span>${lineas("t4.mot",5,"Precio, cercanía, confianza, urgencia, estatus…")}</div>
+      </div>
+      <div class="hint">Piensa el mercado en cuatro grupos: <b>clientes actuales</b>; <b>no clientes cercanos posibles</b>; <b>no clientes que te consideraron y no te eligieron</b>; y <b>no clientes que no te han visto</b>. Define qué datos querrías tener en la hoja de vida o CRM de un cliente.</div>
+    </div>`;
+  },
+  stats(){ return [S.t4.hab.filter(lleno).length + S.t4.mot.filter(lleno).length, 10]; }
+},
+{
+  id:"t5", n:5, corto:"Competencia",
+  titulo:"¿Qué le estás aprendiendo a tu competencia?",
+  lead:"Conoce en detalle a los competidores relevantes: dos fortalezas, dos debilidades, el perfil de su cliente y sus atributos diferenciales.",
+  render(){
+    let h = `<div class="stack"><div class="tw"><table><thead><tr>
+      <th style="min-width:150px">Competidor</th><th style="min-width:180px">2 fortalezas</th>
+      <th style="min-width:180px">2 debilidades</th><th style="min-width:180px">Perfil de su cliente</th>
+      <th style="min-width:180px">2 atributos diferenciales</th><th></th></tr></thead><tbody>`;
+    S.t5.forEach((c,i)=>{
+      h += `<tr>
+        <td>${inp(`t5.${i}.n`,"Nombre")}</td>
+        <td>${ta(`t5.${i}.f`,"…",2)}</td>
+        <td>${ta(`t5.${i}.d`,"…",2)}</td>
+        <td>${ta(`t5.${i}.p`,"…",2)}</td>
+        <td>${ta(`t5.${i}.a`,"…",2)}</td>
+        <td><button class="del" data-act="del-comp" data-i="${i}" type="button" title="Eliminar">×</button></td>
+      </tr>`;
+    });
+    return h + `</tbody></table></div>
+      <div><button class="padd" data-act="add-comp" type="button">+ Agregar competidor</button></div></div>`;
+  },
+  stats(){ let d=0; S.t5.forEach(c=>["n","f","d","p","a"].forEach(k=> lleno(c[k])&&d++)); return [d, S.t5.length*5]; }
+},
+{
+  id:"t6", n:6, corto:"Atributos del sector",
+  titulo:"¿Qué pesa cuando alguien decide comprar?",
+  lead:"Identifica los atributos —las características distintivas que los clientes contemplan y valoran al momento de decidir la compra en tu sector.",
+  render(){
+    return `<div class="stack">
+      <div class="hint">Ejemplos de atributos: <b>precio, servicio, calidad, referencias, garantía, cercanía, plazo de entrega, financiación</b>. Escribe los de tu sector, no los genéricos.</div>
+      ${lineas("t6",5,"Un atributo por línea")}
+    </div>`;
+  },
+  stats(){ return [S.t6.filter(lleno).length, 5]; }
+},
+{
+  id:"t7", n:7, corto:"Procesos clave",
+  titulo:"¿Cuáles son los procesos que sostienen la empresa?",
+  lead:"Separa los procesos productivos —los que crean y entregan valor al cliente— de los procesos de soporte que hacen posible la operación.",
+  render(){
+    const grupo = (k, tit, sub) => `<div class="card">
+      <span class="lbl">${tit}</span>
+      <p style="color:var(--muted);font-size:13.3px;margin:0 0 12px">${sub}</p>
+      <div class="plist">
+        ${S.t7[k].map((p,i)=>`<span class="ptag">${esc(p)}<button data-act="del-proc" data-k="${k}" data-i="${i}" type="button" title="Quitar">×</button></span>`).join("")}
+        <button class="padd" data-act="add-proc" data-k="${k}" type="button">+ Agregar proceso</button>
+      </div></div>`;
+    return `<div class="stack">
+      ${grupo("prod","Procesos productivos","La cadena que va del cliente al producto entregado.")}
+      ${grupo("sop","Procesos de soporte","Lo que sostiene la operación por detrás.")}
+      <div class="hint">Apunta a <b>al menos tres procesos por grupo</b>. Si un proceso no tiene un responsable con nombre propio, todavía no es un proceso.</div>
+    </div>`;
+  },
+  stats(){ return [Math.min(S.t7.prod.length,3)+Math.min(S.t7.sop.length,3), 6]; }
+},
+{
+  id:"t8", n:8, corto:"Indicadores",
+  titulo:"¿Con qué números sabes si vas bien?",
+  lead:"Registra los datos clave con los que monitoreas los resultados de la empresa y su evolución en los últimos tres años.",
+  render(){
+    let h = `<div class="stack">
+      <div class="tw"><table><thead><tr><th style="min-width:230px">Indicador</th>
+      ${S.t8.anios.map((a,i)=>`<th style="min-width:120px">${inp(`t8.anios.${i}`,"Año","num")}</th>`).join("")}<th></th></tr></thead><tbody>`;
+    S.t8.filas.forEach((f,i)=>{
+      h += `<tr><td>${inp(`t8.filas.${i}.n`,"Nombre del indicador")}</td>
+        ${f.v.map((_,j)=>`<td>${inp(`t8.filas.${i}.v.${j}`,"—","num")}</td>`).join("")}
+        <td><button class="del" data-act="del-ind" data-i="${i}" type="button" title="Eliminar">×</button></td></tr>`;
+    });
+    h += `</tbody></table></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="padd" data-act="add-ind" type="button">+ Fila en blanco</button></div>
+      <div><span class="lbl">Indicadores sugeridos · un clic los agrega</span>
+        <div class="sugs">${IND_SUGERIDOS.map(s=>`<button class="sug" data-act="sug-ind" data-t="${esc(s)}" type="button">${esc(s)}</button>`).join("")}</div>
+      </div></div>`;
+    return h;
+  },
+  stats(){
+    let d=0,t=0;
+    S.t8.filas.forEach(f=>{ t+=4; if(lleno(f.n))d++; f.v.forEach(v=> lleno(v)&&d++); });
+    return [d, Math.max(t,12)];
+  }
+},
+{
+  id:"t9", n:9, corto:"Hitos",
+  titulo:"¿Qué decisiones marcaron tu historia?",
+  lead:"Registra cronológicamente los hechos más relevantes: las decisiones, situaciones críticas o cambios que definieron a la empresa.",
+  render(){
+    let h = `<div class="stack">
+      <div class="hint">Ejemplos: <b>2001</b> se creó la empresa · <b>2005</b> se abrió una nueva línea de producto · <b>2016</b> ruptura con un socio · <b>2020</b> la pandemia del COVID-19.</div>
+      <div class="tl">`;
+    S.t9.forEach((x,i)=>{
+      h += `<div class="hito">${inp(`t9.${i}.a`,"Año","num")}${ta(`t9.${i}.h`,"¿Qué pasó y qué cambió a partir de ahí?")}
+        <button class="del" data-act="del-hito" data-i="${i}" type="button" title="Eliminar">×</button></div>`;
+    });
+    return h + `</div><div><button class="padd" data-act="add-hito" type="button">+ Agregar hito</button></div></div>`;
+  },
+  stats(){ let d=0; S.t9.forEach(x=>{ if(lleno(x.a))d++; if(lleno(x.h))d++; }); return [d, Math.max(S.t9.length*2,10)]; }
+},
+{
+  id:"t10", n:10, corto:"Valores",
+  titulo:"¿Cuál es el ADN que te hace irrepetible?",
+  lead:"Elige tres o cuatro valores por los que se destacará la empresa. Las personas que trabajan allí deben respetarlos y destacarse por ellos.",
+  render(){
+    let h = `<div class="stack"><div class="tw"><table><thead><tr>
+      <th style="min-width:180px">Valor</th><th>Qué significa exactamente dentro de la empresa</th><th></th></tr></thead><tbody>`;
+    S.t10.forEach((v,i)=>{
+      h += `<tr><td>${inp(`t10.${i}.v`,"Valor")}</td><td>${ta(`t10.${i}.s`,"Descríbelo como una conducta observable, no como una palabra bonita.",2)}</td>
+        <td><button class="del" data-act="del-val" data-i="${i}" type="button" title="Eliminar">×</button></td></tr>`;
+    });
+    return h + `</tbody></table></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="padd" data-act="add-val" type="button">+ Agregar fila</button></div>
+      <div><span class="lbl">Valores frecuentes · un clic los agrega</span>
+      <div class="sugs">${VALORES_SUGERIDOS.map(s=>`<button class="sug" data-act="sug-val" data-t="${esc(s)}" type="button">${esc(s)}</button>`).join("")}</div></div>
+      <div class="hint">Un valor sirve cuando <b>te obliga a decir que no</b> a algo rentable. Si no descarta nada, es un adorno.</div></div>`;
+  },
+  stats(){ let d=0; S.t10.forEach(x=>{ if(lleno(x.v))d++; if(lleno(x.s))d++; }); return [d, Math.max(S.t10.length*2,8)]; }
+},
+{
+  id:"t11", n:11, corto:"DOFA",
+  titulo:"El cierre: dentro y fuera de tu empresa",
+  lead:"Reúne lo interno —fortalezas y debilidades— y lo externo —amenazas y oportunidades. Todo lo que marcaste en los talleres anteriores desemboca aquí.",
+  render(){
+    const q = (k,cls,tit,sub) => `<div class="q ${cls}"><h3>${tit}</h3><div class="qs">${sub}</div>
+      <div class="grid" style="gap:8px">${S.t11[k].map((_,i)=> ta(`t11.${k}.${i}`, (i+1)+".")).join("")}</div></div>`;
+    const s = sugerencias();
+    return `<div class="stack">
+      <div class="dofa">
+        ${q("F","f-","Fortalezas","Internas · lo que hoy haces mejor que otros")}
+        ${q("D","d-","Debilidades","Internas · lo que te frena por dentro")}
+        ${q("O","o-","Oportunidades","Externas · lo que el entorno te abre")}
+        ${q("A","a-","Amenazas","Externas · lo que el entorno te puede quitar")}
+      </div>
+      ${s.o.length||s.a.length ? `<div class="card">
+        <span class="lbl">Traído de tus propias respuestas · un clic lo inserta</span>
+        ${s.o.length?`<div style="margin-top:6px"><span style="font-size:12.5px;color:var(--fav);font-weight:600">Hacia oportunidades</span>
+          <div class="sugs">${s.o.map(t=>`<button class="sug" data-act="sug-dofa" data-k="O" data-t="${esc(t)}" type="button">${esc(t)}</button>`).join("")}</div></div>`:""}
+        ${s.a.length?`<div style="margin-top:11px"><span style="font-size:12.5px;color:var(--des);font-weight:600">Hacia amenazas</span>
+          <div class="sugs">${s.a.map(t=>`<button class="sug" data-act="sug-dofa" data-k="A" data-t="${esc(t)}" type="button">${esc(t)}</button>`).join("")}</div></div>`:""}
+      </div>` : `<div class="hint">Cuando marques impactos en el <b>Taller 1</b> y las <b>cinco fuerzas</b>, aquí aparecerán sugerencias tomadas de tus propias respuestas.</div>`}
+    </div>`;
+  },
+  stats(){ let d=0; ["F","D","A","O"].forEach(k=> S.t11[k].forEach(v=> lleno(v)&&d++)); return [d,12]; }
+}
+];
+
+/* sugerencias para el DOFA a partir de lo ya respondido */
+function sugerencias(){
+  const o=[], a=[];
+  TENDENCIAS.forEach(([id,t])=>{
+    const v=(S.t1.tend[id]||{}).v;
+    if(v==="fav") o.push(t); else if(v==="des") a.push(t);
+  });
+  S.t1.extra.forEach(e=>{ if(lleno(e.t)){ if(e.v==="fav") o.push(e.t); else if(e.v==="des") a.push(e.t); } });
+  PESTEL.forEach(([cid,nom,,items])=> items.forEach((it,i)=>{
+    const v=S.t1b[cid+i];
+    if(v==="pos") o.push(it); else if(v==="neg") a.push(it);
+  }));
+  FUERZAS.forEach(([id,nom])=>{ if((S.t2[id]||{}).imp==="alto") a.push(nom); });
+  return {o:o.slice(0,10), a:a.slice(0,10)};
+}
+</script>
+
+<script>
+/* ============================================================
+   PROGRESO
+   ============================================================ */
+const NIVELES = [[0,"Aprendiz"],[15,"Observador"],[35,"Analista"],[55,"Estratega"],[75,"Alquimista"],[95,"Maestro del módulo"]];
+function totales(){
+  let d=0,t=0; const por=[];
+  T.forEach(x=>{ const [a,b]=x.stats(); d+=a; t+=b; por.push([a,b]); });
+  return {d,t,por, pct: t? d/t : 0};
+}
+function nivel(pct){ let n=NIVELES[0][1]; NIVELES.forEach(([u,l])=>{ if(pct*100>=u) n=l; }); return n; }
+
+function pintarMedidores(){
+  const {d,t,por,pct} = totales();
+  document.getElementById("tube").style.width = (pct*100).toFixed(1)+"%";
+  document.getElementById("lvl").textContent = nivel(pct);
+  document.getElementById("xp").textContent = (d*10).toLocaleString("es-CO")+" XP";
+  document.getElementById("esub").textContent = `${d} de ${t} campos resueltos · ${Math.round(pct*100)}%`;
+  por.forEach(([a,b],i)=>{
+    const st = document.querySelector(`.st[data-i="${i}"]`); if(!st) return;
+    const p = b? a/b : 0, C = 2*Math.PI*8.6;
+    const fg = st.querySelector(".fg");
+    if(fg) fg.style.strokeDashoffset = C*(1-p);
+    st.classList.toggle("done", p>=1);
+    if(p>=1 && !listos.has(i)){ listos.add(i); if(document.readyState==="complete") celebrar(T[i].corto); }
+    if(p<1) listos.delete(i);
+  });
+  const fin = document.querySelector('.st[data-i="11"] .fg');
+  if(fin){ const C=2*Math.PI*8.6; fin.style.strokeDashoffset = C*(1-pct); }
+}
+
+/* ============================================================
+   RUTA
+   ============================================================ */
+function pintarRuta(){
+  const C = 2*Math.PI*8.6;
+  const item = (i,num,txt) => `<li><button class="st" data-i="${i}" data-act="ir" aria-current="${i===actual}" type="button">
+      <span class="st-n">${num}</span><span class="st-t">${esc(txt)}</span>
+      <svg class="ring" viewBox="0 0 22 22"><circle class="bg" cx="11" cy="11" r="8.6"/>
+      <circle class="fg" cx="11" cy="11" r="8.6" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg>
+    </button></li>`;
+  document.getElementById("ruta").innerHTML =
+    T.map((x,i)=> item(i, String(x.n).padStart(2,"0"), x.corto)).join("") +
+    item(11,"✦","Resumen y entrega");
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const stage = document.getElementById("stage");
+function render(){
+  const esFin = actual===11;
+  const x = esFin? null : T[actual];
+  stage.innerHTML = `
+    <div class="head">
+      <span class="eyebrow">${esFin? "Cierre del módulo" : "Taller "+x.n+" de 11"}</span>
+      <h1 class="h-taller">${esFin? "Tu Módulo 1, de una sola mirada" : esc(x.titulo)}</h1>
+      <p class="lead">${esFin? "Todo lo que respondiste, listo para revisar, imprimir o entregar." : esc(x.lead)}</p>
+    </div>
+    <div class="anim">${esFin? resumen() : x.render()}</div>
+    <div class="nav">
+      <button class="btn" data-act="prev" type="button" ${actual===0?"disabled style=visibility:hidden":""}>← Anterior</button>
+      <button class="btn pri" data-act="next" type="button" ${actual===11?"disabled style=visibility:hidden":""}>Siguiente →</button>
+    </div>`;
+  [...stage.querySelectorAll(".anim > * > *, .anim > *")].slice(0,14).forEach((el,i)=> el.style.animationDelay=(i*38)+"ms");
+  stage.querySelectorAll("textarea.f").forEach(autosize);
+  document.querySelectorAll(".st").forEach(b=> b.setAttribute("aria-current", b.dataset.i==String(actual)));
+  pintarMedidores();
+  window.scrollTo({top:0, behavior: reduce()? "auto":"smooth"});
+}
+const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+function autosize(el){ el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }
+
+function ir(i){ actual = Math.max(0, Math.min(11, i)); render(); }
+
+/* ============================================================
+   RESUMEN
+   ============================================================ */
+function resumen(){
+  const {d,t,por,pct} = totales();
+  const marcadas = TENDENCIAS.filter(([id])=> lleno((S.t1.tend[id]||{}).v)).length + S.t1.extra.filter(e=>lleno(e.v)).length;
+  const criticas = TENDENCIAS.filter(([id])=> (S.t1.tend[id]||{}).v==="des").length;
+  const fuerteAlta = FUERZAS.filter(([id])=> (S.t2[id]||{}).imp==="alto").length;
+  return `<div class="stack">
+    <div class="sum-grid">
+      <div class="tile"><div class="n">${Math.round(pct*100)}%</div><div class="k">del módulo resuelto</div></div>
+      <div class="tile"><div class="n">${(d*10).toLocaleString("es-CO")}</div><div class="k">XP · nivel ${esc(nivel(pct))}</div></div>
+      <div class="tile"><div class="n">${criticas}</div><div class="k">tendencias de alto impacto no favorable</div></div>
+      <div class="tile"><div class="n">${fuerteAlta}</div><div class="k">fuerzas con efecto muy alto</div></div>
+    </div>
+    <div class="card"><span class="lbl">Avance taller por taller</span>
+      <div class="bars" style="margin-top:10px">
+        ${T.map((x,i)=>{ const p = por[i][1]? por[i][0]/por[i][1] : 0;
+          return `<div class="bar-row"><span>${x.n}. ${esc(x.corto)}</span>
+            <span class="bar"><i style="width:${(p*100).toFixed(0)}%;background:${p>=1?"var(--fav)":"var(--accent)"}"></i></span>
+            <span class="pc">${Math.round(p*100)}%</span></div>`;}).join("")}
+      </div>
+    </div>
+    <div class="card">
+      <span class="lbl">Entrega</span>
+      <p style="color:var(--muted);font-size:13.8px;margin:6px 0 12px">Descarga el informe con todas tus respuestas, guarda un respaldo para seguir en otro momento, o imprímelo en PDF desde tu navegador.</p>
+      <div style="display:flex;gap:9px;flex-wrap:wrap">
+        <button class="btn pri" data-act="informe" type="button">Descargar informe</button>
+        <button class="btn" data-act="respaldo" type="button">Respaldo de datos</button>
+        <button class="btn" data-act="imprimir" type="button">Imprimir / PDF</button>
+      </div>
+    </div>
+    <div class="card">${cuerpoInforme()}</div>
+  </div>`;
+}
+
+/* ============================================================
+   INFORME
+   ============================================================ */
+const ETQ = {fav:"Alto · favorable",med:"Medio",des:"Alto · no favorable",na:"No aplica",
+             pos:"Positivo",neu:"Neutro",neg:"Negativo",alto:"Muy alto",medio:"Medio",bajo:"Bajo"};
+function cuerpoInforme(){
+  const P = [];
+  const h2 = (n,t)=> `<h2 style="font-family:var(--display);font-size:18px;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)">Taller ${n}. ${esc(t)}</h2>`;
+  const ul = a => a.filter(lleno).length? `<ul style="margin:0;padding-left:20px">${a.filter(lleno).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : `<p style="color:var(--faint);font-style:italic">Sin responder.</p>`;
+  const tbl = (heads, rows) => rows.length? `<div class="tw" style="margin-top:6px"><table><thead><tr>${heads.map(x=>`<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td style="font-size:13.4px">${esc(c)||"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : `<p style="color:var(--faint);font-style:italic">Sin responder.</p>`;
+
+  P.push(`<h1 style="font-family:var(--display);font-size:24px;margin:0">${esc(S.empresa||"Empresa sin nombre")}</h1>
+    <p style="color:var(--muted);margin:4px 0 0">Módulo 1 · Análisis interno y externo — Empresas con Propósito MEGA</p>`);
+
+  P.push(h2(1,"Grandes tendencias y tablero PESTEL"));
+  P.push(tbl(["Tendencia","Impacto","Cómo se traduce en la operación"],
+    TENDENCIAS.map(([id,t])=>{ const o=S.t1.tend[id]||{}; return [t, ETQ[o.v]||"", o.nota||""]; }).filter(r=>r[1]||r[2])
+    .concat(S.t1.extra.filter(e=>lleno(e.t)).map(e=>[e.t,ETQ[e.v]||"",e.nota||""]))));
+  PESTEL.forEach(([cid,nom,,items])=>{
+    const rows = items.map((it,i)=> [it, ETQ[S.t1b[cid+i]]||""]).filter(r=>r[1]);
+    if(rows.length){ P.push(`<h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:16px 0 0">${esc(nom)}</h3>`); P.push(tbl(["Hecho del entorno","Efecto"], rows)); }
+  });
+
+  P.push(h2(2,"Las cinco fuerzas del mercado"));
+  P.push(tbl(["Prioridad","Fuerza","Efecto en rentabilidad","Sustento"],
+    FUERZAS.map(([id,nom])=>{ const f=S.t2[id]||{}; return [f.rank||"", nom, ETQ[f.imp]||"", f.nota||""]; })
+      .sort((a,b)=> (a[0]||9)-(b[0]||9))));
+
+  P.push(h2(3,"Rasgos del mercado")); P.push(ul(S.t3));
+  P.push(h2(4,"Perfil del cliente"));
+  P.push(`<p style="font-weight:600;margin:8px 0 4px">Hábitos</p>`); P.push(ul(S.t4.hab));
+  P.push(`<p style="font-weight:600;margin:12px 0 4px">Motivadores de compra</p>`); P.push(ul(S.t4.mot));
+  P.push(h2(5,"Competencia relevante"));
+  P.push(tbl(["Competidor","Fortalezas","Debilidades","Perfil de su cliente","Atributos"],
+    S.t5.filter(c=>lleno(c.n)).map(c=>[c.n,c.f,c.d,c.p,c.a])));
+  P.push(h2(6,"Atributos que valora el cliente del sector")); P.push(ul(S.t6));
+  P.push(h2(7,"Procesos clave"));
+  P.push(`<p style="font-weight:600;margin:8px 0 4px">Productivos</p>`); P.push(ul(S.t7.prod));
+  P.push(`<p style="font-weight:600;margin:12px 0 4px">De soporte</p>`); P.push(ul(S.t7.sop));
+  P.push(h2(8,"Indicadores clave"));
+  P.push(tbl(["Indicador",...S.t8.anios.map(a=>a||"Año")], S.t8.filas.filter(f=>lleno(f.n)).map(f=>[f.n,...f.v])));
+  P.push(h2(9,"Hitos de nuestra historia"));
+  P.push(tbl(["Año","Hecho relevante"], S.t9.filter(x=>lleno(x.a)||lleno(x.h)).sort((a,b)=>(a.a||"").localeCompare(b.a||"")).map(x=>[x.a,x.h])));
+  P.push(h2(10,"Valores"));
+  P.push(tbl(["Valor","Significado para la empresa"], S.t10.filter(v=>lleno(v.v)).map(v=>[v.v,v.s])));
+  P.push(h2(11,"Matriz DOFA"));
+  P.push(`<div class="dofa" style="margin-top:8px">
+    <div class="q f-"><h3>Fortalezas</h3>${ul(S.t11.F)}</div>
+    <div class="q d-"><h3>Debilidades</h3>${ul(S.t11.D)}</div>
+    <div class="q o-"><h3>Oportunidades</h3>${ul(S.t11.O)}</div>
+    <div class="q a-"><h3>Amenazas</h3>${ul(S.t11.A)}</div></div>`);
+  return P.join("");
+}
+
+function informeHTML(){
+  const css = [...document.querySelectorAll("style")].map(s=>s.textContent).join("\n");
+  const {pct} = totales();
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Módulo 1 — ${esc(S.empresa||"Empresa")}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>${css}
+body{padding:36px 22px;max-width:900px;margin:0 auto}
+.q{margin-bottom:12px}</style></head><body>
+${cuerpoInforme()}
+<p style="margin-top:34px;padding-top:12px;border-top:1px solid var(--line);color:var(--faint);font-size:12px">
+Diligenciado con la Bitácora MEGA · ${Math.round(pct*100)}% del módulo resuelto · ${new Date().toLocaleDateString("es-CO",{day:"numeric",month:"long",year:"numeric"})}</p>
+</body></html>`;
+}
+
+/* ============================================================
+   GUARDADO
+   ============================================================ */
+let db=null, dls=null, tmr=null;
+const dot = document.getElementById("dot"), estado = document.getElementById("estado");
+function marcar(txt, busy){ estado.textContent = txt; dot.classList.toggle("busy", !!busy); }
+
+function guardar(){
+  S._ts = Date.now();
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  marcar("Guardando…", true);
+  clearTimeout(tmr);
+  tmr = setTimeout(async ()=>{
+    if(db){
+      try{ await db.doc("bitacora/modulo1").set({json: JSON.stringify(S), ts: S._ts}); marcar("Guardado en la nube"); }
+      catch(e){ marcar("Guardado en este equipo"); }
+    } else marcar("Guardado en este equipo");
+  }, 700);
+}
+
+function cargarLocal(){
+  try{ const r = localStorage.getItem(KEY); if(r){ S = Object.assign(nuevo(), JSON.parse(r)); } }catch(e){}
+}
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+document.addEventListener("input", e=>{
+  const el = e.target;
+  if(el.id === "nombre"){ S.empresa = el.value; guardar(); return; }
+  const p = el.dataset.path; if(!p) return;
+  set(p, el.value);
+  if(el.tagName === "TEXTAREA") autosize(el);
+  guardar(); pintarMedidores();
+});
+
+stage.addEventListener("click", e=>{
+  const chip = e.target.closest(".chip[data-path]");
+  if(chip){
+    const p = chip.dataset.path, v = chip.dataset.v;
+    set(p, get(p)===v ? "" : v);
+    guardar();
+    const necesitaRe = p.startsWith("t2.") && p.endsWith(".rank");
+    if(necesitaRe){ render(); } else {
+      chip.parentElement.querySelectorAll(".chip").forEach(c=> c.setAttribute("aria-pressed", c===chip && get(p)===v));
+      const card = chip.closest(".trend");
+      if(card){ const nv = get(p); card.classList.toggle("set", !!nv); card.style.setProperty("--mark", COLOR[nv]||"var(--accent)"); }
+      pintarMedidores();
+    }
+    return;
+  }
+  const b = e.target.closest("[data-act]"); if(!b) return;
+  const a = b.dataset.act, i = +b.dataset.i;
+  const acciones = {
+    prev:()=> ir(actual-1),
+    next:()=> ir(actual+1),
+    "add-tend":()=>{ S.t1.extra.push({t:"",v:"",nota:""}); render(); },
+    "del-tend":()=>{ S.t1.extra.splice(i,1); render(); },
+    "add-comp":()=>{ S.t5.push({n:"",f:"",d:"",p:"",a:""}); render(); },
+    "del-comp":()=>{ if(S.t5.length>1){ S.t5.splice(i,1); render(); } },
+    "add-ind":()=>{ S.t8.filas.push({n:"",v:["","",""]}); render(); },
+    "del-ind":()=>{ if(S.t8.filas.length>1){ S.t8.filas.splice(i,1); render(); } },
+    "sug-ind":()=>{ const f=S.t8.filas.find(f=>!lleno(f.n)); if(f) f.n=b.dataset.t; else S.t8.filas.push({n:b.dataset.t,v:["","",""]}); render(); },
+    "add-hito":()=>{ S.t9.push({a:"",h:""}); render(); },
+    "del-hito":()=>{ if(S.t9.length>1){ S.t9.splice(i,1); render(); } },
+    "add-val":()=>{ S.t10.push({v:"",s:""}); render(); },
+    "del-val":()=>{ if(S.t10.length>1){ S.t10.splice(i,1); render(); } },
+    "sug-val":()=>{ const f=S.t10.find(x=>!lleno(x.v)); if(f) f.v=b.dataset.t; else S.t10.push({v:b.dataset.t,s:""}); render(); },
+    "add-proc":()=>{ const t=prompt("Nombre del proceso"); if(t&&t.trim()){ S.t7[b.dataset.k].push(t.trim()); render(); } },
+    "del-proc":()=>{ S.t7[b.dataset.k].splice(i,1); render(); },
+    "sug-dofa":()=>{ const k=b.dataset.k, arr=S.t11[k]; let j=arr.findIndex(x=>!lleno(x));
+      if(j<0){ arr.push(b.dataset.t); } else arr[j]=b.dataset.t; render(); },
+    informe:()=> bajar(`Modulo1-${(S.empresa||"empresa").replace(/[^\w\sáéíóúñÁÉÍÓÚÑ-]/g,"").trim().replace(/\s+/g,"-")}.html`, informeHTML()),
+    respaldo:()=> bajar("bitacora-mega-modulo1.json", JSON.stringify(S,null,2)),
+    imprimir:()=> window.print(),
+    ir:()=> ir(i)
+  };
+  if(acciones[a]){ acciones[a](); if(["add-tend","add-comp","add-ind","add-hito","add-val","del-tend","del-comp","del-ind","del-hito","del-val","add-proc","del-proc","sug-ind","sug-val","sug-dofa"].includes(a)) guardar(); }
+});
+
+document.getElementById("ruta").addEventListener("click", e=>{
+  const b = e.target.closest(".st"); if(b) ir(+b.dataset.i);
+});
+document.getElementById("btn-informe").addEventListener("click", ()=> bajar(`Modulo1-${(S.empresa||"empresa").replace(/[^\w\sáéíóúñÁÉÍÓÚÑ-]/g,"").trim().replace(/\s+/g,"-")}.html`, informeHTML()));
+document.getElementById("btn-json").addEventListener("click", ()=> bajar("bitacora-mega-modulo1.json", JSON.stringify(S,null,2)));
+document.getElementById("btn-reset").addEventListener("click", ()=>{
+  if(confirm("Esto borra todas las respuestas del módulo. ¿Seguro?")){ S = nuevo(); listos.clear(); document.getElementById("nombre").value=""; guardar(); ir(0); }
+});
+document.getElementById("btn-tema").addEventListener("click", ()=>{
+  const r = document.documentElement;
+  const oscuro = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = oscuro ? "light" : "dark";
+});
+
+async function bajar(nombre, texto){
+  if(dls){
+    try{ await dls.save({filename:nombre, data:texto}); aviso("Archivo entregado"); return; }
+    catch(err){ if(err && err.code==="declined") return; }
+  }
+  ir(11);
+  aviso("Usa Imprimir → Guardar como PDF para conservarlo");
+}
+
+/* ============================================================
+   CELEBRACIÓN
+   ============================================================ */
+const toast = document.getElementById("toast"), toastT = document.getElementById("toast-t");
+let tToast=null;
+function aviso(txt){
+  toastT.textContent = txt; toast.classList.add("on");
+  clearTimeout(tToast); tToast = setTimeout(()=> toast.classList.remove("on"), 3200);
+}
+function celebrar(nombre){
+  aviso("✦ Taller completo · " + nombre);
+  if(!reduce()) chispas();
+}
+const cv = document.getElementById("fx"), cx = cv.getContext("2d");
+let parts=[], raf=null;
+function chispas(){
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ["#4B3FA6","#6B5DD3","#B87333","#2E7D4F","#C98A12"];
+  for(let i=0;i<70;i++) parts.push({
+    x: innerWidth*0.5 + (Math.random()-.5)*160, y: innerHeight*0.42,
+    vx:(Math.random()-.5)*9, vy:-Math.random()*11-3,
+    r: 2+Math.random()*4, c: cols[i%cols.length], a:1, rot:Math.random()*6
+  });
+  if(!raf) raf = requestAnimationFrame(tick);
+}
+function tick(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  parts = parts.filter(p=>p.a>0.02);
+  parts.forEach(p=>{
+    p.vy += 0.34; p.x += p.vx; p.y += p.vy; p.a -= 0.011; p.rot += 0.12;
+    cx.save(); cx.globalAlpha = Math.max(p.a,0); cx.translate(p.x,p.y); cx.rotate(p.rot);
+    cx.fillStyle = p.c; cx.fillRect(-p.r, -p.r*0.5, p.r*2, p.r);
+    cx.restore();
+  });
+  if(parts.length) raf = requestAnimationFrame(tick); else { raf=null; cx.clearRect(0,0,cv.width,cv.height); }
+}
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+cargarLocal();
+document.getElementById("nombre").value = S.empresa || "";
+pintarRuta();
+render();
+T.forEach((x,i)=>{ const [a,b]=x.stats(); if(b && a/b>=1) listos.add(i); });
+marcar(S._ts? "Guardado en este equipo" : "Listo");
+
+(async ()=>{
+  if(!window.claude || !claude.use) return;
+  try{
+    dls = await claude.use("downloads");
+    db  = await claude.use("db");
+    if(db){
+      const snap = await db.doc("bitacora/modulo1").get();
+      if(snap && snap.exists && snap.data && snap.data.json){
+        const remoto = JSON.parse(snap.data.json);
+        if((remoto._ts||0) > (S._ts||0)){
+          S = Object.assign(nuevo(), remoto);
+          document.getElementById("nombre").value = S.empresa||"";
+          listos.clear(); T.forEach((x,i)=>{ const [a,b]=x.stats(); if(b&&a/b>=1) listos.add(i); });
+          render();
+        }
+      }
+      marcar("Guardado en la nube");
+    }
+  }catch(e){}
+})();
+</script>
