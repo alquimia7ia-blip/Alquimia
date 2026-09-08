@@ -23,7 +23,8 @@ funciona.*
 | `docs/metodo/guia-metodologica-tallerista.md` / `.html` | Guía de 2 páginas para preparar un taller. Artifact: `906cc6ad-c5cd-4a4a-80d8-5e273290df0e` |
 | `docs/metodo/ficha-diseno-taller.md` | Plantilla de contenido, una por taller |
 | `docs/metodo/Guia-del-Tallerista.docx` | La guía en Word, carta, editable |
-| `docs/metodo/gemelo-taller.html` | Gemelo digital. Artifact: `c9cbbb64-221d-4273-b8f5-772f85203e6a` |
+| `docs/metodo/gemelo-taller.html` | Gemelo digital · Capacidad de Producción. Artifact: `c9cbbb64-221d-4273-b8f5-772f85203e6a` |
+| `docs/metodo/gemelo-oee.html` | **La Trampa del OEE** — gemelo de indicadores, 4 niveles. Artifact: `ed68e2c7-0dfe-4686-be84-aa8b489fa097` |
 
 ### Preferencias de forma, aprendidas a los golpes
 
@@ -106,7 +107,7 @@ Rama de trabajo: `claude/fabrica-aprendizaje-metodologia-85cziy`.
 
 ---
 
-## Gemelo de indicadores Lean — `docs/metodo/gemelo-oee.html`
+## «La Trampa del OEE» — gemelo de indicadores Lean · `docs/metodo/gemelo-oee.html`
 
 Artifact `ed68e2c7-0dfe-4686-be84-aa8b489fa097`. Segundo gemelo, mismo motor, otro tema.
 **Un solo indicador en los cuatro niveles: OEE.** Lo que sube es la dificultad, no el
@@ -144,6 +145,26 @@ máximo único que además sea una máquina que se avería.
 
 El margen se estrecha nivel a nivel: +14,2 → +8,0 → +4,3 → +1,9. En el nivel 3 forzar
 produce **70 unidades y solo 50 buenas**: ahí está el indicador vanidoso, en vivo.
+
+### La trampa — el patrón, no el ejemplo
+
+**La trampa es que la decisión que sube el número visible baja el número que importa.**
+El jugador aprieta el acelerador, ve subir Rendimiento a 97,7% y produce 70 unidades: todo
+en la pantalla dice que va ganando. Pero Calidad cae a 71,4% y el OEE se hunde a 61,9%.
+Falla habiendo producido *más*.
+
+Funciona por tres razones, y las tres son transferibles a cualquier gemelo futuro:
+
+1. **El indicador es un producto, no una suma.** Un factor en el piso arrastra el total. Con
+   un promedio la trampa no existe: se compensa.
+2. **La palanca tramposa es la que la intuición pide primero.** «Vamos más rápido» es lo que
+   dice cualquiera. El error tiene que ser el impulso natural, no una opción rara.
+3. **La consecuencia llega separada de la acción.** Los defectos se acumulan durante la
+   corrida y solo se leen al final. Si el castigo fuera inmediato, no habría trampa: habría
+   un botón que nadie oprime.
+
+**Receta para diseñar otra trampa:** buscar el indicador compuesto del tema, encontrar la
+palanca que sube un factor y hunde otro, y esconder el daño hasta el veredicto.
 
 ### Reglas que aprendí construyéndolo
 
