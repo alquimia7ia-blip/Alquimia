@@ -100,3 +100,57 @@ se ve igual de bonita que una que funciona.
 ## Git
 
 Rama de trabajo: `claude/fabrica-aprendizaje-metodologia-85cziy`.
+
+---
+
+## Gemelo de indicadores Lean — `docs/metodo/gemelo-oee.html`
+
+Artifact `ed68e2c7-0dfe-4686-be84-aa8b489fa097`. Segundo gemelo, mismo motor, otro tema.
+**Un solo indicador en los cuatro niveles: OEE.** Lo que sube es la dificultad, no el
+indicador. Elegido porque no se puede inflar: es un producto de tres factores.
+
+`OEE = Disponibilidad × Rendimiento × Calidad = ciclo_ideal × buenas / tiempo_planeado`
+
+Disponibilidad se mide **sobre la restricción**, que es la práctica estándar; medirla sobre
+toda la línea daba Rendimiento por encima de 100%.
+
+### Configuración calibrada — no tocar sin recalibrar
+
+```
+E1 Preparar base 20s · E2 Tornillería 40s · E3 Montar cubierta 22s
+E4 Ajuste con herramienta 30s · E5 Calidad y empaque 18s      (total 130 s)
+7 operarios · cola 8 · 1500 s · ciclo ideal 130/7 = 18,571 s/u · META 65%
+MTBF/MTTR  [[2400,25],[230,55],[220,55],[210,58],[2400,25]]
+defectos   [.004,.018,.004,.022,.004]
+preventivo: cuesta 60 s, MTBF x5     ritmo forzado: ciclo x0.8, defectos x5, MTBF x0.4
+nivel 4: MTBF x0.5
+```
+
+Los contenidos de trabajo son **20-40-22-30-18 a propósito**: con valores que empatan, el
+cuello quedaba en una estación fiable y la disponibilidad salía 100%. Deben producir un
+máximo único que además sea una máquina que se avería.
+
+### La escalera verificada (navegador = cálculo analítico, al decimal)
+
+| Nivel | Palanca nueva | Correcto | Errado |
+|---|---|---|---|
+| 1 | repartir operarios | `[1,2,1,2,1]` **79,2%** | `[2,1,1,2,1]` 43,3% |
+| 2 | mantenimiento preventivo | con PM **73,0%** | sin PM 64,4% |
+| 3 | ritmo normal / forzado | normal **69,3%** | forzado 61,9% |
+| 4 | equipo viejo | PM + normal **66,9%** | forzado 55,7% |
+
+El margen se estrecha nivel a nivel: +14,2 → +8,0 → +4,3 → +1,9. En el nivel 3 forzar
+produce **70 unidades y solo 50 buenas**: ahí está el indicador vanidoso, en vivo.
+
+### Reglas que aprendí construyéndolo
+
+- **Calibrar en Python antes de escribir interfaz.** Un juego desbalanceado no enseña.
+- **Paso de simulación fijo (0,25 s)** en JS igual que en el modelo. Con paso variable los
+  números se corren y dejan de coincidir con la calibración.
+- **Fallas deterministas y defectos con semilla fija**: la misma decisión debe dar siempre
+  el mismo resultado, o la lección se enturbia.
+- Para el OEE la forma correcta no es una gráfica: **un número héroe y tres medidores del
+  mismo tono** —D, R y C son magnitudes de la misma clase, no categorías—, más una barra
+  de parte-a-todo para producidas contra buenas.
+- Verificar siempre con `drive3.mjs`: maneja los cuatro niveles y compara contra los
+  valores esperados.

@@ -1,0 +1,515 @@
+<title>La Trampa del OEE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F7F6F3; --ink:#191817; --muted:#6E6A64; --faint:#9A958D;
+    --rule:#E2DFD8; --accent:#C9431C; --accent-soft:#F6E7E0; --card:#FFFFFF;
+    --floor:#17161A; --floor-2:#201E24; --floor-line:#33303A; --floor-ink:#EDEAE4; --floor-dim:#75707C;
+    --ok:#2E6F4E; --ok-soft:#E3EFE8;
+    --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+    --serif:"Instrument Serif",Georgia,serif;
+    --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#131211; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F;
+    --rule:#2D2A26; --accent:#FF7A4F; --accent-soft:#2A1A13; --card:#1B1917;
+    --floor:#0D0C10; --floor-2:#17161B; --floor-line:#2A2830; --floor-ink:#EDEAE4; --floor-dim:#6E6A76;
+    --ok:#63BC90; --ok-soft:#13291F;
+  }}
+  :root[data-theme="dark"]{
+    --paper:#131211; --ink:#EFEDE8; --muted:#A29D95; --faint:#7C776F;
+    --rule:#2D2A26; --accent:#FF7A4F; --accent-soft:#2A1A13; --card:#1B1917;
+    --floor:#0D0C10; --floor-2:#17161B; --floor-line:#2A2830; --floor-ink:#EDEAE4; --floor-dim:#6E6A76;
+    --ok:#63BC90; --ok-soft:#13291F;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:clamp(1rem,.96rem + .22vw,1.08rem);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:52rem;margin:0 auto;padding:clamp(1.6rem,4vw,3rem) clamp(1rem,4vw,2rem) 5rem}
+  p{margin:0} button{font-family:inherit;font-size:inherit;cursor:pointer}
+  [hidden]{display:none!important}
+  .scroll{overflow-x:auto}
+
+  .hero .eyebrow{font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  h1{font-weight:700;letter-spacing:-.035em;line-height:1.02;margin:.7rem 0 0;
+     font-size:clamp(2.1rem,1.6rem + 2.5vw,3.2rem);text-wrap:balance}
+  .hero .say{font-family:var(--serif);font-size:clamp(1.15rem,1rem + .8vw,1.55rem);
+    line-height:1.3;margin-top:.9rem;max-width:32ch;color:var(--muted)}
+  .hero .say b{color:var(--ink);font-weight:400}
+  .formula{margin-top:1.3rem;font-family:var(--mono);font-size:.82rem;color:var(--muted);
+    background:var(--card);border:1px solid var(--rule);padding:.75rem .9rem;line-height:1.7}
+  .formula b{color:var(--ink)}
+
+  /* niveles */
+  .levels{display:flex;gap:.4rem;margin-top:2rem;flex-wrap:wrap}
+  .lv{flex:1;min-width:5.5rem;border:1px solid var(--rule);background:var(--card);padding:.6rem .7rem;
+    border-radius:2px;transition:all .3s ease}
+  .lv .k{font-family:var(--mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+  .lv .t{font-weight:600;font-size:.85rem;line-height:1.25;margin-top:.15rem}
+  .lv .s{font-family:var(--mono);font-size:.74rem;font-weight:700;margin-top:.3rem;color:var(--faint)}
+  .lv.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .lv.now .k{color:var(--accent)}
+  .lv.ok{border-color:var(--ok)} .lv.ok .s{color:var(--ok)}
+
+  section{margin-top:2.2rem}
+  .beat{animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  h2{font-weight:700;font-size:clamp(1.25rem,1.1rem + .55vw,1.6rem);letter-spacing:-.025em;margin:0 0 .7rem}
+  .lead{color:var(--muted);max-width:40rem} .lead + .lead{margin-top:.7rem}
+  .lead b{color:var(--ink);font-weight:600}
+
+  .new{background:var(--accent-soft);border-left:3px solid var(--accent);padding:.9rem 1.1rem;
+    margin-top:1.1rem;max-width:40rem;font-size:.97rem;line-height:1.55}
+  .new .k{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:.4rem}
+
+  /* palancas */
+  .lev{margin-top:1.5rem;display:grid;gap:.5rem;max-width:38rem}
+  .op{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center;
+    background:var(--card);border:1px solid var(--rule);padding:.55rem .8rem;border-radius:2px}
+  .op .n{font-weight:600;font-size:.92rem}
+  .op .n em{font-style:normal;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-left:.45rem}
+  .op .ctl{display:flex;align-items:center;gap:.5rem}
+  .op b{width:1.8rem;height:1.8rem;border:1px solid var(--rule);border-radius:2px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;
+    font-size:1rem;transition:all .15s ease}
+  .op b:hover{border-color:var(--accent);color:var(--accent)}
+  .op b[aria-disabled="true"]{opacity:.28;pointer-events:none}
+  .op .v{font-family:var(--mono);font-weight:700;min-width:1.1rem;text-align:center;font-variant-numeric:tabular-nums}
+  .pool{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+  .pool b{color:var(--accent);font-weight:700}
+
+  .toggle{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center;
+    background:var(--card);border:1px solid var(--rule);padding:.7rem .8rem;border-radius:2px}
+  .toggle .n{font-weight:600;font-size:.92rem}
+  .toggle .d{color:var(--muted);font-size:.85rem;line-height:1.4;margin-top:.15rem;max-width:26rem}
+  .sw{width:3.2rem;height:1.7rem;border-radius:1rem;border:1px solid var(--rule);background:var(--paper);
+    position:relative;flex:none;transition:all .2s ease}
+  .sw::after{content:"";position:absolute;top:.2rem;left:.22rem;width:1.15rem;height:1.15rem;border-radius:50%;
+    background:var(--faint);transition:all .2s ease}
+  .sw[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+  .sw[aria-pressed="true"]::after{left:1.65rem;background:var(--accent)}
+  .sw:focus-visible,.op b:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .go{margin-top:1.6rem;display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:2px;padding:.7rem 1.35rem;font-weight:600}
+  .btn:hover{filter:brightness(1.08)} .btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--rule)}
+  .btn.ghost:hover{color:var(--ink);border-color:var(--faint);filter:none}
+
+  /* planta */
+  .plant{margin-top:1.4rem;background:var(--floor);border-radius:4px;padding:1.1rem 1rem 1.2rem;
+    color:var(--floor-ink);overflow-x:auto}
+  .plant-hd{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;align-items:baseline;font-family:var(--mono);
+    font-size:.7rem;color:var(--floor-dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem}
+  .plant-hd b{color:var(--floor-ink);font-weight:700;font-size:1rem;letter-spacing:0;font-variant-numeric:tabular-nums}
+  .plant-hd .sep{margin-left:auto}
+  .line{display:flex;align-items:stretch;gap:.35rem;min-width:34rem}
+  .stn{flex:1;background:var(--floor-2);border:1px solid var(--floor-line);border-radius:3px;
+    padding:.55rem .55rem .5rem;display:flex;flex-direction:column;gap:.45rem;
+    transition:border-color .2s ease,box-shadow .2s ease,opacity .2s ease}
+  .stn.work{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset,0 0 16px -6px var(--accent)}
+  .stn.dead{border-color:var(--accent);border-style:dashed;opacity:.72}
+  .queue{display:flex;flex-wrap:wrap-reverse;gap:2px;min-height:1.1rem;align-content:flex-end}
+  .queue i{width:.4rem;height:.4rem;background:var(--floor-line);border-radius:1px;transition:background .18s ease}
+  .queue i.on{background:var(--accent)}
+  .queue i.bad{background:var(--floor-dim)}
+  .sname{font-size:.76rem;font-weight:600;line-height:1.25}
+  .smeta{display:flex;justify-content:space-between;align-items:baseline;gap:.3rem;margin-top:.12rem}
+  .scyc,.stt{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;color:var(--floor-dim);text-transform:uppercase}
+  .stn.dead .stt{color:var(--accent);font-weight:700}
+  .ops{display:flex;gap:.18rem;flex-wrap:wrap}
+  .ops i{width:.46rem;height:.46rem;border-radius:50%;background:var(--floor-dim);transition:background .2s ease}
+  .stn.work .ops i{background:var(--accent)}
+  .bar{height:3px;background:var(--floor-line);border-radius:2px;overflow:hidden}
+  .bar span{display:block;height:100%;width:0;background:var(--accent)}
+  .out{flex:0 0 5rem;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.1rem;
+    border-left:1px dashed var(--floor-line);padding-left:.6rem}
+  .out b{font-family:var(--mono);font-size:1.6rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .out span{font-family:var(--mono);font-size:.55rem;letter-spacing:.09em;text-transform:uppercase;color:var(--floor-dim)}
+
+  /* resultado */
+  .res{margin-top:1.5rem;border:1px solid var(--rule);background:var(--card);padding:1.4rem 1.5rem}
+  .res.pass{border-left:3px solid var(--ok)} .res.fail{border-left:3px solid var(--accent)}
+  .heroe{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.8rem 2rem}
+  .heroe .big{font-family:var(--mono);font-size:3.4rem;font-weight:700;line-height:.9;
+    font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+  .res.pass .big{color:var(--ok)} .res.fail .big{color:var(--accent)}
+  .heroe .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);margin-top:.35rem}
+  .heroe .meta{font-family:var(--mono);font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .badge{margin-left:auto;font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;padding:.35rem .7rem;border-radius:2px;display:flex;align-items:center;gap:.4rem}
+  .res.pass .badge{background:var(--ok-soft);color:var(--ok)}
+  .res.fail .badge{background:var(--accent-soft);color:var(--accent)}
+
+  .factors{margin-top:1.4rem;display:grid;gap:.7rem;max-width:34rem}
+  .fac{display:grid;grid-template-columns:8.5rem 1fr 3.2rem;gap:.8rem;align-items:center}
+  .fac .fn{font-size:.87rem;color:var(--muted)}
+  .fac .track{height:.62rem;background:var(--rule);border-radius:0 3px 3px 0}
+  .fac .track span{display:block;height:100%;width:0;background:var(--accent);border-radius:0 3px 3px 0;
+    transition:width .9s cubic-bezier(.2,.7,.3,1)}
+  .fac .fv{font-family:var(--mono);font-size:.87rem;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+  .ident{margin-top:1rem;font-family:var(--mono);font-size:.79rem;color:var(--muted);line-height:1.7}
+  .ident b{color:var(--ink)}
+
+  .parts{margin-top:1.4rem;max-width:34rem}
+  .parts .pt{display:flex;height:1.5rem;border-radius:2px;overflow:hidden;background:var(--rule);gap:2px}
+  .parts .pg{background:var(--accent);width:0;transition:width .9s cubic-bezier(.2,.7,.3,1)}
+  .parts .pb{background:var(--faint);opacity:.45;width:0;transition:width .9s cubic-bezier(.2,.7,.3,1)}
+  .parts .lg{display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;margin-top:.5rem;font-size:.85rem;color:var(--muted)}
+  .parts .lg span{display:flex;align-items:center;gap:.4rem}
+  .parts .lg i{width:.7rem;height:.7rem;border-radius:2px;flex:none}
+  .parts .lg b{font-family:var(--mono);font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+
+  .verdict{margin-top:1.3rem;font-size:.97rem;line-height:1.55;color:var(--muted);max-width:40rem}
+  .verdict b{color:var(--ink);font-weight:600}
+
+  table.hist{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.88rem;min-width:30rem}
+  table.hist th{font-family:var(--mono);font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--faint);text-align:left;font-weight:600;padding:0 .7rem .4rem 0;border-bottom:1px solid var(--rule)}
+  table.hist th.r,table.hist td.r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  table.hist td{padding:.45rem .7rem;border-bottom:1px solid var(--rule);padding-left:0}
+  table.hist td.ok{color:var(--ok);font-weight:700} table.hist td.no{color:var(--accent);font-weight:700}
+
+  footer{margin-top:3.2rem;padding-top:1.2rem;border-top:1px solid var(--rule);
+    color:var(--faint);font-size:.85rem;line-height:1.6}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  @media(max-width:560px){
+    .op,.toggle{grid-template-columns:1fr;gap:.5rem}
+    .fac{grid-template-columns:7rem 1fr 3rem;gap:.5rem}
+    .badge{margin-left:0}
+  }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Fábrica de Aprendizaje · Gemelo digital · Indicadores Lean</p>
+    <h1>La trampa del OEE</h1>
+    <p class="say">Cuatro corridas de la misma línea. Un solo indicador. <b>Y no se puede
+      inflar:</b> es un producto de tres factores, y basta que uno se caiga.</p>
+    <p class="formula">OEE = <b>Disponibilidad</b> × <b>Rendimiento</b> × <b>Calidad</b><br>
+      que es lo mismo que decir: <b>tiempo ideal para hacer las unidades buenas ÷ tiempo planeado</b></p>
+  </header>
+
+  <div class="levels" id="levels"></div>
+  <main id="stage"></main>
+
+  <footer>
+    Línea de cinco estaciones en serie · 7 operarios · cola de 8 unidades · 25 minutos de tiempo
+    planeado · ciclo ideal nominal 18,57 s/unidad. Las averías ocurren a intervalo fijo y los
+    defectos con semilla fija, para que la misma decisión dé siempre el mismo resultado.
+    La disponibilidad se mide sobre la restricción, como manda la práctica estándar.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* ───────── modelo calibrado ───────── */
+  const ST=[{n:"Preparar base",w:20},{n:"Tornillería",w:40},{n:"Montar cubierta",w:22},
+            {n:"Ajuste con herramienta",w:30},{n:"Calidad y empaque",w:18}];
+  const POOL=7, CAP=8, T=1500, CI=130/7, META=0.65;
+  const REL=[[2400,25],[230,55],[220,55],[210,58],[2400,25]];   // [MTBF operando, MTTR]
+  const DEF=[.004,.018,.004,.022,.004];
+  const PM_COST=60, PM_MTBF=5, FK=.8, FD=5, FM=.4;
+
+  const NIV=[
+    {n:1,t:"La línea limpia",fallas:false,defectos:false,rel:1,pm:false,ritmo:false,
+     nuevo:"Una sola palanca: cómo reparte los siete operarios. Ninguna máquina falla y ninguna pieza sale mala.",
+     pista:"El tiempo de ciclo de una estación es su trabajo dividido entre la gente que le ponga. La línea entera va al ritmo de la estación más lenta."},
+    {n:2,t:"Las máquinas fallan",fallas:true,defectos:false,rel:1,pm:true,ritmo:false,
+     nuevo:"Las máquinas se averían. Puede hacer mantenimiento preventivo antes de arrancar: le cuesta un minuto de los veinticinco, y multiplica por cinco el tiempo entre averías.",
+     pista:"El minuto que gasta en preventivo también cuenta como parada. La pregunta es si le devuelve más de lo que le cuesta."},
+    {n:3,t:"Aparecen los defectos",fallas:true,defectos:true,rel:1,pm:true,ritmo:true,
+     nuevo:"Las piezas ahora salen malas y solo se descubren en Calidad. Puede forzar el ritmo: los ciclos bajan un 20%, pero los defectos se multiplican por cinco y las máquinas se averían más.",
+     pista:"Forzar el ritmo siempre produce más unidades. Mire cuántas de esas unidades sirven."},
+    {n:4,t:"Equipo viejo",fallas:true,defectos:true,rel:.5,pm:true,ritmo:true,
+     nuevo:"Misma línea, mismas palancas, pero las máquinas tienen el doble de averías. La meta no baja.",
+     pista:"Aquí no hay margen: las tres decisiones tienen que estar bien."}
+  ];
+
+  function mk(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;
+    t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+  function nuevoSim(ops,cfg){
+    const k=cfg.forzado?FK:1;
+    const mb=(cfg.pm?PM_MTBF:1)*(cfg.forzado?FM:1)*cfg.rel;
+    const cyc=ST.map((e,i)=>e.w/ops[i]*k);
+    let bn=0; for(let i=1;i<ST.length;i++) if(cyc[i]>cyc[bn]) bn=i;
+    return {ops:ops.slice(),cyc:cyc,bn:bn,cfg:cfg,rng:mk(11),
+      mtbf:REL.map(r=>r[0]*mb), mttr:REL.map(r=>r[1]),
+      st:ST.map(()=>({h:false,dn:false,t:0,buf:0,qb:0,dt:0,bad:false,down:0,op:0})),
+      nxt:ST.map((e,i)=>cfg.fallas?REL[i][0]*mb:1e18),
+      clock:cfg.pm?PM_COST:0, pmCost:cfg.pm?PM_COST:0, out:0, good:0};
+  }
+
+  function push(s,i,bad){
+    if(i===ST.length-1){ s.out++; if(!bad) s.good++; return true; }
+    if(s.st[i+1].buf<CAP){ s.st[i+1].buf++; if(bad) s.st[i+1].qb++; return true; }
+    return false;
+  }
+
+  function tick(s,dt){
+    s.clock+=dt;
+    for(let i=ST.length-1;i>=0;i--){
+      const e=s.st[i];
+      if(e.dt>0){ e.dt-=dt; e.down+=dt; continue; }
+      if(e.dn){ if(push(s,i,e.bad)) e.dn=false; else continue; }
+      if(!e.h){
+        if(i===0){ e.h=true; e.t=0; e.bad=false; }
+        else if(e.buf>0){ e.buf--; e.h=true; e.t=0; e.bad=e.qb>0; if(e.qb>0) e.qb--; }
+      }
+      if(e.h){
+        e.t+=dt; e.op+=dt;
+        if(s.cfg.fallas && e.op>=s.nxt[i]){ e.dt=s.mttr[i]; s.nxt[i]=e.op+s.mtbf[i]; }
+        if(e.t>=s.cyc[i]){
+          e.h=false; e.t=0;
+          if(s.cfg.defectos && s.rng()<DEF[i]*(s.cfg.forzado?FD:1)) e.bad=true;
+          if(!push(s,i,e.bad)) e.dn=true;
+        }
+      }
+    }
+  }
+
+  function medir(s){
+    const down=s.st[s.bn].down+s.pmCost;
+    const D=(T-down)/T;
+    const R=down<T?(CI*s.out)/(T-down):0;
+    const Q=s.out?s.good/s.out:0;
+    return {D:D,R:R,Q:Q,OEE:CI*s.good/T,out:s.out,good:s.good,bn:ST[s.bn].n,down:down};
+  }
+
+  /* ───────── estado ───────── */
+  const S={nivel:0, ops:[2,1,1,2,1], pm:false, forzado:false, hist:[], corriendo:false};
+  const $=q=>document.querySelector(q), stage=$("#stage");
+  const pct=v=>(v*100).toFixed(1)+"%";
+  const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  function pintarNiveles(){
+    $("#levels").innerHTML=NIV.map((v,i)=>{
+      const h=S.hist[i];
+      const cls=h&&h.pass?"lv ok":(i===S.nivel?"lv now":"lv");
+      return '<div class="'+cls+'"><div class="k">Nivel '+v.n+'</div><div class="t">'+esc(v.t)+'</div>'
+        +'<div class="s">'+(h?pct(h.OEE):"—")+'</div></div>';
+    }).join("");
+  }
+
+  function poner(html){ stage.innerHTML='<section class="beat">'+html+'</section>'; }
+
+  /* ───────── pantalla de nivel ───────── */
+  function pintarNivel(){
+    const v=NIV[S.nivel];
+    pintarNiveles();
+    let h='<h2>Nivel '+v.n+' · '+esc(v.t)+'</h2>'
+      +'<p class="lead">Meta: <b>'+(META*100)+'% de OEE</b> en 25 minutos. Siete operarios.</p>'
+      +'<div class="new"><span class="k">Lo nuevo en este nivel</span>'+esc(v.nuevo)+'</div>'
+      +'<div class="lev" id="lev">';
+    ST.forEach((e,i)=>{
+      h+='<div class="op"><div class="n">'+esc(e.n)+'<em>'+e.w+'s de trabajo</em></div><div class="ctl">'
+        +'<b role="button" tabindex="0" data-d="-1" data-i="'+i+'" aria-label="Quitar operario">−</b>'
+        +'<span class="v" data-v="'+i+'">'+S.ops[i]+'</span>'
+        +'<b role="button" tabindex="0" data-d="1" data-i="'+i+'" aria-label="Agregar operario">+</b></div></div>';
+    });
+    h+='</div><p class="pool" style="margin-top:.5rem">Sin asignar: <b id="pool">0</b> de '+POOL+'</p>';
+    if(v.pm) h+='<div class="lev" style="margin-top:.9rem"><div class="toggle"><div>'
+      +'<div class="n">Mantenimiento preventivo</div>'
+      +'<div class="d">Cuesta 60 segundos del tiempo planeado. Multiplica por cinco el tiempo entre averías.</div></div>'
+      +'<button class="sw" id="swpm" aria-pressed="'+S.pm+'" aria-label="Mantenimiento preventivo"></button></div></div>';
+    if(v.ritmo) h+='<div class="lev" style="margin-top:.6rem"><div class="toggle"><div>'
+      +'<div class="n">Forzar el ritmo</div>'
+      +'<div class="d">Los ciclos bajan 20%. Los defectos se multiplican por cinco y las averías llegan más seguido.</div></div>'
+      +'<button class="sw" id="swrt" aria-pressed="'+S.forzado+'" aria-label="Forzar el ritmo"></button></div></div>';
+    h+='<p class="lead" style="margin-top:1.1rem;font-size:.93rem"><b>Pista.</b> '+esc(v.pista)+'</p>'
+      +planta()+'<div class="go"><button class="btn" id="run">Arrancar la corrida</button></div>';
+    poner(h);
+    montar();
+    dibujar(nuevoSim(S.ops,cfg()));
+    $("#run").addEventListener("click",correr);
+  }
+
+  function cfg(){ const v=NIV[S.nivel];
+    return {fallas:v.fallas,defectos:v.defectos,rel:v.rel,pm:v.pm&&S.pm,forzado:v.ritmo&&S.forzado}; }
+
+  function montar(){
+    function sync(){
+      const u=S.ops.reduce((a,b)=>a+b,0);
+      S.ops.forEach((x,i)=>{const el=stage.querySelector('[data-v="'+i+'"]'); if(el) el.textContent=x;});
+      $("#pool").textContent=POOL-u;
+      [].forEach.call(stage.querySelectorAll("#lev .op b"),b=>{
+        const i=+b.dataset.i,d=+b.dataset.d;
+        b.setAttribute("aria-disabled",(d>0?u>=POOL:S.ops[i]<=1)?"true":"false");
+      });
+      dibujar(nuevoSim(S.ops,cfg()));
+    }
+    function hit(b){
+      if(S.corriendo) return;
+      const i=+b.dataset.i,d=+b.dataset.d,u=S.ops.reduce((a,x)=>a+x,0);
+      if(d>0&&u>=POOL) return; if(d<0&&S.ops[i]<=1) return;
+      S.ops[i]+=d; sync();
+    }
+    [].forEach.call(stage.querySelectorAll("#lev .op b"),b=>{
+      b.addEventListener("click",()=>hit(b));
+      b.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();hit(b);}});
+    });
+    const pm=$("#swpm"); if(pm) pm.addEventListener("click",()=>{ if(S.corriendo)return;
+      S.pm=!S.pm; pm.setAttribute("aria-pressed",S.pm); sync(); });
+    const rt=$("#swrt"); if(rt) rt.addEventListener("click",()=>{ if(S.corriendo)return;
+      S.forzado=!S.forzado; rt.setAttribute("aria-pressed",S.forzado); sync(); });
+    sync();
+  }
+
+  /* ───────── planta ───────── */
+  function planta(){
+    return '<div class="plant"><div class="plant-hd"><span>Corrida del nivel '+NIV[S.nivel].n+'</span>'
+      +'<span class="sep">Reloj <b id="pclock">00:00</b></span>'
+      +'<span>Meta <b>'+(META*100)+'%</b></span></div><div class="line" id="line"></div></div>';
+  }
+
+  function dibujar(s){
+    const line=$("#line"); if(!line) return;
+    if(line.children.length!==ST.length+1){
+      line.innerHTML="";
+      ST.forEach(e=>{
+        const d=document.createElement("div"); d.className="stn";
+        d.innerHTML='<div class="queue"></div><div><div class="sname">'+esc(e.n)+'</div>'
+          +'<div class="smeta"><span class="scyc"></span><span class="stt"></span></div></div>'
+          +'<div class="ops"></div><div class="bar"><span></span></div>';
+        line.appendChild(d);
+        const q=d.querySelector(".queue");
+        for(let k=0;k<CAP;k++) q.appendChild(document.createElement("i"));
+      });
+      const o=document.createElement("div"); o.className="out";
+      o.innerHTML='<b id="pout">0</b><span>buenas</span>'; line.appendChild(o);
+    }
+    ST.forEach((e,i)=>{
+      const d=line.children[i], st=s.st[i];
+      d.querySelector(".scyc").textContent=s.cyc[i].toFixed(1)+" s/u";
+      const ops=d.querySelector(".ops");
+      if(ops.children.length!==s.ops[i]){ ops.innerHTML="";
+        for(let k=0;k<s.ops[i];k++) ops.appendChild(document.createElement("i")); }
+      const q=d.querySelector(".queue").children;
+      for(let k=0;k<CAP;k++) q[k].className = k<st.buf ? (k<st.qb?"on bad":"on") : "";
+      d.querySelector(".bar span").style.width=(st.h?100*st.t/s.cyc[i]:0)+"%";
+      const averia=st.dt>0;
+      d.className="stn"+(averia?" dead":(st.h?" work":""));
+      d.querySelector(".stt").textContent = averia ? "avería "+Math.ceil(st.dt)+"s"
+        : (st.dn?"bloqueada":(st.h?"":"espera"));
+    });
+    const po=document.getElementById("pout"); if(po) po.textContent=s.good;
+    const pc=document.getElementById("pclock");
+    if(pc){ const m=Math.floor(s.clock/60),x=Math.floor(s.clock%60);
+      pc.textContent=(m<10?"0":"")+m+":"+(x<10?"0":"")+x; }
+  }
+
+  /* ───────── correr ───────── */
+  function correr(){
+    S.corriendo=true;
+    const s=nuevoSim(S.ops,cfg()), b=$("#run");
+    b.disabled=true; b.textContent="Corriendo…";
+    const accel=T/14; let last=performance.now(), acc=0;
+    (function f(now){
+      let d=(now-last)/1000*accel; last=now; if(d>8) d=8;
+      acc+=d;
+      /* paso fijo de 0,25 s: idéntico al modelo con el que se calibraron los niveles */
+      while(acc>=.25&&s.clock<T){ tick(s,.25); acc-=.25; }
+      dibujar(s);
+      if(s.clock<T) requestAnimationFrame(f); else fin(s);
+    })(last);
+  }
+
+  function fin(s){
+    S.corriendo=false;
+    const rb=$("#run"); if(rb) rb.parentNode.remove();
+    const m=medir(s), pass=m.OEE>=META;
+    S.hist[S.nivel]=Object.assign({},m,{pass:pass,ops:S.ops.slice(),pm:S.pm,forzado:S.forzado});
+    pintarNiveles();
+    const malas=m.out-m.good;
+    let h='<div class="res '+(pass?"pass":"fail")+'"><div class="heroe">'
+      +'<div><div class="big">'+pct(m.OEE)+'</div><div class="lbl">OEE obtenido</div></div>'
+      +'<div><div class="meta">meta '+(META*100)+'%</div><div class="lbl">cuello: '+esc(m.bn)+'</div></div>'
+      +'<div class="badge">'+(pass?"✓ Pasa":"✕ No pasa")+'</div></div>'
+      +'<div class="factors">'
+      +fac("Disponibilidad",m.D)+fac("Rendimiento",m.R)+fac("Calidad",m.Q)+'</div>'
+      +'<p class="ident">'+pct(m.D)+' × '+pct(m.R)+' × '+pct(m.Q)+' = <b>'+pct(m.OEE)+'</b></p>'
+      +'<div class="parts"><div class="pt"><span class="pg" data-w="'+(m.out?100*m.good/m.out:0)+'"></span>'
+      +'<span class="pb" data-w="'+(m.out?100*malas/m.out:0)+'"></span></div>'
+      +'<div class="lg"><span><i style="background:var(--accent)"></i>Buenas <b>'+m.good+'</b></span>'
+      +'<span><i style="background:var(--faint);opacity:.45"></i>Malas <b>'+malas+'</b></span>'
+      +'<span>Producidas <b>'+m.out+'</b></span></div></div>'
+      +'<p class="verdict">'+diagnostico(m,pass)+'</p></div>'
+      +'<div class="go">'+(pass
+        ? (S.nivel<NIV.length-1?'<button class="btn" id="next">Nivel '+(NIV[S.nivel].n+1)+'</button>':'<button class="btn" id="next">Ver el resumen</button>')
+        : '<button class="btn" id="retry">Volver a intentar</button>')
+      +'<button class="btn ghost" id="reset">Reiniciar todo</button></div>';
+    stage.querySelector("section").insertAdjacentHTML("beforeend",h);
+    setTimeout(()=>{
+      [].forEach.call(stage.querySelectorAll(".fac .track span"),el=>el.style.width=el.dataset.w+"%");
+      [].forEach.call(stage.querySelectorAll(".parts .pg,.parts .pb"),el=>el.style.width=el.dataset.w+"%");
+    },60);
+    const nx=$("#next"); if(nx) nx.addEventListener("click",()=>{
+      if(S.nivel<NIV.length-1){ S.nivel++; S.pm=false; S.forzado=false; pintarNivel(); }
+      else resumen();
+      window.scrollTo({top:0,behavior:"smooth"});
+    });
+    const rt=$("#retry"); if(rt) rt.addEventListener("click",()=>{ pintarNivel(); window.scrollTo({top:0,behavior:"smooth"}); });
+    $("#reset").addEventListener("click",()=>{ S.nivel=0;S.ops=[2,1,1,2,1];S.pm=false;S.forzado=false;S.hist=[];
+      pintarNivel(); window.scrollTo({top:0,behavior:"smooth"}); });
+    stage.querySelector(".res").scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  function fac(nombre,v){
+    return '<div class="fac"><span class="fn">'+nombre+'</span>'
+      +'<span class="track"><span data-w="'+(v*100).toFixed(1)+'"></span></span>'
+      +'<span class="fv">'+pct(v)+'</span></div>';
+  }
+
+  function diagnostico(m,pass){
+    const v=NIV[S.nivel], malas=m.out-m.good;
+    let t="";
+    if(!pass){
+      const peor = m.D<=m.R&&m.D<=m.Q ? "Disponibilidad" : (m.R<=m.Q ? "Rendimiento" : "Calidad");
+      t="El factor que lo hundió fue <b>"+peor+"</b>. ";
+      if(peor==="Rendimiento") t+="La línea va al ritmo de <b>"+esc(m.bn)+"</b>: mientras esa estación no baje su tiempo de ciclo, las demás esperan. ";
+      if(peor==="Disponibilidad") t+="La restricción estuvo parada <b>"+Math.round(m.down)+" segundos</b> de los 1500. ";
+      if(peor==="Calidad") t+="Produjo <b>"+m.out+"</b> unidades y <b>"+malas+"</b> se fueron a la basura. ";
+    } else {
+      t="<b>Pasó.</b> ";
+    }
+    if(S.forzado&&v.ritmo){
+      t+="Forzando el ritmo produjo <b>"+m.out+"</b> unidades, pero solo <b>"+m.good+"</b> sirven. "
+        +"Ese es el punto de todo el taller: <b>producir más no es producir mejor</b>, y el OEE no se deja engañar porque multiplica la calidad.";
+    } else if(v.pm&&!S.pm){
+      t+="No hizo preventivo. Se ahorró 60 segundos y perdió <b>"+Math.round(m.down)+"</b> en averías.";
+    } else if(v.pm&&S.pm&&pass){
+      t+="El preventivo le costó 60 segundos y le devolvió disponibilidad. Esa es la apuesta del TPM.";
+    }
+    return t;
+  }
+
+  function resumen(){
+    pintarNiveles();
+    let filas=S.hist.map((h,i)=>'<tr><td>Nivel '+NIV[i].n+' · '+esc(NIV[i].t)+'</td>'
+      +'<td class="r">'+pct(h.D)+'</td><td class="r">'+pct(h.R)+'</td><td class="r">'+pct(h.Q)+'</td>'
+      +'<td class="r '+(h.pass?"ok":"no")+'">'+pct(h.OEE)+'</td>'
+      +'<td class="r">'+h.good+" / "+h.out+'</td></tr>').join("");
+    poner('<h2>Las cuatro corridas</h2>'
+      +'<p class="lead">Mismo indicador en los cuatro niveles. Lo que cambió fue lo que había que decidir.</p>'
+      +'<div class="scroll"><table class="hist"><thead><tr><th>Corrida</th><th class="r">Disp.</th>'
+      +'<th class="r">Rend.</th><th class="r">Cal.</th><th class="r">OEE</th><th class="r">Buenas/Total</th>'
+      +'</tr></thead><tbody>'+filas+'</tbody></table></div>'
+      +'<div class="new" style="margin-top:1.6rem"><span class="k">Lo que se lleva</span>'
+      +'El OEE no se puede inflar porque es un producto: si dispara el rendimiento a punta de forzar el '
+      +'ritmo, la calidad se cae y el resultado empeora. Un indicador vanidoso —unidades producidas— le '
+      +'habría dicho que iba bien mientras botaba una de cada cuatro piezas a la basura.</div>'
+      +'<div class="go"><button class="btn ghost" id="reset">Volver a empezar</button></div>');
+    $("#reset").addEventListener("click",()=>{ S.nivel=0;S.ops=[2,1,1,2,1];S.pm=false;S.forzado=false;S.hist=[];
+      pintarNivel(); window.scrollTo({top:0,behavior:"smooth"}); });
+  }
+
+  pintarNivel();
+})();
+</script>
