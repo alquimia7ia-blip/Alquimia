@@ -25,7 +25,7 @@ funciona.*
 | `docs/metodo/Guia-del-Tallerista.docx` | La guía en Word, carta, editable |
 | `docs/metodo/gemelo-taller.html` | Gemelo digital · Capacidad de Producción. Artifact: `c9cbbb64-221d-4273-b8f5-772f85203e6a` |
 | `docs/metodo/gemelo-oee.html` | **La Trampa del OEE** — gemelo de indicadores, 4 niveles. Artifact: `ed68e2c7-0dfe-4686-be84-aa8b489fa097` |
-| `docs/metodo/jefe-de-planta.html` | **Jefe de Planta** — el mismo tema, jugable en celular, 5 niveles con puntaje. Artifact: `PENDIENTE` |
+| `docs/metodo/jefe-de-planta.html` | **Jefe de Planta** — el mismo tema, jugable en celular, 5 niveles con puntaje. Artifact: `ce881141-c424-4b71-b3c7-65707c2e49f0` |
 
 ### Preferencias de forma, aprendidas a los golpes
 
@@ -184,6 +184,8 @@ palanca que sube un factor y hunde otro, y esconder el daño hasta el veredicto.
 ---
 
 ## «Jefe de Planta» — la versión jugable · `docs/metodo/jefe-de-planta.html`
+
+Artifact `ce881141-c424-4b71-b3c7-65707c2e49f0`.
 
 Clon de La Trampa del OEE, para que **los participantes lo jueguen en su celular antes de la
 corrida física**. Mismo motor, misma calibración, mismo indicador. Lo que cambia es quién lo
