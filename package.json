@@ -13,7 +13,7 @@
     "cohorte": "tsx scripts/cargar-cohorte.ts",
     "db:local": "bash scripts/db-local.sh",
     "test:rls": "bash scripts/db-local.sh test",
-    "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts",
+    "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts",
     "check": "tsc --noEmit && next build"
   },
   "dependencies": {
