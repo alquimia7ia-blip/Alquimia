@@ -54,24 +54,91 @@ DATABASE_URL="…" pnpm seed
 Inserta la organización, el programa, los cuatro módulos y los once talleres del Módulo 1.
 Es idempotente: se puede repetir cada vez que cambie el contenido.
 
-## 4. Variables de entorno en Vercel
+## 4. Vercel, paso a paso
 
-**Project → Settings → Environment Variables.** Los valores salen de
-Supabase → Project Settings → API.
+### 4.1 Importar el repositorio
 
-| Variable | Valor | Alcance |
+1. Entra a [vercel.com/new](https://vercel.com/new) con el equipo **Alquimia** seleccionado
+   en el menú de arriba a la izquierda.
+2. En **Import Git Repository**, si no aparece `alquimia7ia-blip/Alquimia`, pulsa
+   **Adjust GitHub App Permissions** (o **Add GitHub Account**). Se abre GitHub para
+   autorizar la aplicación de Vercel: concédele acceso al repositorio `Alquimia`.
+   Este paso solo lo puede hacer el dueño de la cuenta de GitHub.
+3. Pulsa **Import** junto a `Alquimia`.
+
+> Si en la lista de proyectos ya existe uno llamado **`bitacora-mega`** vacío y sin
+> repositorio conectado, bórralo antes (**Settings → Advanced → Delete Project**). Quedó
+> de un intento fallido de conectarlo por API.
+
+### 4.2 Cambiar la rama de producción — no te saltes esto
+
+La rama por defecto del repositorio es `claude/alquimia-market-strategy-22nbvx`, que **no
+tiene la aplicación**: solo documentos. Si despliegas sin cambiarla, la construcción falla
+con un error de que no encuentra nada que construir.
+
+En la pantalla de importación, despliega **Git Branch** y elige:
+
+```
+claude/alchemy-workshop-interactive-8f4qsp
+```
+
+Si ya importaste sin cambiarla, se arregla después en
+**Settings → Git → Production Branch**, y luego **Deployments → ⋯ → Redeploy**.
+
+### 4.3 Ajustes de construcción
+
+No toques nada. Vercel detecta Next.js por `next.config.ts` y usa pnpm porque el
+repositorio trae `pnpm-lock.yaml`. El directorio raíz es la raíz del repositorio.
+
+### 4.4 Variables de entorno
+
+En la misma pantalla de importación, despliega **Environment Variables**. Si todavía no
+tienes el proyecto de Supabase, **puedes desplegar sin ellas**: la aplicación no se cae,
+aterriza en `/configuracion` diciendo cuál falta, y desde ahí se llega al taller
+funcionando sobre el navegador.
+
+| Variable | De dónde sale | Entornos |
 |---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Project URL | Todos |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave `anon public` | Todos |
-| `SUPABASE_SERVICE_ROLE_KEY` | Clave `service_role` | Solo servidor |
-| `RESEND_API_KEY` | Clave de Resend | Solo servidor |
-| `NEXT_PUBLIC_SITIO_URL` | `https://tu-dominio` | Todos |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL | los tres |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API → `anon public` | los tres |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` | los tres |
+| `RESEND_API_KEY` | Resend → API Keys | los tres |
+| `CORREO_REMITENTE` | p. ej. `Bitácora MEGA <hola@tu-dominio.co>` | los tres |
+| `NEXT_PUBLIC_SITIO_URL` | la URL del despliegue (paso 4.6) | los tres |
 
-La clave `service_role` **salta todas las políticas de seguridad**: no la pongas nunca en
-una variable que empiece por `NEXT_PUBLIC_`, ni la pegues en un chat o en el repositorio.
+Las dos que empiezan por `NEXT_PUBLIC_` viajan al navegador por diseño: no son secretas.
+**`SUPABASE_SERVICE_ROLE_KEY` sí lo es y salta todas las políticas de seguridad**: no la
+renombres nunca con el prefijo `NEXT_PUBLIC_`, no la pegues en un chat y no la subas al
+repositorio.
 
-Si falta alguna de las dos primeras, la aplicación no se cae con un error genérico: lleva
-a `/configuracion` y dice cuál falta y dónde conseguirla.
+### 4.5 Desplegar
+
+Pulsa **Deploy**. La primera construcción tarda dos o tres minutos. Si falla, casi siempre
+es la rama del paso 4.2.
+
+### 4.6 Cerrar el círculo de la URL
+
+Ya con la URL (algo como `https://bitacora-mega.vercel.app`):
+
+1. **En Vercel**, edita `NEXT_PUBLIC_SITIO_URL` con esa URL y vuelve a desplegar
+   (**Deployments → ⋯ → Redeploy**). Sin esto, los enlaces de invitación que salen por
+   correo apuntan a `localhost`.
+2. **En Supabase**, ve a **Authentication → URL Configuration** y pon esa misma URL en
+   **Site URL**; en **Redirect URLs** agrega `https://tu-url.vercel.app/invitacion`.
+   Sin esto, Supabase rechaza el enlace del correo por venir de un destino no autorizado.
+
+### 4.7 Si la URL pide iniciar sesión en Vercel
+
+Los proyectos nuevos heredan la protección de despliegue del equipo. Si al abrir la URL
+aparece una pantalla de Vercel pidiendo autenticación, ve a
+**Settings → Deployment Protection** y desactiva **Vercel Authentication** para producción.
+De lo contrario nadie de la Cámara podrá abrirla.
+
+### 4.8 Plan
+
+El equipo está hoy en **Hobby**, cuyos términos **prohíben el uso comercial**. Sirve para
+probar y para mostrar. En el momento en que se le facture a la Cámara, hay que pasar a
+**Pro (USD 20/mes)**.
 
 ## 5. Dar de alta la cohorte
 
