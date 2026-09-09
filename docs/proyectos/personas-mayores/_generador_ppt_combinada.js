@@ -35,31 +35,57 @@ const ic = n => 'image/png;base64,' + fs.readFileSync(`icons/${n}.png`).toString
    Va sobre una placa blanca porque el logo lleva texto oscuro y
    el deck tiene laminas azules y una naranja.
    --------------------------------------------------------------- */
-const LOGO_W = 2.00;                 // ancho en pulgadas
+const LOGO_W = 2.00;                 // ancho normal, en pulgadas
 const LOGO_X = 10.62, LOGO_Y = 0.30; // esquina superior derecha
-function buscarLogo() {
-  for (const ruta of ['logo.png', 'logo/logo.png', '../logo.png']) {
-    if (fs.existsSync(ruta)) {
-      const b = fs.readFileSync(ruta);
-      // IHDR de un PNG: ancho y alto en los bytes 16..23
-      const w = b.readUInt32BE(16), h = b.readUInt32BE(20);
-      return { data: 'image/png;base64,' + b.toString('base64'), alto: LOGO_W * h / w };
+
+// alto original de la imagen, sin depender de librerias externas
+function medir(b) {
+  if (b.length > 24 && b.readUInt32BE(0) === 0x89504e47)          // PNG
+    return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), tipo: 'png' };
+  if (b[0] === 0xFF && b[1] === 0xD8) {                            // JPEG
+    let i = 2;
+    while (i < b.length - 9) {
+      if (b[i] !== 0xFF) { i++; continue; }
+      const m = b[i + 1];
+      if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC)
+        return { h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7), tipo: 'jpeg' };
+      i += 2 + b.readUInt16BE(i + 2);
     }
   }
   return null;
 }
+function buscarLogo() {
+  const rutas = ['logo.png', 'logo.jpg', 'logo.jpeg', 'logo/logo.png', '../logo.png'];
+  for (const ruta of rutas) {
+    if (!fs.existsSync(ruta)) continue;
+    const b = fs.readFileSync(ruta);
+    const d = medir(b);
+    if (!d) { console.warn('AVISO: no pude leer el tamano de ' + ruta); continue; }
+    console.log('logo: ' + ruta + '  ' + d.w + 'x' + d.h + ' px');
+    return { data: 'image/' + d.tipo + ';base64,' + b.toString('base64'), rel: d.h / d.w };
+  }
+  console.warn('AVISO: sin archivo de logo; se dibuja el recuadro punteado.');
+  return null;
+}
 const LOGO = buscarLogo();
-function logo(s) {
-  const h = LOGO ? LOGO.alto : LOGO_W * 0.37;
-  s.addShape(p.ShapeType.rect, { x: LOGO_X - 0.10, y: LOGO_Y - 0.10,
-    w: LOGO_W + 0.20, h: h + 0.20, fill: { color: WHITE } });
+
+// La placa blanca no es adorno: el logo lleva texto oscuro y el deck tiene
+// laminas azules, naranjas y paneles cian donde se perderia.
+function logo(s, ancho, x, y) {
+  const w = ancho || LOGO_W;
+  const h = w * (LOGO ? LOGO.rel : 0.37);
+  const px = x === undefined ? LOGO_X : x;
+  const py = y === undefined ? LOGO_Y : y;
+  const pad = w > 2.5 ? 0.14 : 0.10;
+  s.addShape(p.ShapeType.rect, { x: px - pad, y: py - pad,
+    w: w + pad * 2, h: h + pad * 2, fill: { color: WHITE } });
   if (LOGO) {
-    s.addImage({ data: LOGO.data, x: LOGO_X, y: LOGO_Y, w: LOGO_W, h });
+    s.addImage({ data: LOGO.data, x: px, y: py, w, h });
   } else {
-    s.addShape(p.ShapeType.rect, { x: LOGO_X, y: LOGO_Y, w: LOGO_W, h,
-      fill: { color: 'F1F4F6' }, line: { color: 'B6C6D0', width: 1, dashType: 'dash' } });
-    s.addText('LOGO', { x: LOGO_X, y: LOGO_Y, w: LOGO_W, h, align: 'center',
-      valign: 'middle', fontFace: F, fontSize: 12, bold: true, color: '8FA3B0',
+    s.addShape(p.ShapeType.rect, { x: px, y: py, w, h, fill: { color: 'F1F4F6' },
+      line: { color: 'B6C6D0', width: 1, dashType: 'dash' } });
+    s.addText('LOGO', { x: px, y: py, w, h, align: 'center', valign: 'middle',
+      fontFace: F, fontSize: w > 2.5 ? 15 : 12, bold: true, color: '8FA3B0',
       charSpacing: 2, margin: 0, isTextBox: true });
   }
   return s;
@@ -200,10 +226,11 @@ const anexo = (s, y, texto) => {
 
 /* ===== 1 · PORTADA ===== */
 {
-  const s = p.addSlide(); s.background = { color: NAVY }; logo(s);
-  s.addText('MEDELLÍN',  { x: 4.9, y: 0.30, w: 8, h: 0.95, fontFace: F, fontSize: 58,
+  const s = p.addSlide(); s.background = { color: NAVY };
+  logo(s, 3.25, 9.32, 0.42);
+  s.addText('MEDELLÍN',  { x: 4.9, y: 0.42, w: 4.2, h: 0.82, fontFace: F, fontSize: 48,
     bold: true, color: DEEP, margin: 0, isTextBox: true });
-  s.addText('TE QUIERE', { x: 4.9, y: 1.10, w: 8, h: 0.95, fontFace: F, fontSize: 58,
+  s.addText('TE QUIERE', { x: 4.9, y: 1.12, w: 4.2, h: 0.82, fontFace: F, fontSize: 48,
     bold: true, color: DEEP, margin: 0, isTextBox: true });
   s.addShape(p.ShapeType.rect, { x: 0, y: 0, w: 4.35, h: 7.5, fill: { color: DEEP } });
   s.addText('AQUÍ VA UNA FOTO\nDEL GRUPO', { x: 0.4, y: 3.1, w: 3.55, h: 1.3,
