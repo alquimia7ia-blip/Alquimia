@@ -27,6 +27,44 @@ const NAVY  = '0E3A54',   // azul institucional
 const F = 'Arial';
 const ic = n => 'image/png;base64,' + fs.readFileSync(`icons/${n}.png`).toString('base64');
 
+
+/* ---------------------------------------------------------------
+   LOGO DEL CONSORCIO
+   Coloque el archivo en  logo.png  (o logo/logo.png) y vuelva a
+   correr este generador: se estampa solo en las 32 diapositivas.
+   Va sobre una placa blanca porque el logo lleva texto oscuro y
+   el deck tiene laminas azules y una naranja.
+   --------------------------------------------------------------- */
+const LOGO_W = 2.00;                 // ancho en pulgadas
+const LOGO_X = 10.62, LOGO_Y = 0.30; // esquina superior derecha
+function buscarLogo() {
+  for (const ruta of ['logo.png', 'logo/logo.png', '../logo.png']) {
+    if (fs.existsSync(ruta)) {
+      const b = fs.readFileSync(ruta);
+      // IHDR de un PNG: ancho y alto en los bytes 16..23
+      const w = b.readUInt32BE(16), h = b.readUInt32BE(20);
+      return { data: 'image/png;base64,' + b.toString('base64'), alto: LOGO_W * h / w };
+    }
+  }
+  return null;
+}
+const LOGO = buscarLogo();
+function logo(s) {
+  const h = LOGO ? LOGO.alto : LOGO_W * 0.37;
+  s.addShape(p.ShapeType.rect, { x: LOGO_X - 0.10, y: LOGO_Y - 0.10,
+    w: LOGO_W + 0.20, h: h + 0.20, fill: { color: WHITE } });
+  if (LOGO) {
+    s.addImage({ data: LOGO.data, x: LOGO_X, y: LOGO_Y, w: LOGO_W, h });
+  } else {
+    s.addShape(p.ShapeType.rect, { x: LOGO_X, y: LOGO_Y, w: LOGO_W, h,
+      fill: { color: 'F1F4F6' }, line: { color: 'B6C6D0', width: 1, dashType: 'dash' } });
+    s.addText('LOGO', { x: LOGO_X, y: LOGO_Y, w: LOGO_W, h, align: 'center',
+      valign: 'middle', fontFace: F, fontSize: 12, bold: true, color: '8FA3B0',
+      charSpacing: 2, margin: 0, isTextBox: true });
+  }
+  return s;
+}
+
 function disco(s, x, y, d, fill, icon) {
   s.addShape(p.ShapeType.ellipse, { x, y, w: d, h: d, fill: { color: fill } });
   const q = d * 0.27;
@@ -43,7 +81,7 @@ const rotulo = (s, txt, color) => s.addText(txt, { x: 0.62, y: 0.42, w: 9, h: 0.
 
 /* ---------- A · lamina blanca con titulo grande ---------- */
 function blanca(titulo, icon, rot) {
-  const s = p.addSlide(); s.background = { color: WHITE }; sello(s);
+  const s = p.addSlide(); s.background = { color: WHITE }; sello(s); logo(s);
   if (rot) rotulo(s, rot, RUST);
   const y = rot ? 1.0 : 0.75;
   if (icon) disco(s, 0.62, y, 1.3, CYAN, icon);
@@ -53,7 +91,7 @@ function blanca(titulo, icon, rot) {
 }
 /* ---------- B · lamina navy ---------- */
 function oscura(titulo, icon, sub) {
-  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3');
+  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3'); logo(s);
   if (icon) disco(s, 0.62, 0.75, 1.3, ORANGE, icon);
   s.addText(titulo, { x: icon ? 2.25 : 0.62, y: 0.75, w: icon ? 10.4 : 12.1, h: 1.3,
     fontFace: F, fontSize: 44, bold: true, color: WHITE, valign: 'middle', isTextBox: true });
@@ -63,7 +101,7 @@ function oscura(titulo, icon, sub) {
 }
 /* ---------- C · divisor de tema ---------- */
 function divisor(n, titulo, sub, icon) {
-  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3');
+  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3'); logo(s);
   s.addShape(p.ShapeType.rect, { x: 0, y: 2.35, w: 0.8, h: 2.75, fill: { color: ORANGE } });
   s.addText(n, { x: 1.35, y: 2.35, w: 8, h: 0.65, fontFace: F, fontSize: 24,
     bold: true, color: CYAN, charSpacing: 3, isTextBox: true });
@@ -80,7 +118,7 @@ function ejercicio(rot, instruccion, detalle, icon, o = {}) {
   s.addShape(p.ShapeType.rect, { x: 0, y: 0, w: 0.28, h: 7.5, fill: { color: CYAN } });
   s.addText(rot, { x: 0.72, y: 0.45, w: 9, h: 0.45, fontFace: F, fontSize: 18,
     bold: true, color: '0C6B92', charSpacing: 2, isTextBox: true });
-  sello(s, '6FA2BC');
+  sello(s, '6FA2BC'); logo(s);
   if (icon) disco(s, 10.55, 1.25, 2.1, NAVY, icon);
   s.addText(instruccion, { x: 0.72, y: 1.2, w: 9.5, h: 2.2, fontFace: F,
     fontSize: o.fs || 48, bold: true, color: NAVY, valign: 'middle',
@@ -92,7 +130,7 @@ function ejercicio(rot, instruccion, detalle, icon, o = {}) {
 }
 /* ---------- E · pausa ---------- */
 function pausa(rot, titulo, minutos, texto, icon) {
-  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3');
+  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3'); logo(s);
   rotulo(s, rot, CYAN);
   disco(s, 10.5, 2.45, 2.2, ORANGE, icon);
   s.addText(titulo, { x: 0.62, y: 1.95, w: 9.4, h: 1.35, fontFace: F, fontSize: 60,
@@ -116,7 +154,7 @@ function regla(rot, frase, apoyo, icon) {
       bold: true, color: NAVY, lineSpacing: 40, valign: 'middle', isTextBox: true });
   }
   disco(s, 10.7, 2.15, 1.95, NAVY, icon);
-  sello(s, 'FFD2BB');
+  sello(s, 'FFD2BB'); logo(s);
   return s;
 }
 /* ---------- G · fila de iconos con palabra ---------- */
@@ -162,7 +200,7 @@ const anexo = (s, y, texto) => {
 
 /* ===== 1 · PORTADA ===== */
 {
-  const s = p.addSlide(); s.background = { color: NAVY };
+  const s = p.addSlide(); s.background = { color: NAVY }; logo(s);
   s.addText('MEDELLÍN',  { x: 4.9, y: 0.30, w: 8, h: 0.95, fontFace: F, fontSize: 58,
     bold: true, color: DEEP, margin: 0, isTextBox: true });
   s.addText('TE QUIERE', { x: 4.9, y: 1.10, w: 8, h: 0.95, fontFace: F, fontSize: 58,
@@ -237,7 +275,7 @@ iconos('Hay muchas formas de avisar', [
 
 /* ---------- J · cuidado: etiqueta chica, mensaje enorme ---------- */
 function cuidado(n, mensaje, apoyo, icon, fs) {
-  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3');
+  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, '6E8FA3'); logo(s);
   rotulo(s, 'CUIDADO ' + n + ' DE 4', CYAN);
   disco(s, 10.55, 2.15, 2.2, ORANGE, icon);
   s.addText(mensaje, { x: 0.62, y: 1.55, w: 9.5, h: 2.7, fontFace: F, fontSize: fs || 60,
@@ -502,7 +540,7 @@ ejercicio('PARA CERRAR', '¿Qué se lleva\nde hoy?',
 
 /* ===== 32 · LA PRÓXIMA CLASE ===== */
 {
-  const s = p.addSlide(); s.background = { color: ORANGE };
+  const s = p.addSlide(); s.background = { color: ORANGE }; logo(s);
   s.addText('LA PRÓXIMA CLASE', { x: 0.62, y: 1.4, w: 9, h: 0.55, fontFace: F,
     fontSize: 20, bold: true, color: 'FFE7D8', charSpacing: 3, isTextBox: true });
   s.addText('Ya empezamos\na trabajar', { x: 0.62, y: 2.05, w: 9.7, h: 2.3, fontFace: F,
