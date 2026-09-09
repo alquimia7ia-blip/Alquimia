@@ -64,26 +64,26 @@ Es idempotente: se puede repetir cada vez que cambie el contenido.
    **Adjust GitHub App Permissions** (o **Add GitHub Account**). Se abre GitHub para
    autorizar la aplicación de Vercel: concédele acceso al repositorio `Alquimia`.
    Este paso solo lo puede hacer el dueño de la cuenta de GitHub.
-3. Pulsa **Import** junto a `Alquimia`.
-
-> Si en la lista de proyectos ya existe uno llamado **`bitacora-mega`** vacío y sin
-> repositorio conectado, bórralo antes (**Settings → Advanced → Delete Project**). Quedó
-> de un intento fallido de conectarlo por API.
+3. Pulsa **Import** junto a `Alquimia`. El proyecto queda con el nombre `alquimia`.
 
 ### 4.2 Cambiar la rama de producción — no te saltes esto
 
 La rama por defecto del repositorio es `claude/alquimia-market-strategy-22nbvx`, que **no
-tiene la aplicación**: solo documentos. Si despliegas sin cambiarla, la construcción falla
-con un error de que no encuentra nada que construir.
+tiene la aplicación**: solo documentos. Desplegarla no da un error de construcción — da
+algo peor, porque pasa desapercibido: la construcción termina en verde y la URL responde
+**404 NOT_FOUND**, porque no hay ninguna página que servir.
 
-En la pantalla de importación, despliega **Git Branch** y elige:
+La pantalla de importación de Vercel **no ofrece elegir rama** (comprobado en el import
+real de septiembre de 2026), así que esto se arregla siempre después de importar:
 
-```
-claude/alchemy-workshop-interactive-8f4qsp
-```
+1. Proyecto → **Settings** → **Git**
+2. **Production Branch** → `claude/alchemy-workshop-interactive-8f4qsp` → **Save**
+3. **Deployments** → en el último, menú **`···`** → **Redeploy**
 
-Si ya importaste sin cambiarla, se arregla después en
-**Settings → Git → Production Branch**, y luego **Deployments → ⋯ → Redeploy**.
+Mientras tanto, cada rama con un commit nuevo recibe su propia **vista previa**. Es la vía
+rápida para ver la aplicación viva sin tocar los ajustes de producción: basta con empujar
+a `claude/alchemy-workshop-interactive-8f4qsp` y abrir la URL de previsualización que
+Vercel publica para ese despliegue.
 
 ### 4.3 Ajustes de construcción
 
