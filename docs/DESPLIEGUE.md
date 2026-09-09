@@ -76,14 +76,26 @@ algo peor, porque pasa desapercibido: la construcción termina en verde y la URL
 La pantalla de importación de Vercel **no ofrece elegir rama** (comprobado en el import
 real de septiembre de 2026), así que esto se arregla siempre después de importar:
 
-1. Proyecto → **Settings** → **Git**
-2. **Production Branch** → `claude/alchemy-workshop-interactive-8f4qsp` → **Save**
+1. Proyecto → **Settings** → **Environments** → **Production**
+2. Tarjeta **Branch Tracking** → `claude/alchemy-workshop-interactive-8f4qsp` → **Save**
 3. **Deployments** → en el último, menú **`···`** → **Redeploy**
 
-Mientras tanto, cada rama con un commit nuevo recibe su propia **vista previa**. Es la vía
-rápida para ver la aplicación viva sin tocar los ajustes de producción: basta con empujar
-a `claude/alchemy-workshop-interactive-8f4qsp` y abrir la URL de previsualización que
-Vercel publica para ese despliegue.
+No está en *Settings → Git*, que es donde lo pone casi toda la documentación vieja:
+Vercel lo movió a *Environments*. Y ojo con **Settings** del equipo frente a **Settings**
+del proyecto — son dos páginas distintas con el mismo nombre; la buena cuelga del nombre
+del proyecto, no del equipo.
+
+> **Desactiva la traducción automática del navegador antes de tocar nada.** Chrome traduce
+> los nombres de rama y de dominio que aparecen en pantalla: `claude/alchemy-workshop-...`
+> se lee como `claude/taller-de-alquimia-...` y `alquimia-eight.vercel.app` como
+> `alquimia-ocho.vercel.app`. Ninguno de los dos existe. Copiar uno de esos nombres
+> traducidos a un campo de configuración deja el proyecto apuntando a la nada.
+
+Una vez guardada la rama, cada `git push` a `claude/alchemy-workshop-interactive-8f4qsp`
+genera un despliegue de producción por sí solo. No hay que volver a entrar aquí.
+
+Y antes de tener eso resuelto, cada rama con un commit nuevo recibe igualmente su propia
+**vista previa**: es la vía rápida para ver la aplicación viva sin tocar producción.
 
 ### 4.3 Ajustes de construcción
 
@@ -113,12 +125,15 @@ repositorio.
 
 ### 4.5 Desplegar
 
-Pulsa **Deploy**. La primera construcción tarda dos o tres minutos. Si falla, casi siempre
-es la rama del paso 4.2.
+Pulsa **Deploy**. La primera construcción tarda dos o tres minutos.
+
+Si termina en verde pero la URL responde **404 NOT_FOUND**, la construcción no falló: está
+sirviendo la rama equivocada. Vuelve al paso 4.2.
 
 ### 4.6 Cerrar el círculo de la URL
 
-Ya con la URL (algo como `https://bitacora-mega.vercel.app`):
+Ya con la URL que Vercel asignó (en el despliegue de la Cámara fue
+`https://alquimia-eight.vercel.app`):
 
 1. **En Vercel**, edita `NEXT_PUBLIC_SITIO_URL` con esa URL y vuelve a desplegar
    (**Deployments → ⋯ → Redeploy**). Sin esto, los enlaces de invitación que salen por
