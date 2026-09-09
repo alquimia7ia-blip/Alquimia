@@ -6,101 +6,92 @@ p.author = 'Equipo de Personas Mayores';
 p.title  = 'Sesion 5 - Usamos la tecnologia y el dinero con proposito';
 
 const NAVY='0E3A54', CYAN='00A9E0', ORANGE='F26522', WHITE='FFFFFF',
-      LIGHT='EEF3F6', GREY='5A6B77';
+      LIGHT='EEF3F6', GREY='5A6B77', PLACE='FDEBE1';
 const F = 'Arial';
 const ic = n => 'image/png;base64,' + fs.readFileSync(`icons/${n}.png`).toString('base64');
 
-const sello = (s,c) => s.addText(
-  'Secretaría de Inclusión Social y Familia · Equipo de Personas Mayores',
-  { x: 6.5, y: 0.26, w: 6.2, h: 0.32, align: 'right', fontFace: F,
-    fontSize: 11, color: c || GREY, isTextBox: true });
+const sello = (s,c) => s.addText('Secretaría de Inclusión Social y Familia',
+  { x: 7.8, y: 6.85, w: 4.9, h: 0.3, align: 'right', fontFace: F,
+    fontSize: 10, color: c || 'A9B7C0', isTextBox: true });
 
 function disco(s, x, y, d, fill, icon) {
   s.addShape(p.ShapeType.ellipse, { x, y, w: d, h: d, fill: { color: fill } });
   const q = d * 0.27;
   s.addImage({ data: ic(icon), x: x + q, y: y + q, w: d - 2*q, h: d - 2*q });
 }
-function slideClaro(titulo, icon, rot) {
-  const s = p.addSlide(); s.background = { color: WHITE }; sello(s);
-  if (rot) s.addText(rot, { x: 1.95, y: 0.72, w: 10.7, h: 0.35, fontFace: F,
-    fontSize: 13, bold: true, color: ORANGE, charSpacing: 2, isTextBox: true });
-  if (icon) disco(s, 0.62, 0.9, 1.05, CYAN, icon);
-  s.addText(titulo, { x: icon ? 1.95 : 0.62, y: rot ? 1.06 : 0.9, w: icon ? 10.7 : 12.1,
-    h: 0.95, fontFace: F, fontSize: 36, bold: true, color: NAVY,
-    valign: 'middle', isTextBox: true });
+const rotulo = (s, txt, color) => s.addText(txt, { x: 0.7, y: 0.45, w: 9, h: 0.4,
+  fontFace: F, fontSize: 15, bold: true, color: color || ORANGE,
+  charSpacing: 2, isTextBox: true });
+
+// A · una frase enorme + icono grande al lado
+function frase(rot, texto, apoyo, icon, o = {}) {
+  const s = p.addSlide();
+  const dark = !!o.dark;
+  s.background = { color: dark ? NAVY : WHITE };
+  rotulo(s, rot, dark ? CYAN : ORANGE); sello(s, dark ? '6E8FA3' : 'A9B7C0');
+  disco(s, 10.35, 2.35, 2.3, dark ? ORANGE : CYAN, icon);
+  s.addText(texto, { x: 0.7, y: 1.45, w: 9.3, h: 2.9, fontFace: F,
+    fontSize: o.fs || 50, bold: true, color: dark ? WHITE : NAVY,
+    valign: 'middle', lineSpacing: (o.fs || 50) * 1.15, isTextBox: true });
+  if (apoyo) s.addText(apoyo, { x: 0.7, y: 4.6, w: 9.3, h: 1.9, fontFace: F,
+    fontSize: 28, color: dark ? '9FC7DC' : GREY, lineSpacing: 42,
+    valign: 'top', isTextBox: true });
   return s;
 }
-function slideOscuro(titulo, icon, rot) {
-  const s = p.addSlide(); s.background = { color: NAVY }; sello(s, 'A8BAC6');
-  if (rot) s.addText(rot, { x: 1.95, y: 0.72, w: 10.7, h: 0.35, fontFace: F,
-    fontSize: 13, bold: true, color: CYAN, charSpacing: 2, isTextBox: true });
-  if (icon) disco(s, 0.62, 0.9, 1.05, ORANGE, icon);
-  s.addText(titulo, { x: icon ? 1.95 : 0.62, y: rot ? 1.06 : 0.9, w: icon ? 10.7 : 12.1,
-    h: 0.95, fontFace: F, fontSize: 36, bold: true, color: WHITE,
-    valign: 'middle', isTextBox: true });
+// B · fila de iconos con una palabra cada uno
+function iconos(rot, titulo, items, o = {}) {
+  const s = p.addSlide();
+  const dark = !!o.dark;
+  s.background = { color: dark ? NAVY : WHITE };
+  rotulo(s, rot, dark ? CYAN : ORANGE); sello(s, dark ? '6E8FA3' : 'A9B7C0');
+  s.addText(titulo, { x: 0.7, y: 1.15, w: 12, h: 1.15, fontFace: F, fontSize: 46,
+    bold: true, color: dark ? WHITE : NAVY, valign: 'middle', isTextBox: true });
+  const n = items.length;
+  const w = 12.0 / n, d = n <= 4 ? 1.65 : 1.35;
+  items.forEach((it, i) => {
+    const cx = 0.65 + i * w + w / 2;
+    disco(s, cx - d/2, 2.85, d, i % 2 ? CYAN : NAVY, it[1]);
+    s.addText(it[0], { x: cx - w/2 + 0.1, y: 2.85 + d + 0.28, w: w - 0.2, h: 0.75,
+      align: 'center', fontFace: F, fontSize: n <= 4 ? 30 : 25, bold: true,
+      color: dark ? WHITE : NAVY, margin: 0, isTextBox: true });
+    if (it[2]) s.addText(it[2], { x: cx - w/2 + 0.1, y: 2.85 + d + 1.02, w: w - 0.2,
+      h: 1.1, align: 'center', fontFace: F, fontSize: n <= 4 ? 22 : 19,
+      color: dark ? '9FC7DC' : GREY, lineSpacing: n <= 4 ? 30 : 26,
+      margin: 0, isTextBox: true });
+  });
   return s;
 }
-// momento: rotulo naranja + titulo + texto "que hacer" de la ficha
-function momento(num, titulo, tiempo, queHacer, icon, oscuro) {
-  const s = oscuro ? slideOscuro(titulo, icon, 'MOMENTO ' + num + '  ·  ' + tiempo)
-                   : slideClaro(titulo, icon, 'MOMENTO ' + num + '  ·  ' + tiempo);
-  s.addText(queHacer, { x: 1.95, y: 2.5, w: 10.4, h: 3.4, fontFace: F, fontSize: 27,
-    color: oscuro ? WHITE : NAVY, lineSpacing: 42, valign: 'top', isTextBox: true });
-  return s;
-}
-// juego de la ficha: como se realiza + que aporta
-function juego(rotulo, nombre, como, aporta, icon) {
+// C · ejercicio, fondo cian
+function ejercicio(rot, instruccion, apoyo, icon) {
   const s = p.addSlide(); s.background = { color: CYAN };
-  s.addText(rotulo, { x: 0.62, y: 0.6, w: 9, h: 0.45, fontFace: F, fontSize: 16,
+  s.addText(rot, { x: 0.7, y: 0.45, w: 9, h: 0.4, fontFace: F, fontSize: 15,
     bold: true, color: NAVY, charSpacing: 2, isTextBox: true });
-  disco(s, 10.9, 0.55, 1.5, NAVY, icon);
-  s.addText(nombre, { x: 0.62, y: 1.2, w: 10, h: 1.4, fontFace: F,
-    fontSize: 38, bold: true, color: WHITE, valign: 'top', isTextBox: true });
-  s.addText(como, { x: 0.62, y: 2.85, w: 12.1, h: 2.6, fontFace: F, fontSize: 25,
-    color: WHITE, lineSpacing: 38, valign: 'top', isTextBox: true });
-  s.addShape(p.ShapeType.rect, { x: 0.62, y: 5.7, w: 12.1, h: 0.95, fill: { color: NAVY } });
-  s.addText('QUÉ APORTA:   ' + aporta, { x: 1.0, y: 5.7, w: 11.4, h: 0.95, fontFace: F,
-    fontSize: 22, bold: true, color: WHITE, valign: 'middle', isTextBox: true });
+  sello(s, '9BD9F2');
+  disco(s, 10.35, 2.35, 2.3, NAVY, icon);
+  s.addText(instruccion, { x: 0.7, y: 1.45, w: 9.3, h: 2.9, fontFace: F,
+    fontSize: 50, bold: true, color: WHITE, valign: 'middle',
+    lineSpacing: 58, isTextBox: true });
+  if (apoyo) s.addText(apoyo, { x: 0.7, y: 4.6, w: 9.3, h: 1.9, fontFace: F,
+    fontSize: 28, color: 'E8F6FD', lineSpacing: 42, valign: 'top', isTextBox: true });
   return s;
 }
-// tabla de conceptos de la ficha
-function conceptos(titulo, rotulo, icon, filas, wIzq) {
-  const s = slideClaro(titulo, icon, rotulo);
-  const h = 0.72;
-  filas.forEach((f, i) => {
-    const y = 2.3 + i * (h + 0.09);
-    s.addShape(p.ShapeType.rect, { x: 0.62, y, w: 12.1, h,
-      fill: { color: i % 2 ? LIGHT : WHITE } });
-    s.addText(f[0], { x: 0.95, y, w: wIzq, h, fontFace: F, fontSize: 20,
-      bold: true, color: NAVY, valign: 'middle', margin: 0, isTextBox: true });
-    s.addText(f[1], { x: 0.95 + wIzq + 0.3, y, w: 11.45 - wIzq - 0.3, h, fontFace: F,
-      fontSize: 18, color: GREY, valign: 'middle', margin: 0, isTextBox: true });
-  });
+// D · pausa, fondo navy, hora enorme
+function pausa(rot, titulo, minutos, icon) {
+  const s = p.addSlide(); s.background = { color: NAVY };
+  rotulo(s, rot, CYAN); sello(s, '6E8FA3');
+  disco(s, 10.35, 2.6, 2.3, ORANGE, icon);
+  s.addText(titulo, { x: 0.7, y: 2.1, w: 9.3, h: 1.4, fontFace: F, fontSize: 58,
+    bold: true, color: WHITE, valign: 'middle', isTextBox: true });
+  s.addText(minutos, { x: 0.7, y: 3.75, w: 9.3, h: 1.0, fontFace: F, fontSize: 40,
+    color: CYAN, valign: 'middle', isTextBox: true });
   return s;
 }
-// tabla de ruta
-function ruta(titulo, rotulo, filas) {
-  const s = slideClaro(titulo, 'ruta', rotulo);
-  const h = 0.56;
-  s.addShape(p.ShapeType.rect, { x: 0.62, y: 2.15, w: 12.1, h: 0.42, fill: { color: NAVY } });
-  [['#', 0.95, 0.5], ['Momento', 1.55, 3.3], ['Tiempo', 5.0, 1.2], ['Qué hacer', 6.35, 6.1]]
-    .forEach(c => s.addText(c[0], { x: c[1], y: 2.15, w: c[2], h: 0.42, fontFace: F,
-      fontSize: 14, bold: true, color: WHITE, valign: 'middle', margin: 0, isTextBox: true }));
-  filas.forEach((f, i) => {
-    const y = 2.62 + i * (h + 0.06);
-    s.addShape(p.ShapeType.rect, { x: 0.62, y, w: 12.1, h,
-      fill: { color: i % 2 ? LIGHT : WHITE } });
-    s.addText(f[0], { x: 0.95, y, w: 0.5, h, fontFace: F, fontSize: 17, bold: true,
-      color: CYAN, valign: 'middle', margin: 0, isTextBox: true });
-    s.addText(f[1], { x: 1.55, y, w: 3.3, h, fontFace: F, fontSize: 17, bold: true,
-      color: NAVY, valign: 'middle', margin: 0, isTextBox: true });
-    s.addText(f[2], { x: 5.0, y, w: 1.2, h, fontFace: F, fontSize: 16,
-      color: ORANGE, valign: 'middle', margin: 0, isTextBox: true });
-    s.addText(f[3], { x: 6.35, y, w: 6.1, h, fontFace: F, fontSize: 15,
-      color: GREY, valign: 'middle', margin: 0, isTextBox: true });
-  });
-  return s;
-}
+// caja para anexar despues la tecnica del grupo
+const anexo = (s, y, texto) => {
+  s.addShape(p.ShapeType.rect, { x: 0.7, y, w: 9.3, h: 0.95, fill: { color: PLACE } });
+  s.addText('✎  ' + texto, { x: 1.0, y, w: 8.7, h: 0.95, fontFace: F, fontSize: 20,
+    bold: true, color: 'A8420F', valign: 'middle', margin: 0, isTextBox: true });
+};
 
 /* ===== 1 · PORTADA ===== */
 {
@@ -112,213 +103,167 @@ function ruta(titulo, rotulo, filas) {
   s.addShape(p.ShapeType.rect, { x: 0, y: 0, w: 4.35, h: 7.5, fill: { color: '1B4E6B' } });
   s.addText('AQUÍ VA UNA FOTO\nDEL GRUPO', { x: 0.4, y: 3.1, w: 3.55, h: 1.3,
     align: 'center', fontFace: F, fontSize: 15, bold: true, color: '6E9DB5', isTextBox: true });
-  s.addShape(p.ShapeType.rect, { x: 4.35, y: 2.4, w: 0.62, h: 2.9, fill: { color: ORANGE } });
-  s.addShape(p.ShapeType.rect, { x: 4.97, y: 2.4, w: 7.75, h: 2.9, fill: { color: CYAN } });
-  s.addText('FM-AO-05  ·  SESIÓN 5', { x: 5.4, y: 2.6, w: 7, h: 0.5, fontFace: F,
-    fontSize: 16, bold: true, color: 'D6F1FD', charSpacing: 3, isTextBox: true });
-  s.addText('USAMOS LA TECNOLOGÍA\nY EL DINERO CON PROPÓSITO',
-    { x: 5.4, y: 3.1, w: 7, h: 1.5, fontFace: F, fontSize: 29, bold: true,
-      color: WHITE, valign: 'top', isTextBox: true });
-  s.addText('Formación en Artes y Oficios · 8 h presenciales + 2 h en casa',
-    { x: 5.4, y: 4.62, w: 7, h: 0.45, fontFace: F, fontSize: 15, color: 'E8F6FD', isTextBox: true });
-  s.addText('Secretaría de Inclusión Social y Familia  ·  Equipo de Personas Mayores',
-    { x: 4.97, y: 6.55, w: 7.75, h: 0.4, align: 'right', fontFace: F, fontSize: 13,
-      color: 'BBD3E0', isTextBox: true });
-  s.addNotes('Quinta y última sesión teórica. Reemplace el recuadro izquierdo por una foto del grupo.');
-}
-
-/* ===== 2 · OBJETIVO ===== */
-{
-  const s = slideClaro('Para qué es esta jornada', 'bombillo');
-  s.addShape(p.ShapeType.rect, { x: 0.62, y: 2.3, w: 12.1, h: 1.95, fill: { color: LIGHT } });
-  s.addText('OBJETIVO', { x: 1.0, y: 2.5, w: 4, h: 0.4, fontFace: F, fontSize: 15,
-    bold: true, color: ORANGE, charSpacing: 3, isTextBox: true });
-  s.addText('Reconocer usos accesibles y seguros de medios tecnológicos para comunicar una iniciativa y comprender principios básicos de ingresos, gastos, ahorro y decisiones responsables.',
-    { x: 1.0, y: 2.95, w: 11.3, h: 1.2, fontFace: F, fontSize: 22, color: NAVY,
-      lineSpacing: 32, isTextBox: true });
-  s.addShape(p.ShapeType.rect, { x: 0.62, y: 4.5, w: 12.1, h: 1.95, fill: { color: CYAN } });
-  s.addText('AL FINALIZAR', { x: 1.0, y: 4.7, w: 4, h: 0.4, fontFace: F, fontSize: 15,
+  s.addShape(p.ShapeType.rect, { x: 4.35, y: 2.3, w: 0.62, h: 3.0, fill: { color: ORANGE } });
+  s.addShape(p.ShapeType.rect, { x: 4.97, y: 2.3, w: 7.75, h: 3.0, fill: { color: CYAN } });
+  s.addText('CLASE 5', { x: 5.4, y: 2.5, w: 7, h: 0.5, fontFace: F, fontSize: 18,
     bold: true, color: 'D6F1FD', charSpacing: 3, isTextBox: true });
-  s.addText('Cada participante habrá identificado una forma posible de mostrar o comunicar una oferta y una decisión sencilla para organizar mejor los recursos de una iniciativa.',
-    { x: 1.0, y: 5.15, w: 11.3, h: 1.2, fontFace: F, fontSize: 22, color: WHITE,
-      lineSpacing: 32, isTextBox: true });
-  s.addNotes('Objetivo y resultado esperado, tal como están en la ficha FM-AO-05.');
+  s.addText('EL TELÉFONO\nY EL DINERO', { x: 5.4, y: 3.0, w: 7, h: 1.7, fontFace: F,
+    fontSize: 40, bold: true, color: WHITE, valign: 'top', isTextBox: true });
+  s.addText('Artes y Oficios  ·  Personas Mayores', { x: 5.4, y: 4.72, w: 7, h: 0.45,
+    fontFace: F, fontSize: 17, color: 'E8F6FD', isTextBox: true });
+  s.addText('Secretaría de Inclusión Social y Familia  ·  Equipo de Personas Mayores',
+    { x: 4.97, y: 6.6, w: 7.75, h: 0.4, align: 'right', fontFace: F, fontSize: 12,
+      color: 'BBD3E0', isTextBox: true });
+  s.addNotes('Sesión 5 · FM-AO-05. Título dicho en palabras del grupo. Reemplace el recuadro por una foto.');
 }
 
-/* ===== 3-4 · RUTA ===== */
-ruta('Ruta de la jornada', 'MOMENTOS 1 A 7  ·  MAÑANA', [
-  ['1', 'Bienvenida y activación', '20 min', 'Presente el propósito y realice ¿Para qué uso la tecnología?'],
-  ['2', 'Experiencias cotidianas', '40 min', 'Converse en subgrupos sobre llamadas, fotos, radio y carteles'],
-  ['3', 'Tecnología accesible y segura', '50 min', 'Explique usos posibles y cuidados'],
-  ['4', 'Pausa lúdica y refrigerio', '20 min', 'Proponga Mensaje que viaja u otra actividad voluntaria'],
-  ['5', 'Mostrar una oferta', '1 h', 'Practiquen fondo limpio, buena luz y descripción breve'],
-  ['6', 'Pausa activa', '10 min', 'Descanso visual y movilidad suave'],
-  ['7', 'Mensaje sencillo', '50 min', 'Construyan en parejas un mensaje, sin datos reales'],
-]).addNotes('Ruta de la jornada según la ficha. Los tiempos suman 8 horas incluidos todos los momentos.');
+/* ===== 2 · QUÉ VAMOS A HACER ===== */
+iconos('HOY', 'Hoy vamos a ver dos cosas', [
+  ['El teléfono', 'celular', 'Cómo mostrar\nlo que usted hace'],
+  ['El dinero', 'dinero', 'Cuánto entra\ny cuánto se guarda'],
+]).addNotes('Momento 1. Dígalo en dos frases. No lea el objetivo del documento.');
 
-ruta('Ruta de la jornada', 'MOMENTOS 8 A 13  ·  TARDE', [
-  ['8',  'Almuerzo', '1 h', 'Almuerzo y descanso'],
-  ['9',  'Reactivación', '10 min', 'Realice Necesidad o gusto u otra actividad corta'],
-  ['10', 'Ingresos, gastos y ahorro', '1 h', 'Explique con ejemplos de una iniciativa'],
-  ['11', 'Juego del presupuesto', '50 min', 'Con fichas de dinero y un caso imaginario'],
-  ['12', 'Pausa lúdica y refrigerio', '20 min', 'Actividad breve, adaptada y voluntaria'],
-  ['13', 'Cierre', '30 min', 'Integre los seis ejes y explique la transición a la sesión 6'],
-]).addNotes('Segunda mitad de la ruta.');
+/* ===== 3 · M1 BIENVENIDA ===== */
+ejercicio('PARA EMPEZAR', '¿Para qué usa usted\nel teléfono?',
+  'Vamos anotando todo lo que salga.\nTambién vale el cartel, la llamada y el voz a voz.', 'saludo')
+  .addNotes('Momento 1 · 20 min. Juego "¿Para qué uso la tecnología?". Incluya opciones no digitales.');
 
-/* ===== 5-6 · MOMENTO 1 ===== */
-momento('1', 'Bienvenida y activación', '20 MINUTOS',
-  'Presente el propósito de la jornada.\n\nRealice ¿Para qué uso la tecnología?\no otra actividad breve.', 'saludo')
-  .addNotes('Las actividades no dependen de que cada persona tenga celular, internet o cuenta bancaria.');
+/* ===== 4 · M2 EXPERIENCIAS ===== */
+ejercicio('CONVERSEMOS EN GRUPOS', '¿Cómo se enteró\nla gente?',
+  'Piense en algo que usted vendió, prestó o regaló.\n¿Cómo supo la gente que usted lo tenía?', 'grupo')
+  .addNotes('Momento 2 · 40 min. Subgrupos. Cada grupo trae una sola historia a la plenaria.');
 
-juego('MOMENTO 1 · JUEGO', '¿Para qué uso la tecnología?',
-  'El grupo menciona los medios que usa en la vida diaria.\n\nIncluya opciones no digitales como cartel, llamada o voz a voz.',
-  'Reconocimiento de experiencias', 'megafono')
-  .addNotes('La participación es voluntaria. Evite competencia y exigencias de memoria o rapidez.');
+/* ===== 5 · M3 LOS MEDIOS ===== */
+iconos('AVISAR', 'Hay muchas formas de avisar', [
+  ['La llamada', 'telefono'],
+  ['El WhatsApp', 'whatsapp'],
+  ['Una foto', 'camara'],
+  ['Un cartel', 'megafono'],
+  ['El voz a voz', 'grupo'],
+]).addNotes('Momento 3 · 50 min. El cartel y el voz a voz también son medios válidos: dígalo en voz alta.');
 
-/* ===== 7 · MOMENTO 2 ===== */
-momento('2', 'Experiencias cotidianas', '40 MINUTOS',
-  'Converse en subgrupos sobre experiencias y anécdotas:\n\nllamadas, mensajes, fotografías, radio, carteles\ny otros medios usados para informarse o vender.', 'grupo')
-  .addNotes('Use parejas o subgrupos para facilitar la participación; lleve a plenaria solo algunas ideas.');
+/* ===== 6-9 · M3 LOS CUIDADOS ===== */
+frase('CUIDADO 1', 'Nunca dé su clave',
+  'Ni por teléfono. Ni por mensaje. A nadie.\nEl banco nunca le pide la clave.', 'escudo', { dark: true });
 
-/* ===== 8-9 · MOMENTO 3 ===== */
-momento('3', 'Tecnología accesible y segura', '50 MINUTOS',
-  'Explique usos posibles y cuidados:\n\ndatos personales  ·  enlaces  ·  claves  ·  engaños\ny autorización antes de publicar fotografías.', 'escudo')
-  .addNotes('No pida claves, saldos, deudas, cuentas bancarias ni publicaciones reales durante el ejercicio.');
+frase('CUIDADO 2', 'No abra enlaces\nraros',
+  'Si no sabe quién lo mandó, no lo abra.\nSi tiene duda, pregúntele a alguien de confianza.', 'celular', { dark: true, fs: 46 });
 
-conceptos('Medios tecnológicos: usos y cuidados', 'MOMENTO 3', 'celular', [
-  ['Llamadas y mensajes', 'Confirmar el destinatario, escribir información clara y no compartir claves o códigos.'],
-  ['Fotografías', 'Buscar luz suficiente y fondo ordenado; pedir autorización antes de fotografiar o publicar a otras personas.'],
-  ['WhatsApp o redes', 'No abrir enlaces dudosos, no enviar dinero por presión y verificar pedidos o pagos por un medio conocido.'],
-  ['Carteles y voz a voz', 'También son medios válidos. Deben incluir información clara, legible y verificable.'],
-  ['Apoyo de otra persona', 'Puede solicitar acompañamiento de alguien de confianza sin entregar claves ni perder control de sus decisiones.'],
-], 3.3).addNotes('Tabla de conceptos esenciales de la ficha. Dé una instrucción por vez y compruebe que se entendió.');
+frase('CUIDADO 3', 'Pida permiso\nantes de la foto',
+  'Antes de tomarle una foto a alguien, pregúntele.\nY antes de publicarla, también.', 'camara', { dark: true, fs: 46 });
 
-/* ===== 10-11 · MOMENTO 4 ===== */
-momento('4', 'Pausa lúdica y refrigerio', '20 MINUTOS',
-  'Proponga Mensaje que viaja\nu otra actividad voluntaria.', 'comida', true)
-  .addNotes('Entregue el refrigerio y diligencie el formato de entrega de beneficios.');
+frase('CUIDADO 4', 'Si lo apuran,\ndesconfíe',
+  'Nadie serio le pide plata de afán.\nTómese su tiempo y confirme por un número que usted ya conozca.',
+  'mano', { dark: true, fs: 46 });
 
-juego('MOMENTO 4 · JUEGO', 'Mensaje que viaja',
-  'Una frase breve pasa de persona en persona.\n\nAl final se compara con la original\ny se conversa sobre la claridad.',
-  'Comunicación clara', 'whatsapp')
-  .addNotes('Es compatible con estar sentados y comiendo. La participación es voluntaria.');
+/* ===== 10 · M4 PAUSA ===== */
+pausa('DESCANSO', 'Refrigerio', '20 minutos', 'comida')
+  .addNotes('Momento 4 · 20 min. Juego "Mensaje que viaja": una frase pasa de persona en persona y al final se compara con la original.');
 
-/* ===== 12-13 · MOMENTO 5 ===== */
-momento('5', 'Mostrar una oferta', '1 HORA',
-  'Con objetos o ejemplos, practiquen:\n\nfondo limpio  ·  buena luz  ·  información clara\ny una descripción breve.\n\nPuede simularse en papel.', 'camara')
-  .addNotes('Ofrezca alternativas en papel, conversación o demostración compartida. No dependa del celular.');
+/* ===== 11 · M5 ASÍ SE VE BIEN ===== */
+iconos('MOSTRAR LO QUE HACE', 'Así se ve bien', [
+  ['Con luz', 'sol', 'Al lado de\nla ventana'],
+  ['Sin desorden', 'cuadro', 'Una tela o\nuna pared limpia'],
+  ['De cerquita', 'zoom', 'Que se vea\nbien grande'],
+]).addNotes('Momento 5 · 1 hora. Muestre primero un objeto MAL presentado y pregunte qué le arreglarían.');
 
-juego('MOMENTO 5 · ACTIVIDAD', 'Foto o dibujo de producto',
-  'En parejas, preparan una escena con fondo ordenado y buena luz,\n\no la dibujan si no hay dispositivo.',
-  'Presentación de la oferta', 'cuadro')
-  .addNotes('Nadie está obligado a usar celular. Pida autorización antes de fotografiar a cualquier persona.');
+/* ===== 12 · M5 EJERCICIO ===== */
+{
+  const s = ejercicio('AHORA USTED', 'Tómele una foto\na lo que usted hace',
+    'Si no tiene teléfono, dibújelo en una hoja.\nLas dos formas valen igual.', 'camara');
+  anexo(s, 6.15, 'Anexe aquí una foto de una pieza de la técnica del grupo');
+  s.addNotes('Puede simularse en papel. Nadie está obligado a usar su celular ni a salir en la foto.');
+}
 
-/* ===== 14 · MOMENTO 6 ===== */
-momento('6', 'Pausa activa', '10 MINUTOS',
-  'Descanso visual y movilidad suave\nde manos, cuello y hombros.', 'caminar', true)
-  .addNotes('Cada 60 a 90 minutos proponga movilidad suave, descanso visual, respiración o una activación breve.');
+/* ===== 13 · M6 PAUSA ACTIVA ===== */
+pausa('ESTIRAMOS', 'Pausa activa', '10 minutos', 'caminar')
+  .addNotes('Momento 6 · 10 min. Descanso visual y movilidad suave de manos, cuello y hombros. Sentados o de pie.');
 
-/* ===== 15 · MOMENTO 7 ===== */
-momento('7', 'Mensaje sencillo', '50 MINUTOS',
-  'Construyan en parejas un mensaje con:\n\nnombre  ·  qué ofrece  ·  para quién puede servir\ny forma segura de contacto.\n\nSin publicar datos reales.', 'lapiz')
-  .addNotes('La participación puede ser oral, escrita, gráfica o práctica.');
+/* ===== 14 · M7 EL MENSAJE ===== */
+iconos('EL AVISO', 'Su aviso lleva cuatro cosas', [
+  ['El nombre', 'lapiz', 'Cómo se llama\nlo que hace'],
+  ['Qué es', 'bolsa', 'Para qué\nsirve'],
+  ['Cuánto vale', 'dinero', 'El precio,\nsiempre'],
+  ['Cómo lo piden', 'casa', 'Dónde lo\nbuscan a usted'],
+]).addNotes('Momento 7 · 50 min. Sin publicar datos reales: se escribe "aquí va mi contacto".');
 
-/* ===== 16 · MOMENTO 8 ===== */
-momento('8', 'Almuerzo', '1 HORA', 'Almuerzo y descanso.', 'comida', true)
-  .addNotes('Entregue el almuerzo y diligencie el formato de entrega de beneficios.');
+/* ===== 15 · M7 EJERCICIO ===== */
+{
+  const s = ejercicio('EN PAREJAS', 'Arme el aviso\nde su producto',
+    'Primero el del compañero. Después el suyo.', 'lapiz');
+  anexo(s, 5.55, 'Anexe aquí un aviso de ejemplo con la técnica del grupo');
+  s.addText('No escriba su teléfono ni su dirección. Escriba: «aquí va mi contacto».',
+    { x: 0.7, y: 6.55, w: 9.3, h: 0.5, fontFace: F, fontSize: 22, bold: true,
+      color: WHITE, isTextBox: true });
+  s.addNotes('Si en una pareja ninguno escribe, lo dictan y el auxiliar escribe. Solo 3 o 4 leen en voz alta.');
+}
 
-/* ===== 17-18 · MOMENTO 9 ===== */
-momento('9', 'Reactivación', '10 MINUTOS',
-  'Realice Necesidad o gusto\nu otra actividad corta.', 'mano', true)
-  .addNotes('Alterne conversación y actividad. Permita repetir, descansar y recibir apoyo.');
+/* ===== 16 · M8 ALMUERZO ===== */
+pausa('ALMUERZO', 'Almuerzo', 'Volvemos en 1 hora', 'comida')
+  .addNotes('Momento 8 · 1 hora. Escriba la hora exacta de regreso en el tablero.');
 
-juego('MOMENTO 9 · JUEGO', 'Necesidad o gusto',
-  'Ante ejemplos cotidianos, cada persona indica con un gesto\n\nsi lo considera necesidad, gusto o depende del caso.',
-  'Priorización', 'pregunta')
-  .addNotes('Nadie está obligado a moverse ni a hablar frente a todo el grupo.');
+/* ===== 17 · M9 NECESIDAD O GUSTO ===== */
+ejercicio('DESPUÉS DEL ALMUERZO', '¿Necesidad o gusto?',
+  'Mano arriba si es necesidad.\nMano abajo si es gusto.\nMano plana si depende.', 'mano')
+  .addNotes('Momento 9 · 10 min. Ejemplos: el mercado, un vestido nuevo, la droga del mes, una olla para trabajar. No hay respuesta correcta.');
 
-/* ===== 19-21 · MOMENTO 10 ===== */
-momento('10', 'Ingresos, gastos y ahorro', '1 HORA',
-  'Explique con ejemplos de una iniciativa:\n\ndinero que entra  ·  costos  ·  gastos\nreserva  ·  ahorro.\n\nNo solicite cifras personales.', 'dinero')
-  .addNotes('Trabaje con casos imaginarios. Parta de la experiencia de las personas y evite lenguaje infantilizante.');
+/* ===== 18 · M10 LAS CUATRO PALABRAS ===== */
+iconos('EL DINERO', 'Cuatro palabras del dinero', [
+  ['INGRESO', 'bolsa', 'Lo que le\npagan'],
+  ['COSTO', 'fichas', 'Lo que gastó\npara hacerlo'],
+  ['GASTO', 'bus', 'Pasajes,\nbolsas'],
+  ['AHORRO', 'casa', 'Lo que guarda\npara después'],
+]).addNotes('Momento 10 · 1 hora. Explique con ejemplos de una iniciativa. NO solicite cifras personales de nadie.');
 
-conceptos('Uso racional de los recursos', 'MOMENTO 10', 'calculadora', [
-  ['Ingreso', 'Dinero que entra por una venta, servicio u otra fuente.'],
-  ['Costo', 'Recurso que se usa directamente para producir u ofrecer: materiales, insumos o mano de obra, según el caso.'],
-  ['Gasto', 'Pago necesario para funcionar, comunicar, transportar o entregar, entre otros.'],
-  ['Ahorro o reserva', 'Parte que se guarda para una meta, una compra futura o una situación inesperada.'],
-  ['Decisión responsable', 'Comparar, priorizar, evitar compras innecesarias y no comprometer dinero que no se tiene.'],
-], 3.3).addNotes('Explicación aplicada a una iniciativa, tal como está en la ficha.');
+/* ===== 19 · M10 LA RESTA ===== */
+{
+  const s = frase('LA CUENTA', 'Lo que entra\nmenos lo que sale',
+    'Eso es lo que de verdad le queda.', 'calculadora', { fs: 46 });
+  anexo(s, 6.15, 'Anexe aquí un ejemplo con precios de la técnica del grupo');
+  s.addNotes('Trabaje con casos imaginarios. No pida claves, saldos, deudas ni información bancaria.');
+}
 
+/* ===== 20 · M10 DECISIÓN RESPONSABLE ===== */
+frase('ANTES DE COMPRAR', 'Pregúntese tres\ncosas',
+  '¿De verdad lo necesito?\n¿Puedo esperar un poquito?\n¿Tengo con qué pagarlo hoy?', 'bombillo', { fs: 46 });
+
+/* ===== 21 · M11 JUEGO DEL PRESUPUESTO ===== */
+ejercicio('JUEGO', 'Repartamos la plata',
+  'Cada grupo recibe fichas de dinero.\nDecidan cuánto va para materiales, transporte,\nempaque y cuánto se guarda.', 'fichas')
+  .addNotes('Momento 11 · 50 min. Con fichas y un caso imaginario. Prioricen materiales, transporte, empaque, ahorro y otros gastos.');
+
+/* ===== 22 · M12 PAUSA ===== */
+pausa('DESCANSO', 'Refrigerio', '20 minutos', 'comida')
+  .addNotes('Momento 12 · 20 min. Actividad breve, adaptada y voluntaria.');
+
+/* ===== 23 · M13 CIERRE ===== */
+ejercicio('PARA CERRAR', '¿Qué se lleva\nde hoy?',
+  'Cada quien dice una sola cosa.\nEl que no quiera hablar, pasa.', 'corazon')
+  .addNotes('Momento 13 · 30 min. Integre los seis ejes teóricos. Termine en autoestima, no en evaluación.');
+
+/* ===== 24 · TAREA ===== */
+{
+  const s = frase('PARA LA CASA', 'Escoja cómo mostrar\nlo que usted hace',
+    'Una frase, un dibujo, un cartel o una foto.\nY piense en un gasto que sí y en uno que puede esperar.',
+    'libro', { dark: true, fs: 44 });
+  s.addNotes('Trabajo en casa · 2 horas. No debe publicar información ni usar dinero real.');
+}
+
+/* ===== 25 · PRÓXIMA CLASE ===== */
 {
   const s = p.addSlide(); s.background = { color: ORANGE };
-  s.addText('CUIDADO', { x: 0.62, y: 1.7, w: 8, h: 0.55, fontFace: F, fontSize: 18,
-    bold: true, color: 'FFE0CE', charSpacing: 3, isTextBox: true });
-  s.addText('Trabaje siempre con\ncasos imaginarios.', { x: 0.62, y: 2.35, w: 9.6, h: 2.2,
-    fontFace: F, fontSize: 46, bold: true, color: WHITE, isTextBox: true });
-  s.addText('No solicite claves, saldos, deudas, ingresos personales ni información bancaria.',
-    { x: 0.62, y: 4.8, w: 10.6, h: 1.0, fontFace: F, fontSize: 23, color: 'FFEDE3',
-      lineSpacing: 34, isTextBox: true });
-  disco(s, 10.7, 2.45, 1.9, NAVY, 'escudo');
-  s.addNotes('Advertencia de la ficha para los momentos 10 y 11.');
-}
-
-/* ===== 22-23 · MOMENTO 11 ===== */
-momento('11', 'Juego del presupuesto', '50 MINUTOS',
-  'Con fichas de dinero y un caso imaginario, prioricen:\n\nmateriales  ·  transporte  ·  empaque\nahorro  ·  otros gastos.', 'fichas')
-  .addNotes('El caso debe ser ficticio. No solicite información financiera real de ninguna persona.');
-
-juego('MOMENTO 11 · JUEGO', 'Presupuesto imaginario',
-  'Distribuyan fichas entre materiales, transporte, empaque,\n\nahorro y otros gastos de un caso ficticio.',
-  'Decisiones financieras', 'tienda')
-  .addNotes('Trabaje en subgrupos. Lleve a plenaria solo algunas decisiones.');
-
-/* ===== 24 · MOMENTO 12 ===== */
-momento('12', 'Pausa lúdica y refrigerio', '20 MINUTOS',
-  'Proponga una actividad breve,\nadaptada y voluntaria.', 'comida', true)
-  .addNotes('Entregue el refrigerio y diligencie el formato de entrega de beneficios.');
-
-/* ===== 25 · MOMENTO 13 ===== */
-momento('13', 'Cierre', '30 MINUTOS',
-  'Integre los seis ejes teóricos\n\ny explique la transición a la primera práctica\nen la sesión 6.', 'corazon')
-  .addNotes('Cuide el trato: parta de la experiencia de las personas y evite juicios sobre sus capacidades.');
-
-/* ===== 26 · PREGUNTAS ORIENTADORAS ===== */
-{
-  const s = slideClaro('Preguntas orientadoras', 'pregunta', 'CIERRE');
-  const Q = ['¿Qué medio podría usar?',
-             '¿Qué cuidado debo tener?',
-             '¿Qué decisión ayudaría a organizar mejor\nlos recursos de una iniciativa?'];
-  Q.forEach((q, i) => {
-    const y = 2.4 + i * 1.35;
-    s.addShape(p.ShapeType.ellipse, { x: 0.8, y: y + 0.12, w: 0.85, h: 0.85, fill: { color: CYAN } });
-    s.addText(String(i + 1), { x: 0.8, y: y + 0.12, w: 0.85, h: 0.85, align: 'center',
-      valign: 'middle', fontFace: F, fontSize: 30, bold: true, color: WHITE,
-      margin: 0, isTextBox: true });
-    s.addText(q, { x: 2.0, y, w: 10.3, h: 1.15, fontFace: F, fontSize: 26, bold: true,
-      color: NAVY, valign: 'middle', lineSpacing: 34, margin: 0, isTextBox: true });
-  });
-  s.addText('Escuche sin exigir respuestas escritas ni elaborar un informe.',
-    { x: 0.62, y: 6.35, w: 12.1, h: 0.5, fontFace: F, fontSize: 17, italic: true,
-      color: GREY, isTextBox: true });
-  s.addNotes('Preguntas orientadoras de la ficha FM-AO-05.');
-}
-
-/* ===== 27 · TRABAJO EN CASA ===== */
-{
-  const s = slideOscuro('Trabajo en casa', 'casa', '2 HORAS');
-  s.addShape(p.ShapeType.rect, { x: 0.62, y: 2.4, w: 12.1, h: 2.1, fill: { color: '15455F' } });
-  s.addText('Elegir una forma sencilla de presentar una iniciativa:\nuna frase, un dibujo, un cartel o una fotografía.',
-    { x: 1.1, y: 2.62, w: 11.2, h: 1.7, fontFace: F, fontSize: 25, bold: true,
-      color: WHITE, lineSpacing: 38, isTextBox: true });
-  s.addShape(p.ShapeType.rect, { x: 0.62, y: 4.7, w: 12.1, h: 1.5, fill: { color: CYAN } });
-  s.addText('Y pensar en un gasto que conviene priorizar y otro que podría esperar.',
-    { x: 1.1, y: 4.7, w: 11.2, h: 1.5, fontFace: F, fontSize: 24, bold: true,
-      color: WHITE, valign: 'middle', isTextBox: true });
-  s.addText('No debe publicar información ni usar dinero real.',
-    { x: 0.62, y: 6.4, w: 12.1, h: 0.5, fontFace: F, fontSize: 20, bold: true,
-      color: ORANGE, isTextBox: true });
-  s.addNotes('Trabajo en casa de 2 horas, según la ficha. La sesión 6 es la primera práctica.');
+  s.addText('LA PRÓXIMA CLASE', { x: 0.7, y: 1.5, w: 9, h: 0.5, fontFace: F,
+    fontSize: 17, bold: true, color: 'FFE0CE', charSpacing: 3, isTextBox: true });
+  s.addText('Ya empezamos\na trabajar', { x: 0.7, y: 2.1, w: 9.6, h: 2.2, fontFace: F,
+    fontSize: 52, bold: true, color: WHITE, isTextBox: true });
+  disco(s, 10.35, 2.35, 2.1, NAVY, 'check');
+  s.addShape(p.ShapeType.rect, { x: 0.7, y: 4.7, w: 12.0, h: 1.35, fill: { color: WHITE } });
+  s.addText('Día: ____________     Hora: ____________     Lugar: ____________',
+    { x: 1.1, y: 4.7, w: 11.2, h: 1.35, fontFace: F, fontSize: 26, bold: true,
+      color: NAVY, valign: 'middle', isTextBox: true });
+  s.addText('Secretaría de Inclusión Social y Familia', { x: 7.8, y: 6.85, w: 4.9, h: 0.3,
+    align: 'right', fontFace: F, fontSize: 10, color: 'FFD9C6', isTextBox: true });
+  s.addNotes('Sesión 6: primera práctica. Deje escritos día, hora y lugar en el tablero.');
 }
 
 p.writeFile({ fileName: '/home/user/Alquimia/docs/proyectos/personas-mayores/PPT_Sesion_5_Tecnologia_y_Dinero.pptx' })
