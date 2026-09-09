@@ -5,12 +5,19 @@ import { hayConfiguracion } from "./configuracion";
 const PUBLICAS = ["/entrar", "/recuperar", "/invitacion", "/estilos",
                   "/politica-de-datos", "/configuracion"];
 
+// Rutas que ni siquiera necesitan Supabase: el taller sobre bitácora local,
+// el texto de la política y la propia pantalla de configuración. Mandarlas a
+// /configuracion dejaba su enlace «Ver el taller funcionando» dando vueltas
+// sobre sí mismo, que es justo lo que se ve al abrir un despliegue recién
+// hecho y todavía sin base de datos.
+const SIN_BASE = ["/configuracion", "/estilos", "/politica-de-datos"];
+
 /** Refresca la sesión y protege las rutas de la aplicación. */
 export async function actualizarSesion(peticion: NextRequest) {
   // Sin credenciales no hay sesión que refrescar. En vez de reventar con un
   // 500 opaco, se lleva a la página que dice qué variable falta.
   if (!hayConfiguracion()) {
-    if (peticion.nextUrl.pathname.startsWith("/configuracion")) {
+    if (SIN_BASE.some((r) => peticion.nextUrl.pathname.startsWith(r))) {
       return NextResponse.next({ request: peticion });
     }
     const destino = peticion.nextUrl.clone();
