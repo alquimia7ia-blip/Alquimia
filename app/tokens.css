@@ -1,0 +1,52 @@
+/*
+ * Tokens de color y tipografía.
+ *
+ * Portados sin cambios desde docs/taller-mega-modulo-1.html (líneas 6-47).
+ * Tres estados de tema, no dos: la preferencia explícita marca
+ * data-theme en la raíz, y el ajuste "sistema" no marca nada — ahí solo
+ * prefers-color-scheme separa claro de oscuro. Por eso :root define la
+ * paleta clara completa y los otros dos bloques solo redefinen tokens.
+ */
+
+:root{
+  --ground:#EFEFF4; --surface:#FFFFFF; --surface-2:#F7F6FB; --line:#DEDCE8; --line-2:#EAE8F2;
+  --text:#1C1A2E; --muted:#615D7A; --faint:#8C88A6;
+  --accent:#4B3FA6; --accent-2:#6B5DD3; --accent-soft:#E8E5F8; --accent-line:#C7C0EE;
+  --gold:#9C5F22; --gold-soft:#F7EADC; --gold-line:#E4CBAC;
+  --fav:#2E7D4F; --fav-soft:#E3F1E9; --fav-line:#B6DAC5;
+  --med:#A9740A; --med-soft:#FBF0D9; --med-line:#E8D19A;
+  --des:#B93E2B; --des-soft:#FAE6E2; --des-line:#EEBCB2;
+  --na:#7C7A93;  --na-soft:#EDECF3;  --na-line:#D6D4E1;
+  --shadow-sm:0 1px 2px rgba(28,26,46,.05);
+  --shadow:0 1px 2px rgba(28,26,46,.05), 0 10px 28px -16px rgba(28,26,46,.35);
+  --radius:14px;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#131220; --surface:#1B1A2B; --surface-2:#222134; --line:#333148; --line-2:#2A2940;
+    --text:#EAE8F6; --muted:#A5A2BE; --faint:#807DA0;
+    --accent:#A79AFF; --accent-2:#8C7DF0; --accent-soft:#282444; --accent-line:#413A6B;
+    --gold:#E0A45C; --gold-soft:#33261A; --gold-line:#5A422A;
+    --fav:#63C692; --fav-soft:#172E23; --fav-line:#2C523E;
+    --med:#E4B54A; --med-soft:#312712; --med-line:#584A22;
+    --des:#F0806F; --des-soft:#361D1A; --des-line:#5E332C;
+    --na:#9895B0;  --na-soft:#26253A;  --na-line:#3B3952;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#131220; --surface:#1B1A2B; --surface-2:#222134; --line:#333148; --line-2:#2A2940;
+  --text:#EAE8F6; --muted:#A5A2BE; --faint:#807DA0;
+  --accent:#A79AFF; --accent-2:#8C7DF0; --accent-soft:#282444; --accent-line:#413A6B;
+  --gold:#E0A45C; --gold-soft:#33261A; --gold-line:#5A422A;
+  --fav:#63C692; --fav-soft:#172E23; --fav-line:#2C523E;
+  --med:#E4B54A; --med-soft:#312712; --med-line:#584A22;
+  --des:#F0806F; --des-soft:#361D1A; --des-line:#5E332C;
+  --na:#9895B0;  --na-soft:#26253A;  --na-line:#3B3952;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -18px rgba(0,0,0,.9);
+}
