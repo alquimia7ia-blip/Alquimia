@@ -21,7 +21,7 @@ export function Escala({ campoId, escalaId }: { campoId: string; escalaId: strin
           data-v={o.color}
           aria-pressed={actual === o.valor}
           disabled={soloLectura}
-          onClick={() => escribir(campoId, actual === o.valor ? "" : o.valor)}
+          onClick={() => escribir(campoId, actual === o.valor ? "" : o.valor, { inmediato: true })}
         >
           {o.etiqueta}
         </button>
@@ -52,7 +52,7 @@ export function Ranking({
             aria-pressed={marcado}
             disabled={soloLectura}
             style={repetido ? { opacity: 0.45 } : undefined}
-            onClick={() => escribir(campoId, marcado ? "" : n)}
+            onClick={() => escribir(campoId, marcado ? "" : n, { inmediato: true })}
           >
             {n}
           </button>

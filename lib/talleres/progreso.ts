@@ -64,10 +64,19 @@ function camposDeBloque(b: Bloque, filas: Fila[]): CampoEsperado[] {
         }
         return salida;
       });
-      const propias = filasDe(filas, b.id).flatMap((f) => [
-        c(campo.fila(b.id, f.id, "titulo")),
-        c(campo.fila(b.id, f.id, "valoracion")),
-      ]);
+      // Las fichas que agrega la empresa llevan los mismos campos que las
+      // fijas, nota incluida: si aquí faltara, la interfaz mostraría un campo
+      // que el progreso no cuenta y el informe no exportaría.
+      const propias = filasDe(filas, b.id).flatMap((f) => {
+        const salida = [
+          c(campo.fila(b.id, f.id, "titulo")),
+          c(campo.fila(b.id, f.id, "valoracion")),
+        ];
+        if (b.campoNota) {
+          salida.push(c(campo.fila(b.id, f.id, "nota"), b.campoNota.requerido ?? false));
+        }
+        return salida;
+      });
       return [...fijas, ...propias];
     }
 

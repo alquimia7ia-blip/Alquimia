@@ -153,14 +153,14 @@ create table facilitadores_cohorte (
   unique (perfil_id, cohorte_id)
 );
 
--- El token en claro se envía por correo y nunca se almacena.
+-- Registro de a quién se invitó y si ya aceptó. El token lo emite y valida
+-- Supabase Auth, que envía el correo: aquí no se guarda ningún secreto.
 create table invitaciones (
   id           uuid primary key default gen_random_uuid(),
   empresa_id   uuid not null references empresas on delete cascade,
   correo       text not null,
   rol          text not null default 'miembro'
                check (rol in ('propietario','miembro','lector')),
-  token_hash   text not null unique,
   expira_at    timestamptz not null default now() + interval '14 days',
   aceptada_at  timestamptz,
   creada_por   uuid references perfiles on delete set null,

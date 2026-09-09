@@ -12,7 +12,11 @@ import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
  */
 export type BitacoraCtx = {
   valor: (campoId: string) => ValorCampo;
-  escribir: (campoId: string, valor: ValorCampo) => void;
+  /**
+   * Escribe un campo. `inmediato` evita el retardo de reposo: un clic en una
+   * escala es un evento atómico y no hay razón para esperar.
+   */
+  escribir: (campoId: string, valor: ValorCampo, opciones?: { inmediato?: boolean }) => void;
   /** Filas vivas de un bloque, ya ordenadas. */
   filas: (bloqueId: string) => Fila[];
   /** Todas las filas de la bitácora; el cálculo de progreso las necesita. */
