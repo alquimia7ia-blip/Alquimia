@@ -94,6 +94,11 @@ ha entrado todavía.
 Cada persona recibe un enlace, define su contraseña, autoriza el tratamiento de datos y
 entra directo a su bitácora.
 
+A partir de ahí, **quien administra cada empresa suma a sus compañeros desde `/equipo`**
+sin volver a pasar por aquí: escribe el correo, elige si podrá responder o solo leer, y el
+sistema envía la invitación. Es lo que hace que el taller lo resuelva un equipo y no una
+sola persona.
+
 ## 6. Registrar a los facilitadores
 
 Todavía no hay pantalla para esto: se hace con una consulta, una vez por cohorte.

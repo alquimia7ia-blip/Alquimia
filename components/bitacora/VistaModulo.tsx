@@ -31,9 +31,13 @@ type Props = {
   /** Texto del indicador de guardado: "Guardado", "Guardando…", "Sin conexión". */
   estado?: { texto: string; ocupado?: boolean };
   acciones?: React.ReactNode;
+  /** Pie del riel: enlaces al equipo y aviso sobre el trabajo simultáneo. */
+  pieRail?: React.ReactNode;
 };
 
-export function VistaModulo({ talleres, moduloTitulo, empresa, onEmpresa, estado, acciones }: Props) {
+export function VistaModulo({
+  talleres, moduloTitulo, empresa, onEmpresa, estado, acciones, pieRail,
+}: Props) {
   const bit = useBitacora();
   const [actual, setActual] = useState(0);
   const { lanzar, Lienzo } = useConfeti();
@@ -132,6 +136,8 @@ export function VistaModulo({ talleres, moduloTitulo, empresa, onEmpresa, estado
             </li>
           </ul>
         </nav>
+
+        {pieRail && <div className="rail-foot">{pieRail}</div>}
       </aside>
 
       <div className="main">

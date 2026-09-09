@@ -47,6 +47,15 @@ export function Bitacora({
         acciones={
           <a className="btn" href={`/api/informe/${bitacoraId}`}>Descargar informe</a>
         }
+        pieRail={
+          <>
+            <a className="mini" href="/equipo">👥 Equipo de la empresa</a>
+            <p style={{ fontSize: 11.5, color: "var(--faint)", lineHeight: 1.45, margin: 0 }}>
+              Si alguien más de tu empresa está respondiendo ahora mismo, sus cambios
+              aparecen al recargar la página.
+            </p>
+          </>
+        }
       />
     </ProveedorBitacora>
   );
