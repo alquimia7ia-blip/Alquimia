@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { VARIABLES, faltantes } from "@/lib/supabase/configuracion";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,16 @@ export default function Configuracion() {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="card" style={{ marginBottom: 14, borderColor: "var(--accent-line)" }}>
+          <span className="lbl">Mientras tanto</span>
+          <p style={{ margin: "6px 0 10px", fontSize: 13.4, color: "var(--muted)" }}>
+            El taller funciona sin base de datos: los once talleres del Módulo 1 sobre una
+            bitácora que se guarda en este navegador. Sirve para mostrarlo y para probar
+            tipos de bloque nuevos.
+          </p>
+          <Link className="btn pri" href="/estilos">Ver el taller funcionando →</Link>
         </div>
 
         <div className="hint">
