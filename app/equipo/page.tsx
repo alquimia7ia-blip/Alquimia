@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { Invitar } from "./Invitar";
+import { Solicitud } from "./Solicitud";
 
 export const metadata = { title: "Equipo · Bitácora MEGA" };
 
@@ -43,7 +44,7 @@ export default async function Equipo() {
     (empresa.empresas as unknown as { nombre: string } | null)?.nombre ?? "tu empresa";
   const esPropietario = empresa.rol === "propietario";
 
-  const [{ data: miembros }, { data: pendientes }] = await Promise.all([
+  const [{ data: miembros }, { data: pendientes }, { data: esperando }] = await Promise.all([
     supabase.from("membresias")
       .select("id, rol, perfil_id, perfiles(nombre_completo, cargo)")
       .eq("empresa_id", empresa.empresa_id).eq("estado", "activa"),
@@ -51,6 +52,10 @@ export default async function Equipo() {
       .select("id, correo, rol, creado_at")
       .eq("empresa_id", empresa.empresa_id).is("aceptada_at", null)
       .order("creado_at", { ascending: false }),
+    supabase.from("membresias")
+      .select("id, perfil_id, creado_at, perfiles(nombre_completo)")
+      .eq("empresa_id", empresa.empresa_id).eq("estado", "pendiente")
+      .order("creado_at", { ascending: true }),
   ]);
 
   const rotulo: Record<string, string> = {
@@ -103,6 +108,22 @@ export default async function Equipo() {
                   <span className="xp" style={{ color: "var(--med)" }}>pendiente</span>
                 </div>
               ))}
+            </div>
+          </>
+        )}
+
+        {esPropietario && (esperando ?? []).length > 0 && (
+          <>
+            <span className="lbl">Piden entrar a tu empresa</span>
+            <p style={{ fontSize: 12.8, color: "var(--muted)", margin: "4px 0 10px" }}>
+              Hasta que las aceptes no ven nada de la bitácora. Acepta solo a quien
+              reconozcas: aquí adentro están las cifras del Taller 8.
+            </p>
+            <div className="grid" style={{ gap: 8, margin: "0 0 20px" }}>
+              {(esperando ?? []).map((m) => {
+                const p = m.perfiles as unknown as { nombre_completo: string | null } | null;
+                return <Solicitud key={m.id} id={m.id} nombre={p?.nombre_completo ?? "Sin nombre"} />;
+              })}
             </div>
           </>
         )}

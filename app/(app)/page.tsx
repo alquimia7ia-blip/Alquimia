@@ -16,19 +16,11 @@ export default async function Inicio() {
   const enCurso = bitacoras?.find((b) => b.estado === "en_curso") ?? bitacoras?.[0];
   const modulo = enCurso?.modulos as unknown as { slug: string } | undefined;
 
-  if (!modulo) {
-    return (
-      <div className="portada">
-        <div className="tarjeta-sesion">
-          <h1>Todavía no hay nada que diligenciar</h1>
-          <p className="sub">
-            Tu cuenta no está asociada a ninguna bitácora. Escríbele a quien coordina el
-            programa para que te vincule a tu empresa y a la cohorte.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // Sin bitácora visible hay dos casos: quien todavía no dijo a qué empresa
+  // pertenece, y quien lo dijo pero espera que lo acepten. La pantalla de
+  // empresa distingue los dos; mandar a ambos allí evita el callejón sin
+  // salida que había antes.
+  if (!modulo) redirect("/empresa" as Route);
   // El slug sale de la base y corresponde a /[moduloSlug].
   redirect(`/${modulo.slug}` as Route);
 }

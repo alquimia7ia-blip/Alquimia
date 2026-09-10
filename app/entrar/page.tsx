@@ -73,7 +73,7 @@ function Formulario() {
 
       <div className="pie-sesion">
         <Link href="/recuperar">¿Olvidaste la contraseña?</Link>
-        <span>¿Sin cuenta? La invitación llega por correo.</span>
+        <Link href="/registro">¿Sin cuenta? Créala</Link>
       </div>
     </form>
   );

@@ -2,8 +2,8 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hayConfiguracion } from "./configuracion";
 
-const PUBLICAS = ["/entrar", "/recuperar", "/invitacion", "/estilos", "/tablero",
-                  "/politica-de-datos", "/configuracion"];
+const PUBLICAS = ["/entrar", "/registro", "/recuperar", "/invitacion", "/estilos",
+                  "/tablero", "/politica-de-datos", "/configuracion"];
 
 // Rutas que ni siquiera necesitan Supabase: el taller sobre bitácora local,
 // el texto de la política y la propia pantalla de configuración. Mandarlas a
