@@ -15,7 +15,8 @@
     "test:rls": "bash scripts/db-local.sh test",
     "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts",
     "check": "tsc --noEmit && next build",
-    "seed:sql": "tsx scripts/emitir-siembra.ts"
+    "seed:sql": "tsx scripts/emitir-siembra.ts",
+    "exportar:html": "node scripts/exportar-html.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -34,6 +35,7 @@
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "dotenv": "^16.4.7",
+    "esbuild": "^0.28.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
