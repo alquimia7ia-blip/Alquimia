@@ -8,8 +8,10 @@ create extension if not exists pgcrypto;
 create schema if not exists app;
 
 -- Marca de tiempo de modificación, compartida por todas las tablas.
+-- search_path fijo: una función sin él resuelve los nombres contra el
+-- search_path de quien la invoca, que en un trigger es quien escribe.
 create or replace function app.tocar_actualizado_at() returns trigger
-language plpgsql as $$
+language plpgsql set search_path = '' as $$
 begin
   new.actualizado_at := now();
   return new;

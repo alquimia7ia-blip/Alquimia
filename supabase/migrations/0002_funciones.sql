@@ -57,7 +57,7 @@ create trigger respuestas_historial_trg
 -- Debe coincidir exactamente con lleno() de lib/talleres/progreso.ts:
 -- una cadena en blanco no cuenta, un arreglo vacío tampoco.
 create or replace function app.valor_lleno(v jsonb) returns boolean
-language sql immutable as $$
+language sql immutable set search_path = '' as $$
   select case
     when v is null                    then false
     when jsonb_typeof(v) = 'null'     then false
