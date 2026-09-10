@@ -23,8 +23,21 @@ function Formulario() {
       password: clave,
     });
     if (error) {
-      // Sin detallar si el correo existe: eso filtra quién está en el programa.
-      setError("Correo o contraseña incorrectos. Revísalos e inténtalo de nuevo.");
+      // Un fallo de credenciales no se detalla: decir si el correo existe
+      // filtraría quién está en el programa. Pero cualquier otro error —una
+      // clave de API equivocada, el proyecto pausado, la red caída— no tiene
+      // nada que ver con quien entra, y disfrazarlo de «contraseña
+      // incorrecta» lo manda a probar una y otra vez una clave que sí es
+      // correcta, sin forma de saber que el problema está en el servidor.
+      const credenciales =
+        error.code === "invalid_credentials" ||
+        /invalid login credentials/i.test(error.message);
+      setError(
+        credenciales
+          ? "Correo o contraseña incorrectos. Revísalos e inténtalo de nuevo."
+          : `No se pudo conectar con el servidor (${error.status ?? "sin código"}): ` +
+            `${error.message}. Es un problema de configuración, no de tu contraseña.`,
+      );
       setEnviando(false);
       return;
     }
