@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { GUION_TEMA } from "@/components/ui/ControlTema";
 
 export const metadata: Metadata = {
   title: "Bitácora MEGA",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap"
         />
+        <script dangerouslySetInnerHTML={{ __html: GUION_TEMA }} />
       </head>
       <body>{children}</body>
     </html>

@@ -11,6 +11,7 @@ import { AnilloProgreso } from "@/components/gamificacion/AnilloProgreso";
 import { MedidorElixir } from "@/components/gamificacion/MedidorElixir";
 import { useConfeti } from "@/components/gamificacion/Confeti";
 import { useToast } from "@/components/ui/Toast";
+import { ControlTema } from "@/components/ui/ControlTema";
 
 export type TallerVista = {
   id: string;
@@ -137,7 +138,10 @@ export function VistaModulo({
           </ul>
         </nav>
 
-        {pieRail && <div className="rail-foot">{pieRail}</div>}
+        <div className="rail-foot">
+          <ControlTema />
+          {pieRail}
+        </div>
       </aside>
 
       <div className="main">

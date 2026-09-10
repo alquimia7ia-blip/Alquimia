@@ -17,16 +17,22 @@ import { fileURLToPath } from "node:url";
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const salida = resolve(raiz, "docs/bitacora-mega-modulo-1.html");
 
-const { outputFiles } = await build({
-  entryPoints: [resolve(raiz, "scripts/html/entrada.tsx")],
+const comun = {
   bundle: true, write: false, minify: true, format: "iife",
   jsx: "automatic", target: ["es2020"], platform: "browser",
   define: { "process.env.NODE_ENV": '"production"' },
   alias: { "@": raiz },
   loader: { ".ts": "ts", ".tsx": "tsx" },
-});
+};
 
-const js = outputFiles[0].text;
+const uno = async (entrada) => (await build({
+  ...comun, entryPoints: [resolve(raiz, entrada)],
+})).outputFiles[0].text;
+
+// El tema se aplica desde la misma función que usa el interruptor, no desde
+// una copia: un archivo con dos reglas de tema distintas es un archivo roto.
+const preTema = await uno("scripts/html/pretema.ts");
+const js = await uno("scripts/html/entrada.tsx");
 const css = ["app/tokens.css", "app/globals.css"]
   .map((f) => readFileSync(resolve(raiz, f), "utf8")).join("\n");
 
@@ -44,6 +50,7 @@ const html = `<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FUENTES}">
+<script>${preTema}</script>
 <style>
 ${css}
 </style>
