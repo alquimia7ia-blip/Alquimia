@@ -13,13 +13,14 @@ type Props = {
   perfilId: string;
   empresa: string;
   moduloTitulo: string;
+  moduloSlug: string;
   talleres: TallerVista[];
   respuestas: Record<string, ValorCampo>;
   filas: Fila[];
 };
 
 export function Bitacora({
-  bitacoraId, perfilId, empresa, moduloTitulo, talleres, respuestas, filas,
+  bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, talleres, respuestas, filas,
 }: Props) {
   const supabase = useMemo(() => clienteNavegador(), []);
 
@@ -45,10 +46,14 @@ export function Bitacora({
         empresa={empresa}
         estado={bitacora.estado}
         acciones={
-          <a className="btn" href={`/api/informe/${bitacoraId}`}>Descargar informe</a>
+          <>
+            <a className="btn pri" href={`/${moduloSlug}/tablero`}>Ver conclusiones</a>
+            <a className="btn" href={`/api/informe/${bitacoraId}`}>Descargar informe</a>
+          </>
         }
         pieRail={
           <>
+            <a className="mini" href={`/${moduloSlug}/tablero`}>📊 Conclusiones del módulo</a>
             <a className="mini" href="/equipo">👥 Equipo de la empresa</a>
             <p style={{ fontSize: 11.5, color: "var(--faint)", lineHeight: 1.45, margin: 0 }}>
               Si alguien más de tu empresa está respondiendo ahora mismo, sus cambios
