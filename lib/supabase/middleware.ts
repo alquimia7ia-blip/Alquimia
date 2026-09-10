@@ -2,7 +2,7 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hayConfiguracion } from "./configuracion";
 
-const PUBLICAS = ["/entrar", "/recuperar", "/invitacion", "/estilos",
+const PUBLICAS = ["/entrar", "/recuperar", "/invitacion", "/estilos", "/tablero",
                   "/politica-de-datos", "/configuracion"];
 
 // Rutas que ni siquiera necesitan Supabase: el taller sobre bitácora local,
@@ -10,7 +10,7 @@ const PUBLICAS = ["/entrar", "/recuperar", "/invitacion", "/estilos",
 // /configuracion dejaba su enlace «Ver el taller funcionando» dando vueltas
 // sobre sí mismo, que es justo lo que se ve al abrir un despliegue recién
 // hecho y todavía sin base de datos.
-const SIN_BASE = ["/configuracion", "/estilos", "/politica-de-datos"];
+const SIN_BASE = ["/configuracion", "/estilos", "/tablero", "/politica-de-datos"];
 
 /** Refresca la sesión y protege las rutas de la aplicación. */
 export async function actualizarSesion(peticion: NextRequest) {
