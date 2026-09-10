@@ -21,6 +21,12 @@ treinta empresas la misma tarde. En Supabase se configura en
 
 ## 2. Aplicar el esquema
 
+> **Ya está aplicado** en el proyecto `bitacora-mega` (`chrxwcffqugyikvhmfbb`), junto con
+> los cuatro módulos y los once talleres del Módulo 1. Esta sección queda para el segundo
+> cliente. Si no tienes el puerto 5432 alcanzable, `pnpm seed:sql` emite el mismo contenido
+> como guion SQL para pegar en el editor del panel, y `supabase/tests/aislamiento-remoto.sql`
+> verifica las políticas sin borrar nada.
+
 Con la cadena de conexión del proyecto (Supabase → Project Settings → Database →
 Connection string → URI):
 
@@ -113,10 +119,13 @@ funcionando sobre el navegador.
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL | los tres |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API → `anon public` | los tres |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` | los tres |
-| `RESEND_API_KEY` | Resend → API Keys | los tres |
-| `CORREO_REMITENTE` | p. ej. `Bitácora MEGA <hola@tu-dominio.co>` | los tres |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API Keys → `service_role` | los tres |
 | `NEXT_PUBLIC_SITIO_URL` | la URL del despliegue (paso 4.6) | los tres |
+
+Son cuatro y no más. **La clave de Resend no va aquí**: quien manda las
+invitaciones y los enlaces de recuperación es Supabase Auth, así que Resend se
+configura en el panel de Supabase (**Authentication → SMTP Settings**). Ponerla
+en Vercel no haría nada — ningún código de la aplicación la lee.
 
 Las dos que empiezan por `NEXT_PUBLIC_` viajan al navegador por diseño: no son secretas.
 **`SUPABASE_SERVICE_ROLE_KEY` sí lo es y salta todas las políticas de seguridad**: no la
