@@ -52,13 +52,23 @@ export default function Registro() {
       return;
     }
 
-    // Con la confirmación por correo activada, signUp no devuelve sesión.
-    // Decirlo es mejor que dejar la pantalla en blanco: el problema es de
-    // configuración del proyecto y quien se registra no puede resolverlo.
-    if (!data.session) {
+    // Con la confirmación por correo activada, signUp no devuelve sesión aunque
+    // el usuario ya quede confirmado por el disparador de la base. En ese caso
+    // se entra en el acto con las mismas credenciales: quien se registra no
+    // tiene por qué escribirlas dos veces por un ajuste del servidor.
+    let sesion = data.session;
+    if (!sesion) {
+      const { data: entrada } = await supabase.auth.signInWithPassword({
+        email: correo.trim(),
+        password: clave,
+      });
+      sesion = entrada.session;
+    }
+
+    if (!sesion) {
       setAviso(
-        "Tu cuenta quedó creada, pero el proyecto exige confirmar el correo y el envío " +
-        "todavía no está configurado. Avísale a quien coordina el programa.",
+        "Tu cuenta quedó creada, pero no se pudo iniciar sesión automáticamente. " +
+        "Entra con el correo y la contraseña que acabas de elegir.",
       );
       setEnviando(false);
       return;
@@ -68,9 +78,9 @@ export default function Registro() {
     // Colombia no reconoce a EE.UU. con nivel adecuado de protección, así que
     // exige autorización propia y hay que poder probarla después.
     await supabase.from("consentimientos").insert([
-      { perfil_id: data.session.user.id, tipo: "tratamiento_datos",
+      { perfil_id: sesion.user.id, tipo: "tratamiento_datos",
         version_politica: VERSION_POLITICA, aceptado: true, agente: navigator.userAgent },
-      { perfil_id: data.session.user.id, tipo: "transferencia_internacional",
+      { perfil_id: sesion.user.id, tipo: "transferencia_internacional",
         version_politica: VERSION_POLITICA, aceptado: true, agente: navigator.userAgent },
     ]);
 
