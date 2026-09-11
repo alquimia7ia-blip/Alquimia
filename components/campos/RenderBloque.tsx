@@ -20,7 +20,22 @@ const tokenColor = (c?: ColorEscala) =>
 
 function Ayuda({ texto }: { texto?: string }) {
   if (!texto) return null;
-  return <div className="hint">{conNegritas(texto)}</div>;
+  // Plegada: la instrucción sigue a un clic, pero no compite con el trabajo.
+  return (
+    <details className="pista">
+      <summary>Cómo llenarlo</summary>
+      <div className="cuerpo">{conNegritas(texto)}</div>
+    </details>
+  );
+}
+
+/** Contador vivo del bloque. Ver "4 de 11" avanzar es la mitad del juego. */
+function Cuenta({ hechos, total }: { hechos: number; total: number }) {
+  return (
+    <span className={`cuenta ${hechos >= total ? "full" : ""}`}>
+      {hechos >= total ? `✓ ${total} de ${total}` : `${hechos} de ${total}`}
+    </span>
+  );
 }
 
 function Detalle({ detalle }: { detalle?: { titulo: string; cuerpo: string } }) {
@@ -38,7 +53,13 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
 
   switch (b.tipo) {
     case "nota":
-      return <div className="hint">{conNegritas(b.cuerpo)}</div>;
+      // También plegada: el aviso del autor está, pero no ocupa media pantalla.
+      return (
+        <details className="pista">
+          <summary>Cómo llenarlo</summary>
+          <div className="cuerpo">{conNegritas(b.cuerpo)}</div>
+        </details>
+      );
 
     case "texto":
       return (
@@ -67,42 +88,63 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
 
     case "fichas_escala": {
       const propias = bit.filas(b.id);
+      const hechos =
+        b.items.filter((it) => bit.valor(campo.item(b.id, it.id, "valoracion"))).length +
+        propias.filter((f) => bit.valor(campo.fila(b.id, f.id, "valoracion"))).length;
+
+      // Una ficha sin responder enseña qué es; una respondida enseña dónde
+      // desarrollarla. Nunca las dos cosas, para que la página no crezca.
+      const Ficha = ({
+        clave, cabecera, campoValor, campoNota, descripcion,
+      }: {
+        clave: string; cabecera: React.ReactNode; campoValor: string;
+        campoNota: string; descripcion?: string;
+      }) => {
+        const v = bit.valor(campoValor);
+        const marca = typeof v === "string" ? opcion(b.escala, v)?.color : undefined;
+        return (
+          <div key={clave} className={`trend ${v ? "set" : ""}`}
+               style={{ ["--mark" as string]: tokenColor(marca) }}>
+            <div className="trend-cab">
+              <div style={{ minWidth: 0, flex: 1 }}>
+                {cabecera}
+                {descripcion && !v && <div className="trend-d">{descripcion}</div>}
+              </div>
+              {v ? <span className="tick" aria-label="Respondida">✓</span> : null}
+            </div>
+            <Escala campoId={campoValor} escalaId={b.escala} />
+            {b.campoNota && v && (
+              <div className="revelado">
+                <Texto campoId={campoNota} marcador={b.campoNota.etiqueta} />
+              </div>
+            )}
+          </div>
+        );
+      };
+
       return (
         <div className="stack">
+          <div className="bloque-cab">
+            <Cuenta hechos={hechos} total={b.items.length + propias.length} />
+          </div>
           <Ayuda texto={b.ayuda} />
           <div className="grid" style={{ gap: 10 }}>
-            {b.items.map((it) => {
-              const campoValor = campo.item(b.id, it.id, "valoracion");
-              const v = bit.valor(campoValor);
-              const marca = typeof v === "string" ? opcion(b.escala, v)?.color : undefined;
-              return (
-                <div
-                  key={it.id}
-                  className={`trend ${v ? "set" : ""}`}
-                  style={{ ["--mark" as string]: tokenColor(marca) }}
-                >
-                  <div>
-                    <div className="trend-t">{it.titulo}</div>
-                    {it.descripcion && <div className="trend-d">{it.descripcion}</div>}
-                  </div>
-                  <Escala campoId={campoValor} escalaId={b.escala} />
-                  {b.campoNota && (
-                    <Texto campoId={campo.item(b.id, it.id, "nota")} marcador={b.campoNota.etiqueta} />
-                  )}
-                </div>
-              );
-            })}
+            {b.items.map((it) => (
+              <Ficha
+                key={it.id}
+                clave={it.id}
+                cabecera={<div className="trend-t">{it.titulo}</div>}
+                campoValor={campo.item(b.id, it.id, "valoracion")}
+                campoNota={campo.item(b.id, it.id, "nota")}
+                descripcion={it.descripcion}
+              />
+            ))}
 
-            {propias.map((f) => {
-              const campoValor = campo.fila(b.id, f.id, "valoracion");
-              const v = bit.valor(campoValor);
-              const marca = typeof v === "string" ? opcion(b.escala, v)?.color : undefined;
-              return (
-                <div
-                  key={f.id}
-                  className={`trend ${v ? "set" : ""}`}
-                  style={{ ["--mark" as string]: tokenColor(marca) }}
-                >
+            {propias.map((f) => (
+              <Ficha
+                key={f.id}
+                clave={f.id}
+                cabecera={
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                     <Texto
                       campoId={campo.fila(b.id, f.id, "titulo")}
@@ -112,13 +154,11 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
                     <button className="del" type="button" title="Eliminar"
                       onClick={() => bit.eliminarFila(f.id)}>×</button>
                   </div>
-                  <Escala campoId={campoValor} escalaId={b.escala} />
-                  {b.campoNota && (
-                    <Texto campoId={campo.fila(b.id, f.id, "nota")} marcador={b.campoNota.etiqueta} />
-                  )}
-                </div>
-              );
-            })}
+                }
+                campoValor={campo.fila(b.id, f.id, "valoracion")}
+                campoNota={campo.fila(b.id, f.id, "nota")}
+              />
+            ))}
           </div>
           {b.permiteAgregar && !bit.soloLectura && (
             <div>
@@ -141,18 +181,16 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
               <div className="card" key={g.id}>
                 <div style={{ display: "flex", justifyContent: "space-between",
                               alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-                  <h3 style={{ fontSize: 15, textTransform: "uppercase",
+                  <h3 style={{ fontSize: 16, textTransform: "uppercase",
                                letterSpacing: ".06em", color: "var(--accent)" }}>{g.titulo}</h3>
-                  <span className="xp" style={{ color: "var(--muted)" }}>
-                    {hechos}/{g.filas.length}
-                  </span>
+                  <Cuenta hechos={hechos} total={g.filas.length} />
                 </div>
                 <div className="grid" style={{ gap: 9 }}>
                   {g.filas.map((f) => (
                     <div key={f.id} style={{ display: "flex", gap: 12, justifyContent: "space-between",
                                              alignItems: "center", flexWrap: "wrap", paddingBottom: 9,
                                              borderBottom: "1px solid var(--line-2)" }}>
-                      <span style={{ fontSize: 13.8, flex: "1 1 260px" }}>{f.texto}</span>
+                      <span style={{ fontSize: 16.2, flex: "1 1 280px", lineHeight: 1.4 }}>{f.texto}</span>
                       <Escala campoId={campo.matriz(b.id, g.id, f.id)} escalaId={b.escala} />
                     </div>
                   ))}
@@ -170,14 +208,16 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
       return (
         <div className="stack">
           <Ayuda texto={b.ayuda} />
-          {b.items.map((it, i) => (
+          {b.items.map((it, i) => {
+            const prioridad = bit.valor(campo.item(b.id, it.id, "prioridad"));
+            return (
             <div className="force" key={it.id}>
-              <div className="force-n">
-                {bit.valor(campo.item(b.id, it.id, "prioridad")) || i + 1}
-              </div>
+              <div className="force-n">{prioridad || i + 1}</div>
               <div>
                 <h3>{it.titulo}</h3>
-                {it.descripcion && <p>{it.descripcion}</p>}
+                {/* Igual que en las fichas: la explicación se retira cuando ya
+                    cumplió su función, y la fuerza queda en una sola línea. */}
+                {it.descripcion && !prioridad && <p>{it.descripcion}</p>}
                 <div className="ctrl">
                   <span className="mini-lbl">Prioridad</span>
                   <Ranking campoId={campo.item(b.id, it.id, "prioridad")}
@@ -187,16 +227,17 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
                   <span className="mini-lbl">Efecto en rentabilidad</span>
                   <Escala campoId={campo.item(b.id, it.id, "impacto")} escalaId={b.escala} />
                 </div>
-                {b.campoNota && (
-                  <div style={{ marginTop: 11 }}>
+                {b.campoNota && bit.valor(campo.item(b.id, it.id, "prioridad")) ? (
+                  <div className="revelado" style={{ marginTop: 11 }}>
                     <Texto campoId={campo.item(b.id, it.id, "nota")}
                            marcador={b.campoNota.etiqueta} filas={2} />
                   </div>
-                )}
+                ) : null}
                 <Detalle detalle={it.detalle} />
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       );
     }
