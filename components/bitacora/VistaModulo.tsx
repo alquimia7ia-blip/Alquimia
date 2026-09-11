@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { camposEsperados, progresoTaller, progresoModulo, nivel, xp } from "@/lib/talleres/progreso";
 import { sugerenciasDelModulo } from "@/lib/talleres/sugerencias";
 import { campo, bloques } from "@/lib/talleres/rutas";
-import type { Definicion, ValorCampo } from "@/lib/talleres/tipos";
+import type { Bloque, Definicion, ValorCampo } from "@/lib/talleres/tipos";
 import { useBitacora } from "@/components/campos/contexto";
 import { RenderBloque } from "@/components/campos/RenderBloque";
 import { AnilloProgreso } from "@/components/gamificacion/AnilloProgreso";
@@ -204,6 +204,20 @@ export function VistaModulo({
   );
 }
 
+/**
+ * La ayuda va arriba, siempre.
+ *
+ * El contenido traía las notas donde el autor las escribió, a veces al final
+ * de la sección. Una instrucción que se lee cuando ya llenaste los campos no
+ * sirve de nada, así que suben al principio de su sección —justo debajo de la
+ * pregunta— conservando el orden relativo entre ellas.
+ */
+function conAyudaArriba(bs: Bloque[]): Bloque[] {
+  const notas = bs.filter((b) => b.tipo === "nota");
+  if (notas.length === 0 || notas.length === bs.length) return bs;
+  return [...notas, ...bs.filter((b) => b.tipo !== "nota")];
+}
+
 function CuerpoTaller({
   taller, respuestas, talleres,
 }: { taller: TallerVista; respuestas: Map<string, ValorCampo>; talleres: TallerVista[] }) {
@@ -223,7 +237,7 @@ function CuerpoTaller({
         <div className="stack" key={s.id}>
           {s.titulo && <h2 style={{ fontSize: 20, marginTop: 16 }}>{s.titulo}</h2>}
           {s.lead && <p className="lead" style={{ marginTop: 4 }}>{s.lead}</p>}
-          {s.bloques.map((b) => <RenderBloque key={b.id} bloque={b} />)}
+          {conAyudaArriba(s.bloques).map((b) => <RenderBloque key={b.id} bloque={b} />)}
         </div>
       ))}
 
