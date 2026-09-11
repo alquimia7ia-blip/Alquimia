@@ -7,10 +7,10 @@ generalista.
 ## Estrategia de entrada al mercado
 
 El documento principal es **[`docs/INFORME-FINAL.md`](docs/INFORME-FINAL.md)** —
-el dossier consolidado con la decisión B2B, el ultranicho recomendado, el mapa
+el informe consolidado con la decisión B2B, el ultranicho recomendado, el mapa
 competitivo, el modelo financiero y un plan de 18 meses.
-La versión navegable con simulador financiero interactivo está en
-`docs/dossier-alquimia.html`.
+La versión navegable con simulador financiero interactivo es la **Brújula
+empresarial**: [`docs/brujula-empresarial.html`](docs/brujula-empresarial.html).
 
 ### Conclusiones
 
