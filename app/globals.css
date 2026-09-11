@@ -245,18 +245,19 @@ details.ayuda p{margin:0 0 12px; font-size:15.6px; color:var(--muted)}
 
 /* nota guía plegada: está disponible, pero no ocupa la pantalla */
 details.pista{
-  border:1px solid var(--gold-line); background:var(--gold-soft);
+  border:1px solid var(--pista-line); background:var(--pista-soft);
   border-radius:10px; padding:0 16px;
 }
 details.pista summary{
-  cursor:pointer; padding:12px 0; font-size:15.4px; font-weight:600; color:var(--gold);
+  cursor:pointer; padding:12px 0; font-size:16.5px; font-weight:600; color:var(--pista);
   list-style:none; display:flex; align-items:center; gap:9px;
 }
 details.pista summary::-webkit-details-marker{display:none}
 details.pista summary::after{content:"Ver"; margin-left:auto; font-weight:600; opacity:.75}
 details.pista[open] summary::after{content:"Ocultar"}
 details.pista .cuerpo{padding:0 0 14px; font-size:15.4px; color:var(--text)}
-details.pista .cuerpo b{font-weight:600; color:var(--gold)}
+details.pista .cuerpo b{font-weight:600; color:var(--pista)}
+details.pista .ico{width:22px; height:22px; flex:none}
 
 /* ---------- tablas ---------- */
 .tw{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface)}

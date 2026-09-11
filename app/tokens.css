@@ -20,6 +20,9 @@
   --med:#8A6206; --med-soft:#FAF1DC; --med-line:#E5D2A2;
   --des:#B3261E; --des-soft:#FBE9E7; --des-line:#EFBFBA;
   --na:#68748A;  --na-soft:#EDF0F5;  --na-line:#D5DBE4;
+  /* Turquesa: color exclusivo de la ayuda. No puede ser verde, ámbar ni rojo
+     porque esos tres ya significan favorable, medio y alerta en las escalas. */
+  --pista:#0C7A6F; --pista-soft:#E4F6F3; --pista-line:#A2DCD4;
   --shadow-sm:0 1px 2px rgba(15,27,45,.06);
   --shadow:0 1px 2px rgba(15,27,45,.06), 0 12px 30px -18px rgba(15,27,45,.4);
   --radius:12px;
@@ -37,6 +40,7 @@
     --med:#D8B357; --med-soft:#292312; --med-line:#4B4023;
     --des:#EE857A; --des-soft:#2D1A18; --des-line:#54302C;
     --na:#8E98A8;  --na-soft:#1E242E;  --na-line:#323A46;
+    --pista:#2DD4BF; --pista-soft:#0E2A2B; --pista-line:#1F5E5A;
     --shadow-sm:0 1px 2px rgba(0,0,0,.35);
     --shadow:0 1px 2px rgba(0,0,0,.35), 0 14px 34px -20px rgba(0,0,0,.95);
   }
@@ -50,6 +54,7 @@
   --med:#D8B357; --med-soft:#292312; --med-line:#4B4023;
   --des:#EE857A; --des-soft:#2D1A18; --des-line:#54302C;
   --na:#8E98A8;  --na-soft:#1E242E;  --na-line:#323A46;
+  --pista:#2DD4BF; --pista-soft:#0E2A2B; --pista-line:#1F5E5A;
   --shadow-sm:0 1px 2px rgba(0,0,0,.35);
   --shadow:0 1px 2px rgba(0,0,0,.35), 0 14px 34px -20px rgba(0,0,0,.95);
 }
