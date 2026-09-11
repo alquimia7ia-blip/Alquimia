@@ -2,7 +2,7 @@ import Link from "next/link";
 import { VARIABLES, faltantes } from "@/lib/supabase/configuracion";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Falta configurar · Bitácora MEGA" };
+export const metadata = { title: "Falta configurar · Brújula empresarial" };
 
 /** Dice qué variable de entorno falta y dónde se consigue su valor. */
 export default function Configuracion() {

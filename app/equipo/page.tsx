@@ -4,7 +4,7 @@ import { clienteServidor } from "@/lib/supabase/servidor";
 import { Invitar } from "./Invitar";
 import { Solicitud } from "./Solicitud";
 
-export const metadata = { title: "Equipo · Bitácora MEGA" };
+export const metadata = { title: "Equipo · Brújula empresarial" };
 
 /**
  * Quién puede trabajar en la bitácora de la empresa.

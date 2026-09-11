@@ -7,7 +7,7 @@ import { Tablero } from "@/components/informe/Tablero";
 import { lecturas } from "@/lib/informe/lecturas";
 import type { DatosInforme } from "@/lib/informe/cuerpo";
 
-export const metadata = { title: "Conclusiones · Bitácora MEGA" };
+export const metadata = { title: "Conclusiones · Brújula empresarial" };
 
 /**
  * Conclusiones de la bitácora real de la empresa.

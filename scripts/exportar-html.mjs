@@ -15,7 +15,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const salida = resolve(raiz, "docs/bitacora-mega-modulo-1.html");
+const salida = resolve(raiz, "docs/brujula-empresarial-borrador.html");
 
 const comun = {
   bundle: true, write: false, minify: true, format: "iife",
@@ -36,7 +36,11 @@ const js = await uno("scripts/html/entrada.tsx");
 const css = ["app/tokens.css", "app/globals.css"]
   .map((f) => readFileSync(resolve(raiz, f), "utf8")).join("\n");
 
-const FUENTES = "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap";
+const FUENTES = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap";
+
+// El favicon va incrustado: el archivo tiene que verse igual desde una USB.
+const ICONO = "data:image/svg+xml;base64," +
+  readFileSync(resolve(raiz, "app/icon.svg")).toString("base64");
 
 // Las fuentes se piden a Google, pero cada familia declara alternativas del
 // sistema en tokens.css: sin internet el archivo se ve distinto, no roto.
@@ -45,8 +49,9 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bitácora MEGA · Módulo 1 · Entorno empresarial</title>
+<title>Brújula empresarial · Módulo 1 · Entorno empresarial</title>
 <meta name="description" content="Los once talleres del Módulo 1 del programa Empresas con Propósito MEGA, guiados y con avance en vivo.">
+<link rel="icon" href="${ICONO}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FUENTES}">

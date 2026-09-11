@@ -75,7 +75,7 @@ export function informeHtml(d: DatosInforme): string {
 </head>
 <body>
 ${cuerpoInforme(d)}
-<p class="pie">Diligenciado en la Bitácora MEGA · ${fecha}</p>
+<p class="pie">Diligenciado en la Brújula empresarial · ${fecha}</p>
 </body>
 </html>`;
 }

@@ -102,9 +102,9 @@ export function VistaModulo({
     <div className="app">
       <aside className="rail">
         <div className="brand">
-          <Matraz />
+          <Brujula />
           <div>
-            <div className="brand-t">Bitácora MEGA</div>
+            <div className="brand-t">Brújula empresarial</div>
             <div className="brand-s">{moduloTitulo}</div>
           </div>
         </div>
@@ -339,16 +339,15 @@ function Resumen({
   );
 }
 
-function Matraz() {
+function Brujula() {
   return (
-    <svg className="flask" viewBox="0 0 34 38" aria-hidden="true">
-      <path d="M13 3h8v11.5l7.6 15.1A4 4 0 0 1 25 36H9a4 4 0 0 1-3.6-6.4L13 14.5V3Z"
-            fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M9.4 23.5h15.2l4 8.1A4 4 0 0 1 25 36H9a4 4 0 0 1-3.6-6.4l4-6.1Z"
-            fill="var(--accent)" opacity=".85" />
-      <circle cx="14" cy="29" r="1.7" fill="var(--gold)" />
-      <circle cx="20.5" cy="31.5" r="1.2" fill="var(--gold)" />
-      <path d="M11 3h12" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    <svg className="marca" viewBox="0 0 36 36" aria-hidden="true">
+      <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="2"
+              opacity=".35" />
+      <path d="M18 1.5v3M18 31.5v3M1.5 18h3M31.5 18h3" stroke="currentColor" strokeWidth="2"
+            strokeLinecap="round" opacity=".35" />
+      <path d="M18 6.5 25 18l-7 11.5L11 18Z" fill="var(--accent)" opacity=".22" />
+      <path d="M18 6.5 25 18H11Z" fill="var(--accent)" />
     </svg>
   );
 }

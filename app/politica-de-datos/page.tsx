@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Política de tratamiento de datos · Bitácora MEGA" };
+export const metadata = { title: "Política de tratamiento de datos · Brújula empresarial" };
 
 /**
  * Plantilla de la política, con los datos del responsable por completar.
