@@ -9,6 +9,7 @@
  *   pnpm seed:sql > siembra.sql
  */
 import { MODULO_1, MODULOS_PENDIENTES } from "../supabase/seed/modulo-1";
+import { MODULO_2 } from "../supabase/seed/modulo-2";
 import { validarDefinicion } from "../lib/talleres/esquema";
 import { camposEsperados } from "../lib/talleres/progreso";
 import { bloques } from "../lib/talleres/rutas";
@@ -44,6 +45,7 @@ out.push(`insert into programas (organizacion_id, nombre, slug)
 
 const modulos = [
   { ...MODULO_1, publicado: true },
+  { ...MODULO_2, publicado: true },
   ...MODULOS_PENDIENTES.map((m) => ({ ...m, publicado: false, talleres: [] as TallerSemilla[] })),
 ];
 

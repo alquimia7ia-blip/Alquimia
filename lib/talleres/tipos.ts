@@ -78,6 +78,8 @@ export type BloqueFichasEscala = Base & {
   items: { id: string; titulo: string; descripcion?: string }[];
   /** Permite que la empresa agregue ítems propios de su sector. */
   permiteAgregar?: boolean;
+  /** Texto del botón de agregar. Por defecto, genérico. */
+  textoAgregar?: string;
   campoNota?: { etiqueta: string; requerido?: boolean };
 };
 
@@ -134,6 +136,8 @@ export type BloqueChipsAgregables = Base & {
   tipo: "chips_agregables";
   etiqueta?: string;
   descripcion?: string;
+  /** Texto del botón. Sin esto decía «Agregar proceso» en todo el programa. */
+  textoAgregar?: string;
   /** Ejemplos que se insertan de un clic. No son respuestas prellenadas. */
   sugerencias?: string[];
   /** Cuántas etiquetas orientar al usuario a registrar. No afecta el progreso. */

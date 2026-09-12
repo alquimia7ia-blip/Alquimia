@@ -169,7 +169,7 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
           {b.permiteAgregar && !bit.soloLectura && (
             <div>
               <button className="padd" type="button" onClick={() => bit.agregarFila(b.id)}>
-                + Agregar una tendencia de mi sector
+                {b.textoAgregar ?? "+ Agregar uno propio"}
               </button>
             </div>
           )}
@@ -260,7 +260,15 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
         <div className="stack">
           <Ayuda texto={b.ayuda} />
           <div className="tw">
-            <table>
+            {/* El ancho mínimo se calcula: con seis columnas la tabla se
+                apretaba hasta partir cada palabra en su propia línea. Ahora
+                pide el espacio que necesita y el contenedor se desplaza. */}
+            <table style={{
+              minWidth: Math.max(
+                640,
+                b.columnas.reduce((n, c) => n + (c.numerica ? 132 : 224), 0) + 48,
+              ),
+            }}>
               <thead>
                 <tr>
                   {b.columnas.map((c) => <th key={c.id}>{titulo(c)}</th>)}
@@ -345,7 +353,7 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
                 onClick={() => {
                   const t = window.prompt("Nombre del proceso");
                   if (t) agregar(t);
-                }}>+ Agregar proceso</button>
+                }}>{b.textoAgregar ?? "+ Agregar"}</button>
             )}
           </div>
           {b.sugerencias && !bit.soloLectura && (

@@ -14,13 +14,15 @@ type Props = {
   empresa: string;
   moduloTitulo: string;
   moduloSlug: string;
+  modulos: { numero: number; slug: string; titulo: string }[];
   talleres: TallerVista[];
   respuestas: Record<string, ValorCampo>;
   filas: Fila[];
 };
 
 export function Bitacora({
-  bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, talleres, respuestas, filas,
+  bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, modulos,
+  talleres, respuestas, filas,
 }: Props) {
   const supabase = useMemo(() => clienteNavegador(), []);
 
@@ -43,6 +45,8 @@ export function Bitacora({
       <VistaModulo
         talleres={talleres}
         moduloTitulo={moduloTitulo}
+        modulos={modulos}
+        moduloSlug={moduloSlug}
         empresa={empresa}
         estado={bitacora.estado}
         acciones={

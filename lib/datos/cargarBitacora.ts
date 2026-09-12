@@ -17,11 +17,16 @@ import type { Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
  * mejor así: el filtro vive en la base y no en cada consulta.
  */
 
+export type ModuloAbierto = { numero: number; slug: string; titulo: string };
+
 export type BitacoraCargada = {
   bitacoraId: string;
   empresa: string;
   moduloTitulo: string;
   moduloSlug: string;
+  /** Los módulos que esta persona puede abrir. Sale de sus bitácoras, no de
+   *  `modulos`, para que la lista y el permiso no puedan discrepar. */
+  modulos: ModuloAbierto[];
   talleres: TallerVista[];
   respuestas: Map<string, ValorCampo>;
   filas: Fila[];
@@ -53,13 +58,15 @@ export async function cargarBitacora(moduloSlug: string): Promise<Carga> {
     .maybeSingle();
   if (!bitacora) return { estado: "sin-bitacora" };
 
-  const [{ data: talleres }, { data: respuestas }, { data: filas }] = await Promise.all([
+  const [{ data: talleres }, { data: respuestas }, { data: filas }, { data: abiertos }] =
+    await Promise.all([
     supabase.from("talleres")
       .select("id, numero, slug, corto, titulo, lead, definicion, campos_minimos")
       .eq("modulo_id", modulo.id).order("numero"),
     supabase.from("respuestas").select("campo_id, valor").eq("bitacora_id", bitacora.id),
     supabase.from("filas").select("id, bloque_id, taller_id, orden")
       .eq("bitacora_id", bitacora.id).is("eliminada_at", null),
+    supabase.from("bitacoras").select("modulos(numero, slug, titulo, publicado)"),
   ]);
 
   const empresa = bitacora.empresas as unknown as { nombre: string } | null;
@@ -72,6 +79,11 @@ export async function cargarBitacora(moduloSlug: string): Promise<Carga> {
       empresa: empresa?.nombre ?? "",
       moduloTitulo: `Módulo ${modulo.numero} · ${modulo.pregunta}`,
       moduloSlug: modulo.slug,
+      modulos: (abiertos ?? [])
+        .map((b) => b.modulos as unknown as ModuloAbierto & { publicado: boolean })
+        .filter((m) => m?.publicado)
+        .map(({ numero, slug, titulo }) => ({ numero, slug, titulo }))
+        .sort((a, b) => a.numero - b.numero),
       talleres: (talleres ?? []).map((t): TallerVista => ({
         id: t.id, numero: t.numero, slug: t.slug, corto: t.corto,
         titulo: t.titulo, lead: t.lead ?? "",

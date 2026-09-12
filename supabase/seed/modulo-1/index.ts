@@ -45,6 +45,7 @@ const t1: TallerSemilla = {
             id: "tend",
             escala: "impacto_tendencia",
             permiteAgregar: true,
+            textoAgregar: "+ Agregar una tendencia de mi sector",
             campoNota: {
               etiqueta: "¿Cómo se traduce esta tendencia en tu operación?",
               requerido: false,
@@ -285,6 +286,7 @@ const t7: TallerSemilla = {
             tipo: "chips_agregables",
             id: "productivos",
             etiqueta: "Procesos productivos",
+            textoAgregar: "+ Agregar proceso",
             descripcion: "La cadena que va del cliente al producto entregado.",
             sugerencias: PROC_PROD,
             esperadas: 3,
@@ -293,6 +295,7 @@ const t7: TallerSemilla = {
             tipo: "chips_agregables",
             id: "soporte",
             etiqueta: "Procesos de soporte",
+            textoAgregar: "+ Agregar proceso",
             descripcion: "Lo que sostiene la operación por detrás.",
             sugerencias: PROC_SOP,
             esperadas: 3,
@@ -472,12 +475,17 @@ export const MODULO_1 = {
   talleres: [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11] as TallerSemilla[],
 };
 
-/** Los otros tres bloques del programa. El contenido llega después. */
+/**
+ * Los bloques del programa cuyo contenido todavía no llega.
+ *
+ * El Módulo 2 salió de aquí cuando llegó su presentación: ahora es
+ * `supabase/seed/modulo-2`, «Dirección estratégica». Las declaraciones de
+ * propósito y propuesta de valor —lo que era «¿Para qué?»— quedaron dentro
+ * de ese módulo, así que los dos pendientes son estos.
+ */
 export const MODULOS_PENDIENTES = [
-  { numero: 2, slug: "con-quien", pregunta: "¿Con quién?", titulo: "Personas, liderazgo y cultura",
+  { numero: 3, slug: "con-quien", pregunta: "¿Con quién?", titulo: "Personas, liderazgo y cultura",
     lead: "Con qué personas nos acompañaremos para desarrollar las acciones." },
-  { numero: 3, slug: "para-que", pregunta: "¿Para qué?", titulo: "Propósito, valores y declaraciones",
-    lead: "Cuáles son nuestras declaraciones ante nuestros públicos y ante la sociedad." },
   { numero: 4, slug: "como", pregunta: "¿Cómo?", titulo: "Mapa estratégico y proyectos",
     lead: "Cuáles son las acciones que nos llevarán a cumplir nuestras declaraciones." },
 ];

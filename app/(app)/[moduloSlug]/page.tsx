@@ -23,6 +23,7 @@ export default async function PaginaModulo({
       empresa={datos.empresa}
       moduloTitulo={datos.moduloTitulo}
       moduloSlug={datos.moduloSlug}
+      modulos={datos.modulos}
       talleres={datos.talleres}
       respuestas={Object.fromEntries(datos.respuestas)}
       filas={datos.filas}

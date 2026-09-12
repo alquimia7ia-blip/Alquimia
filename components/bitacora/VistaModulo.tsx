@@ -27,6 +27,12 @@ export type TallerVista = {
 type Props = {
   talleres: TallerVista[];
   moduloTitulo: string;
+  /** Módulos entre los que se puede saltar. */
+  modulos?: { numero: number; slug: string; titulo: string }[];
+  moduloSlug?: string;
+  /** Sin esto el salto navega a /<slug>. El archivo autónomo, que no tiene
+   *  rutas, lo usa para cambiar de módulo en memoria. */
+  onModulo?: (slug: string) => void;
   empresa: string;
   onEmpresa?: (nombre: string) => void;
   /** Texto del indicador de guardado: "Guardado", "Guardando…", "Sin conexión". */
@@ -37,7 +43,7 @@ type Props = {
 };
 
 export function VistaModulo({
-  talleres, moduloTitulo, empresa, onEmpresa, estado, acciones, pieRail,
+  talleres, moduloTitulo, modulos, moduloSlug, onModulo, empresa, onEmpresa, estado, acciones, pieRail,
 }: Props) {
   const bit = useBitacora();
   const [actual, setActual] = useState(0);
@@ -108,6 +114,8 @@ export function VistaModulo({
             <div className="brand-s">{moduloTitulo}</div>
           </div>
         </div>
+
+        <SelectorModulos modulos={modulos} actual={moduloSlug} onModulo={onModulo} />
 
         <MedidorElixir resueltos={total.resueltos} total={total.total} />
 
@@ -350,6 +358,49 @@ function Resumen({
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Salto entre módulos.
+ *
+ * Hasta que se publicó el Módulo 2 no existía: con un solo módulo el riel
+ * bastaba. Se dibuja solo cuando hay más de uno, así que el archivo autónomo
+ * —que lleva un módulo y ningún enlace— no cambia.
+ */
+function SelectorModulos({
+  modulos, actual, onModulo,
+}: {
+  modulos?: { numero: number; slug: string; titulo: string }[];
+  actual?: string;
+  onModulo?: (slug: string) => void;
+}) {
+  if (!modulos || modulos.length < 2) return null;
+  return (
+    <>
+      <div className="ruta-h">Programa</div>
+      <nav className="modulos" aria-label="Módulos del programa">
+        {modulos.map((m) => {
+          const contenido = (
+            <>
+              <span className="mod-n">{m.numero}</span>
+              <span className="mod-t">{m.titulo}</span>
+            </>
+          );
+          const marcado = m.slug === actual ? "true" : undefined;
+          return onModulo ? (
+            <button key={m.slug} className="mod" type="button" aria-current={marcado}
+                    onClick={() => onModulo(m.slug)}>
+              {contenido}
+            </button>
+          ) : (
+            <a key={m.slug} className="mod" href={`/${m.slug}`} aria-current={marcado}>
+              {contenido}
+            </a>
+          );
+        })}
+      </nav>
+    </>
   );
 }
 

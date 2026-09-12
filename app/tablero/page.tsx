@@ -16,9 +16,12 @@ import { EJEMPLO } from "./ejemplo";
  * Lee la misma bitácora local que /estilos, así que se responde el taller
  * allá y se ven aquí las conclusiones. Sin base de datos: sirve para
  * enseñar el tablero antes de que exista una cohorte real.
+ *
+ * Las lecturas de este tablero son las del Módulo 1, así que lee su clave.
+ * Desde que /estilos lleva dos módulos, cada uno guarda en la suya.
  */
 
-const CLAVE = "bitacora-mega-estilos";
+const CLAVE = "bitacora-mega-estilos-donde";
 
 function leer(): { respuestas: Map<string, ValorCampo>; filas: Fila[] } {
   try {
