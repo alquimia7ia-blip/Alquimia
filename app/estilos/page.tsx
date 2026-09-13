@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MODULO_1 } from "@/supabase/seed/modulo-1";
 import { MODULO_2 } from "@/supabase/seed/modulo-2";
+import { MODULO_3 } from "@/supabase/seed/modulo-3";
 import { ProveedorBitacora } from "@/components/campos/contexto";
 import { useBitacoraLocal } from "@/components/bitacora/useBitacoraLocal";
 import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo";
@@ -15,9 +16,9 @@ import type { TallerSemilla } from "@/lib/talleres/tipos";
  * datos ni sesión. Es también el archivo autónomo que se manda por correo o
  * se abre en un salón sin internet.
  *
- * Desde que existe el Módulo 2 lleva los dos, con el mismo selector que la
- * versión con cuentas — pero cambiando de módulo en memoria, porque aquí no
- * hay rutas. Cada módulo guarda en su propia clave del navegador.
+ * Lleva todos los módulos publicados, con el mismo selector que la versión
+ * con cuentas — pero cambiando de módulo en memoria, porque aquí no hay
+ * rutas. Cada módulo guarda en su propia clave del navegador.
  */
 
 type Modulo = {
@@ -27,7 +28,7 @@ type Modulo = {
   talleres: TallerSemilla[];
 };
 
-const MODULOS: Modulo[] = [MODULO_1, MODULO_2];
+const MODULOS: Modulo[] = [MODULO_1, MODULO_2, MODULO_3];
 const LISTA = MODULOS.map((m) => ({ numero: m.numero, slug: m.slug, titulo: m.titulo }));
 
 export default function Estilos() {

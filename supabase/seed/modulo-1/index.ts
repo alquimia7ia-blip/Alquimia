@@ -469,23 +469,20 @@ const t11: TallerSemilla = {
 export const MODULO_1 = {
   numero: 1,
   slug: "donde",
-  pregunta: "¿Dónde?",
+  pregunta: "¿Dónde estamos?",
   titulo: "Análisis interno y externo",
   lead: "¿Quiénes somos y en qué negocio estamos?",
   talleres: [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11] as TallerSemilla[],
 };
 
 /**
- * Los bloques del programa cuyo contenido todavía no llega.
+ * Lo que falta del programa.
  *
- * El Módulo 2 salió de aquí cuando llegó su presentación: ahora es
- * `supabase/seed/modulo-2`, «Dirección estratégica». Las declaraciones de
- * propósito y propuesta de valor —lo que era «¿Para qué?»— quedaron dentro
- * de ese módulo, así que los dos pendientes son estos.
+ * Los nombres y las preguntas son los del mapa de contenidos que traen las
+ * presentaciones: 1 ¿Dónde estamos? · 2 ¿A dónde queremos ir? ·
+ * 3 ¿Con quién lo haremos? · 4 ¿Cómo lo haremos?
  */
 export const MODULOS_PENDIENTES = [
-  { numero: 3, slug: "con-quien", pregunta: "¿Con quién?", titulo: "Personas, liderazgo y cultura",
-    lead: "Con qué personas nos acompañaremos para desarrollar las acciones." },
-  { numero: 4, slug: "como", pregunta: "¿Cómo?", titulo: "Mapa estratégico y proyectos",
+  { numero: 4, slug: "plan-de-accion", pregunta: "¿Cómo lo haremos?", titulo: "Plan de acción",
     lead: "Cuáles son las acciones que nos llevarán a cumplir nuestras declaraciones." },
 ];

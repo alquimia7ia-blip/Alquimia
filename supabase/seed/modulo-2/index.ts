@@ -322,7 +322,7 @@ const t4: TallerSemilla = {
 export const MODULO_2 = {
   numero: 2,
   slug: "direccion-estrategica",
-  pregunta: "¿Dónde?",
+  pregunta: "¿A dónde queremos ir?",
   titulo: "Dirección estratégica",
   lead: "¿Quiénes somos, con qué contamos y qué declaramos ante el mercado?",
   talleres: [t1, t2, t3, t4] as TallerSemilla[],
