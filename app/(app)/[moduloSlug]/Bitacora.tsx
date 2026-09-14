@@ -6,6 +6,7 @@ import { useBitacoraRemota } from "@/lib/datos/useBitacoraRemota";
 import { ProveedorBitacora } from "@/components/campos/contexto";
 import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo";
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
+import { CierreModulo, type Valoracion } from "@/components/cierre/CierreModulo";
 import { bloques } from "@/lib/talleres/rutas";
 import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
 
@@ -18,13 +19,15 @@ type Props = {
   modulos: { numero: number; slug: string; titulo: string }[];
   talleres: TallerVista[];
   dudas: Duda[];
+  valoracion?: Valoracion;
+  avance: { resueltos: number; total: number; fraccion: number };
   respuestas: Record<string, ValorCampo>;
   filas: Fila[];
 };
 
 export function Bitacora({
   bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, modulos,
-  talleres, respuestas, filas, dudas,
+  talleres, respuestas, filas, dudas, valoracion, avance,
 }: Props) {
   const supabase = useMemo(() => clienteNavegador(), []);
 
@@ -49,6 +52,15 @@ export function Bitacora({
         moduloTitulo={moduloTitulo}
         modulos={modulos}
         moduloSlug={moduloSlug}
+        pieResumen={
+          <CierreModulo
+            bitacoraId={bitacoraId}
+            perfilId={perfilId}
+            modulo={moduloTitulo}
+            fraccion={avance.fraccion}
+            inicial={valoracion}
+          />
+        }
         pieTaller={(tallerId) => (
           <Dudas
             key={tallerId}
