@@ -5,6 +5,7 @@ import { clienteNavegador } from "@/lib/supabase/cliente";
 import { useBitacoraRemota } from "@/lib/datos/useBitacoraRemota";
 import { ProveedorBitacora } from "@/components/campos/contexto";
 import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo";
+import { Dudas, type Duda } from "@/components/dudas/Dudas";
 import { bloques } from "@/lib/talleres/rutas";
 import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
 
@@ -16,13 +17,14 @@ type Props = {
   moduloSlug: string;
   modulos: { numero: number; slug: string; titulo: string }[];
   talleres: TallerVista[];
+  dudas: Duda[];
   respuestas: Record<string, ValorCampo>;
   filas: Fila[];
 };
 
 export function Bitacora({
   bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, modulos,
-  talleres, respuestas, filas,
+  talleres, respuestas, filas, dudas,
 }: Props) {
   const supabase = useMemo(() => clienteNavegador(), []);
 
@@ -47,6 +49,16 @@ export function Bitacora({
         moduloTitulo={moduloTitulo}
         modulos={modulos}
         moduloSlug={moduloSlug}
+        pieTaller={(tallerId) => (
+          <Dudas
+            key={tallerId}
+            bitacoraId={bitacoraId}
+            perfilId={perfilId}
+            tallerId={tallerId}
+            iniciales={dudas}
+            compacto
+          />
+        )}
         empresa={empresa}
         estado={bitacora.estado}
         acciones={

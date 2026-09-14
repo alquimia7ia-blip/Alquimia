@@ -33,6 +33,8 @@ type Props = {
   /** Sin esto el salto navega a /<slug>. El archivo autónomo, que no tiene
    *  rutas, lo usa para cambiar de módulo en memoria. */
   onModulo?: (slug: string) => void;
+  /** Al pie del taller abierto. Ahí va el registro de dudas. */
+  pieTaller?: (tallerId: string) => React.ReactNode;
   empresa: string;
   onEmpresa?: (nombre: string) => void;
   /** Texto del indicador de guardado: "Guardado", "Guardando…", "Sin conexión". */
@@ -43,7 +45,7 @@ type Props = {
 };
 
 export function VistaModulo({
-  talleres, moduloTitulo, modulos, moduloSlug, onModulo, empresa, onEmpresa, estado, acciones, pieRail,
+  talleres, moduloTitulo, modulos, moduloSlug, onModulo, pieTaller, empresa, onEmpresa, estado, acciones, pieRail,
 }: Props) {
   const bit = useBitacora();
   const [actual, setActual] = useState(0);
@@ -192,6 +194,8 @@ export function VistaModulo({
               ? <Resumen talleres={talleres} avances={avances} total={total} />
               : <CuerpoTaller taller={taller!} respuestas={respuestas} talleres={talleres} />}
           </div>
+
+          {!esResumen && pieTaller?.(taller!.id)}
 
           <div className="nav">
             <button className="btn" type="button" onClick={() => ir(actual - 1)}

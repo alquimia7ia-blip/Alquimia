@@ -5,6 +5,7 @@ import { cargarBitacora, avanceDe } from "@/lib/datos/cargarBitacora";
 import { SinBitacora } from "@/components/bitacora/SinBitacora";
 import { Tablero } from "@/components/informe/Tablero";
 import { Observaciones, type Observacion } from "@/components/informe/Observaciones";
+import { Dudas, type Duda } from "@/components/dudas/Dudas";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { lecturas } from "@/lib/informe/lecturas";
 import type { DatosInforme } from "@/lib/informe/cuerpo";
@@ -39,6 +40,21 @@ export default async function PaginaTableroModulo({
     .select("id, cuerpo, origen, creado_at, autor_id, perfiles(nombre)")
     .eq("bitacora_id", datos.bitacoraId)
     .order("creado_at");
+
+  const { data: crudas } = await supabase
+    .from("dudas")
+    .select("id, cuerpo, taller_id, estado, creado_at, autor_id")
+    .eq("bitacora_id", datos.bitacoraId)
+    .order("creado_at");
+
+  const dudas: Duda[] = (crudas ?? []).map((d) => ({
+    id: d.id, cuerpo: d.cuerpo, tallerId: d.taller_id,
+    estado: d.estado === "resuelta" ? "resuelta" : "abierta",
+    fecha: d.creado_at, mia: d.autor_id === perfilId,
+  }));
+
+  const nombreTaller = (id: string | null) =>
+    datos.talleres.find((t) => t.id === id)?.corto ?? "Del módulo";
 
   const observaciones: Observacion[] = (notas ?? []).map((n) => ({
     id: n.id,
@@ -79,11 +95,19 @@ export default async function PaginaTableroModulo({
           avance={avance}
           claveFoco={`brujula-foco-${datos.bitacoraId}`}
           observaciones={
-            <Observaciones
-              bitacoraId={datos.bitacoraId}
-              perfilId={perfilId}
-              iniciales={observaciones}
-            />
+            <>
+              <Dudas
+                bitacoraId={datos.bitacoraId}
+                perfilId={perfilId}
+                iniciales={dudas}
+                nombreTaller={nombreTaller}
+              />
+              <Observaciones
+                bitacoraId={datos.bitacoraId}
+                perfilId={perfilId}
+                iniciales={observaciones}
+              />
+            </>
           }
         />
       </div>
