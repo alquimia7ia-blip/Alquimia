@@ -190,17 +190,32 @@ function anchos(n: number): string[] {
   return [`${primera}%`, ...Array.from({ length: n - 1 }, () => `${resto}%`)];
 }
 
+/**
+ * Una tabla del informe.
+ *
+ * Nada lleva `wrap={false}`, y esa es la corrección: un bloque marcado como
+ * indivisible que no cabe en una página entera no se mueve a la siguiente
+ * —no hay siguiente donde quepa—, así que el motor lo dibuja igual y el
+ * texto termina encima del texto. Pasaba con «Cinco fuerzas»: cinco filas
+ * con sustentos largos miden más de una página.
+ *
+ * `minPresenceAhead` hace el trabajo que se le pedía a `wrap={false}`: una
+ * fila no empieza a tres renglones del pie, se pasa entera a la página
+ * siguiente. Y el encabezado va `fixed`, así que se repite arriba de cada
+ * página que la tabla ocupe.
+ */
 function Tabla({ encabezados, filas }: { encabezados: string[]; filas: string[][] }) {
   const w = anchos(encabezados.length);
   return (
-    <View style={e.tabla} wrap={filas.length > 8}>
-      <View style={e.th} fixed={filas.length > 8}>
+    <View style={e.tabla}>
+      <View style={e.th} fixed>
         {encabezados.map((h, i) => (
           <Text key={i} style={[e.thCelda, { width: w[i] }]}>{h.toUpperCase()}</Text>
         ))}
       </View>
       {filas.map((f, i) => (
-        <View key={i} style={i === filas.length - 1 ? e.trUltima : e.tr} wrap={false}>
+        <View key={i} style={i === filas.length - 1 ? e.trUltima : e.tr}
+              minPresenceAhead={46}>
           {f.map((c, j) => (
             <Text key={j} style={[
               e.tdCelda,
@@ -226,7 +241,7 @@ function Bloque({ n }: { n: Nodo }) {
       return (
         <View style={{ marginBottom: 8 }}>
           {n.items.map((it, i) => (
-            <View key={i} style={e.item} wrap={false}>
+            <View key={i} style={e.item} minPresenceAhead={24}>
               <Text style={e.vineta}>•</Text>
               <Text style={{ flexGrow: 1 }}>{it}</Text>
             </View>
@@ -239,7 +254,8 @@ function Bloque({ n }: { n: Nodo }) {
       return (
         <View style={e.rejilla}>
           {n.cuadros.map((q, i) => (
-            <View key={i} style={[e.cuadro, { borderLeftColor: TONO[q.color] }]} wrap={false}>
+            <View key={i} style={[e.cuadro, { borderLeftColor: TONO[q.color] }]}
+                  minPresenceAhead={60}>
               <Text style={[e.cuadroTitulo, { color: TONO[q.color] }]}>
                 {q.titulo.toUpperCase()}
               </Text>
@@ -262,7 +278,7 @@ function Taller({ t }: { t: TallerInforme }) {
   return (
     <View>
       {/* La cabecera no se separa de lo que titula. */}
-      <View wrap={false}>
+      <View wrap={false} minPresenceAhead={120}>
         <Text style={e.tallerNum}>TALLER {t.numero}</Text>
         <Text style={e.tallerCorto}>{t.corto}</Text>
         <Text style={e.tallerPregunta}>{t.titulo}</Text>
