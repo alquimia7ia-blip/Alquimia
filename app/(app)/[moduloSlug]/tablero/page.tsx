@@ -8,7 +8,7 @@ import { Observaciones, type Observacion } from "@/components/informe/Observacio
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { lecturas } from "@/lib/informe/lecturas";
-import type { DatosInforme } from "@/lib/informe/cuerpo";
+import type { DatosInforme } from "@/lib/informe/documento";
 
 export const metadata = { title: "Conclusiones · Brújula empresarial" };
 

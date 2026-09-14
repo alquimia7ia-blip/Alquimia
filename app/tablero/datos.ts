@@ -3,7 +3,7 @@
 import { MODULO_1 } from "@/supabase/seed/modulo-1";
 import { lecturas as calcular } from "@/lib/informe/lecturas";
 import { camposEsperados, progresoTaller, progresoModulo, type Avance } from "@/lib/talleres/progreso";
-import type { DatosInforme } from "@/lib/informe/cuerpo";
+import type { DatosInforme } from "@/lib/informe/documento";
 import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
 import { EJEMPLO } from "./ejemplo";
 

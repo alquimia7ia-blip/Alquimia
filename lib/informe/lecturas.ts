@@ -1,6 +1,6 @@
 import { campo } from "@/lib/talleres/rutas";
 import { opcion } from "@/lib/talleres/escalas";
-import type { DatosInforme } from "./cuerpo";
+import type { DatosInforme } from "./documento";
 import type { ColorEscala, Sugerencia } from "@/lib/talleres/tipos";
 
 /**

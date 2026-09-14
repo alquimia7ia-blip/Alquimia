@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { clienteServidor } from "@/lib/supabase/servidor";
-import { informeHtml, nombreArchivo } from "@/lib/informe/html";
+import { documentoInforme } from "@/lib/informe/documento";
+import { informePdf, nombreArchivo } from "@/lib/informe/pdf";
 import { camposEsperados, progresoTaller, progresoModulo } from "@/lib/talleres/progreso";
 import type { Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
 
+// El renderizador de PDF necesita Node, no el entorno de borde.
+export const runtime = "nodejs";
+
 /**
- * Informe descargable de una bitácora.
+ * Informe descargable de una bitácora, en PDF.
  *
  * No filtra por empresa a mano: RLS decide qué bitácoras alcanza quien pide.
  * Si esta persona no debe verla, la consulta vuelve vacía y responde 404,
@@ -66,14 +70,14 @@ export async function GET(
     actor_id: user.id, accion: "exportar_informe", recurso: `bitacora:${bitacoraId}`,
   });
 
-  const html = informeHtml({
+  const pdf = await informePdf(documentoInforme({
     empresa, modulo: nombreModulo, talleres: lista,
     respuestas: mapaRespuestas, filas: listaFilas, avance,
-  });
+  }));
 
-  return new NextResponse(html, {
+  return new NextResponse(new Uint8Array(pdf), {
     headers: {
-      "Content-Type": "text/html; charset=utf-8",
+      "Content-Type": "application/pdf",
       "Content-Disposition":
         `attachment; filename="${nombreArchivo(`Modulo-${mod.numero}`, empresa)}"`,
       "Cache-Control": "no-store",
