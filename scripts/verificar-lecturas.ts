@@ -9,6 +9,7 @@
  */
 import { EJEMPLO } from "../app/tablero/ejemplo";
 import { lecturas, numero } from "../lib/informe/lecturas";
+import { tresPreguntas, focos, conteo } from "../lib/informe/preguntas";
 import { MODULO_1 } from "../supabase/seed/modulo-1";
 import { camposEsperados, progresoTaller, progresoModulo } from "../lib/talleres/progreso";
 import type { DatosInforme } from "../lib/informe/cuerpo";
@@ -76,8 +77,9 @@ afirmar(!!tendencia?.titular.includes("no se mueven en la misma dirección"),
   "detecta la divergencia: ventas suben y utilidad baja");
 afirmar(!!tendencia?.detalle?.includes("Margen de utilidad total"),
   "y nombra el margen como la caída más fuerte");
-afirmar((tendencia?.cifras?.length ?? 0) === 4,
-  `compara los cuatro indicadores (fueron ${tendencia?.cifras?.length ?? 0})`);
+const serieTendencia = tendencia?.grafica?.tipo === "cambios" ? tendencia.grafica.series : [];
+afirmar(serieTendencia.length === 4,
+  `compara los cuatro indicadores (fueron ${serieTendencia.length})`);
 
 const coherencia = buscar("coherencia-");
 afirmar(!!coherencia?.titular.includes("está vacío"),
@@ -86,6 +88,35 @@ afirmar(!!coherencia?.titular.includes("está vacío"),
 const cobertura = buscar("cobertura");
 afirmar(!!cobertura?.titular.includes("soporte"),
   "detecta que faltan procesos de soporte por nombrar");
+
+// ---------------------------------------------------------------------
+// Preguntas y foco
+// ---------------------------------------------------------------------
+console.log("\nPreguntas y foco");
+
+const preguntas = tresPreguntas(l);
+afirmar(preguntas.length === 3, `escoge tres preguntas (fueron ${preguntas.length})`);
+afirmar(preguntas.every((p) => p.pregunta.includes("?")),
+  "las tres son preguntas de verdad");
+afirmar(new Set(preguntas.map((p) => p.id)).size === 3,
+  "y ninguna se repite");
+
+// La bitácora de ejemplo tiene tres lecturas en rojo: son las que deben
+// encabezar. Si esto se rompe, el tablero estaría preguntando por lo que
+// va bien mientras calla lo que está mal.
+afirmar(preguntas.every((p) => p.lectura.senal === "alerta"),
+  "las preguntas salen de las lecturas más severas primero");
+
+const acciones = focos(l);
+afirmar(acciones.length > 0, `hay foco para las próximas semanas (${acciones.length} acciones)`);
+afirmar(acciones.every((f) => f.senal !== "favorable"),
+  "ninguna acción sale de algo que va bien");
+afirmar(acciones[0]!.senal === "alerta",
+  "lo más urgente encabeza la lista");
+
+const c = conteo(l);
+afirmar(c.alerta + c.atencion + c.favorable + c.neutro === l.length,
+  "el semáforo cuadra con el total de lecturas");
 
 console.log(fallos === 0 ? "\n✓ tablero verificado\n" : `\n✗ ${fallos} fallas\n`);
 process.exit(fallos === 0 ? 0 : 1);

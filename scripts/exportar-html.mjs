@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const salida = resolve(raiz, "docs/brujula-empresarial-borrador.html");
+const salidaTablero = resolve(raiz, "docs/brujula-conclusiones-borrador.html");
 
 const comun = {
   bundle: true, write: false, minify: true, format: "iife",
@@ -33,6 +34,7 @@ const uno = async (entrada) => (await build({
 // una copia: un archivo con dos reglas de tema distintas es un archivo roto.
 const preTema = await uno("scripts/html/pretema.ts");
 const js = await uno("scripts/html/entrada.tsx");
+const jsTablero = await uno("scripts/html/conclusiones.tsx");
 const css = ["app/tokens.css", "app/globals.css"]
   .map((f) => readFileSync(resolve(raiz, f), "utf8")).join("\n");
 
@@ -44,13 +46,13 @@ const ICONO = "data:image/svg+xml;base64," +
 
 // Las fuentes se piden a Google, pero cada familia declara alternativas del
 // sistema en tokens.css: sin internet el archivo se ve distinto, no roto.
-const html = `<!doctype html>
+const pagina = (titulo, descripcion, guion) => `<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brújula empresarial · Módulo 1 · Entorno empresarial</title>
-<meta name="description" content="Los once talleres del Módulo 1 del programa Empresas con Propósito MEGA, guiados y con avance en vivo.">
+<title>${titulo}</title>
+<meta name="description" content="${descripcion}">
 <link rel="icon" href="${ICONO}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,13 +65,27 @@ ${css}
 <body>
 <div id="raiz"></div>
 <script>
-${js}
+${guion}
 </script>
 </body>
 </html>
 `;
 
+const html = pagina(
+  "Brújula empresarial · Los talleres",
+  "Los talleres del programa Empresas con Propósito MEGA, guiados y con avance en vivo.",
+  js,
+);
+
+const htmlTablero = pagina(
+  "Brújula empresarial · Conclusiones",
+  "Las conclusiones que salen de cruzar las respuestas de la bitácora.",
+  jsTablero,
+);
+
 mkdirSync(dirname(salida), { recursive: true });
-writeFileSync(salida, html);
-const kb = (Buffer.byteLength(html) / 1024).toFixed(0);
-console.log(`✓ ${salida.replace(raiz + "/", "")} · ${kb} KB`);
+for (const [ruta, contenido] of [[salida, html], [salidaTablero, htmlTablero]]) {
+  writeFileSync(ruta, contenido);
+  const kb = (Buffer.byteLength(contenido) / 1024).toFixed(0);
+  console.log(`✓ ${ruta.replace(raiz + "/", "")} · ${kb} KB`);
+}

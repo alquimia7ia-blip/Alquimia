@@ -4,6 +4,8 @@ import { notFound, redirect } from "next/navigation";
 import { cargarBitacora, avanceDe } from "@/lib/datos/cargarBitacora";
 import { SinBitacora } from "@/components/bitacora/SinBitacora";
 import { Tablero } from "@/components/informe/Tablero";
+import { Observaciones, type Observacion } from "@/components/informe/Observaciones";
+import { clienteServidor } from "@/lib/supabase/servidor";
 import { lecturas } from "@/lib/informe/lecturas";
 import type { DatosInforme } from "@/lib/informe/cuerpo";
 
@@ -26,8 +28,28 @@ export default async function PaginaTableroModulo({
   if (carga.estado === "sin-modulo") notFound();
   if (carga.estado === "sin-bitacora") return <SinBitacora />;
 
-  const { datos } = carga;
+  const { datos, perfilId } = carga;
   const avance = avanceDe(datos);
+
+  // Las observaciones salen de `comentarios`, que RLS ya limita a esta
+  // bitácora: lo que llegue aquí es lo que esta persona puede ver.
+  const supabase = await clienteServidor();
+  const { data: notas } = await supabase
+    .from("comentarios")
+    .select("id, cuerpo, origen, creado_at, autor_id, perfiles(nombre)")
+    .eq("bitacora_id", datos.bitacoraId)
+    .order("creado_at");
+
+  const observaciones: Observacion[] = (notas ?? []).map((n) => ({
+    id: n.id,
+    cuerpo: n.cuerpo,
+    origen: n.origen === "facilitador" ? "facilitador" : "empresa",
+    autor: n.autor_id === perfilId
+      ? "Tú"
+      : (n.perfiles as unknown as { nombre: string } | null)?.nombre ?? "Tu equipo",
+    fecha: n.creado_at,
+    mia: n.autor_id === perfilId,
+  }));
 
   const paraInforme: DatosInforme = {
     empresa: datos.empresa,
@@ -55,6 +77,14 @@ export default async function PaginaTableroModulo({
           empresa={datos.empresa}
           modulo={datos.moduloTitulo}
           avance={avance}
+          claveFoco={`brujula-foco-${datos.bitacoraId}`}
+          observaciones={
+            <Observaciones
+              bitacoraId={datos.bitacoraId}
+              perfilId={perfilId}
+              iniciales={observaciones}
+            />
+          }
         />
       </div>
     </div>

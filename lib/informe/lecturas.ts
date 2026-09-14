@@ -24,15 +24,37 @@ export type Senal = "favorable" | "atencion" | "alerta" | "neutro";
 export type Cifra = { n: string; k: string; color?: ColorEscala };
 export type Barra = { rotulo: string; valor: number; total: number; color?: ColorEscala };
 
+/**
+ * La forma de la evidencia, no su dibujo.
+ *
+ * El lector dice qué tipo de figura sostiene su conclusión; `Grafica.tsx`
+ * decide cómo pintarla. Así un módulo nuevo hereda las figuras sin tocar
+ * una línea de SVG.
+ */
+export type Grafica =
+  | { tipo: "balance"; a: Barra; b: Barra }
+  | { tipo: "barras"; series: Barra[]; sufijo?: string }
+  | { tipo: "cambios"; series: { rotulo: string; ini: number; fin: number; cambio: number }[] };
+
 export type Lectura = {
   id: string;
   titulo: string;
   origen: string;
   senal: Senal;
+  /** Una línea. Lo que se ve sin abrir nada. */
   titular: string;
+  /** El resto. Va detrás de un desplegable: el tablero se lee mirando. */
   detalle?: string;
   cifras?: Cifra[];
-  barras?: Barra[];
+  grafica?: Grafica;
+  /**
+   * La pregunta que esta lectura le deja al empresario. El tablero escoge
+   * las tres más severas y las pone antes que cualquier gráfica: una
+   * conclusión que no termina en pregunta no cambia ninguna conducta.
+   */
+  pregunta?: string;
+  /** Qué hacer en las próximas semanas. Una acción, no un consejo. */
+  foco?: string;
   /** Faltan respuestas para sostenerla. Se muestra, atenuada, con qué falta. */
   incompleta?: boolean;
 };
@@ -148,10 +170,17 @@ function balanceEntorno(d: DatosInforme): Lectura | null {
     detalle: m.length < 20
       ? `Calculado sobre ${m.length} calificaciones. Entre más completes, más firme la lectura.`
       : `Calculado sobre ${m.length} calificaciones.`,
-    cifras: [
-      { n: String(opo), k: "oportunidades", color: "fav" },
-      { n: String(ame), k: "amenazas", color: "des" },
-    ],
+    grafica: {
+      tipo: "balance",
+      a: { rotulo: "Oportunidades", valor: opo, total: m.length, color: "fav" },
+      b: { rotulo: "Amenazas", valor: ame, total: m.length, color: "des" },
+    },
+    pregunta: ame > opo
+      ? "De las amenazas que marcaste, ¿cuál puede quebrarte el año — y qué estás haciendo hoy contra ella?"
+      : "De las oportunidades que marcaste, ¿cuál puedes empezar a capturar este mes sin pedir plata prestada?",
+    foco: ame > opo
+      ? "Escoge la amenaza más grave y escribe qué vas a hacer contra ella en las próximas cuatro semanas."
+      : "Escoge una oportunidad y ponle fecha, responsable y primer paso.",
     incompleta: m.length < 10,
   };
 }
@@ -191,9 +220,18 @@ function frenteAdverso(d: DatosInforme): Lectura | null {
           detalle: sinTocar.length
             ? `Sin calificar todavía: ${sinTocar.join(", ")}.`
             : undefined,
-          barras: conRespuesta.map((f) => ({
-            rotulo: f.titulo, valor: f.ame, total: f.resp, color: "des" as ColorEscala,
-          })),
+          grafica: {
+            tipo: "barras",
+            sufijo: "en contra",
+            series: conRespuesta.map((f) => ({
+              rotulo: f.titulo, valor: f.ame, total: f.resp, color: "des" as ColorEscala,
+            })),
+          },
+          pregunta: peor.ame === 0
+            ? "Ningún frente te presiona todavía. ¿Es que el entorno te acompaña, o que aún no lo miraste de frente?"
+            : `¿Qué decisión tuya depende de «${peor.titulo}», y quién en tu empresa la está vigilando?`,
+          foco: peor.ame === 0 ? undefined
+            : `Pon un responsable con nombre propio a vigilar «${peor.titulo}» y a traer datos cada mes.`,
           incompleta: sinTocar.length > 0,
         };
       }
@@ -236,13 +274,25 @@ function mandaEnElMargen(d: DatosInforme): Lectura | null {
                 ? `«${primera.titulo}» es la que más pesa, y su efecto sobre tu rentabilidad es ${o.etiqueta.toLowerCase()}. Tu margen no lo define tu costo: lo define esa fuerza.`
                 : `«${primera.titulo}» es la que más pesa, con efecto ${o.etiqueta.toLowerCase()} sobre tu rentabilidad.`,
           detalle: `${calificadas} de ${b.items.length} fuerzas calificadas.`,
-          barras: puestos
-            .filter((p) => p.valor !== "")
-            .map((p) => {
-              const op = opcion(b.escala, p.valor);
-              const peso = op?.sugiere === "amenaza" ? 3 : op?.sugiere === "oportunidad" ? 1 : 2;
-              return { rotulo: p.titulo, valor: peso, total: 3, color: op?.color };
-            }),
+          grafica: {
+            tipo: "barras",
+            sufijo: "de presión",
+            series: puestos
+              .filter((p) => p.valor !== "")
+              .map((p) => {
+                const op = opcion(b.escala, p.valor);
+                const peso = op?.sugiere === "amenaza" ? 3 : op?.sugiere === "oportunidad" ? 1 : 2;
+                return { rotulo: p.titulo, valor: peso, total: 3, color: op?.color };
+              }),
+          },
+          pregunta: !primera
+            ? "¿Cuál de las cinco fuerzas manda de verdad en tu margen? Ordenarlas es la decisión."
+            : aprieta
+              ? `Si «${primera.titulo}» define tu margen, ¿qué tendrías que cambiar para dejar de depender de ella?`
+              : `«${primera.titulo}» hoy no te aprieta. ¿Qué tendría que pasar para que sí, y lo verías venir?`,
+          foco: aprieta
+            ? `Escribe tres formas concretas de reducir tu dependencia de «${primera!.titulo}».`
+            : undefined,
           incompleta: calificadas < b.items.length,
         };
       }
@@ -283,6 +333,8 @@ function tendenciaNumeros(d: DatosInforme): Lectura | null {
             senal: "neutro",
             titular: "Todavía no hay dos años con cifras para comparar.",
             detalle: "Es la única lectura del módulo que se apoya en datos duros. Vale la pena completarla aunque sea con estimaciones.",
+            pregunta: "¿Puedes decir, con cifras, si tu empresa está mejor que hace un año?",
+            foco: "Consigue las cifras de dos años de tus indicadores clave, aunque sean estimadas.",
             incompleta: true,
           };
         }
@@ -305,19 +357,30 @@ function tendenciaNumeros(d: DatosInforme): Lectura | null {
           id: `tendencia-${b.id}`,
           titulo: "Tendencia de tus números",
           origen: `${t.corto} · ${cambios.length} indicadores comparables`,
-          senal: bajan.length > suben.length ? "alerta" : divergen ? "atencion" : suben.length ? "favorable" : "neutro",
+          // Subir no es bueno por sí solo: si entre los indicadores hay
+          // costos, «todo sube» puede ser la peor noticia del módulo. Por eso
+          // aquí no hay señal favorable — solo divergencia, caída, o un hecho.
+          senal: bajan.length > suben.length ? "alerta" : divergen ? "atencion" : "neutro",
           titular: divergen
             ? `Tus números no se mueven en la misma dirección: ${suben.length} suben y ${bajan.length} bajan. Eso casi nunca es casualidad.`
             : bajan.length
               ? `${bajan.length} de ${cambios.length} indicadores vienen cayendo.`
-              : `${suben.length} de ${cambios.length} indicadores vienen subiendo.`,
+              : `Los ${suben.length} indicadores que registraste vienen subiendo.`,
           detalle: mayorCaida
             ? `La caída más fuerte es «${mayorCaida.nombre}», ${pct(mayorCaida.cambio)}.`
             : undefined,
-          cifras: cambios.slice(0, 4).map((c) => ({
-            n: pct(c.cambio), k: c.nombre,
-            color: c.cambio > 2 ? "fav" : c.cambio < -2 ? "des" : "med",
-          })),
+          grafica: {
+            tipo: "cambios",
+            series: cambios.map((c) => ({ rotulo: c.nombre, ini: c.ini, fin: c.fin, cambio: c.cambio })),
+          },
+          pregunta: divergen
+            ? "Unos indicadores suben y otros bajan al mismo tiempo. ¿Por dónde se está yendo lo que ganas?"
+            : mayorCaida
+              ? `¿Qué cambió en el negocio para que «${mayorCaida.nombre}» caiga ${pct(mayorCaida.cambio)}?`
+              : "Todo sube, costos incluidos. ¿Cuáles de esas subidas te convienen y cuáles te están comiendo el margen?",
+          foco: mayorCaida
+            ? `Toma «${mayorCaida.nombre}» y encuentra la causa de la caída antes de la próxima sesión.`
+            : undefined,
           incompleta: cambios.length < filas.length,
         };
       }
@@ -369,12 +432,20 @@ function coherenciaCierre(d: DatosInforme): Lectura | null {
           detalle: filas
             .map((f) => `${f.cuadrante}: ${f.escritas} de ${f.lineas} escritas, con ${f.disponibles} sugerencias disponibles de tus propias respuestas.`)
             .join(" "),
-          barras: filas.map((f) => ({
+          pregunta: huerfanos.length
+            ? "Lo que detectaste en el diagnóstico no llegó al cierre. ¿Se te pasó, o en el fondo no te lo crees?"
+            : totalEscritas === 0
+              ? "¿Qué sale de todo lo que analizaste? El cierre está en blanco."
+              : "Tu cierre recoge tu diagnóstico. ¿Cuál de esos cuatro cuadrantes va a mover plata este trimestre?",
+          foco: huerfanos.length
+            ? `Vuelve al cierre y pasa las señales que ya marcaste: hay ${huerfanos.reduce((a, h) => a + h.disponibles, 0)} esperando.`
+            : undefined,
+          grafica: { tipo: "barras", sufijo: "escritas", series: filas.map((f) => ({
             rotulo: f.cuadrante, valor: f.escritas, total: Math.max(f.lineas, f.escritas),
             color: f.escritas === 0 && f.disponibles >= 3
               ? "des" as ColorEscala
               : f.escritas >= f.lineas ? "fav" as ColorEscala : "med" as ColorEscala,
-          })),
+          })) },
           incompleta: totalEscritas === 0,
         };
       }
@@ -414,10 +485,20 @@ function cobertura(d: DatosInforme): Lectura | null {
     titular: cortos.length === 0
       ? "Enumeraste al menos lo que el ejercicio pide en cada grupo."
       : `Faltan por nombrar: ${cortos.map((g) => `${g.rotulo.toLowerCase()} (${g.hay} de ${g.pide})`).join(", ")}.`,
-    barras: grupos.map((g) => ({
-      rotulo: g.rotulo, valor: g.hay, total: Math.max(g.pide, g.hay),
-      color: g.hay >= g.pide ? "fav" as ColorEscala : "med" as ColorEscala,
-    })),
+    grafica: {
+      tipo: "barras",
+      sufijo: "nombrados",
+      series: grupos.map((g) => ({
+        rotulo: g.rotulo, valor: g.hay, total: Math.max(g.pide, g.hay),
+        color: g.hay >= g.pide ? "fav" as ColorEscala : "med" as ColorEscala,
+      })),
+    },
+    pregunta: cortos.length
+      ? "Lo que no alcanzaste a nombrar, ¿no existe en tu empresa o no lo tienes claro?"
+      : "Nombraste todo lo que el ejercicio pide. ¿Quién es el responsable de cada una de esas cosas?",
+    foco: cortos.length
+      ? `Completa ${cortos[0]!.rotulo.toLowerCase()}: te faltan ${cortos[0]!.pide - cortos[0]!.hay}.`
+      : undefined,
     incompleta: cortos.length > 0,
   };
 }
