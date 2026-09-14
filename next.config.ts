@@ -20,13 +20,16 @@ const nextConfig: NextConfig = {
    * `chunks/`, y perseguir uno por uno los archivos que se piden entre sí es
    * cómo se llega a un tercer 500 en producción. Son ~2 MB de texto.
    *
-   * Dos patrones porque el layout de pnpm es anidado y los globs no siempre
-   * entran a `.pnpm`.
+   * Los dos patrones son rutas concretas, no `node_modules/**\/pdfkit`. Ese
+   * comodín al principio obliga a recorrer el árbol entero de dependencias, y
+   * en el constructor de Vercel —2 núcleos— eso terminaba en «error interno»
+   * a los 47 segundos, con la construcción caída. Uno cubre el layout anidado
+   * de pnpm y el otro el plano de npm; sobra el que no aplique.
    */
   outputFileTracingIncludes: {
     "/api/informe/[bitacoraId]": [
       "./node_modules/.pnpm/pdfkit@*/node_modules/pdfkit/js/**",
-      "./node_modules/**/pdfkit/js/**",
+      "./node_modules/pdfkit/js/**",
     ],
   },
 };
