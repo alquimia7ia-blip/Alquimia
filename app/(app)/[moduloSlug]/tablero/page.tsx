@@ -35,17 +35,25 @@ export default async function PaginaTableroModulo({
   // Las observaciones salen de `comentarios`, que RLS ya limita a esta
   // bitácora: lo que llegue aquí es lo que esta persona puede ver.
   const supabase = await clienteServidor();
-  const { data: notas } = await supabase
-    .from("comentarios")
-    .select("id, cuerpo, origen, creado_at, autor_id, perfiles(nombre)")
-    .eq("bitacora_id", datos.bitacoraId)
-    .order("creado_at");
+  const [{ data: notas, error: errorNotas }, { data: crudas, error: errorDudas }] =
+    await Promise.all([
+      supabase
+        .from("comentarios")
+        .select("id, cuerpo, origen, creado_at, autor_id, perfiles(nombre_completo)")
+        .eq("bitacora_id", datos.bitacoraId)
+        .order("creado_at"),
+      supabase
+        .from("dudas")
+        .select("id, cuerpo, taller_id, estado, creado_at, autor_id")
+        .eq("bitacora_id", datos.bitacoraId)
+        .order("creado_at"),
+    ]);
 
-  const { data: crudas } = await supabase
-    .from("dudas")
-    .select("id, cuerpo, taller_id, estado, creado_at, autor_id")
-    .eq("bitacora_id", datos.bitacoraId)
-    .order("creado_at");
+  // Si una de las dos falla, el tablero se dibuja igual —las conclusiones no
+  // dependen de ellas— pero queda dicho en el registro. Tragarse el error
+  // hacía que un recuadro vacío se viera idéntico a uno sin contenido.
+  if (errorNotas) console.error("tablero · observaciones", errorNotas.message);
+  if (errorDudas) console.error("tablero · dudas", errorDudas.message);
 
   const dudas: Duda[] = (crudas ?? []).map((d) => ({
     id: d.id, cuerpo: d.cuerpo, tallerId: d.taller_id,
@@ -53,8 +61,9 @@ export default async function PaginaTableroModulo({
     fecha: d.creado_at, mia: d.autor_id === perfilId,
   }));
 
-  const nombreTaller = (id: string | null) =>
-    datos.talleres.find((t) => t.id === id)?.corto ?? "Del módulo";
+  // Un mapa, no una función: React no deja pasar funciones del servidor a un
+  // componente de cliente, y hacerlo tumbaba esta página con un 500.
+  const nombresTaller = Object.fromEntries(datos.talleres.map((t) => [t.id, t.corto]));
 
   const observaciones: Observacion[] = (notas ?? []).map((n) => ({
     id: n.id,
@@ -62,7 +71,8 @@ export default async function PaginaTableroModulo({
     origen: n.origen === "facilitador" ? "facilitador" : "empresa",
     autor: n.autor_id === perfilId
       ? "Tú"
-      : (n.perfiles as unknown as { nombre: string } | null)?.nombre ?? "Tu equipo",
+      : (n.perfiles as unknown as { nombre_completo: string } | null)?.nombre_completo
+        ?? "Tu equipo",
     fecha: n.creado_at,
     mia: n.autor_id === perfilId,
   }));
@@ -100,7 +110,7 @@ export default async function PaginaTableroModulo({
                 bitacoraId={datos.bitacoraId}
                 perfilId={perfilId}
                 iniciales={dudas}
-                nombreTaller={nombreTaller}
+                nombresTaller={nombresTaller}
               />
               <Observaciones
                 bitacoraId={datos.bitacoraId}

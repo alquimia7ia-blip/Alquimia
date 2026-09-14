@@ -29,15 +29,21 @@ const dia = (iso: string) =>
   new Date(iso).toLocaleDateString("es-CO", { day: "numeric", month: "short" });
 
 export function Dudas({
-  bitacoraId, perfilId, tallerId, iniciales, nombreTaller, compacto,
+  bitacoraId, perfilId, tallerId, iniciales, nombresTaller, compacto,
 }: {
   bitacoraId: string;
   perfilId: string;
   /** El taller abierto. Ausente en el tablero. */
   tallerId?: string;
   iniciales: Duda[];
-  /** Cómo se llama cada taller, para rotular la lista del tablero. */
-  nombreTaller?: (id: string | null) => string;
+  /**
+   * Cómo se llama cada taller, para rotular la lista del tablero.
+   *
+   * Un mapa y no una función: esto es un componente de cliente y React no
+   * deja pasarle funciones desde el servidor. Pasaba una y la página de
+   * conclusiones respondía 500 entera.
+   */
+  nombresTaller?: Record<string, string>;
   /** Al pie del taller: sin lista, solo el campo. */
   compacto?: boolean;
 }) {
@@ -166,7 +172,7 @@ export function Dudas({
                             justifyContent: "space-between", marginBottom: 4 }}>
                 <span style={{ fontSize: 12.6, letterSpacing: ".08em", textTransform: "uppercase",
                                fontWeight: 700, color: "var(--faint)" }}>
-                  {nombreTaller?.(d.tallerId) ?? "Del módulo"} · {dia(d.fecha)}
+                  {(d.tallerId && nombresTaller?.[d.tallerId]) ?? "Del módulo"} · {dia(d.fecha)}
                 </span>
                 {d.mia && (
                   <button className="del" type="button" title="Borrar"
