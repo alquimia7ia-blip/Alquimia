@@ -8,10 +8,10 @@ import type { Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
 // El renderizador de PDF necesita Node, no el entorno de borde.
 export const runtime = "nodejs";
 
-// Un módulo lleno son ~17 páginas. En frío eso puede pasarse de los 10 s que
-// la función trae por defecto, y un informe cortado a la mitad se ve igual
-// que uno roto.
-export const maxDuration = 60;
+// Nota: aquí había un `maxDuration = 60`. El plan Hobby no siempre lo admite
+// y eso tumba la construcción entera, no solo esta ruta. No hace falta: armar
+// el informe de un módulo lleno toma ~500 ms medidos, muy por debajo del
+// límite por defecto.
 
 /**
  * Informe descargable de una bitácora, en PDF.
