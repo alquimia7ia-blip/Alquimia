@@ -8,6 +8,11 @@ import type { Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
 // El renderizador de PDF necesita Node, no el entorno de borde.
 export const runtime = "nodejs";
 
+// Un módulo lleno son ~17 páginas. En frío eso puede pasarse de los 10 s que
+// la función trae por defecto, y un informe cortado a la mitad se ve igual
+// que uno roto.
+export const maxDuration = 60;
+
 /**
  * Informe descargable de una bitácora, en PDF.
  *
@@ -70,10 +75,29 @@ export async function GET(
     actor_id: user.id, accion: "exportar_informe", recurso: `bitacora:${bitacoraId}`,
   });
 
-  const pdf = await informePdf(documentoInforme({
-    empresa, modulo: nombreModulo, talleres: lista,
-    respuestas: mapaRespuestas, filas: listaFilas, avance,
-  }));
+  // Si el armado falla, lo que ve la empresa no puede ser la pantalla en
+  // blanco del navegador: sin el mensaje no hay forma de saber qué pasó, y
+  // los registros de la plataforma no siempre están a la mano.
+  let pdf: Buffer;
+  try {
+    pdf = await informePdf(documentoInforme({
+      empresa, modulo: nombreModulo, talleres: lista,
+      respuestas: mapaRespuestas, filas: listaFilas, avance,
+    }));
+  } catch (error) {
+    console.error("informe · falló el armado del PDF", error);
+    const detalle = error instanceof Error
+      ? `${error.name}: ${error.message}`
+      : String(error);
+    return new NextResponse(
+      "No se pudo armar el informe de este módulo.\n\n" +
+      `Detalle técnico: ${detalle}\n\n` +
+      "Tu bitácora está intacta: esto falló al generar el archivo, no al " +
+      "leer tus respuestas. Pásale este mensaje a quien mantiene la " +
+      "plataforma y se corrige.",
+      { status: 500, headers: { "Content-Type": "text/plain; charset=utf-8" } },
+    );
+  }
 
   return new NextResponse(new Uint8Array(pdf), {
     headers: {
