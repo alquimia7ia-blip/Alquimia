@@ -194,6 +194,27 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 .gb.a .num,.gb.a .k{color:var(--accent)}
 .gb.a .k{font-weight:700}
 
+/* ── hoja de montaje ── */
+.mesa{border:2px solid var(--rule);border-radius:6px;padding:16px;margin-bottom:14px}
+.mesa.lenta{border-color:var(--accent)}
+.mesa .cab{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+           padding-bottom:13px;border-bottom:1px solid var(--line);margin-bottom:13px}
+.mesa .cab .t{font-size:1.25rem;font-weight:700;line-height:1.2}
+.mesa .cab .t small{display:block;font-size:.8rem;font-weight:400;color:var(--accent);margin-top:2px}
+.mesa .cab .s{font-family:var(--mono);font-size:1.25rem;font-weight:800;white-space:nowrap}
+.mesa.lenta .cab .s{color:var(--accent)}
+.mesa ol{list-style:none;counter-reset:t;margin-bottom:14px}
+.mesa ol li{counter-increment:t;position:relative;padding:7px 0 7px 32px;font-size:1rem;line-height:1.4}
+.mesa ol li::before{content:counter(t);position:absolute;left:0;top:7px;width:22px;height:22px;
+  border-radius:50%;background:var(--line);color:var(--muted);font-family:var(--mono);
+  font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.mesa ol li b{font-family:var(--mono);font-size:.85rem;color:var(--muted);font-weight:700}
+.mesa .kit,.mesa .pasa{font-size:.92rem;line-height:1.45;padding:11px 13px;border-radius:4px;
+  background:var(--line);margin-bottom:9px}
+.mesa .kit b,.mesa .pasa b{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:800}
+.mesa .pasa{margin-bottom:0}
+
 /* ── ayuda ── */
 .paso{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;
       padding:18px 0;border-bottom:1px solid var(--line)}
@@ -265,6 +286,22 @@ const SOBRE_K=1.15, SOBRE_X=2.5;   /* puesto sobrecargado: se equivoca más */
 
 /* qué cara de la pieza deja lista cada tarea: sirve para dibujarla */
 const CAPA=[1,1,1,1, 2,2,2,2,2,2, 3,3,3,3, 4,4,4,4, 5,5,5,5, 6,6,6, 7,7,7];
+const CAPA_PASA=[
+  "la base y los tres espárragos puestos",
+  "la placa transparente ya puesta",
+  "la placa amarilla ya puesta",
+  "la placa verde ya puesta",
+  "la placa azul ya puesta",
+  "las tuercas ya puestas",
+  "la tapa ya apretada"];
+const CAPA_MAT=[
+  "1 placa base blanca · 3 espárragos roscados",
+  "2 mitades de placa transparente · 1 triángulo · 1 pentágono · 2 cilindros",
+  "2 mitades de placa amarilla · 4 insertos",
+  "2 mitades de placa verde · 4 insertos",
+  "2 mitades de placa azul · 4 insertos",
+  "4 tuercas de forma · 3 tuercas de espárrago",
+  "1 tapa de tres brazos · 1 tornillo central · llave allen"];
 const CAPA_NOM=["base y espárragos","placa transparente","placa amarilla",
   "placa verde","placa azul","tuercas","tapa y apriete"];
 
@@ -402,7 +439,7 @@ function bajo(m){
 
 /* ═══════════════ estado del juego ═══════════════ */
 const S={nivel:0,cortes:HOY.slice(),apOEE:null,apPar:null,puntos:0,hist:[],
-         R:null,raf:0,gemelo:false,modo:"objetivo",ultTwin:null};
+         R:null,raf:0,gemelo:false,modo:"objetivo",ultTwin:null,cerrado:false};
 
 const $=q=>document.querySelector(q), stage=$("#stage");
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -640,7 +677,7 @@ function verApuesta(){
     });
   };
   S.apOEE=null;S.apPar=null;sel("q1","apOEE");sel("q2","apPar");
-  $("#go").onclick=()=>{ S.R=mkRun(S.cortes,v.W,v.relx); verCorrida(); };
+  $("#go").onclick=()=>{ S.cerrado=false; S.R=mkRun(S.cortes,v.W,v.relx); verCorrida(); };
 }
 
 /* ═══════════════ 4 · corrida ═══════════════ */
@@ -757,9 +794,11 @@ function verCierre(){
     realQ2 = "fueron "+BANDAS_PZA[pi][0];
   }
   const gan=(pasa?50:0)+(okOEE?25:0)+(okPar?25:0);
-  S.puntos+=gan;
-  S.hist[S.nivel]={pasa:pasa,oee:m.OEE,good:m.good,takt:tk,gan:gan};
-  barra();
+  if(!S.cerrado){                      /* se puntúa una sola vez por nivel */
+    S.puntos+=gan;
+    S.hist[S.nivel]={pasa:pasa,oee:m.OEE,good:m.good,takt:tk,gan:gan};
+    S.cerrado=true; barra();
+  }
 
   const b=bajo(m);
   const DIAG={
@@ -810,10 +849,11 @@ function verCierre(){
     +'<p style="margin-top:10px"><strong>'+gan+' puntos</strong> en este nivel.</p></div>';
 
   h+='<div class="card"><b class="t">Para armarlo en la mesa</b>'
-    +'Parta la línea real después de estas tareas:'
-    +'<div class="code">'+R.cortes.join(" · ")+'</div>'
-    +R.cortes.length+' puestos. El más lento es el <strong>puesto '+(R.L.bn+1)+'</strong>, '
-    +'con '+n1(R.L.cyc[R.L.bn])+' segundos.</div>';
+    +'Ponga <strong>'+R.cortes.length+' mesas en fila</strong>, con una persona en cada una. '
+    +'La pieza pasa de mesa en mesa siempre en el mismo orden.'
+    +'<p style="margin-top:10px">La mesa más lenta es la <strong>'+(R.L.bn+1)+'</strong>, '
+    +'con '+n1(R.L.cyc[R.L.bn])+' segundos. Esa es la que manda sobre toda la línea.</p></div>'
+    +'<button class="btn gh" id="hoja">Ver qué va en cada mesa</button>';
 
   if(S.nivel<NIV.length-1){
     h+='<button class="btn" id="next">Siguiente nivel</button>';
@@ -833,11 +873,53 @@ function verCierre(){
   }
   stage.innerHTML=h;
   window.scrollTo(0,0);
+  $("#hoja").onclick=()=>verHoja(R,v);
   $("#next").onclick=()=>{
+    S.cerrado=false;
     if(S.nivel<NIV.length-1)S.nivel++;
     else {S.nivel=0;S.puntos=0;S.hist=[];}
     S.R=null;barra();verObjetivo();
   };
+}
+
+/* ═══════════════ 6 · la hoja de montaje ═══════════════
+   Lo que se lleva a la Fábrica. Tiene que servirle a alguien parado frente a
+   unas mesas vacías, así que va por nombre, no por número de tarea. */
+function verHoja(R,v){
+  const K=R.cortes.length, W_ACT=v.W;
+  let h='<div class="eyebrow">Para llevar a la Fábrica</div>'
+    +'<h1>Qué va en cada mesa</h1>'
+    +'<p class="lead">Ponga <strong>'+K+' mesas en fila</strong> y una persona en cada una. '
+    +'La pieza empieza en la mesa 1 y pasa de mano en mano, siempre en el mismo orden. '
+    +'Nadie se salta una mesa.</p>';
+  let p=0;
+  for(let k=0;k<K;k++){
+    const c=R.cortes[k], seg=R.L.cyc[k], lenta=(k===R.L.bn);
+    const capaFin=CAPA[c-1];
+    /* materiales: las capas distintas que toca esta mesa */
+    const capas=[]; for(let i=p;i<c;i++) if(capas.indexOf(CAPA[i])<0) capas.push(CAPA[i]);
+    h+='<div class="mesa'+(lenta?" lenta":"")+'">'
+      +'<div class="cab">'+hexa(capaFin,56)
+      +'<span class="t">Mesa '+(k+1)+(lenta?'<small>la más lenta · esta manda</small>':'')+'</span>'
+      +'<span class="s">'+n1(seg)+' s</span></div>'
+      +'<ol>';
+    for(let i=p;i<c;i++) h+='<li>'+esc(NOM[i])+' <b>'+n1(W_ACT[i])+' s</b></li>';
+    h+='</ol>'
+      +'<div class="kit"><b>Tenga sobre la mesa</b>'+capas.map(x=>CAPA_MAT[x-1]).join(' · ')+'</div>'
+      +'<div class="pasa"><b>'+(k===K-1?'Al terminar':'Le pasa a la mesa '+(k+2))+'</b>'
+      +(k===K-1?'La pieza sale armada. Revise que no le falte nada y póngala en la bandeja de buenas.'
+               :'la pieza con '+CAPA_PASA[capaFin-1]+'.')+'</div>'
+      +'</div>';
+    p=c;
+  }
+  h+='<div class="card a"><b class="t">Lo que hay que vigilar</b>'
+    +'La <strong>mesa '+(R.L.bn+1)+'</strong> se demora '+n1(R.L.cyc[R.L.bn])+' segundos. '
+    +'De la línea no va a salir una pieza más rápido que eso, por más que las otras mesas estén libres. '
+    +'Si quiere ir más rápido, hay que quitarle trabajo a esa mesa.</div>'
+    +'<button class="btn" id="volverc">Volver al resultado</button>';
+  stage.innerHTML=h;
+  window.scrollTo(0,0);
+  $("#volverc").onclick=verCierre;
 }
 
 /* ═══════════════ arranque ═══════════════ */
