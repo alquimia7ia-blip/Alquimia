@@ -26,6 +26,8 @@ funciona.*
 | `docs/metodo/gemelo-taller.html` | Gemelo digital · Capacidad de Producción. Artifact: `c9cbbb64-221d-4273-b8f5-772f85203e6a` |
 | `docs/metodo/gemelo-oee.html` | **La Trampa del OEE** — gemelo de indicadores, 4 niveles. Artifact: `ed68e2c7-0dfe-4686-be84-aa8b489fa097` |
 | `docs/metodo/jefe-de-planta.html` | **Jefe de Planta** — el mismo tema, jugable en celular, 5 niveles con puntaje. Artifact: `ce881141-c424-4b71-b3c7-65707c2e49f0` |
+| `docs/metodo/sin-parar.html` | **SIN PARAR** — tercer gemelo, línea HEXA de 7 puestos. Artifact: <https://claude.ai/artifact/Pk9dYZtNESYkdsxW5StUyq> |
+| `docs/metodo/ficha-sin-parar.md` | Ficha del taller de SIN PARAR, con el prompt que se le entrega a la IA |
 
 ### Preferencias de forma, aprendidas a los golpes
 
@@ -274,3 +276,141 @@ Maneja el juego en una pantalla de 390 px y contrasta los diez casos contra `cal
 Los cinco niveles de la jugada correcta y las cinco jugadas equivocadas coinciden **al
 decimal**. Comprueba además que no haya desborde horizontal en celular. Los únicos errores de
 consola son las fuentes de Google, que el contenedor no alcanza.
+
+---
+
+## «SIN PARAR» — tercer gemelo · línea HEXA · `docs/metodo/sin-parar.html`
+
+Artifact <https://claude.ai/artifact/Pk9dYZtNESYkdsxW5StUyq>. Ficha del taller en
+`docs/metodo/ficha-sin-parar.md`. Calibrador: `cal7.py`. Verificador: `drive7.mjs`.
+
+Nace del documento «Estrategia de Optimización Industrial mediante Gemelos Digitales e IA»
+y de las 7 fotos de la línea física. Tesis del documento, que es la del taller:
+
+> «¿Usted cómo se le ocurre mejorarlo? Sin parar. La forma de mejorar sin parar es tener un
+> gemelo digital.»
+
+**Objetivo del taller:** que el participante aprenda a leer los indicadores de una línea para
+decidir **qué mejorar primero**, y descubra que se mejora sin detener la planta.
+
+### La pieza: HEXA, y por qué decide el diseño
+
+Apilado hexagonal sobre 3 espárragos: base de acetal · placa transparente · amarilla · verde ·
+azul · tuercas · tapa de tres brazos. **Cada placa viene partida en dos mitades que encajan en
+zigzag.** La pieza ya está dividida en elementos separables con precedencia estricta, así que
+el ensamble es una **cadena de 28 tareas** y un puesto es un **tramo de esa cadena**. Eso no
+hubo que inventarlo: está en la pieza.
+
+### El mecanismo nuevo: el jugador mueve los cortes
+
+En los gemelos 01 y 02 las estaciones son fijas y se reparten operarios. Aquí **la única
+palanca es dónde se corta la cadena**. Una persona por puesto; no puede haber más puestos que
+participantes. Agregar un puesto **sí** baja el tiempo de ciclo; apurar a la gente **no**. Y
+el resultado se traduce literalmente a la Fábrica: **dónde poner las mesas**.
+
+### Configuración calibrada — no tocar sin correr `cal7.py`
+
+```
+28 tareas · trabajo total 182 s · jornada 8 h (28.800 s) · cola CAP=4
+paso fijo 0,25 s · semilla 11 · ciclo ideal CI = 18,2 s (182/10, velocidad de diseño)
+reconfigurar la línea real: 2.100 s (35 min) y la línea se vacía
+máquinas (siguen a la tarea, no al puesto): t4 [2600,40] · t24 [2200,55] · t26 [1800,70]
+micro-parada de cualquier puesto: [3200,50]
+defectos: .0004 base · .0010 insertos · .0014 tuercas · .0016 torque
+puesto sobrecargado (>1,15 × reparto parejo): defectos ×2,5
+cortes de hoy [4,10,14,18,22,25,28] · óptimo 10 [4,6,10,13,16,19,22,24,26,28]
+```
+
+**`CI` es constante a propósito.** Con `CI = W/N` el OEE salía **no monótono** —con 9 puestos
+daba peor que con 7— porque el ideal se movía junto con la gente. El ciclo ideal es la placa
+de la línea, no función de cuánta gente le ponga hoy.
+
+### El escalón — lo que destapó el modelo, no yo
+
+| Puestos | 7 hoy | 7 recortados | 8 | 9 | **10** | 11 |
+|---|---|---|---|---|---|---|
+| Sale cada | 36,0 s | 28,0 s | 26,0 s | 25,0 s | **20,0 s** | 18,5 s |
+| OEE | 47,4 % | 61,6 % | 65,4 % | 66,9 % | **86,2 %** | 92,5 % |
+
+De 8 a 9 se gana **un** segundo; de 9 a 10 se ganan **cinco**, y diecinueve puntos de OEE.
+Sale de cómo está partida la pieza. Es el nivel 2 entero y la pregunta que el participante se
+hace solo: *«contraté a alguien y no pasó nada, ¿por qué?»*
+
+### La trampa: «probemos en la línea» — verificada por simulación
+
+| Jugada | Cambios físicos | OEE | Buenas |
+|---|---|---|---|
+| No tocar nada | 0 | 47,4 % | 750 |
+| **Gemelo + 1 cambio** | 1 | **76,2 %** | **1.206** |
+| Tanteo en la línea | 4 | 46,9 % | **742** |
+
+**Tantear cuatro veces entrega menos piezas que no hacer nada**, con el OEE por debajo del
+punto de partida. Cumple la receta: indicador compuesto, palanca que la intuición pide
+primero, consecuencia diferida al cierre.
+
+En la corrida, **la planta sigue produciendo mientras el jugador está en el gemelo** (el bucle
+de animación no se detiene). Eso es lo que hace que la lección se sienta, no que se lea.
+
+### El OEE aquí es diagnóstico, no meta
+
+En «Jefe de Planta» el OEE **es** la meta. Repetirlo habría sido hacer el mismo taller dos
+veces. Aquí las piezas dicen si ganó y **el OEE dice por qué**, porque cada factor lo rompe
+una decisión distinta de este juego:
+
+| Factor | Qué lo daña |
+|---|---|
+| Disponibilidad | parar la línea para reconfigurarla — la trampa |
+| Rendimiento | el desbalanceo: bloqueo antes del cuello, espera después |
+| Calidad | el puesto sobrecargado, que se equivoca más |
+
+**Regla de lectura que entrega el cierre:** *Rendimiento mide su balanceo, Disponibilidad mide
+sus paradas. Si Disponibilidad se le acerca a Rendimiento, está parando de más.*
+
+### La escalera — correcto pasa, intuitivo falla
+
+| Nivel | Gente | Meta | Correcto | Errado |
+|---|---|---|---|---|
+| 1 · La línea de hoy | 7 | takt ≤ 30,0 s | recortar a 7 parejos **28,0 s** | dejarlo como está 36,0 s |
+| 2 · El escalón | 10 | takt ≤ 20,0 s | 10 puestos **20,0 s** | 9 puestos 25,0 s |
+| 3 · La propuesta de la IA | 10 | OEE ≥ 72 % | 1 cambio temprano **76,2 %** | 2 cambios 63,7 % |
+| 4 · Equipo viejo (×2 averías) | 10 | OEE ≥ 70 % | 1 cambio temprano **75,1 %** | 2 cambios 61,2 % |
+| 5 · Referencia nueva | 10 | ≥ 1.000 buenas | recortar al reparto nuevo **1.182** | quedarse con lo de ayer 908 |
+
+Nivel 5: la placa transparente lleva sellador y cada mitad pasa de 8 a 15 s. **Mismo trabajo
+total**, otro reparto; con los cortes de ayer el takt salta a 30,0 s.
+
+### La apuesta — dos preguntas, ninguna adivinable
+
+1. ¿A qué **OEE** va a cerrar la jornada? (bandas)
+2. ¿Cuántas veces va a **parar la línea real** hoy?
+
+Se cayó «¿llega a los 20 s?»: era calculable sumando los cortes. Y **se descartó «¿cuál factor
+quedará más bajo?»** porque Rendimiento salía casi siempre — el mismo defecto que ya está
+documentado en «Jefe de Planta». Puntaje: 50 pasar · 25 acertar la banda · 25 acertar las
+paradas = 100 por nivel, 500 en total.
+
+### La IA vive por fuera
+
+Decisión del usuario. Los participantes le piden la configuración a ChatGPT o Claude en su
+celular y la transcriben. **El gemelo es el validador**, que es el papel que le da el
+documento. El prompt que se entrega está en la ficha.
+
+### Reglas nuevas aprendidas aquí
+
+- **El tiempo planeado del OEE en vivo es el transcurrido, no la jornada entera.** Con `T` fijo
+  el indicador arrancaba en 13 % y subía solo porque el día avanzaba. Al cerrar da idéntico.
+- **Verificar la mecánica, no solo los números.** `drive7.mjs` comprueba que la planta siga
+  produciendo mientras el jugador está en el gemelo y que reconfigurar cobre 2.100 s exactos.
+  Un motor correcto con la trampa rota no enseña nada.
+- Las máquinas se atan a la **tarea**, no al puesto: si se atan al índice del puesto, mover un
+  corte mueve la avería de sitio y el modelo deja de ser el mismo.
+- Los artifacts de este proyecto **no llevan** `<!DOCTYPE>`, `<html>`, `<head>` ni `<body>`:
+  empiezan en `<title>` porque la plataforma pone el andamiaje al publicar.
+
+### Lo que queda por confirmar con la Fábrica
+
+1. **Cuánta gente tiene un grupo** — fija el máximo de puestos. Con menos de 10 el nivel 2 no
+   se puede recrear físicamente.
+2. **Si se pueden montar más de 7 mesas.** Si no, el taller físico no reproduce el resultado.
+3. **Los tiempos reales por tarea, con cronómetro.** Los actuales son estimados de las fotos y
+   están marcados como tales en la ficha.

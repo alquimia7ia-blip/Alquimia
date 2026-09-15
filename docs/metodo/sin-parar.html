@@ -1,0 +1,687 @@
+<title>Sin Parar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;700;800&display=swap">
+<style>
+:root{
+  --paper:#F7F6F3; --ink:#191817; --muted:#6B6762; --rule:#DDD9D2; --line:#F0EEEA;
+  --accent:#C9431C; --soft:#E8C6BA; --good:#2E6B41;
+  --panel:#17161A; --pink:#EDEBE7; --pmuted:#8B8783; --prule:#312E33; --pline:#232127;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Instrument Serif",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121113; --ink:#EDEBE7; --muted:#918C86; --rule:#2C2A2E; --line:#232127;
+  --soft:#7A3A26; --good:#5FA877; --panel:#08080A; --prule:#252329; --pline:#1A181E;
+}}
+:root[data-theme="dark"]{
+  --paper:#121113; --ink:#EDEBE7; --muted:#918C86; --rule:#2C2A2E; --line:#232127;
+  --soft:#7A3A26; --good:#5FA877; --panel:#08080A; --prule:#252329; --pline:#1A181E;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;
+     line-height:1.5;padding:0 16px}
+.wrap{max-width:34rem;margin:0 auto;padding:18px 0 40px}
+
+/* ── barra superior ── */
+.top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
+     padding-bottom:12px;border-bottom:1px solid var(--rule);margin-bottom:20px}
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.15em;font-weight:700;text-transform:uppercase}
+.brand b{color:var(--accent);font-weight:700}
+#dots{display:flex;gap:5px;justify-content:center}
+#dots i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+#dots i.now{background:var(--accent)}
+#dots i.ok{background:var(--ink)}
+#dots i.no{background:var(--muted)}
+#pts{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+
+h1{font-size:1.45rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:8px}
+h2{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.lead{color:var(--muted);margin-bottom:20px}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+         color:var(--accent);font-weight:700;margin-bottom:7px}
+
+/* ── bloques del objetivo ── */
+.ob{margin-bottom:18px}
+.ob p{color:var(--muted);font-size:.94rem;line-height:1.55}
+.ob p strong{color:var(--ink);font-weight:700}
+.big{font-family:var(--mono);font-size:2.3rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.big s{text-decoration:none;font-size:1.2rem;font-weight:400;color:var(--muted)}
+.big.a{color:var(--accent)}
+
+/* ── métricas ── */
+.met{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+     border:1px solid var(--rule);margin-bottom:16px}
+.met>div{background:var(--paper);padding:11px 13px}
+.met b{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+       text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:400}
+.met i{font-style:normal;font-family:var(--mono);font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
+.met i.a{color:var(--accent)} .met i.ok{color:var(--good)}
+
+/* ── medidores del OEE ── */
+.oee{border:1px solid var(--rule);padding:13px;margin-bottom:16px}
+.oee .h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.oee .h b{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+          color:var(--muted);font-weight:400}
+.oee .h i{font-style:normal;font-family:var(--mono);font-size:1.7rem;font-weight:800;letter-spacing:-.03em}
+.fac{display:grid;grid-template-columns:6.2rem 1fr 2.8rem;gap:9px;align-items:center;
+     font-size:.78rem;color:var(--muted);margin-bottom:7px}
+.fac:last-child{margin-bottom:0}
+.fac .tr{height:6px;background:var(--rule);border-radius:3px;overflow:hidden}
+.fac .tr i{display:block;height:100%;background:var(--soft);border-radius:3px;transition:width .25s}
+.fac .vl{font-family:var(--mono);font-size:.78rem;text-align:right}
+.fac.low{color:var(--accent);font-weight:700}
+.fac.low .tr i{background:var(--accent)}
+
+/* ── la cadena de tareas ── */
+.chain{border:1px solid var(--rule);margin-bottom:16px}
+.pst{background:var(--line);padding:9px 12px;display:grid;grid-template-columns:1fr auto;
+     gap:10px;align-items:center;border-bottom:1px solid var(--rule)}
+.pst .n{font-family:var(--mono);font-size:10px;letter-spacing:.1em;font-weight:700;text-transform:uppercase}
+.pst .s{font-family:var(--mono);font-size:.85rem;font-weight:700}
+.pst.bn{background:color-mix(in srgb,var(--accent) 12%,var(--paper))}
+.pst.bn .n,.pst.bn .s{color:var(--accent)}
+.tsk{display:grid;grid-template-columns:1fr auto;padding:7px 12px 7px 26px;font-size:.84rem;
+     color:var(--muted);border-bottom:1px solid var(--line)}
+.tsk span:last-child{font-family:var(--mono);font-size:.78rem}
+.cutrow{display:block;width:100%;background:var(--paper);border:0;border-bottom:1px solid var(--line);
+        padding:7px 12px;cursor:pointer;font:inherit}
+.cutrow .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px}
+.cutrow .in::before,.cutrow .in::after{content:"";border-top:1px dashed var(--rule)}
+.cutrow b{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;font-weight:700;
+          color:var(--muted);border:1px dashed var(--rule);border-radius:12px;padding:4px 11px;white-space:nowrap}
+.cutrow.on{border-bottom-color:var(--rule)}
+.cutrow.on .in::before,.cutrow.on .in::after{border-top:1.5px dashed var(--accent)}
+.cutrow.on b{color:var(--accent);border:1.5px solid var(--accent)}
+.cutrow[disabled]{cursor:not-allowed;opacity:.45}
+
+/* ── botones ── */
+.btn{display:block;width:100%;text-align:center;padding:14px;border:1.5px solid var(--ink);
+     background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px;
+     letter-spacing:.12em;text-transform:uppercase;font-weight:700;border-radius:3px;
+     cursor:pointer;margin-bottom:8px}
+.btn.gh{background:transparent;color:var(--ink)}
+.btn.dan{background:transparent;color:var(--accent);border-color:var(--accent)}
+.btn:disabled{background:var(--line);color:var(--muted);border-color:var(--rule);cursor:not-allowed}
+.hint{font-size:.78rem;color:var(--muted);text-align:center;margin:-4px 0 16px;line-height:1.4}
+
+/* ── apuesta ── */
+.q{margin-bottom:20px}
+.q p{font-weight:600;margin-bottom:9px;font-size:.95rem}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opt{border:1.5px solid var(--rule);background:transparent;color:var(--muted);border-radius:3px;
+     padding:10px 14px;font-family:var(--mono);font-size:.8rem;font-weight:700;cursor:pointer}
+.opt.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+/* ── panel oscuro de la corrida ── */
+.plant{background:var(--panel);color:var(--pink);border-radius:5px;padding:16px;margin-bottom:16px}
+.plant .met{background:var(--prule);border-color:var(--prule)}
+.plant .met>div{background:var(--panel)}
+.plant .met b{color:var(--pmuted)}
+.plant .oee{border-color:var(--prule)}
+.plant .oee .h b{color:var(--pmuted)}
+.plant .fac{color:var(--pmuted)}
+.plant .fac .tr{background:var(--prule)}
+.clk{display:flex;justify-content:space-between;align-items:baseline;
+     font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+     color:var(--pmuted);padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--prule)}
+.clk b{color:var(--pink);font-weight:700}
+.line{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
+.line::-webkit-scrollbar{display:none}
+.stn{flex:0 0 46px;text-align:center}
+.stn .lb{font-family:var(--mono);font-size:8.5px;color:var(--pmuted);margin-top:3px}
+.stn .pb{height:3px;background:var(--prule);border-radius:2px;overflow:hidden;margin-top:4px}
+.stn .pb i{display:block;height:100%;background:var(--accent)}
+.stn.dn .pb i{background:var(--accent)}
+.stn.idle{opacity:.34}
+.split{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;
+       font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+       color:var(--pmuted);margin-bottom:6px}
+.bar2{height:9px;border-radius:2px;overflow:hidden;display:flex;background:var(--prule)}
+.bar2 i{display:block;height:100%}
+.bar2 .g{background:var(--pink)} .bar2 .b{background:var(--accent)}
+
+/* ── cierre ── */
+.hero{text-align:center;padding:14px 0 18px;border-bottom:1px solid var(--rule);margin-bottom:18px}
+.hero .n{font-family:var(--mono);font-size:3.1rem;font-weight:800;letter-spacing:-.045em;line-height:1}
+.hero .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+         color:var(--muted);margin-top:9px}
+.hero .v{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+         font-weight:700;margin-top:10px}
+.hero .v.ok{color:var(--good)} .hero .v.no{color:var(--accent)}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:9px 0;
+     border-bottom:1px solid var(--line);font-size:.9rem}
+.row span:last-child{font-family:var(--mono);font-weight:700;white-space:nowrap}
+.row .a{color:var(--accent)} .row .g{color:var(--good)}
+.card{border:1.5px solid var(--ink);padding:14px;margin:18px 0;font-size:.9rem;line-height:1.55}
+.card.a{border-color:var(--accent)}
+.card b.t{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+          text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.code{font-family:var(--mono);font-size:.88rem;font-weight:700;margin:9px 0;word-spacing:.1em}
+
+/* ── varios ── */
+.tag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+     text-transform:uppercase;font-weight:700;border:1px solid var(--accent);color:var(--accent);
+     border-radius:3px;padding:4px 9px;margin-bottom:12px}
+.tag.w{background:var(--accent);color:var(--paper)}
+.note{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:14px}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);
+      font-size:.76rem;color:var(--muted);line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <span class="brand">SIN <b>PARAR</b></span>
+    <span id="dots"></span>
+    <span id="pts">0 pts</span>
+  </div>
+  <main id="stage" aria-live="polite"></main>
+  <div class="foot">
+    Fábrica de Aprendizaje · gemelo digital de la línea HEXA. Tiempos por tarea estimados;
+    se recalibran con cronómetro tras la primera corrida física.
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════════ modelo calibrado — no tocar sin recorrer cal7.py ═══════════════ */
+const STEP=0.25, SEED=11, CAP=4, T=28800, PARADA=2100;   /* jornada 8 h · parada 35 min */
+const REAL=14;                                            /* segundos reales por jornada */
+
+const NOM=["Tomar placa base","Montar espárrago A","Montar espárrago B","Montar espárrago C",
+  "Media placa transparente A","Media placa transparente B",
+  "Inserto triángulo","Inserto pentágono","Inserto cilindro 1","Inserto cilindro 2",
+  "Media placa amarilla A","Media placa amarilla B","Insertos amarillos · formas","Insertos amarillos · cilindros",
+  "Media placa verde A","Media placa verde B","Insertos verdes · formas","Insertos verdes · cilindros",
+  "Media placa azul A","Media placa azul B","Insertos azules · formas","Insertos azules · cilindros",
+  "Tuercas formas 1-2","Tuercas formas 3-4","Tuercas espárragos",
+  "Tapa de tres brazos","Tornillo central","Inspección final"];
+const W0=[4,5,5,5, 8,8, 5,5,5,5, 6.5,6.5,6,6, 6.5,6.5,6,6, 6.5,6.5,6,6, 8,8,9, 9,10,8];
+/* referencia nueva: placa transparente con sellador. Mismo trabajo total, otro reparto. */
+const W5=[4,5,5,5, 15,15, 4.5,4.5,4.5,4.5, 5,5,5, 5,5,5, 5,5,5, 5,5,5, 9,8, 9,9, 11,9];
+const CI=18.2;                    /* ciclo ideal: velocidad de diseño de la línea (182/10) */
+
+const MAQ={4:[2600,40], 24:[2200,55], 26:[1800,70]};   /* máquinas: siguen a la tarea */
+const MICRO=[3200,50];                                  /* micro-parada de cualquier puesto */
+const DEFB=(function(){const d=new Array(28).fill(.0004);
+  [6,7,8,9,12,13,16,17,20,21].forEach(i=>d[i]=.0010);
+  [22,23,24].forEach(i=>d[i]=.0014); d[26]=.0016; return d;})();
+const SOBRE_K=1.15, SOBRE_X=2.5;   /* puesto sobrecargado: se equivoca más */
+
+const HOY=[4,10,14,18,22,25,28];
+const C7 =[5,10,14,18,22,25,28];
+const C10=[4,6,10,13,16,19,22,24,26,28];
+
+const NIV=[
+ {n:1,t:"La línea de hoy",gente:7,W:W0,relx:1,cortes:HOY,recfg:false,
+  meta:{k:"takt",v:30,txt:"Sacar una pieza cada 30,0 s o menos"},
+  nuevo:"Siete puestos, siete personas, y los cortes donde están montados hoy en la Fábrica. No puede contratar a nadie ni parar la línea: lo único que puede hacer es mover los cortes.",
+  pista:"El puesto más lento manda sobre toda la línea. Mírelo antes de mover nada."},
+ {n:2,t:"El escalón",gente:10,W:W0,relx:1,cortes:HOY,recfg:false,
+  meta:{k:"takt",v:20,txt:"Sacar una pieza cada 20,0 s o menos"},
+  nuevo:"Llegan tres personas más. Puede repartir la cadena hasta en diez puestos. La meta baja a veinte segundos.",
+  pista:"Agregar un puesto a la vez casi no mueve el número. Pruebe repartiendo de nuevo toda la cadena, no partiendo solo el cuello."},
+ {n:3,t:"La propuesta de la IA",gente:10,W:W0,relx:1,cortes:HOY,recfg:true,
+  meta:{k:"oee",v:.72,txt:"Cerrar la jornada con OEE de 72 % o más"},
+  nuevo:"Ahora puede cambiar la línea con la jornada andando — pero mover las mesas para la planta 35 minutos. También puede ensayar en el gemelo cuantas veces quiera: eso no cuesta nada.",
+  pista:"Pídale una configuración a la IA en su celular, tradúzcala a cortes y pruébela en el gemelo antes de tocar la planta."},
+ {n:4,t:"Equipo viejo",gente:10,W:W0,relx:.5,cortes:HOY,recfg:true,
+  meta:{k:"oee",v:.70,txt:"Cerrar la jornada con OEE de 70 % o más"},
+  nuevo:"Las mismas palancas, pero las máquinas se averían el doble. La meta casi no baja.",
+  pista:"Con más averías, cada parada que usted agregue encima pesa más. Decida bien cuántas veces va a tocar la línea."},
+ {n:5,t:"Referencia nueva, sin parar",gente:10,W:W5,relx:1,cortes:C10,recfg:true,
+  meta:{k:"buenas",v:1000,txt:"Entregar 1.000 piezas buenas o más"},
+  nuevo:"Entra otra referencia del HEXA: la placa transparente ahora lleva sellador y cada mitad pasa de 8 a 15 segundos. El trabajo total es el mismo. Su línea de ayer ya no sirve.",
+  pista:"Vuelva a mirar los tramos antes de arrancar. El cuello se mudó de puesto."}
+];
+
+const BANDAS=[["<50 %",0,.50],["50-65 %",.50,.65],["65-80 %",.65,.80],[">80 %",.80,1.01]];
+const PARADAS_OPC=[0,1,2,3];
+const RANGOS=[
+ [450,"Ingeniero de mejora","Decide en el gemelo y toca la planta una sola vez. Este es el nivel al que se llega leyendo los tres factores antes de actuar, no después."],
+ [370,"Jefe de planta","Casi siempre sabe dónde está la pérdida. Le falta afinar cuándo vale la pena parar."],
+ [280,"Supervisor","Llega a la meta, pero decide después de correr en vez de antes."],
+ [170,"Operario con criterio","Mejora la línea, pero tanteando sobre la planta. El diagnóstico es lo que falta."],
+ [0,"Le creyó al tablero","Un tiempo de ciclo bajo no es una buena planta. Vuelva a empezar mirando cuál de los tres factores se le está cayendo."]
+];
+
+/* ═══════════════ motor ═══════════════ */
+function mk(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;
+  t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+function tramos(cortes,W){const r=[];let p=0;
+  for(const c of cortes){let s=0;for(let i=p;i<c;i++)s+=W[i];r.push(s);p=c;}return r;}
+
+/* estado de una configuración: se reconstruye entera en cada reconfiguración */
+function mkLinea(cortes,W,relx){
+  const P=[];let p=0;for(const c of cortes){P.push([p,c]);p=c;}
+  const N=P.length, cyc=tramos(cortes,W), parejo=W.reduce((a,b)=>a+b,0)/N;
+  let bn=0;for(let i=1;i<N;i++)if(cyc[i]>cyc[bn])bn=i;
+  const pdef=[],maqs=[];
+  for(let k=0;k<N;k++){
+    let d=0,sobre=cyc[k]>SOBRE_K*parejo;
+    const m=[];
+    for(let i=P[k][0];i<P[k][1];i++){ d+=DEFB[i]; if(MAQ[i])m.push([i,MAQ[i][0]*relx,MAQ[i][1]]); }
+    m.push([-1,MICRO[0]*relx,MICRO[1]]);
+    pdef.push(d*(sobre?SOBRE_X:1)); maqs.push(m);
+  }
+  const st=[];for(let k=0;k<N;k++){const nx={};maqs[k].forEach(m=>nx[m[0]]=m[1]);
+    st.push({h:false,dn:false,t:0,buf:0,qb:0,dt:0,bad:false,down:0,op:0,nxt:nx});}
+  return {N:N,P:P,cyc:cyc,bn:bn,pdef:pdef,maqs:maqs,st:st};
+}
+
+function mkRun(cortes,W,relx,seed){
+  return {L:mkLinea(cortes,W,relx),W:W,relx:relx,cortes:cortes.slice(),
+          rng:mk(seed===undefined?SEED:seed),clock:0,parado:0,downBn:0,
+          out:0,good:0,cambios:0,fin:false};
+}
+
+function reconfig(R,cortes){
+  R.downBn+=R.L.st[R.L.bn].down;
+  R.clock+=PARADA; R.parado+=PARADA; R.cambios++;
+  R.cortes=cortes.slice();
+  R.L=mkLinea(cortes,R.W,R.relx);
+  if(R.clock>=T)R.fin=true;
+}
+
+function tick(R,dt){
+  const L=R.L,N=L.N,st=L.st;
+  R.clock+=dt;
+  for(let i=N-1;i>=0;i--){
+    const e=st[i];
+    if(e.dt>0){e.dt-=dt;e.down+=dt;continue;}
+    if(e.dn){ if(push(R,i,e.bad))e.dn=false; else continue; }
+    if(!e.h){
+      if(i===0){e.h=true;e.t=0;e.bad=false;}
+      else if(e.buf>0){e.buf--;e.h=true;e.t=0;e.bad=e.qb>0;if(e.qb>0)e.qb--;}
+    }
+    if(e.h){
+      e.t+=dt; e.op+=dt;
+      const m=L.maqs[i];
+      for(let j=0;j<m.length;j++){ if(e.op>=e.nxt[m[j][0]]){e.dt=m[j][2];e.nxt[m[j][0]]=e.op+m[j][1];break;} }
+      if(e.t>=L.cyc[i]){
+        e.h=false;e.t=0;
+        if(R.rng()<L.pdef[i])e.bad=true;
+        if(!push(R,i,e.bad))e.dn=true;
+      }
+    }
+  }
+  if(R.clock>=T)R.fin=true;
+}
+function push(R,i,bad){
+  const L=R.L;
+  if(i===L.N-1){R.out++;if(!bad)R.good++;return true;}
+  if(L.st[i+1].buf<CAP){L.st[i+1].buf++;if(bad)L.st[i+1].qb++;return true;}
+  return false;
+}
+
+/* El tiempo planeado es el TRANSCURRIDO, no la jornada entera: si no, durante la
+   corrida el OEE arranca en casi cero y sube solo porque el día avanza. Al cerrar,
+   clock ya llegó a T y el resultado es idéntico al calibrado en cal7.py. */
+function medir(R){
+  const plan=Math.max(1,Math.min(R.clock,T));
+  const down=R.downBn+R.L.st[R.L.bn].down+R.parado;
+  const oper=Math.max(1,plan-down);
+  const D=oper/plan, Rd=(CI*R.out)/oper, Q=R.out?R.good/R.out:0;
+  return {D:D,R:Rd,Q:Q,OEE:D*Rd*Q,out:R.out,good:R.good,down:down,oper:oper,plan:plan};
+}
+/* corre una jornada completa de un tirón: es lo que hace el gemelo */
+function simular(cortes,W,relx){
+  const R=mkRun(cortes,W,relx);
+  while(!R.fin)tick(R,STEP);
+  return medir(R);
+}
+function bajo(m){
+  const a=[["D",m.D],["R",m.R],["Q",m.Q]].sort((x,y)=>x[1]-y[1]);
+  return a[0][0];
+}
+
+/* ═══════════════ estado del juego ═══════════════ */
+const S={nivel:0,cortes:HOY.slice(),apOEE:null,apPar:null,puntos:0,hist:[],
+         R:null,raf:0,gemelo:false,modo:"objetivo",ultTwin:null};
+
+const $=q=>document.querySelector(q), stage=$("#stage");
+const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const n1=v=>v.toFixed(1).replace(".",",");
+const pc=v=>(v*100).toFixed(1).replace(".",",")+" %";
+const mil=v=>v.toLocaleString("es-CO");
+const niv=()=>NIV[S.nivel];
+const hm=s=>{const h=Math.floor(s/3600),m=Math.round((s%3600)/60);return h+" h "+String(m).padStart(2,"0");};
+
+function barra(){
+  $("#dots").innerHTML=NIV.map((v,i)=>{const h=S.hist[i];
+    return '<i class="'+(h?(h.pasa?"ok":"no"):(i===S.nivel?"now":""))+'"></i>';}).join("");
+  $("#pts").textContent=S.puntos+" pts";
+}
+
+/* la pieza HEXA, capa por capa */
+const CAPAS=[["#E9E7E1","#C8C4BB"],["#DCE9E8","#A9C4C2"],["#E6CF23","#B9A50F"],
+             ["#3AAE45","#25812D"],["#28A6B6","#177C89"],["#A8ADB2","#7E8389"],["#CFD8DA","#9AA7AA"]];
+function hexa(n,w){
+  const lw=w*.64, lh=lw*.30, sep=lw*.115, alto=lh+sep*(n-1)+9;
+  let s="";
+  for(let i=n-1;i>=0;i--){
+    const y=alto-lh-i*sep-2,c=CAPAS[i];
+    s+='<polygon transform="translate('+((w-lw)/2).toFixed(1)+','+y.toFixed(1)+')" points="'
+      +(lw*.25).toFixed(1)+',0 '+(lw*.75).toFixed(1)+',0 '+lw.toFixed(1)+','+(lh*.5).toFixed(1)+' '
+      +(lw*.75).toFixed(1)+','+lh.toFixed(1)+' '+(lw*.25).toFixed(1)+','+lh.toFixed(1)+' 0,'+(lh*.5).toFixed(1)
+      +'" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1"/>';
+  }
+  const t=alto-lh-(n-1)*sep-2;
+  [.28,.5,.72].forEach(p=>{s+='<rect x="'+((w-lw)/2+lw*p-1).toFixed(1)+'" y="'+(t-7).toFixed(1)
+    +'" width="2" height="9" fill="#8D9298"/>';});
+  return '<svg width="'+w+'" height="'+alto.toFixed(0)+'" viewBox="0 0 '+w+' '+alto.toFixed(0)+'" aria-hidden="true">'+s+'</svg>';
+}
+
+function medidores(m,rotulo){
+  const b=bajo(m);
+  const f=(k,nom,v)=>'<div class="fac'+(b===k?" low":"")+'"><span>'+nom+'</span>'
+    +'<span class="tr"><i style="width:'+(v*100).toFixed(1)+'%"></i></span>'
+    +'<span class="vl">'+(v*100).toFixed(1).replace(".",",")+'</span></div>';
+  return '<div class="oee"><div class="h"><b>'+rotulo+'</b><i>'+pc(m.OEE)+'</i></div>'
+    +f("D","Disponibilidad",m.D)+f("R","Rendimiento",m.R)+f("Q","Calidad",m.Q)+'</div>';
+}
+
+/* ═══════════════ 1 · objetivo ═══════════════ */
+function verObjetivo(){
+  const v=niv(), tk=Math.max.apply(null,tramos(v.cortes,v.W));
+  const hoy=simular(v.cortes,v.W,v.relx);
+  stage.innerHTML=
+    '<div class="eyebrow">Nivel '+v.n+' de 5</div>'
+    +'<h1>'+esc(v.t)+'</h1>'
+    +'<p class="lead">'+esc(v.nuevo)+'</p>'
+    +'<div class="ob"><div class="eyebrow">Hoy sale una pieza cada</div>'
+      +'<div class="big">'+n1(tk)+' <s>s</s></div></div>'
+    +'<div class="ob"><div class="eyebrow">Tiene que llegar a</div>'
+      +'<div class="big a">'+(v.meta.k==="takt"?n1(v.meta.v)+" <s>s</s>"
+         :v.meta.k==="oee"?(v.meta.v*100).toFixed(0)+" <s>% de OEE</s>"
+         :mil(v.meta.v)+" <s>piezas</s>")+'</div></div>'
+    +'<div class="ob"><div class="eyebrow">Su eficiencia se mide con el OEE</div>'
+      +'<p>Disponibilidad × Rendimiento × Calidad. Con la línea como está hoy, el OEE va en '
+      +'<strong>'+pc(hoy.OEE)+'</strong>.</p></div>'
+    +(v.recfg
+      ?'<div class="ob"><div class="eyebrow">Sin parar la planta</div>'
+       +'<p>Reconfigurar la línea real <strong>para la producción 35 minutos</strong>. '
+       +'Ensayar en el gemelo digital no cuesta nada y la planta sigue andando.</p></div>'
+      :'<div class="ob"><div class="eyebrow">Se decide antes de arrancar</div>'
+       +'<p>En este nivel la línea se arma una vez y corre toda la jornada. <strong>No hay segunda '
+       +'oportunidad</strong> hasta el cierre.</p></div>')
+    +'<div class="ob"><div class="eyebrow">Gana quien</div>'
+      +'<p>entregue <strong>más piezas buenas</strong>. El OEE no es el marcador: es el diagnóstico '
+      +'que dice dónde se está perdiendo.</p></div>'
+    +'<button class="btn" id="go">Empezar</button>';
+  $("#go").onclick=()=>{S.cortes=v.cortes.slice();verArmado();};
+}
+
+/* ═══════════════ 2 · armado ═══════════════ */
+function verArmado(opts){
+  opts=opts||{};
+  const v=niv(), W=v.W, tr=tramos(S.cortes,W);
+  const tk=Math.max.apply(null,tr), K=S.cortes.length;
+  let bn=0;for(let i=1;i<tr.length;i++)if(tr[i]>tr[bn])bn=i;
+
+  let h="";
+  if(opts.gemelo){
+    h+='<div class="tag">Gemelo digital · la planta sigue andando</div>'
+      +'<h2>Ensaye sin tocar la planta</h2>'
+      +'<p class="lead">Mueva los cortes y córralo. Esto no para la producción ni cuenta como cambio.</p>';
+  }else if(opts.parado){
+    h+='<div class="tag w">Planta parada · 35 min</div>'
+      +'<h2>Reconfigure la línea</h2>'
+      +'<p class="lead">Ya está pagando la parada. Deje la línea como la quiere para el resto de la jornada.</p>';
+  }else{
+    h+='<div class="eyebrow">Nivel '+v.n+' · armado</div>'
+      +'<h2>¿Dónde corta la línea?</h2>'
+      +'<p class="lead">'+esc(v.pista)+'</p>';
+  }
+
+  h+='<div class="met">'
+    +'<div><b>Sale cada</b><i class="'+(tk<= (v.meta.k==="takt"?v.meta.v:20)?"ok":"a")+'">'+n1(tk)+' s</i></div>'
+    +'<div><b>Puestos · gente</b><i>'+K+' de '+v.gente+'</i></div>'
+    +'</div>';
+
+  /* la cadena */
+  h+='<div class="chain">';
+  let p=0;
+  for(let k=0;k<K;k++){
+    const c=S.cortes[k];
+    h+='<div class="pst'+(k===bn?" bn":"")+'"><span class="n">Puesto '+(k+1)+'</span>'
+      +'<span class="s">'+n1(tr[k])+' s</span></div>';
+    for(let i=p;i<c;i++){
+      h+='<div class="tsk"><span>'+esc(NOM[i])+'</span><span>'+n1(W[i])+'</span></div>';
+      if(i<27){
+        const esCorte=(i+1===c);
+        const puedeAbrir=!esCorte && K<v.gente;
+        h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'"'
+          +((esCorte&&K<=1)||(!esCorte&&!puedeAbrir)?' disabled':'')+'>'
+          +'<span class="in"><b>'+(esCorte?"✂ corte "+(k+1):"+ cortar aquí")+'</b></span></button>';
+      }
+    }
+    p=c;
+  }
+  h+='</div>';
+
+  if(opts.gemelo){
+    if(S.ultTwin)h+=medidores(S.ultTwin,"Si la jornada entera corriera así");
+    h+='<button class="btn gh" id="twin">Correr en el gemelo</button>'
+      +'<button class="btn" id="back">Volver a la planta</button>'
+      +'<p class="hint">La planta no se detuvo mientras usted ensayaba.</p>';
+  }else if(opts.parado){
+    h+='<button class="btn" id="ok">Arrancar así</button>';
+  }else{
+    h+='<button class="btn" id="ok">Continuar</button>';
+  }
+  stage.innerHTML=h;
+
+  stage.querySelectorAll(".cutrow").forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i, j=S.cortes.indexOf(i);
+      if(j>=0){ if(S.cortes.length>1)S.cortes.splice(j,1); }
+      else if(S.cortes.length<v.gente){ S.cortes.push(i);S.cortes.sort((a,b)=>a-b); }
+      S.ultTwin=null;
+      verArmado(opts);
+    };
+  });
+  if(opts.gemelo){
+    $("#twin").onclick=()=>{S.ultTwin=simular(S.cortes,v.W,v.relx);verArmado(opts);};
+    $("#back").onclick=()=>{S.gemelo=false;S.ultTwin=null;verCorrida();};
+  }else if(opts.parado){
+    $("#ok").onclick=()=>{reconfig(S.R,S.cortes);S.ultTwin=null;verCorrida();};
+  }else{
+    $("#ok").onclick=verApuesta;
+  }
+}
+
+/* ═══════════════ 3 · apuesta ═══════════════ */
+function verApuesta(){
+  const v=niv();
+  const h='<div class="eyebrow">Nivel '+v.n+' · antes de arrancar</div>'
+    +'<h2>Comprométase primero</h2>'
+    +'<p class="lead">Nadie mejora un indicador que no sabe leer. Diga qué va a pasar <em>antes</em> de que pase.</p>'
+    +'<div class="q"><p>1 · ¿A qué OEE va a cerrar la jornada?</p><div class="opts" id="q1">'
+      +BANDAS.map((b,i)=>'<button class="opt" data-i="'+i+'">'+b[0]+'</button>').join("")+'</div></div>'
+    +'<div class="q"><p>2 · ¿Cuántas veces va a parar la línea real hoy?</p><div class="opts" id="q2">'
+      +PARADAS_OPC.map((b,i)=>'<button class="opt" data-i="'+i+'">'+(b===3?"3 o más":b)+'</button>').join("")
+      +'</div>'+(v.recfg?'':'<p class="hint" style="text-align:left;margin-top:9px">En este nivel la línea no se puede tocar durante la jornada.</p>')+'</div>'
+    +'<button class="btn" id="go" disabled>Arrancar la jornada</button>'
+    +'<p class="hint">Sin responder las dos, el botón no se habilita.</p>';
+  stage.innerHTML=h;
+  const chk=()=>{$("#go").disabled=(S.apOEE===null||S.apPar===null);};
+  const sel=(cont,key)=>{
+    stage.querySelectorAll("#"+cont+" .opt").forEach(b=>{
+      b.onclick=()=>{
+        stage.querySelectorAll("#"+cont+" .opt").forEach(x=>x.classList.remove("sel"));
+        b.classList.add("sel"); S[key]=+b.dataset.i; chk();
+      };
+    });
+  };
+  S.apOEE=null;S.apPar=null;sel("q1","apOEE");sel("q2","apPar");
+  $("#go").onclick=()=>{
+    S.R=mkRun(S.cortes,v.W,v.relx);
+    verCorrida();
+  };
+}
+
+/* ═══════════════ 4 · corrida ═══════════════ */
+function verCorrida(){
+  const v=niv();
+  stage.innerHTML=
+    '<div class="eyebrow">Nivel '+v.n+' · jornada en curso</div>'
+    +'<h2>'+esc(v.meta.txt)+'</h2>'
+    +'<div class="plant">'
+      +'<div class="clk"><span id="hora">Hora 0 de 8</span><span id="cmb">0 cambios</span></div>'
+      +'<div class="met">'
+        +'<div><b>Piezas buenas</b><i id="mg">0</i></div>'
+        +'<div><b>Planta parada</b><i id="mp" class="ok">0 min</i></div>'
+      +'</div>'
+      +'<div id="oee"></div>'
+      +'<div class="line" id="line"></div>'
+      +'<div class="split"><span>Buenas / malas</span><span class="bar2" id="bar"><i class="g" style="width:100%"></i><i class="b" style="width:0"></i></span></div>'
+    +'</div>'
+    +(v.recfg
+      ?'<button class="btn gh" id="twin">Ensayar en el gemelo</button>'
+       +'<p class="hint">Gratis. La planta sigue produciendo mientras usted ensaya.</p>'
+       +'<button class="btn dan" id="stop">⚠ Parar y reconfigurar</button>'
+       +'<p class="hint">Cuesta 35 minutos de planta y vacía la línea.</p>'
+      :'<p class="hint">La línea se armó una vez y corre así toda la jornada.</p>');
+  if(v.recfg){
+    $("#twin").onclick=()=>{S.gemelo=true;S.ultTwin=null;verArmado({gemelo:true});};
+    $("#stop").onclick=()=>{cancelAnimationFrame(S.raf);S.raf=0;verArmado({parado:true});};
+  }
+  pintarPlanta();
+  correr();
+}
+
+function pintarPlanta(){
+  const R=S.R,L=R.L,m=medir(R);
+  const el=id=>document.getElementById(id);
+  if(!el("hora"))return;
+  el("hora").innerHTML='Hora <b>'+Math.min(8,Math.floor(R.clock/3600))+'</b> de 8';
+  el("cmb").textContent=R.cambios+(R.cambios===1?" cambio":" cambios");
+  el("mg").textContent=mil(R.good);
+  const mp=el("mp");mp.textContent=Math.round(R.parado/60)+" min";
+  mp.className=R.parado>0?"a":"ok";
+  el("oee").innerHTML=medidores(m,"OEE de la jornada");
+  const malas=R.out-R.good, tot=Math.max(1,R.out);
+  el("bar").innerHTML='<i class="g" style="width:'+(R.good/tot*100)+'%"></i>'
+                     +'<i class="b" style="width:'+(malas/tot*100)+'%"></i>';
+  let h="";
+  for(let i=0;i<L.N;i++){
+    const e=L.st[i], capa=Math.min(7,Math.floor(i/L.N*7)+1);
+    const idle=!e.h&&e.dt<=0;
+    h+='<div class="stn'+(idle?" idle":"")+'">'+hexa(capa,40)
+      +'<div class="lb">P'+(i+1)+'</div>'
+      +'<div class="pb"><i style="width:'+(e.dt>0?100:Math.min(100,e.t/L.cyc[i]*100)).toFixed(0)+'%"></i></div></div>';
+  }
+  el("line").innerHTML=h;
+}
+
+function correr(){
+  let ant=performance.now(), acc=0;
+  const porSeg=T/REAL;
+  function paso(now){
+    const d=Math.min(.1,(now-ant)/1000); ant=now;
+    acc+=d*porSeg;
+    /* paso fijo de 0,25 s: idéntico al modelo con el que se calibraron los niveles */
+    while(acc>=STEP && !S.R.fin){ tick(S.R,STEP); acc-=STEP; }
+    pintarPlanta();
+    if(S.R.fin){ S.raf=0; setTimeout(verCierre,420); return; }
+    S.raf=requestAnimationFrame(paso);
+  }
+  S.raf=requestAnimationFrame(paso);
+}
+
+/* ═══════════════ 5 · cierre ═══════════════ */
+function verCierre(){
+  const v=niv(), m=medir(S.R), R=S.R;
+  const tk=Math.max.apply(null,tramos(R.cortes,v.W));
+  const pasa = v.meta.k==="takt" ? tk<=v.meta.v+1e-9
+             : v.meta.k==="oee"  ? m.OEE>=v.meta.v
+             :                     m.good>=v.meta.v;
+  /* apuesta */
+  let bi=0;for(let i=0;i<BANDAS.length;i++)if(m.OEE>=BANDAS[i][1]&&m.OEE<BANDAS[i][2])bi=i;
+  const okOEE=S.apOEE===bi;
+  const parReal=Math.min(3,R.cambios), okPar=PARADAS_OPC[S.apPar]===parReal;
+  const gan=(pasa?50:0)+(okOEE?25:0)+(okPar?25:0);
+  S.puntos+=gan;
+  S.hist[S.nivel]={pasa:pasa,oee:m.OEE,good:m.good,takt:tk,gan:gan};
+  barra();
+
+  const b=bajo(m);
+  const DIAG={
+    D:["Disponibilidad","La planta estuvo quieta "+hm(m.down)+" de las ocho. "
+       +(R.parado>0?"De eso, "+Math.round(R.parado/60)+" minutos los puso usted al reconfigurar."
+                   :"Todo fue avería de máquina: no vino de sus decisiones.")],
+    R:["Rendimiento","La línea corrió a "+n1(tk)+" s por pieza contra los 18,2 s de diseño. "
+       +"Eso es desbalanceo: hay un puesto cargado y otros esperando."],
+    Q:["Calidad","Salieron "+mil(m.out-m.good)+" piezas malas de "+mil(m.out)+". "
+       +"Cuando un puesto queda sobrecargado, se equivoca más."]
+  }[b];
+
+  let h='<div class="hero">'
+    +'<div class="n">'+mil(m.good)+'</div>'
+    +'<div class="l">piezas buenas entregadas</div>'
+    +'<div class="v '+(pasa?"ok":"no")+'">'+(pasa?"✓ pasó el nivel":"✗ no llegó a la meta")+'</div>'
+    +'</div>'
+    +medidores(m,"OEE de la jornada")
+    +'<div class="row"><span>Sale cada</span><span>'+n1(tk)+' s</span></div>'
+    +'<div class="row"><span>Puestos</span><span>'+R.cortes.length+' de '+v.gente+'</span></div>'
+    +'<div class="row"><span>Paradas de planta</span><span class="'+(R.cambios?"a":"g")+'">'
+      +R.cambios+(R.cambios?' · '+Math.round(R.parado/60)+' min':'')+'</span></div>'
+    +'<div class="row"><span>Meta del nivel</span><span>'+esc(v.meta.txt.replace("Sacar una pieza cada ","").replace("Cerrar la jornada con ","").replace("Entregar ",""))+'</span></div>';
+
+  h+='<div class="card"><b class="t">Dónde está su pérdida</b>'
+    +'<strong>'+DIAG[0]+'</strong> es el factor más bajo. '+DIAG[1]
+    +'<p style="margin-top:9px;color:var(--muted);font-size:.85rem">Regla para leerlo: '
+    +'<strong>Rendimiento</strong> mide su balanceo y <strong>Disponibilidad</strong> mide sus paradas. '
+    +'Si Disponibilidad se le acerca a Rendimiento, está parando la planta de más.</p></div>';
+
+  h+='<div class="card a"><b class="t">La apuesta</b>'
+    +'<div class="row"><span>Dijo que el OEE cerraría en '+BANDAS[S.apOEE][0]+'</span>'
+      +'<span class="'+(okOEE?"g":"a")+'">'+(okOEE?"✓ +25":"✗ fue "+BANDAS[bi][0])+'</span></div>'
+    +'<div class="row" style="border:0"><span>Dijo '+(PARADAS_OPC[S.apPar]===3?"3 o más paradas"
+        :PARADAS_OPC[S.apPar]===1?"1 parada":PARADAS_OPC[S.apPar]+" paradas")+'</span>'
+      +'<span class="'+(okPar?"g":"a")+'">'+(okPar?"✓ +25":"✗ hizo "+R.cambios)+'</span></div>'
+    +'<p style="margin-top:9px"><strong>'+gan+' puntos</strong> en este nivel.</p></div>';
+
+  h+='<div class="card"><b class="t">Lo que se lleva a la mesa</b>'
+    +'Corte la línea física después de estas tareas:'
+    +'<div class="code">'+R.cortes.join(" · ")+'</div>'
+    +R.cortes.length+' puestos. El cuello queda en <strong>Puesto '+(R.L.bn+1)+'</strong>, a '
+    +n1(R.L.cyc[R.L.bn])+' s.</div>';
+
+  if(S.nivel<NIV.length-1){
+    h+='<button class="btn" id="next">Siguiente nivel</button>';
+  }else{
+    let r=RANGOS[RANGOS.length-1];
+    for(const x of RANGOS)if(S.puntos>=x[0]){r=x;break;}
+    h+='<div class="card a"><b class="t">Cierre · '+S.puntos+' de 500 puntos</b>'
+      +'<strong style="font-size:1.05rem">'+r[1]+'</strong><p style="margin-top:6px">'+r[2]+'</p></div>'
+      +'<div class="card"><b class="t">Lo que hay que llevarse de todo esto</b>'
+      +'Ensayar en el gemelo es gratis y se siente improductivo. Parar la línea se siente '
+      +'productivo y cuesta. Quien reconfigura cuatro veces en un día entrega <strong>menos piezas '
+      +'que si no hubiera tocado nada</strong> — y con el OEE por debajo de como lo encontró. '
+      +'Esa es la razón de ser de un gemelo digital.</div>'
+      +'<button class="btn" id="next">Volver a empezar</button>';
+  }
+  stage.innerHTML=h;
+  window.scrollTo(0,0);
+  $("#next").onclick=()=>{
+    if(S.nivel<NIV.length-1)S.nivel++;
+    else {S.nivel=0;S.puntos=0;S.hist=[];}
+    S.R=null;barra();verObjetivo();
+  };
+}
+
+/* ═══════════════ arranque ═══════════════ */
+barra();
+verObjetivo();
+window.SINPARAR={S:S,simular:simular,tramos:tramos,NIV:NIV,W0:W0,W5:W5,
+                 medir:function(){return S.R?medir(S.R):null;}};
+})();
+</script>
