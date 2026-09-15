@@ -51,6 +51,53 @@ function Detalle({ detalle }: { detalle?: { titulo: string; cuerpo: string } }) 
   );
 }
 
+/**
+ * Una ficha de `fichas_escala`: escala arriba y nota debajo.
+ *
+ * Vive en el módulo y no dentro de `RenderBloque` a propósito. Un componente
+ * declarado dentro de otro cambia de identidad en cada render, y React
+ * entonces no reconcilia: desmonta el subárbol y lo vuelve a montar. Como
+ * `RenderBloque` se vuelve a pintar con cada tecla —lee el contexto de la
+ * bitácora—, el <textarea> de la nota se destruía y se recreaba letra a
+ * letra: se perdía el cursor y se reiniciaba la animación de `.revelado`.
+ * El efecto para quien escribe era no poder corregir un texto ya escrito.
+ *
+ * Una ficha sin responder enseña qué es; una respondida enseña dónde
+ * desarrollarla. Nunca las dos cosas, para que la página no crezca.
+ */
+function Ficha({
+  escala, cabecera, campoValor, campoNota, notaEtiqueta, descripcion,
+}: {
+  escala: string;
+  cabecera: React.ReactNode;
+  campoValor: string;
+  campoNota: string;
+  notaEtiqueta?: string;
+  descripcion?: string;
+}) {
+  const bit = useBitacora();
+  const v = bit.valor(campoValor);
+  const marca = typeof v === "string" ? opcion(escala, v)?.color : undefined;
+  return (
+    <div className={`trend ${v ? "set" : ""}`}
+         style={{ ["--mark" as string]: tokenColor(marca) }}>
+      <div className="trend-cab">
+        <div style={{ minWidth: 0, flex: 1 }}>
+          {cabecera}
+          {descripcion && !v && <div className="trend-d">{descripcion}</div>}
+        </div>
+        {v ? <span className="tick" aria-label="Respondida">✓</span> : null}
+      </div>
+      <Escala campoId={campoValor} escalaId={escala} />
+      {notaEtiqueta && v && (
+        <div className="revelado">
+          <Texto campoId={campoNota} marcador={notaEtiqueta} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
   const bit = useBitacora();
 
@@ -98,36 +145,6 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
         b.items.filter((it) => bit.valor(campo.item(b.id, it.id, "valoracion"))).length +
         propias.filter((f) => bit.valor(campo.fila(b.id, f.id, "valoracion"))).length;
 
-      // Una ficha sin responder enseña qué es; una respondida enseña dónde
-      // desarrollarla. Nunca las dos cosas, para que la página no crezca.
-      const Ficha = ({
-        clave, cabecera, campoValor, campoNota, descripcion,
-      }: {
-        clave: string; cabecera: React.ReactNode; campoValor: string;
-        campoNota: string; descripcion?: string;
-      }) => {
-        const v = bit.valor(campoValor);
-        const marca = typeof v === "string" ? opcion(b.escala, v)?.color : undefined;
-        return (
-          <div key={clave} className={`trend ${v ? "set" : ""}`}
-               style={{ ["--mark" as string]: tokenColor(marca) }}>
-            <div className="trend-cab">
-              <div style={{ minWidth: 0, flex: 1 }}>
-                {cabecera}
-                {descripcion && !v && <div className="trend-d">{descripcion}</div>}
-              </div>
-              {v ? <span className="tick" aria-label="Respondida">✓</span> : null}
-            </div>
-            <Escala campoId={campoValor} escalaId={b.escala} />
-            {b.campoNota && v && (
-              <div className="revelado">
-                <Texto campoId={campoNota} marcador={b.campoNota.etiqueta} />
-              </div>
-            )}
-          </div>
-        );
-      };
-
       return (
         <div className="stack">
           <div className="bloque-cab">
@@ -138,7 +155,8 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
             {b.items.map((it) => (
               <Ficha
                 key={it.id}
-                clave={it.id}
+                escala={b.escala}
+                notaEtiqueta={b.campoNota?.etiqueta}
                 cabecera={<div className="trend-t">{it.titulo}</div>}
                 campoValor={campo.item(b.id, it.id, "valoracion")}
                 campoNota={campo.item(b.id, it.id, "nota")}
@@ -149,7 +167,8 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
             {propias.map((f) => (
               <Ficha
                 key={f.id}
-                clave={f.id}
+                escala={b.escala}
+                notaEtiqueta={b.campoNota?.etiqueta}
                 cabecera={
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                     <Texto

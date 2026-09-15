@@ -13,7 +13,8 @@
     "cohorte": "tsx scripts/cargar-cohorte.ts",
     "db:local": "bash scripts/db-local.sh",
     "test:rls": "bash scripts/db-local.sh test",
-    "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts && tsx scripts/verificar-lecturas.ts",
+    "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts && tsx scripts/verificar-lecturas.ts && pnpm verify:edicion",
+    "verify:edicion": "tsx --tsconfig tsconfig.scripts.json scripts/verificar-edicion.mts",
     "check": "tsc --noEmit && next build",
     "seed:sql": "tsx scripts/emitir-siembra.ts",
     "exportar:html": "node scripts/exportar-html.mjs",
@@ -32,12 +33,14 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^22.10.5",
     "@types/pg": "^8.23.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "dotenv": "^16.4.7",
     "esbuild": "^0.28.2",
+    "jsdom": "^30.0.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
