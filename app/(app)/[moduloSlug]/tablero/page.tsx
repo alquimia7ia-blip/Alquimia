@@ -39,7 +39,15 @@ export default async function PaginaTableroModulo({
     await Promise.all([
       supabase
         .from("comentarios")
-        .select("id, cuerpo, origen, creado_at, autor_id, perfiles(nombre_completo)")
+        // La clave foránea va nombrada a propósito: `comentarios` apunta dos
+        // veces a `perfiles` —autor_id y resuelto_por—, así que pedir
+        // `perfiles(...)` a secas es ambiguo y PostgREST rechaza la consulta
+        // entera. El recuadro de observaciones salía vacío al recargar, como
+        // si no se hubiera guardado nada, con las filas intactas en la base.
+        .select(
+          "id, cuerpo, origen, creado_at, autor_id," +
+          " perfiles!comentarios_autor_id_fkey(nombre_completo)",
+        )
         .eq("bitacora_id", datos.bitacoraId)
         .order("creado_at"),
       supabase
@@ -49,9 +57,9 @@ export default async function PaginaTableroModulo({
         .order("creado_at"),
     ]);
 
-  // Si una de las dos falla, el tablero se dibuja igual —las conclusiones no
-  // dependen de ellas— pero queda dicho en el registro. Tragarse el error
-  // hacía que un recuadro vacío se viera idéntico a uno sin contenido.
+  // Un recuadro vacío se ve idéntico a uno que no pudo cargar. Si la consulta
+  // falla, se dice en pantalla: callarlo fue lo que hizo parecer que la
+  // plataforma perdía lo escrito.
   if (errorNotas) console.error("tablero · observaciones", errorNotas.message);
   if (errorDudas) console.error("tablero · dudas", errorDudas.message);
 
@@ -65,14 +73,18 @@ export default async function PaginaTableroModulo({
   // componente de cliente, y hacerlo tumbaba esta página con un 500.
   const nombresTaller = Object.fromEntries(datos.talleres.map((t) => [t.id, t.corto]));
 
-  const observaciones: Observacion[] = (notas ?? []).map((n) => ({
+  // La forma del `select` con la clave foránea nombrada no la infieren los
+  // tipos generados, así que se declara aquí.
+  type NotaCruda = {
+    id: string; cuerpo: string; origen: string; creado_at: string; autor_id: string;
+    perfiles: { nombre_completo: string | null } | null;
+  };
+
+  const observaciones: Observacion[] = ((notas ?? []) as unknown as NotaCruda[]).map((n) => ({
     id: n.id,
     cuerpo: n.cuerpo,
     origen: n.origen === "facilitador" ? "facilitador" : "empresa",
-    autor: n.autor_id === perfilId
-      ? "Tú"
-      : (n.perfiles as unknown as { nombre_completo: string } | null)?.nombre_completo
-        ?? "Tu equipo",
+    autor: n.autor_id === perfilId ? "Tú" : n.perfiles?.nombre_completo ?? "Tu equipo",
     fecha: n.creado_at,
     mia: n.autor_id === perfilId,
   }));
@@ -111,11 +123,13 @@ export default async function PaginaTableroModulo({
                 perfilId={perfilId}
                 iniciales={dudas}
                 nombresTaller={nombresTaller}
+                errorCarga={errorDudas?.message}
               />
               <Observaciones
                 bitacoraId={datos.bitacoraId}
                 perfilId={perfilId}
                 iniciales={observaciones}
+                errorCarga={errorNotas?.message}
               />
             </>
           }

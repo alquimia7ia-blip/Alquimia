@@ -29,7 +29,7 @@ const dia = (iso: string) =>
   new Date(iso).toLocaleDateString("es-CO", { day: "numeric", month: "short" });
 
 export function Dudas({
-  bitacoraId, perfilId, tallerId, iniciales, nombresTaller, compacto,
+  bitacoraId, perfilId, tallerId, iniciales, nombresTaller, compacto, errorCarga,
 }: {
   bitacoraId: string;
   perfilId: string;
@@ -46,6 +46,8 @@ export function Dudas({
   nombresTaller?: Record<string, string>;
   /** Al pie del taller: sin lista, solo el campo. */
   compacto?: boolean;
+  /** La consulta que trae lo guardado falló. Se dice, no se disimula. */
+  errorCarga?: string;
 }) {
   const propias = tallerId
     ? iniciales.filter((d) => d.tallerId === tallerId)
@@ -90,8 +92,16 @@ export function Dudas({
     setLista(lista.filter((d) => d.id !== id));
   };
 
+  const avisoCarga = errorCarga ? (
+    <div className="error-sesion" style={{ marginTop: 12 }}>
+      No se pudo cargar lo guardado ({errorCarga}). Lo que escribiste sigue en la
+      base de datos; es la consulta la que falló.
+    </div>
+  ) : null;
+
   const campo = (
     <>
+      {avisoCarga}
       {error && <div className="error-sesion" style={{ marginTop: 10 }}>{error}</div>}
       <textarea
         className="f"

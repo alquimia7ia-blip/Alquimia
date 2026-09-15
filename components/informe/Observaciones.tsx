@@ -25,8 +25,14 @@ const dia = (iso: string) =>
   new Date(iso).toLocaleDateString("es-CO", { day: "numeric", month: "short" });
 
 export function Observaciones({
-  bitacoraId, perfilId, iniciales,
-}: { bitacoraId: string; perfilId: string; iniciales: Observacion[] }) {
+  bitacoraId, perfilId, iniciales, errorCarga,
+}: {
+  bitacoraId: string;
+  perfilId: string;
+  iniciales: Observacion[];
+  /** La consulta que trae lo guardado falló. Se dice, no se disimula. */
+  errorCarga?: string;
+}) {
   const [lista, setLista] = useState(iniciales);
   const [texto, setTexto] = useState("");
   const [guardando, setGuardando] = useState(false);
@@ -99,6 +105,12 @@ export function Observaciones({
         </div>
       )}
 
+      {errorCarga && (
+        <div className="error-sesion">
+          No se pudo cargar lo guardado ({errorCarga}). Lo que escribiste sigue en
+          la base de datos; es la consulta la que falló.
+        </div>
+      )}
       {error && <div className="error-sesion">{error}</div>}
 
       <textarea
