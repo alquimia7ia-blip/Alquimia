@@ -55,14 +55,18 @@ Se guardan los dibujos. Se vuelven a sacar en el momento 6.
 | Concepto | Qué es | Dónde se va a ver |
 |---|---|---|
 | **Tiempo de ciclo** | lo que se demora el puesto más lento | en el número grande del juego |
-| **OEE** | Disponibilidad × Rendimiento × Calidad | en los tres medidores |
+| **OEE** | Disponibilidad × Rendimiento × Calidad | en los tres medidores, como «la nota» |
 | **Gemelo digital** | la línea simulada, donde equivocarse no cuesta | en el botón «ensayar» |
 
 **La dinámica, dicha por encima:** «van a dirigir la línea. Tienen que bajar el
 tiempo de ciclo. Ahí está el juego, en el celular.»
 
-**Lo que NO se les explica:** que agregar puestos de a uno casi no sirve; que parar
+**Lo que NO se les explica:** que agregar puestos de a uno casi no sirve; que detener
 la línea para reconfigurarla se come la ganancia; dónde está el cuello.
+
+**Lo que sí trae el juego explicado**, en «¿cómo se juega?»: cómo se leen las barras
+—una por puesto, alta según lo que se demora— y qué quiere decir detener la línea.
+Eso es manejo de la pantalla, no la lección.
 
 ## MOMENTO 5 · PRACTICAR · 45 min
 
@@ -71,6 +75,11 @@ en el celular de cada uno o en grupos de tres en un computador de la Fábrica.
 
 **Meta:** pasar el nivel 2 — una pieza cada 20,0 s.
 **Métrica:** puntos del juego y OEE de cierre, escritos en el tablero por equipo.
+
+Antes de cada corrida el juego les cobra **dos apuestas**: cuántas piezas buenas van a
+entregar y qué nota van a sacar. Valen 25 puntos cada una. Ese es el momento en que
+dejan de tantear y empiezan a estimar, y es la pregunta que hay que devolverles en el
+momento 6: *¿en qué se equivocó su cuenta?*
 
 **Minutos de planeación:** ninguno. Se entra al juego de una.
 
@@ -127,9 +136,10 @@ el gemelo. Esa es la frase del momento: *la IA propone, el gemelo valida.*
 ## MOMENTO 8 · EJECUTAR · 40 min
 
 **Escenario complejo:** nivel 5 del juego — entra otra referencia y la asignación de
-ayer ya no sirve. Y después, **montarlo físicamente**: se corren las mesas de la
-Fábrica a los cortes que el equipo ganador sacó en «lo que se lleva a la mesa», y se
-arma el HEXA de verdad, cronómetro en mano.
+ayer ya no sirve. Y después, **montarlo físicamente**: se corren los puestos de la
+Fábrica al reparto que sacó el equipo ganador —la pantalla de cierre lo entrega en
+«cómo quedó su línea»: cuántos puestos y cuál es el más lento— y se arma el HEXA de
+verdad, cronómetro en mano.
 
 **Debe responder:** ¿el tiempo real coincide con el del gemelo? ¿En qué puesto se
 separa y por qué?

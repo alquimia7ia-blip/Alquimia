@@ -40,15 +40,16 @@ for (const e of ESP) {
 /* ═════ 2 · nivel 1 jugado BIEN por la interfaz ═════ */
 console.log("\n── nivel 1, jugado bien con clics reales ──");
 await p.click("#go");                                   await chkAncho("armado");
+await p.click('.pst[data-k="0"]');                       // abre el puesto 1 del acordeón
 await p.click('.cutrow[data-i="4"]');                   // quitar el corte de hoy
 await p.click('.cutrow[data-i="5"]');                   // ponerlo un paso más allá  -> C7
-const takt1 = (await p.textContent(".met i")).trim();
+const takt1 = (await p.textContent(".takt b")).trim();
 console.log("  cortes movidos, sale cada: " + takt1 + (takt1 === "28,0 s" ? "  (= cal7.py)" : "  ✗"));
 if (takt1 !== "28,0 s") mal("el takt tras recortar no da 28,0 s");
 await p.click("#ok");                                   await chkAncho("apuesta");
 if (!await p.isDisabled("#go")) mal("el botón arrancar no está bloqueado sin apostar");
-await p.click('#q1 .opt:nth-child(2)');                 // 50-65 %
-await p.click('#q2 .opt:nth-child(1)');                 // 0 paradas
+await p.click('#q1 .opt:nth-child(2)');                 // 800 a 1.000 piezas
+await p.click('#q2 .opt:nth-child(2)');                 // nota 50 a 65
 if (await p.isDisabled("#go")) mal("el botón sigue bloqueado tras apostar");
 await p.click("#go");                                   await chkAncho("corrida");
 await p.waitForSelector("#next", { timeout: 45000 });   await chkAncho("cierre");
@@ -64,7 +65,7 @@ await p.click("#next");                                  // -> nivel 2
 await p.evaluate(() => { window.SINPARAR.S.nivel = 2; });
 await p.click("#go");                                    // objetivo n3 -> armado
 await p.click("#ok");                                    // armado -> apuesta
-await p.click('#q1 .opt:nth-child(3)'); await p.click('#q2 .opt:nth-child(2)');
+await p.click('#q1 .opt:nth-child(3)'); await p.click('#q2 .opt:nth-child(3)');
 await p.click("#go");                                    // arranca la jornada
 await p.waitForTimeout(2200);
 const a = await p.evaluate(() => ({ clock: window.SINPARAR.S.R.clock, par: window.SINPARAR.S.R.parado,
@@ -85,12 +86,20 @@ await p.click("#back");
 await p.click("#stop");                                  // ahora sí, parar y reconfigurar
 await chkAncho("reconfigurar");
 await p.click('.cutrow[data-i="6"]');
-await p.click("#ok");
-await p.waitForTimeout(300);
+await p.click("#ok");                                   // confirma: detiene la línea
+await p.waitForSelector("#sigue", { timeout: 5000 });   await chkAncho("línea detenida");
 const d2 = await p.evaluate(() => ({ par: window.SINPARAR.S.R.parado, cmb: window.SINPARAR.S.R.cambios }));
-console.log("  tras reconfigurar: " + d2.cmb + " cambio(s), planta parada " + d2.par + " s ("
+console.log("  tras reconfigurar: " + d2.cmb + " cambio(s), línea detenida " + d2.par + " s ("
   + Math.round(d2.par / 60) + " min)");
 if (d2.par !== 2100 || d2.cmb !== 1) mal("reconfigurar debía costar 2100 s y contar 1 cambio");
+const relIni = await p.textContent("#rel");
+if (!/^3[0-5]:/.test(relIni)) mal("el reloj de la parada no arranca en 35 minutos, dio " + relIni);
+await p.waitForTimeout(3400);
+const relFin = await p.textContent("#rel");
+if (relFin !== "0:00") mal("el reloj de la parada no llega a cero, quedó en " + relFin);
+console.log("  la cuenta regresiva corrió de " + relIni + " a " + relFin
+  + " y avisó de " + (await p.textContent("#pp")) + " piezas que no van a salir");
+await p.click("#sigue");                                // vuelve a arrancar
 await p.waitForSelector("#next", { timeout: 45000 });
 const c3 = await p.evaluate(() => document.querySelector("#stage").textContent.replace(/\s+/g, " "));
 console.log("  cierre n3: " + c3.slice(0, 64));

@@ -306,7 +306,9 @@ hubo que inventarlo: está en la pieza.
 En los gemelos 01 y 02 las estaciones son fijas y se reparten operarios. Aquí **la única
 palanca es dónde se corta la cadena**. Una persona por puesto; no puede haber más puestos que
 participantes. Agregar un puesto **sí** baja el tiempo de ciclo; apurar a la gente **no**. Y
-el resultado se traduce literalmente a la Fábrica: **dónde poner las mesas**.
+el resultado se traduce literalmente a la Fábrica: **dónde parte la fila**. El juego habla
+siempre de **puestos**, nunca de «mesas»: decir «mover las mesas» hacía leer «mover mesas
+*para* la planta» como si fuera un complemento y no el verbo *detener*.
 
 ### Configuración calibrada — no tocar sin correr `cal7.py`
 
@@ -379,15 +381,23 @@ sus paradas. Si Disponibilidad se le acerca a Rendimiento, está parando de más
 Nivel 5: la placa transparente lleva sellador y cada mitad pasa de 8 a 15 s. **Mismo trabajo
 total**, otro reparto; con los cortes de ayer el takt salta a 30,0 s.
 
-### La apuesta — dos preguntas, ninguna adivinable
+### La apuesta — dos preguntas, las mismas en los cinco niveles
 
-1. ¿A qué **OEE** va a cerrar la jornada? (bandas)
-2. ¿Cuántas veces va a **parar la línea real** hoy?
+1. ¿Cuántas **piezas buenas** va a entregar hoy? (`<800 · 800-1.000 · 1.000-1.200 · >1.200`)
+2. ¿A qué **nota (OEE)** va a cerrar? (`<50 · 50-65 · 65-80 · >80`)
 
-Se cayó «¿llega a los 20 s?»: era calculable sumando los cortes. Y **se descartó «¿cuál factor
-quedará más bajo?»** porque Rendimiento salía casi siempre — el mismo defecto que ya está
-documentado en «Jefe de Planta». Puntaje: 50 pasar · 25 acertar la banda · 25 acertar las
-paradas = 100 por nivel, 500 en total.
+Se cayó «¿llega a los 20 s?»: era calculable sumando los cortes. **Se descartó «¿cuál factor
+quedará más bajo?»** porque Rendimiento salía casi siempre — el defecto ya documentado en
+«Jefe de Planta». Y **se cayó «¿cuántas veces va a parar la línea?»**: solo tenía sentido en
+los niveles 3-5, en los niveles 1 y 2 la respuesta era forzosamente cero, y el usuario reportó
+que la pregunta confundía más de lo que medía. Puntaje: 50 pasar · 25 la banda de piezas ·
+25 la banda de nota = 100 por nivel, 500 en total.
+
+**Los cortes de las bandas de piezas no son redondos por gusto:** separan la jugada correcta de
+la errada en los cinco niveles (750/975 · 1.059/1.364 · 1.008/1.206 · 968/1.189 · 908/1.182).
+Con las bandas anteriores —600/900/1.200— los niveles 4 y 5 caían los dos en la misma banda y
+la pregunta no medía nada. Si se recalibran los tiempos, **hay que volver a mirar esto en
+`niv.py` antes de mover las bandas.**
 
 ### La IA vive por fuera
 
@@ -404,13 +414,53 @@ documento. El prompt que se entrega está en la ficha.
   Un motor correcto con la trampa rota no enseña nada.
 - Las máquinas se atan a la **tarea**, no al puesto: si se atan al índice del puesto, mover un
   corte mueve la avería de sitio y el modelo deja de ser el mismo.
+- Las máquinas se atan a la **tarea**, no al puesto (ver arriba).
 - Los artifacts de este proyecto **no llevan** `<!DOCTYPE>`, `<html>`, `<head>` ni `<body>`:
   empiezan en `<title>` porque la plataforma pone el andamiaje al publicar.
+
+### Lo que enseñó rehacer la interfaz para empresarios (v5)
+
+El público son empresarios mirando un celular, no ingenieros. Tres reportes seguidos —«un poco
+enredado», «el contador no me convence», «todavía no entiendo lo de parar la planta»— salieron
+todos de lo mismo: **la pantalla pedía leer en vez de mirar.**
+
+- **El estado de la línea es una gráfica, no una lista.** Una fila por puesto con su nombre, su
+  estado en palabras y sus segundos son diez tarjetas y tres pantallas de deslizar. Una **barra
+  por puesto, alta según lo que se demora**, cabe entera en media pantalla y el desbalanceo se
+  ve sin leer nada. El acento marca el cuello; lo que se llena por dentro es el avance.
+  Los segundos van **redondeados**: con diez puestos en 390 px el decimal no cabe, y el decimal
+  exacto vive en el armado y en el cierre.
+- **El mismo dibujo en las cuatro pantallas.** Las barras salen en el armado (fijas), en la
+  ayuda (de ejemplo), en la corrida (vivas) y en la parada (apagadas). Reconocerlo cuesta una
+  vez, no cuatro.
+- **La cadena de 28 tareas es un acordeón.** Antes salían las 28 tareas y los 27 botones de
+  corte de una vez: diez pantallas para decidir una cosa. Ahora se ven los **puestos completos**
+  —que es lo que se compara para balancear— y se abre uno para mover sus cortes. **Arranca
+  abierto el más lento**, que es donde hay que actuar.
+- **Un costo se muestra, no se explica.** Reconfigurar cobra 2.100 s desde el principio, pero
+  el jugador no lo sentía. Ahora, al confirmar, hay una pantalla con la línea apagada, un reloj
+  que corre de 35:00 a 0:00 y el conteo de las piezas que no van a salir. `reconfig()` no
+  cambió: la pantalla no toca el modelo, lo hace visible. Y el número de piezas está rotulado
+  como lo que es —aritmética del ritmo, `2.100 ÷ takt`—, no como una lectura del modelo.
+- **Explicar y mostrar, no una de las dos.** Además de la pantalla, la ayuda trae un paso
+  «¿qué es detener la línea?» con las dos jugadas lado a lado: *probar en el computador —
+  gratis* contra *detener la línea — 35 min*.
+- **Cada pantalla arranca arriba.** Si el botón está al final de una pantalla larga, la
+  siguiente entra por la mitad y parece rota. Al rearmar el acordeón sí se conserva el sitio.
+- **Un botón deshabilitado sin explicación parece un juego trabado.** Cuando ya se usaron todas
+  las personas, los «+ partir aquí» salen grises: hay que decir por qué y qué hacer.
+- **Ojo con las clases genéricas.** El rótulo del eje se llamaba `.no` y `.paso .no` —el círculo
+  naranja de los pasos de la ayuda— le ganaba por orden en la hoja: los números de puesto salían
+  como bolas naranja. Se llama `.px`.
+- **Al cambiar la interfaz hay que mover `drive7.mjs` con ella.** El acordeón escondió los
+  `.cutrow` y el panel fijo se volvió `.takt`; el verificador dejó de encontrarlos. Los siete
+  casos del motor contra `cal7.py` siguieron dando idéntico, que es la prueba de que se tocó
+  la cara y no el modelo.
 
 ### Lo que queda por confirmar con la Fábrica
 
 1. **Cuánta gente tiene un grupo** — fija el máximo de puestos. Con menos de 10 el nivel 2 no
    se puede recrear físicamente.
-2. **Si se pueden montar más de 7 mesas.** Si no, el taller físico no reproduce el resultado.
+2. **Si se pueden montar más de 7 puestos.** Si no, el taller físico no reproduce el resultado.
 3. **Los tiempos reales por tarea, con cronómetro.** Los actuales son estimados de las fotos y
    están marcados como tales en la ficha.

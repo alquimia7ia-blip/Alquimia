@@ -21,7 +21,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:19px;
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:21px;
      line-height:1.55;padding:0 16px}
 .wrap{max-width:33rem;margin:0 auto;padding:20px 0 48px}
 
@@ -39,38 +39,44 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:
 
 h1{font-size:1.85rem;font-weight:700;letter-spacing:-.022em;line-height:1.15;margin-bottom:10px;text-wrap:balance}
 h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;text-wrap:balance}
-.lead{color:var(--muted);margin-bottom:24px;font-size:1.02rem;line-height:1.55}
-.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;
+.lead{color:var(--muted);margin-bottom:24px;font-size:1.06rem;line-height:1.55}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;
          color:var(--accent);font-weight:800;margin-bottom:9px}
 
 /* ── bloques del objetivo ── */
 .ob{margin-bottom:24px}
-.ob p{color:var(--muted);font-size:1.02rem;line-height:1.55}
+.ob p{color:var(--muted);font-size:1.06rem;line-height:1.55}
 .ob p strong{color:var(--ink);font-weight:700}
 .big{font-family:var(--mono);font-size:3rem;font-weight:800;letter-spacing:-.045em;line-height:1}
 .big s{text-decoration:none;font-size:1.4rem;font-weight:400;color:var(--muted)}
 .big.a{color:var(--accent)}
 
 /* ── métricas ── */
-.met.peg{position:sticky;top:0;z-index:5;box-shadow:0 6px 14px -8px rgba(0,0,0,.35)}
+.takt{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;
+      align-items:baseline;gap:14px;background:var(--paper);border-bottom:2px solid var(--ink);
+      padding:12px 2px;margin-bottom:18px;font-family:var(--mono);font-size:.74rem;
+      letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted);
+      box-shadow:0 8px 12px -10px rgba(0,0,0,.4)}
+.takt b{font-size:1.3rem;font-weight:800;letter-spacing:-.025em;color:var(--ink);margin-left:6px}
+.takt b.a{color:var(--accent)} .takt b.ok{color:var(--good)}
 .met{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
      border:1px solid var(--rule);margin-bottom:20px}
 .met>div{background:var(--paper);padding:14px 15px}
-.met b{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.11em;
+.met b{display:block;font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;
        text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
 .met i{font-style:normal;font-family:var(--mono);font-size:1.65rem;font-weight:800;letter-spacing:-.03em}
 .met i.a{color:var(--accent)} .met i.ok{color:var(--good)}
 
 /* ── medidores del OEE ── */
 .oee{border:1px solid var(--rule);padding:16px;margin-bottom:20px}
-.oee .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:16px}
-.oee .h b{font-family:var(--mono);font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;
+.oee .h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 10px;margin-bottom:16px}
+.oee .h b{font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;text-transform:uppercase;
           color:var(--muted);font-weight:700}
 .oee .h i{font-style:normal;font-family:var(--mono);font-size:2.2rem;font-weight:800;letter-spacing:-.04em}
 .fac{display:grid;grid-template-columns:1fr 3.2rem;gap:5px 10px;align-items:baseline;margin-bottom:13px}
 .fac:last-child{margin-bottom:0}
-.fac .nm{font-size:.95rem;font-weight:700}
-.fac .ex{grid-column:1/-1;font-size:.82rem;color:var(--muted);line-height:1.35;margin-top:-3px}
+.fac .nm{font-size:1rem;font-weight:700}
+.fac .ex{grid-column:1/-1;font-size:.9rem;color:var(--muted);line-height:1.35;margin-top:-3px}
 .fac .tr{grid-column:1/-1;height:10px;background:var(--rule);border-radius:5px;overflow:hidden;margin-top:5px}
 .fac .tr i{display:block;height:100%;background:var(--soft);border-radius:5px;transition:width .25s}
 .fac .vl{font-family:var(--mono);font-size:1.05rem;font-weight:700;text-align:right}
@@ -79,8 +85,15 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 
 /* ── la cadena de tareas ── */
 .chain{border:1px solid var(--rule);margin-bottom:20px}
-.pst{background:var(--line);padding:11px 13px;display:grid;grid-template-columns:auto 1fr auto;
-     gap:12px;align-items:center;border-bottom:1px solid var(--rule)}
+.pst{width:100%;background:var(--line);padding:13px;display:grid;
+     grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;min-height:66px;
+     border:0;border-bottom:1px solid var(--rule);text-align:left;font:inherit;color:inherit;
+     cursor:pointer}
+.pst .ch{font-size:.8rem;color:var(--muted);line-height:1}
+.pst.ab{background:var(--rule)}
+.pst.ab .ch{color:var(--ink)}
+.pst.bn.ab{background:color-mix(in srgb,var(--accent) 20%,var(--paper))}
+.pst.bn .ch{color:var(--accent)}
 .pst .n{font-family:var(--mono);font-size:.78rem;letter-spacing:.07em;font-weight:800;text-transform:uppercase}
 .pst .s{font-family:var(--mono);font-size:1.15rem;font-weight:800}
 .pst.bn{background:color-mix(in srgb,var(--accent) 13%,var(--paper))}
@@ -88,7 +101,7 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 .pst .tag2{display:block;font-size:.72rem;font-family:var(--sans);letter-spacing:0;
            text-transform:none;font-weight:400;color:var(--muted);margin-top:2px}
 .pst.bn .tag2{color:var(--accent)}
-.tsk{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 13px 10px 30px;font-size:.95rem;
+.tsk{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 13px 10px 30px;font-size:1rem;
      color:var(--muted);border-bottom:1px solid var(--line)}
 .tsk span:last-child{font-family:var(--mono);font-size:.9rem;font-weight:700}
 .cutrow{display:block;width:100%;min-height:46px;background:var(--paper);border:0;
@@ -106,21 +119,21 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 /* ── botones ── */
 .btn{display:block;width:100%;min-height:56px;text-align:center;padding:17px;
      border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-family:var(--mono);
-     font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;
+     font-size:.86rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;
      border-radius:4px;cursor:pointer;margin-bottom:10px}
 .btn.gh{background:transparent;color:var(--ink)}
 .btn.dan{background:transparent;color:var(--accent);border-color:var(--accent)}
 .btn:disabled{background:var(--line);color:var(--muted);border-color:var(--rule);cursor:not-allowed}
-.hint{font-size:.88rem;color:var(--muted);text-align:center;margin:-4px 0 20px;line-height:1.45}
+.hint{font-size:.95rem;color:var(--muted);text-align:center;margin:-4px 0 20px;line-height:1.45}
 
 /* ── apuesta ── */
 .q{margin-bottom:26px}
 .q p{font-weight:700;margin-bottom:12px;font-size:1.08rem;line-height:1.4}
-.q .sub{font-weight:400;color:var(--muted);font-size:.9rem;margin:-8px 0 12px;line-height:1.4}
-.opts{display:flex;gap:10px;flex-wrap:wrap}
-.opt{flex:1 1 auto;min-width:4.6rem;min-height:54px;border:2px solid var(--rule);background:transparent;
+.q .sub{font-weight:400;color:var(--muted);font-size:.98rem;margin:-8px 0 12px;line-height:1.4}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{min-width:0;min-height:58px;border:2px solid var(--rule);background:transparent;
      color:var(--muted);border-radius:4px;padding:13px 16px;font-family:var(--mono);
-     font-size:.95rem;font-weight:800;cursor:pointer}
+     font-size:1.05rem;font-weight:800;cursor:pointer}
 .opt.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent)}
 
 /* ── panel oscuro de la corrida ── */
@@ -137,25 +150,54 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
      color:var(--pmuted);font-weight:700;padding-bottom:12px;margin-bottom:16px;
      border-bottom:1px solid var(--prule)}
 .clk b{color:var(--pink);font-weight:800}
-/* la línea, una fila por puesto: todo cabe sin deslizar de lado */
-.line{margin-bottom:16px}
-.stn{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto auto;
-     gap:2px 14px;align-items:center;padding:11px 13px;border-radius:6px;
-     background:var(--pline);margin-bottom:8px}
-.stn .hx{grid-column:1;grid-row:1/4;align-self:center;line-height:0}
-.stn .nm{grid-column:2;grid-row:1;font-size:1.02rem;font-weight:700;line-height:1.2}
-.stn .sub{grid-column:2;grid-row:2;font-size:.82rem;color:var(--pmuted);line-height:1.3}
-.stn .s{grid-column:3;grid-row:1/3;font-family:var(--mono);font-size:1.1rem;
-        font-weight:800;align-self:center;white-space:nowrap}
-.stn .pb{grid-column:2/4;grid-row:3;height:8px;background:var(--prule);
-         border-radius:4px;overflow:hidden;margin-top:7px}
-.stn .pb i{display:block;height:100%;background:var(--accent);border-radius:4px}
-.stn.idle{opacity:.42}
-.stn.idle .sub{color:var(--pmuted)}
-.stn.dn{background:#2C1613;box-shadow:inset 0 0 0 1.5px var(--accent)}
-.stn.dn .sub{color:var(--accent);font-weight:700}
-.stn.cuello{box-shadow:inset 4px 0 0 var(--accent)}
-.stn.cuello .s{color:var(--accent)}
+/* ── la línea: una barra por puesto ──────────────────────────────────────
+   Lo alto de la barra es lo que se demora ese puesto. Así el desbalanceo se ve
+   de un vistazo en vez de leerse número por número, y la barra más alta —la que
+   frena la fila— queda señalada sola. Lo que se llena por dentro es el avance
+   de la pieza que tiene en la mano. Una sola serie, un solo tono, y el acento
+   marca dónde hay que mirar. */
+.bh{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--pmuted);font-weight:700;margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:4px;
+      border-bottom:1.5px solid rgba(242,240,236,.32)}
+.bfoot{display:flex;gap:4px;margin:9px 0 12px}
+.bcol,.bl{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center}
+.bx{position:relative;width:100%;height:calc(var(--h)*1.4px);border-radius:5px 5px 0 0;
+    overflow:hidden;background:rgba(242,240,236,.24);
+    box-shadow:inset 0 0 0 1px rgba(242,240,236,.36)}
+.bx i{position:absolute;left:0;right:0;bottom:0;background:rgba(242,240,236,.88)}
+.bl .sg{font-family:var(--mono);font-size:.7rem;font-weight:800;color:var(--pink);
+        white-space:nowrap;line-height:1}
+.bl .px{font-family:var(--mono);font-size:.66rem;color:var(--pmuted);margin-top:5px;
+        font-weight:700;line-height:1}
+.cuello .bx{background:rgba(201,67,28,.3);box-shadow:inset 0 0 0 2px var(--accent)}
+.cuello .bx i{background:var(--accent)}
+.cuello .sg{color:var(--accent)}
+.idle{opacity:.34}
+.dn .bx{background:#3A1712;box-shadow:inset 0 0 0 2px var(--accent)}
+.dn .bx i{background:repeating-linear-gradient(45deg,var(--accent) 0 4px,transparent 4px 9px)}
+.dn .sg{color:var(--accent)}
+.leg{font-size:.95rem;color:var(--pmuted);line-height:1.45;margin-bottom:18px}
+.leg b{color:var(--pink);font-weight:700}
+.leg .ac{color:var(--accent);font-weight:700}
+
+/* ── la línea parada: el costo de reconfigurar, visible ── */
+.paro{text-align:center;padding:6px 0 20px;border-bottom:1px solid var(--prule);margin-bottom:20px}
+.rel{font-family:var(--mono);font-size:3.4rem;font-weight:800;letter-spacing:-.045em;
+     line-height:1;color:var(--accent)}
+.rl{font-family:var(--mono);font-size:.74rem;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--pmuted);margin-top:11px;font-weight:700}
+
+/* ── la comparación de la ayuda: probar contra parar ── */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 4px}
+.vs>div{border:2px solid var(--rule);border-radius:6px;padding:14px}
+.vs>div.mal{border-color:var(--accent)}
+.vs .t2{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+        font-weight:800;margin-bottom:10px;line-height:1.35;color:var(--muted)}
+.vs .mal .t2{color:var(--accent)}
+.vs .n2{font-family:var(--mono);font-size:1.5rem;font-weight:800;letter-spacing:-.035em;line-height:1}
+.vs .mal .n2{color:var(--accent)}
+.vs p{font-size:.92rem;color:var(--muted);line-height:1.4;margin-top:9px}
 .split{display:grid;gap:8px;margin-bottom:6px}
 .split .lb2{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
             color:var(--pmuted);font-weight:700}
@@ -166,7 +208,7 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 /* ── cierre ── */
 .hero{text-align:center;padding:18px 0 22px;border-bottom:1px solid var(--rule);margin-bottom:22px}
 .hero .n{font-family:var(--mono);font-size:3.9rem;font-weight:800;letter-spacing:-.05em;line-height:1}
-.hero .l{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;
+.hero .l{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;
          color:var(--muted);margin-top:11px;font-weight:700}
 .hero .v{font-family:var(--mono);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;
          font-weight:800;margin-top:14px}
@@ -177,16 +219,16 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 .row .a{color:var(--accent)} .row .g{color:var(--good)}
 .card{border:2px solid var(--ink);padding:16px;margin:22px 0;font-size:1rem;line-height:1.55}
 .card.a{border-color:var(--accent)}
-.card b.t{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.11em;
+.card b.t{display:block;font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;
           text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:800}
 .code{font-family:var(--mono);font-size:1.05rem;font-weight:800;margin:11px 0;word-spacing:.12em}
 
 /* ── gráfica de barras ── */
 .graf{margin:22px 0}
-.graf .tt{font-family:var(--mono);font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;
+.graf .tt{font-family:var(--mono);font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;
           color:var(--muted);font-weight:700;margin-bottom:14px}
 .gb{display:grid;grid-template-columns:5.4rem 1fr;gap:10px;align-items:center;margin-bottom:11px}
-.gb .k{font-size:.88rem;color:var(--muted);line-height:1.25}
+.gb .k{font-size:.95rem;color:var(--muted);line-height:1.25}
 .gb .v{display:flex;align-items:center;gap:9px}
 .gb .br{height:26px;background:var(--soft);border-radius:0 3px 3px 0;min-width:3px}
 .gb.a .br{background:var(--accent)}
@@ -194,35 +236,14 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
 .gb.a .num,.gb.a .k{color:var(--accent)}
 .gb.a .k{font-weight:700}
 
-/* ── hoja de montaje ── */
-.mesa{border:2px solid var(--rule);border-radius:6px;padding:16px;margin-bottom:14px}
-.mesa.lenta{border-color:var(--accent)}
-.mesa .cab{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
-           padding-bottom:13px;border-bottom:1px solid var(--line);margin-bottom:13px}
-.mesa .cab .t{font-size:1.25rem;font-weight:700;line-height:1.2}
-.mesa .cab .t small{display:block;font-size:.8rem;font-weight:400;color:var(--accent);margin-top:2px}
-.mesa .cab .s{font-family:var(--mono);font-size:1.25rem;font-weight:800;white-space:nowrap}
-.mesa.lenta .cab .s{color:var(--accent)}
-.mesa ol{list-style:none;counter-reset:t;margin-bottom:14px}
-.mesa ol li{counter-increment:t;position:relative;padding:7px 0 7px 32px;font-size:1rem;line-height:1.4}
-.mesa ol li::before{content:counter(t);position:absolute;left:0;top:7px;width:22px;height:22px;
-  border-radius:50%;background:var(--line);color:var(--muted);font-family:var(--mono);
-  font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center}
-.mesa ol li b{font-family:var(--mono);font-size:.85rem;color:var(--muted);font-weight:700}
-.mesa .kit,.mesa .pasa{font-size:.92rem;line-height:1.45;padding:11px 13px;border-radius:4px;
-  background:var(--line);margin-bottom:9px}
-.mesa .kit b,.mesa .pasa b{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:800}
-.mesa .pasa{margin-bottom:0}
-
 /* ── ayuda ── */
 .paso{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;
       padding:18px 0;border-bottom:1px solid var(--line)}
 .paso .no{font-family:var(--mono);font-size:.9rem;font-weight:800;color:var(--paper);
           background:var(--accent);width:34px;height:34px;border-radius:50%;
           display:flex;align-items:center;justify-content:center}
-.paso h3{font-size:1.1rem;font-weight:700;margin-bottom:5px}
-.paso p{color:var(--muted);font-size:.98rem;line-height:1.5}
+.paso h3{font-size:1.16rem;font-weight:700;margin-bottom:5px}
+.paso p{color:var(--muted);font-size:1.02rem;line-height:1.5}
 .paso .fig{margin-top:12px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
 .demo{border:1px solid var(--rule);border-radius:4px;padding:10px 12px;margin-top:12px;
       font-family:var(--mono);font-size:.88rem;font-weight:700}
@@ -239,7 +260,7 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
      border-radius:4px;padding:7px 13px;margin-bottom:16px}
 .tag.w{background:var(--accent);color:var(--paper)}
 .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
-      font-size:.85rem;color:var(--muted);line-height:1.6}
+      font-size:.92rem;color:var(--muted);line-height:1.6}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 
@@ -286,22 +307,6 @@ const SOBRE_K=1.15, SOBRE_X=2.5;   /* puesto sobrecargado: se equivoca más */
 
 /* qué cara de la pieza deja lista cada tarea: sirve para dibujarla */
 const CAPA=[1,1,1,1, 2,2,2,2,2,2, 3,3,3,3, 4,4,4,4, 5,5,5,5, 6,6,6, 7,7,7];
-const CAPA_PASA=[
-  "la base y los tres espárragos puestos",
-  "la placa transparente ya puesta",
-  "la placa amarilla ya puesta",
-  "la placa verde ya puesta",
-  "la placa azul ya puesta",
-  "las tuercas ya puestas",
-  "la tapa ya apretada"];
-const CAPA_MAT=[
-  "1 placa base blanca · 3 espárragos roscados",
-  "2 mitades de placa transparente · 1 triángulo · 1 pentágono · 2 cilindros",
-  "2 mitades de placa amarilla · 4 insertos",
-  "2 mitades de placa verde · 4 insertos",
-  "2 mitades de placa azul · 4 insertos",
-  "4 tuercas de forma · 3 tuercas de espárrago",
-  "1 tapa de tres brazos · 1 tornillo central · llave allen"];
 const CAPA_NOM=["base y espárragos","placa transparente","placa amarilla",
   "placa verde","placa azul","tuercas","tapa y apriete"];
 
@@ -320,24 +325,27 @@ const NIV=[
   pista:"Reparta toda la fila otra vez. Partir solo el puesto más lento no alcanza."},
  {n:3,t:"La idea de la IA",gente:10,W:W0,relx:1,cortes:HOY,recfg:true,
   meta:{k:"oee",v:.72,txt:"Terminar el día con nota de 72 o más"},
-  nuevo:"Ya puede mover las mesas con el día andando. Pero mover mesas para la planta 35 minutos. Probar en el computador no cuesta nada.",
-  pista:"Pídale un reparto a ChatGPT o a Claude en su celular. Pruébelo en el computador antes de mover una sola mesa."},
+  nuevo:"Hoy sí puede cambiar el reparto con el día andando. Pero para cambiarlo hay que detener la línea 35 minutos: en ese rato nadie arma nada. Probar en el computador no cuesta nada y la línea sigue trabajando.",
+  pista:"Pídale un reparto a ChatGPT o a Claude en su celular. Pruébelo en el computador antes de detener la línea."},
  {n:4,t:"Máquinas viejas",gente:10,W:W0,relx:.5,cortes:HOY,recfg:true,
   meta:{k:"oee",v:.70,txt:"Terminar el día con nota de 70 o más"},
   nuevo:"Las mismas reglas. Pero las máquinas se dañan el doble. La meta casi no baja.",
-  pista:"Con más daños, cada parada suya pesa más. Piense bien cuántas veces va a mover las mesas."},
+  pista:"Con más daños, cada parada suya pesa más. Piense bien cuántas veces va a detener la línea."},
  {n:5,t:"Llega una pieza nueva",gente:10,W:W5,relx:1,cortes:C10,recfg:true,
   meta:{k:"buenas",v:1000,txt:"Entregar 1.000 piezas buenas o más"},
   nuevo:"La placa transparente ahora lleva pegante: cada mitad pasa de 8 a 15 segundos. El trabajo total es el mismo, pero repartido distinto. Su línea de ayer ya no sirve.",
   pista:"Mire los tiempos otra vez. El puesto más lento se cambió de lugar."}
 ];
 
-const BANDAS=[["<50 %",0,.50],["50-65 %",.50,.65],["65-80 %",.65,.80],[">80 %",.80,1.01]];
-const PARADAS_OPC=[0,1,2,3];
-/* en los niveles 1 y 2 la línea no se toca: preguntar cuántas veces la va a
-   parar tiene una sola respuesta posible y no mide nada. Allí se pregunta por
-   piezas, que obliga a pensar cuántas caben en ocho horas al ritmo que armó. */
-const BANDAS_PZA=[["menos de 600",0,600],["600 a 900",600,900],["900 a 1.200",900,1200],["más de 1.200",1200,9e9]];
+const BANDAS=[["menos de 50",0,.50],["50 a 65",.50,.65],["65 a 80",.65,.80],["más de 80",.80,1.01]];
+/* La segunda pregunta es la misma en los cinco niveles: cuántas piezas buenas
+   entrega hoy. Antes cambiaba de nivel a nivel —en los que no se puede parar la
+   línea, preguntar cuántas veces la va a parar tiene una sola respuesta— y eso
+   confundía más de lo que medía. Los cortes están puestos donde separan la
+   jugada correcta de la errada en los cinco niveles: 750/975 · 1059/1364 ·
+   1008/1206 · 968/1189 · 908/1182 (ver niv.py). */
+const BANDAS_PZA=[["menos de 800",0,800],["800 a 1.000",800,1000],
+                  ["1.000 a 1.200",1000,1200],["más de 1.200",1200,9e9]];
 const RANGOS=[
  [450,"Ingeniero de mejora","Decide en el gemelo y toca la planta una sola vez. Este es el nivel al que se llega leyendo los tres factores antes de actuar, no después."],
  [370,"Jefe de planta","Casi siempre sabe dónde está la pérdida. Le falta afinar cuándo vale la pena parar."],
@@ -438,8 +446,8 @@ function bajo(m){
 }
 
 /* ═══════════════ estado del juego ═══════════════ */
-const S={nivel:0,cortes:HOY.slice(),apOEE:null,apPar:null,puntos:0,hist:[],
-         R:null,raf:0,gemelo:false,modo:"objetivo",ultTwin:null,cerrado:false};
+const S={nivel:0,cortes:HOY.slice(),apOEE:null,apPza:null,puntos:0,hist:[],
+         R:null,raf:0,gemelo:false,modo:"objetivo",ultTwin:null,cerrado:false,abierto:null};
 
 const $=q=>document.querySelector(q), stage=$("#stage");
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -506,7 +514,7 @@ function verObjetivo(){
     +'<p class="lead">'+esc(v.nuevo)+'</p>'
     +'<div class="met">'
       +'<div><b>Hoy sale cada</b><i class="a">'+n1(tk)+' s</i></div>'
-      +'<div><b>Tiene que llegar a</b><i>'+(v.meta.k==="takt"?n1(v.meta.v)+" s"
+      +'<div><b>La meta es</b><i>'+(v.meta.k==="takt"?n1(v.meta.v)+" s"
           :v.meta.k==="oee"?(v.meta.v*100).toFixed(0)+" de nota":mil(v.meta.v)+" pzas")+'</i></div>'
     +'</div>'
     +'<div class="ob"><div class="eyebrow">Su nota de hoy · OEE</div>'
@@ -518,8 +526,9 @@ function verObjetivo(){
       +'<p style="margin-top:10px">Cada puesto le pone una capa. Sale armada al final de la fila.</p></div>'
     +(v.recfg
       ?'<div class="ob"><div class="eyebrow">Ojo con esto</div>'
-       +'<p>Mover las mesas <strong>para la planta 35 minutos</strong>. '
-       +'Probar en el computador <strong>no cuesta nada</strong>.</p></div>'
+       +'<p>Cambiar el reparto con el día andando obliga a '
+       +'<strong>detener la línea 35 minutos</strong>: en ese rato nadie arma nada. '
+       +'Probar en el computador <strong>no cuesta nada</strong> y la línea sigue trabajando.</p></div>'
       :'<div class="ob"><div class="eyebrow">Ojo con esto</div>'
        +'<p>La línea se arma <strong>una sola vez</strong> y corre así todo el día. '
        +'No hay segunda oportunidad.</p></div>')
@@ -527,7 +536,8 @@ function verObjetivo(){
       +'<p>entregue <strong>más piezas buenas</strong>.</p></div>'
     +'<button class="btn" id="go">Empezar</button>'
     +'<button class="btn gh" id="ayuda">¿Cómo se juega?</button>';
-  $("#go").onclick=()=>{S.cortes=v.cortes.slice();verArmado();};
+  window.scrollTo(0,0);
+  $("#go").onclick=()=>{S.cortes=v.cortes.slice();S.abierto=null;verArmado();};
   $("#ayuda").onclick=verAyuda;
 }
 
@@ -539,7 +549,7 @@ function verAyuda(){
     +'<h3>'+t+'</h3><p>'+txt+'</p>'+(fig||'')+'</div></div>';
   stage.innerHTML=
     '<div class="eyebrow">Cómo se juega</div>'
-    +'<h1>Cuatro pasos</h1>'
+    +'<h1>Cinco pasos</h1>'
     +'<p class="lead">Se juega con el dedo. No hay que escribir nada.</p>'
     +paso(1,"Mire la fila de tareas",
       "Son las 28 cosas que hay que hacer para armar una pieza, en orden. Cada una tiene sus segundos.",
@@ -550,8 +560,28 @@ function verAyuda(){
     +paso(3,"Diga cómo le va a ir",
       "Antes de arrancar tiene que responder dos preguntas. No se puede arrancar sin responder: la gracia es pensar antes, no después.")
     +paso(4,"Vea correr el día",
-      "El día pasa en quince segundos. Al final le muestran cuántas piezas entregó y qué nota sacó.",
-      '<div class="fig">'+hexa(1,54)+hexa(4,54)+hexa(7,54)+'</div>')
+      "El día pasa en quince segundos. Cada puesto es una barra: lo alto de la barra es lo que "
+      +"se demora ese puesto. La barra más alta es la que frena a todas las demás.",
+      '<div class="plant" style="padding:15px 15px 3px;margin-top:13px">'
+      +'<div class="bars">'
+      +[52,38,100,44,48].map(function(a,i){
+         return '<div class="bcol'+(i===2?" cuello":"")+'"><span class="bx" style="--h:'+a+'">'
+           +'<i style="height:'+(i===2?72:34)+'%"></i></span></div>';}).join("")
+      +'</div><div class="bfoot">'
+      +[20,15,36,17,18].map(function(a,i){
+         return '<div class="bl'+(i===2?" cuello":"")+'"><span class="sg">'+a+'</span>'
+           +'<span class="px">'+(i+1)+'</span></div>';}).join("")
+      +'</div></div>')
+    +paso(5,"¿Qué es detener la línea?",
+      "Del nivel 3 en adelante usted puede cambiar el reparto con el día andando. Cambiar el reparto "
+      +"quiere decir mover a las personas de puesto, y mientras eso pasa nadie arma nada: son 35 minutos "
+      +"sin producir, y la fila queda vacía. Por eso primero se prueba en el computador.",
+      '<div class="vs">'
+      +'<div><div class="t2">Probar en el computador</div><div class="n2">Gratis</div>'
+        +'<p>La línea sigue trabajando. Pruebe las veces que quiera.</p></div>'
+      +'<div class="mal"><div class="t2">Detener la línea</div><div class="n2">35 min</div>'
+        +'<p>Nadie arma nada, y la fila queda vacía.</p></div>'
+      +'</div>')
     +'<div class="card"><b class="t">Lo único que hay que saber</b>'
       +'El puesto más lento manda sobre toda la línea. Si un puesto se demora 36 segundos, '
       +'de la línea no sale una pieza más rápido que cada 36 segundos — '
@@ -562,7 +592,7 @@ function verAyuda(){
 }
 
 /* ═══════════════ 2 · armado ═══════════════ */
-function verArmado(opts){
+function verArmado(opts,mantener){
   opts=opts||{};
   const v=niv(), W=v.W, tr=tramos(S.cortes,W);
   const tk=Math.max.apply(null,tr), K=S.cortes.length;
@@ -574,9 +604,10 @@ function verArmado(opts){
       +'<h2>Pruebe sin tocar la planta</h2>'
       +'<p class="lead">Mueva los cortes y pruebe. Esto no para la planta ni cuenta como cambio.</p>';
   }else if(opts.parado){
-    h+='<div class="tag w">Planta parada · 35 min</div>'
-      +'<h2>Mueva las mesas</h2>'
-      +'<p class="lead">Ya está pagando los 35 minutos. Deje la línea como la quiere para el resto del día.</p>';
+    h+='<div class="tag w">Va a detener la línea · 35 min</div>'
+      +'<h2>Cambie el reparto</h2>'
+      +'<p class="lead">Mueva los cortes y deje la línea como la quiere para el resto del día. '
+      +'Al confirmar, la línea se detiene 35 minutos y nadie arma nada en ese rato.</p>';
   }else{
     h+='<div class="eyebrow">Nivel '+v.n+' · armado</div>'
       +'<h2>¿Dónde parte la fila?</h2>'
@@ -584,30 +615,47 @@ function verArmado(opts){
   }
 
   const metaTakt = v.meta.k==="takt" ? v.meta.v : 20;
-  h+='<div class="met peg">'
-    +'<div><b>Sale cada</b><i class="'+(tk<=metaTakt?"ok":"a")+'">'+n1(tk)+' s</i></div>'
-    +'<div><b>Meta</b><i>'+n1(metaTakt)+' s</i></div>'
-    +'</div>'
-    +'<p class="hint" style="margin:-12px 0 20px">'+K+' puestos · usa '+K+' de '+v.gente+' personas</p>';
+  h+='<div class="takt">'
+    +'<span>Sale cada<b class="'+(tk<=metaTakt?"ok":"a")+'">'+n1(tk)+' s</b></span>'
+    +'<span>Meta<b>'+n1(metaTakt)+' s</b></span>'
+    +'</div>';
 
-  /* la cadena */
-  h+='<div class="chain">';
+  /* Cómo queda repartido el trabajo, con las mismas barras de la corrida: el
+     participante compara puestos aquí y reconoce el dibujo cuando corra el día. */
+  h+='<div class="plant" style="padding:16px 16px 4px">'
+    +'<div class="bh">Cada puesto, en segundos</div>'
+    +barras(tr,bn,null)
+    +'</div>';
+
+  /* La cadena, en acordeón. Antes salían las 28 tareas y los 27 botones de
+     corte de una vez: diez pantallas de deslizar para decidir una cosa. Ahora
+     se ven los puestos completos —que es lo que se compara para balancear— y
+     se abre uno para mover sus cortes. Arranca abierto el más lento, que es
+     donde hay que actuar. */
+  const ab = (S.abierto===null||S.abierto===undefined) ? bn : Math.min(S.abierto,K-1);
+  h+='<p class="hint" style="margin:0 0 14px">'+K+' puestos · usa '+K+' de '+v.gente+' personas. '
+    +'Toque un puesto para ver sus tareas y mover los cortes.'
+    +(K>=v.gente?'<br><strong>Ya usó a las '+v.gente+' personas.</strong> Para partir un puesto, '
+                +'primero quite un corte de otro lado.':'')+'</p>'
+    +'<div class="chain">';
   let p=0;
   for(let k=0;k<K;k++){
-    const c=S.cortes[k];
-    const cf=CAPA[c-1];
-    h+='<div class="pst'+(k===bn?" bn":"")+'">'+hexa(cf,42)
+    const c=S.cortes[k], cf=CAPA[c-1], abierto=(k===ab);
+    h+='<button class="pst'+(k===bn?" bn":"")+(abierto?" ab":"")+'" data-k="'+k+'">'+hexa(cf,42)
       +'<span class="n">Puesto '+(k+1)
-      +'<span class="tag2">'+(k===bn?"el más lento de todos":"deja la pieza en: "+CAPA_NOM[cf-1])+'</span></span>'
-      +'<span class="s">'+n1(tr[k])+' s</span></div>';
-    for(let i=p;i<c;i++){
-      h+='<div class="tsk"><span>'+esc(NOM[i])+'</span><span>'+n1(W[i])+'</span></div>';
-      if(i<27){
-        const esCorte=(i+1===c);
-        const puedeAbrir=!esCorte && K<v.gente;
-        h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'"'
-          +((esCorte&&K<=1)||(!esCorte&&!puedeAbrir)?' disabled':'')+'>'
-          +'<span class="in"><b>'+(esCorte?"✂ corte "+(k+1):"+ cortar aquí")+'</b></span></button>';
+      +'<span class="tag2">'+(k===bn?"el más lento · ":"")+(c-p)+(c-p===1?" tarea":" tareas")+'</span></span>'
+      +'<span class="s">'+n1(tr[k])+' s</span>'
+      +'<span class="ch">'+(abierto?"&#9662;":"&#9656;")+'</span></button>';
+    if(abierto){
+      for(let i=p;i<c;i++){
+        h+='<div class="tsk"><span>'+esc(NOM[i])+'</span><span>'+n1(W[i])+'</span></div>';
+        if(i<27){
+          const esCorte=(i+1===c);
+          const puedeAbrir=!esCorte && K<v.gente;
+          h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'"'
+            +((esCorte&&K<=1)||(!esCorte&&!puedeAbrir)?' disabled':'')+'>'
+            +'<span class="in"><b>'+(esCorte?"✂ aquí termina el puesto "+(k+1):"+ partir aquí")+'</b></span></button>';
+        }
       }
     }
     p=c;
@@ -615,31 +663,36 @@ function verArmado(opts){
   h+='</div>';
 
   if(opts.gemelo){
-    if(S.ultTwin)h+=medidores(S.ultTwin,"Si el día entero corriera así");
+    if(S.ultTwin)h+=medidores(S.ultTwin,"Si el día fuera así");
     h+='<button class="btn gh" id="twin">Probar este reparto</button>'
       +'<button class="btn" id="back">Volver a la planta</button>'
       +'<p class="hint">La planta siguió produciendo mientras usted probaba.</p>';
   }else if(opts.parado){
-    h+='<button class="btn" id="ok">Arrancar así</button>';
+    h+='<button class="btn dan" id="ok">Detener la línea y cambiar</button>';
   }else{
     h+='<button class="btn" id="ok">Continuar</button>';
   }
+  const sy = mantener ? window.scrollY : 0;
   stage.innerHTML=h;
+  window.scrollTo(0,sy);
 
+  stage.querySelectorAll(".pst").forEach(b=>{
+    b.onclick=()=>{ const k=+b.dataset.k; S.abierto=(k===ab?-1:k); verArmado(opts,true); };
+  });
   stage.querySelectorAll(".cutrow").forEach(b=>{
     b.onclick=()=>{
       const i=+b.dataset.i, j=S.cortes.indexOf(i);
       if(j>=0){ if(S.cortes.length>1)S.cortes.splice(j,1); }
       else if(S.cortes.length<v.gente){ S.cortes.push(i);S.cortes.sort((a,b)=>a-b); }
       S.ultTwin=null;
-      verArmado(opts);
+      verArmado(opts,true);
     };
   });
   if(opts.gemelo){
-    $("#twin").onclick=()=>{S.ultTwin=simular(S.cortes,v.W,v.relx);verArmado(opts);};
+    $("#twin").onclick=()=>{S.ultTwin=simular(S.cortes,v.W,v.relx);verArmado(opts,true);};
     $("#back").onclick=()=>{S.gemelo=false;S.ultTwin=null;verCorrida();};
   }else if(opts.parado){
-    $("#ok").onclick=()=>{reconfig(S.R,S.cortes);S.ultTwin=null;verCorrida();};
+    $("#ok").onclick=()=>{reconfig(S.R,S.cortes);S.ultTwin=null;verParada();};
   }else{
     $("#ok").onclick=verApuesta;
   }
@@ -647,27 +700,25 @@ function verArmado(opts){
 
 /* ═══════════════ 3 · apuesta ═══════════════ */
 function verApuesta(){
-  const v=niv();
-  const q2 = v.recfg
-    ? {p:"¿Cuántas veces va a parar la planta para mover las mesas?", sub:"", o:PARADAS_OPC.map(x=>x===3?"3 o más":String(x))}
-    : {p:"¿Cuántas piezas buenas cree que va a entregar hoy?",
-       sub:"Pista: el día tiene 8 horas, o sea 28.800 segundos.",
-       o:BANDAS_PZA.map(b=>b[0])};
+  const v=niv(), tk=Math.max.apply(null,tramos(S.cortes,v.W));
   stage.innerHTML=
     '<div class="eyebrow">Nivel '+v.n+' · antes de arrancar</div>'
     +'<h2>Diga primero qué va a pasar</h2>'
     +'<p class="lead">Explicar un número después es fácil. La gracia es acertarlo antes.</p>'
-    +'<div class="q"><p>1 · ¿Qué nota cree que va a sacar hoy?</p>'
-      +'<p class="sub">La nota es el OEE: máquina sin parar, línea rápida y piezas buenas.</p>'
+    +'<div class="q"><p>1 · ¿Cuántas piezas buenas va a entregar hoy?</p>'
+      +'<p class="sub">Su línea saca una pieza cada '+n1(tk)+' segundos y el día tiene 8 horas. '
+      +'Si nada saliera mal serían unas <strong>'+mil(Math.round(T/tk))+'</strong>. Algo siempre sale mal.</p>'
       +'<div class="opts" id="q1">'
-      +BANDAS.map((b,i)=>'<button class="opt" data-i="'+i+'">'+b[0]+'</button>').join("")+'</div></div>'
-    +'<div class="q"><p>2 · '+q2.p+'</p>'
-      +(q2.sub?'<p class="sub">'+q2.sub+'</p>':'')
+      +BANDAS_PZA.map((b,i)=>'<button class="opt" data-i="'+i+'">'+b[0]+'</button>').join("")+'</div></div>'
+    +'<div class="q"><p>2 · ¿Qué nota cree que va a sacar?</p>'
+      +'<p class="sub">La nota es el OEE, de 0 a 100. Sube cuando la máquina no para, '
+      +'la línea va rápida y las piezas salen buenas.</p>'
       +'<div class="opts" id="q2">'
-      +q2.o.map((t,i)=>'<button class="opt" data-i="'+i+'">'+t+'</button>').join("")+'</div></div>'
+      +BANDAS.map((b,i)=>'<button class="opt" data-i="'+i+'">'+b[0]+'</button>').join("")+'</div></div>'
     +'<button class="btn" id="go" disabled>Arrancar el día</button>'
     +'<p class="hint">Hay que responder las dos para poder arrancar.</p>';
-  const chk=()=>{$("#go").disabled=(S.apOEE===null||S.apPar===null);};
+  window.scrollTo(0,0);
+  const chk=()=>{$("#go").disabled=(S.apOEE===null||S.apPza===null);};
   const sel=(cont,key)=>{
     stage.querySelectorAll("#"+cont+" .opt").forEach(b=>{
       b.onclick=()=>{
@@ -676,7 +727,7 @@ function verApuesta(){
       };
     });
   };
-  S.apOEE=null;S.apPar=null;sel("q1","apOEE");sel("q2","apPar");
+  S.apOEE=null;S.apPza=null;sel("q1","apPza");sel("q2","apOEE");
   $("#go").onclick=()=>{ S.cerrado=false; S.R=mkRun(S.cortes,v.W,v.relx); verCorrida(); };
 }
 
@@ -690,22 +741,25 @@ function verCorrida(){
       +'<div class="clk"><span id="hora">Hora 0 de 8</span><span id="cmb">0 cambios</span></div>'
       +'<div class="met">'
         +'<div><b>Piezas buenas</b><i id="mg">0</i></div>'
-        +'<div><b>Planta parada</b><i id="mp" class="ok">0 min</i></div>'
+        +'<div><b>Línea detenida</b><i id="mp" class="ok">0 min</i></div>'
       +'</div>'
+      +'<div class="bh">Cada puesto, en segundos</div>'
+      +'<div id="line"></div>'
+      +'<div class="leg" id="leg"></div>'
       +'<div id="oee"></div>'
-      +'<div class="line" id="line"></div>'
       +'<div class="split"><span class="lb2">Buenas / malas</span><span class="bar2" id="bar"><i class="g" style="width:100%"></i><i class="b" style="width:0"></i></span></div>'
     +'</div>'
     +(v.recfg
       ?'<button class="btn gh" id="twin">Probar en el computador</button>'
-       +'<p class="hint">Es gratis. La planta sigue produciendo mientras usted prueba.</p>'
-       +'<button class="btn dan" id="stop">⚠ Parar y mover las mesas</button>'
-       +'<p class="hint">Cuesta 35 minutos parada. La línea queda vacía y hay que volver a llenarla.</p>'
+       +'<p class="hint">Gratis. La línea sigue trabajando mientras usted prueba.</p>'
+       +'<button class="btn dan" id="stop">Detener la línea y cambiar el reparto</button>'
+       +'<p class="hint">35 minutos sin producir. La fila queda vacía y hay que volver a llenarla.</p>'
       :'<p class="hint">La línea se armó una vez y corre así todo el día.</p>');
   if(v.recfg){
-    $("#twin").onclick=()=>{S.gemelo=true;S.ultTwin=null;verArmado({gemelo:true});};
-    $("#stop").onclick=()=>{cancelAnimationFrame(S.raf);S.raf=0;verArmado({parado:true});};
+    $("#twin").onclick=()=>{S.gemelo=true;S.ultTwin=null;S.abierto=null;verArmado({gemelo:true});};
+    $("#stop").onclick=()=>{cancelAnimationFrame(S.raf);S.raf=0;S.abierto=null;verArmado({parado:true});};
   }
+  window.scrollTo(0,0);
   pintarPlanta();
   correr();
 }
@@ -719,28 +773,77 @@ function pintarPlanta(){
   el("mg").textContent=mil(R.good);
   const mp=el("mp");mp.textContent=Math.round(R.parado/60)+" min";
   mp.className=R.parado>0?"a":"ok";
-  el("oee").innerHTML=medidores(m,"Su nota de hoy · OEE");
+  el("oee").innerHTML=medidores(m,"Nota de hoy · OEE");
   const malas=R.out-R.good, tot=Math.max(1,R.out);
   el("bar").innerHTML='<i class="g" style="width:'+(R.good/tot*100)+'%"></i>'
                      +'<i class="b" style="width:'+(malas/tot*100)+'%"></i>';
-  let h="";
-  for(let i=0;i<L.N;i++){
-    const e=L.st[i], capa=CAPA[L.P[i][1]-1];
-    const dañada = e.dt>0, esperando = !e.h && !dañada;
-    const cls = dañada?"dn":(esperando?"idle":"") ;
-    const est = dañada    ? "máquina dañada"
-              : i===L.bn    ? "el puesto más lento de la fila"
-              : esperando   ? "esperando que le llegue pieza"
-              :               "armando · "+CAPA_NOM[capa-1];
-    h+='<div class="stn '+cls+(i===L.bn?" cuello":"")+'">'
-      +'<span class="hx">'+hexa(capa,60)+'</span>'
-      +'<span class="nm">Puesto '+(i+1)+'</span>'
-      +'<span class="sub">'+est+'</span>'
-      +'<span class="s">'+n1(L.cyc[i])+' s</span>'
-      +'<span class="pb"><i style="width:'+(dañada?100:Math.min(100,e.t/L.cyc[i]*100)).toFixed(0)+'%"></i></span>'
-      +'</div>';
+  el("line").innerHTML=barras(L.cyc,L.bn,L.st);
+  el("leg").innerHTML='La barra más alta es el <b>puesto '+(L.bn+1)+'</b>, con <span class="ac">'
+    +n1(L.cyc[L.bn])+' s</span>. De la línea no sale una pieza más rápido que eso, '
+    +'por más desocupados que estén los demás. Los puestos apagados están esperando pieza.';
+}
+
+/* Una barra por puesto. Lo ALTO es lo que se demora —el dato que enseña, porque
+   deja ver el desbalanceo de un golpe— y lo LLENO es el avance de la pieza que
+   tiene en la mano. Los segundos van redondeados: con diez puestos en 390 px el
+   decimal no cabe, y el decimal exacto está en el armado y en el cierre. */
+function barras(cyc,bn,st,muerto){
+  const maxc=Math.max.apply(null,cyc);
+  let arr="",pie="";
+  for(let i=0;i<cyc.length;i++){
+    const e=st?st[i]:null;
+    const dañada=!muerto&&!!e&&e.dt>0;
+    const esperando=muerto||(!!e&&!e.h&&!dañada);
+    const cls=(i===bn&&!muerto?" cuello":"")+(dañada?" dn":(esperando?" idle":""));
+    const alt=Math.max(10,Math.round(cyc[i]/maxc*100));
+    const llen=(muerto||!e)?0:(dañada?100:Math.min(100,e.t/cyc[i]*100));
+    arr+='<div class="bcol'+cls+'">'
+      +'<span class="bx" style="--h:'+alt+'"><i style="height:'+llen.toFixed(0)+'%"></i></span></div>';
+    pie+='<div class="bl'+cls+'"><span class="sg">'+Math.round(cyc[i])+'</span>'
+      +'<span class="px">'+(i+1)+'</span></div>';
   }
-  el("line").innerHTML=h;
+  return '<div class="bars">'+arr+'</div><div class="bfoot">'+pie+'</div>';
+}
+
+
+/* ═══════════════ 4b · la línea detenida ═══════════════
+   reconfig() ya cobró los 2.100 s de reloj: esta pantalla no cambia el modelo,
+   lo hace visible. Las piezas que muestra son aritmética del ritmo de la línea
+   —35 min ÷ el tiempo de ciclo— y así está rotulado, no una lectura del modelo. */
+function verParada(){
+  const R=S.R, L=R.L, tk=Math.max.apply(null,L.cyc);
+  const perdidas=Math.round(PARADA/tk);
+  stage.innerHTML=
+    '<div class="tag w">La línea está detenida</div>'
+    +'<h1>Nadie está armando nada</h1>'
+    +'<p class="lead">Está moviendo a las personas de puesto. Mientras eso pasa, de la línea '
+    +'no sale una sola pieza.</p>'
+    +'<div class="plant">'
+      +'<div class="paro"><div class="rel" id="rel">35:00</div>'
+      +'<div class="rl">faltan para volver a arrancar</div></div>'
+      +'<div class="bh">Todos los puestos quietos</div>'
+      +barras(L.cyc,-1,L.st,true)
+      +'<div class="leg">Además la fila quedó <b>vacía</b>. Cuando arranque, las primeras '
+      +'piezas tienen que recorrerla entera antes de que salga la primera.</div>'
+    +'</div>'
+    +'<div class="met">'
+      +'<div><b>Tiempo sin producir</b><i class="a">35 min</i></div>'
+      +'<div><b>Piezas que no saldrán</b><i class="a" id="pp">0</i></div>'
+    +'</div>'
+    +'<p class="hint">A '+n1(tk)+' segundos por pieza, 35 minutos son unas '+perdidas+' piezas '
+    +'que hoy ya no va a entregar. Probar en el computador no le habría costado ninguna.</p>'
+    +'<button class="btn" id="sigue">Volver a arrancar la línea</button>';
+  window.scrollTo(0,0);
+  $("#sigue").onclick=verCorrida;
+  /* la cuenta regresiva corre en 3,2 s reales: el rato basta para leerla */
+  const t0=performance.now(), DUR=3200, rel=$("#rel"), pp=$("#pp");
+  (function cuenta(now){
+    const f=Math.min(1,((now||t0)-t0)/DUR), q=Math.round(PARADA*(1-f));
+    if(!rel.isConnected)return;
+    rel.textContent=Math.floor(q/60)+":"+String(Math.floor(q%60)).padStart(2,"0");
+    pp.textContent=Math.round(perdidas*f);
+    if(f<1)requestAnimationFrame(cuenta);
+  })(t0);
 }
 
 function correr(){
@@ -779,21 +882,9 @@ function verCierre(){
              : v.meta.k==="oee"  ? m.OEE>=v.meta.v
              :                     m.good>=v.meta.v;
   let bi=0;for(let i=0;i<BANDAS.length;i++)if(m.OEE>=BANDAS[i][1]&&m.OEE<BANDAS[i][2])bi=i;
-  const okOEE=S.apOEE===bi;
-  let okPar, dichoQ2, realQ2;
-  if(v.recfg){
-    const parReal=Math.min(3,R.cambios);
-    okPar = PARADAS_OPC[S.apPar]===parReal;
-    dichoQ2 = (PARADAS_OPC[S.apPar]===3?"3 o más paradas"
-              :PARADAS_OPC[S.apPar]===1?"1 parada":PARADAS_OPC[S.apPar]+" paradas");
-    realQ2 = "hizo "+R.cambios;
-  }else{
-    let pi=0;for(let i=0;i<BANDAS_PZA.length;i++)if(m.good>=BANDAS_PZA[i][1]&&m.good<BANDAS_PZA[i][2])pi=i;
-    okPar = S.apPar===pi;
-    dichoQ2 = "que entregaría "+BANDAS_PZA[S.apPar][0];
-    realQ2 = "fueron "+BANDAS_PZA[pi][0];
-  }
-  const gan=(pasa?50:0)+(okOEE?25:0)+(okPar?25:0);
+  let pi=0;for(let i=0;i<BANDAS_PZA.length;i++)if(m.good>=BANDAS_PZA[i][1]&&m.good<BANDAS_PZA[i][2])pi=i;
+  const okOEE=S.apOEE===bi, okPza=S.apPza===pi;
+  const gan=(pasa?50:0)+(okPza?25:0)+(okOEE?25:0);
   if(!S.cerrado){                      /* se puntúa una sola vez por nivel */
     S.puntos+=gan;
     S.hist[S.nivel]={pasa:pasa,oee:m.OEE,good:m.good,takt:tk,gan:gan};
@@ -804,7 +895,7 @@ function verCierre(){
   const DIAG={
     D:["La máquina paró mucho",
        "La planta estuvo quieta "+hm(m.down)+" de las ocho horas. "
-       +(R.parado>0?"De eso, "+Math.round(R.parado/60)+" minutos los puso usted al mover las mesas."
+       +(R.parado>0?"De eso, "+Math.round(R.parado/60)+" minutos los puso usted al detener la línea."
                    :"Todo fue daño de máquina: eso no vino de sus decisiones.")],
     R:["La línea fue lenta",
        "Salió una pieza cada "+n1(tk)+" segundos. Si la fila estuviera bien repartida saldría cada 18,2. "
@@ -826,10 +917,10 @@ function verCierre(){
         m.good>base.good ? "Entregó <strong>"+mil(m.good-base.good)+" piezas más</strong> que si no hubiera tocado nada."
       : m.good<base.good ? "Entregó <strong>"+mil(base.good-m.good)+" piezas menos</strong> que si no hubiera tocado nada."
       :                    "Entregó <strong>lo mismo</strong> que si no hubiera tocado nada.")+'</p>'
-    +medidores(m,"Su nota de hoy · OEE")
+    +medidores(m,"Nota de hoy · OEE")
     +'<div class="row"><span>Sale una pieza cada</span><span>'+n1(tk)+' s</span></div>'
     +'<div class="row"><span>Puestos</span><span>'+R.cortes.length+' de '+v.gente+'</span></div>'
-    +'<div class="row"><span>Veces que paró la planta</span><span class="'+(R.cambios?"a":"g")+'">'
+    +'<div class="row"><span>Veces que detuvo la línea</span><span class="'+(R.cambios?"a":"g")+'">'
       +R.cambios+(R.cambios?' · '+Math.round(R.parado/60)+' min':'')+'</span></div>'
     +'<div class="row"><span>La meta era</span><span>'+esc(v.meta.txt
         .replace("Sacar una pieza cada ","").replace("Terminar el día con ","")
@@ -839,21 +930,20 @@ function verCierre(){
     +'<strong>'+DIAG[0]+'.</strong> '+DIAG[1]
     +'<p style="margin-top:10px;color:var(--muted);font-size:.9rem">Para leerlo rápido: '
     +'<strong>Rendimiento</strong> le dice si repartió bien la fila. '
-    +'<strong>Disponibilidad</strong> le dice si paró la planta de más.</p></div>';
+    +'<strong>Disponibilidad</strong> le dice si detuvo la línea de más.</p></div>';
 
   h+='<div class="card a"><b class="t">Su apuesta</b>'
-    +'<div class="row"><span>Dijo que la nota daría '+BANDAS[S.apOEE][0]+'</span>'
-      +'<span class="'+(okOEE?"g":"a")+'">'+(okOEE?"✓ +25":"✗ dio "+BANDAS[bi][0])+'</span></div>'
-    +'<div class="row" style="border:0"><span>Dijo '+dichoQ2+'</span>'
-      +'<span class="'+(okPar?"g":"a")+'">'+(okPar?"✓ +25":"✗ "+realQ2)+'</span></div>'
+    +'<div class="row"><span>Piezas · dijo <strong>'+BANDAS_PZA[S.apPza][0]+'</strong></span>'
+      +'<span class="'+(okPza?"g":"a")+'">'+(okPza?"✓ +25":"✗ fueron "+mil(m.good))+'</span></div>'
+    +'<div class="row" style="border:0"><span>Nota · dijo <strong>'+BANDAS[S.apOEE][0]+'</strong></span>'
+      +'<span class="'+(okOEE?"g":"a")+'">'+(okOEE?"✓ +25":"✗ dio "+(m.OEE*100).toFixed(0))+'</span></div>'
     +'<p style="margin-top:10px"><strong>'+gan+' puntos</strong> en este nivel.</p></div>';
 
-  h+='<div class="card"><b class="t">Para armarlo en la mesa</b>'
-    +'Ponga <strong>'+R.cortes.length+' mesas en fila</strong>, con una persona en cada una. '
-    +'La pieza pasa de mesa en mesa siempre en el mismo orden.'
-    +'<p style="margin-top:10px">La mesa más lenta es la <strong>'+(R.L.bn+1)+'</strong>, '
-    +'con '+n1(R.L.cyc[R.L.bn])+' segundos. Esa es la que manda sobre toda la línea.</p></div>'
-    +'<button class="btn gh" id="hoja">Ver qué va en cada mesa</button>';
+  h+='<div class="card"><b class="t">Cómo quedó su línea</b>'
+    +'<strong>'+R.cortes.length+' puestos</strong> en fila, una persona en cada uno. '
+    +'El puesto <strong>'+(R.L.bn+1)+'</strong> es el más lento, con '+n1(R.L.cyc[R.L.bn])+' segundos.'
+    +'<p style="margin-top:10px">Si quiere ir más rápido, no sirve apurar a los demás: '
+    +'hay que quitarle trabajo a ese puesto y repartirlo entre los que están esperando.</p></div>';
 
   if(S.nivel<NIV.length-1){
     h+='<button class="btn" id="next">Siguiente nivel</button>';
@@ -865,61 +955,20 @@ function verCierre(){
       +'<div class="card a"><b class="t">Cierre · '+S.puntos+' de 500 puntos</b>'
       +'<strong style="font-size:1.15rem">'+r[1]+'</strong><p style="margin-top:8px">'+r[2]+'</p></div>'
       +'<div class="card"><b class="t">Lo que hay que llevarse</b>'
-      +'Probar en el computador es gratis y se siente inútil. Parar la línea se siente '
-      +'productivo y cuesta caro. Quien mueve las mesas cuatro veces en un día entrega '
-      +'<strong>menos piezas que si no hubiera hecho nada</strong>. '
+      +'Probar en el computador es gratis y se siente inútil. Detener la línea se siente '
+      +'productivo y cuesta caro. Quien la detiene cuatro veces en un día entrega '
+      +'<strong>menos piezas que si no hubiera tocado nada</strong>. '
       +'Para eso sirve tener un gemelo digital.</div>'
       +'<button class="btn" id="next">Volver a empezar</button>';
   }
   stage.innerHTML=h;
   window.scrollTo(0,0);
-  $("#hoja").onclick=()=>verHoja(R,v);
   $("#next").onclick=()=>{
     S.cerrado=false;
     if(S.nivel<NIV.length-1)S.nivel++;
     else {S.nivel=0;S.puntos=0;S.hist=[];}
     S.R=null;barra();verObjetivo();
   };
-}
-
-/* ═══════════════ 6 · la hoja de montaje ═══════════════
-   Lo que se lleva a la Fábrica. Tiene que servirle a alguien parado frente a
-   unas mesas vacías, así que va por nombre, no por número de tarea. */
-function verHoja(R,v){
-  const K=R.cortes.length, W_ACT=v.W;
-  let h='<div class="eyebrow">Para llevar a la Fábrica</div>'
-    +'<h1>Qué va en cada mesa</h1>'
-    +'<p class="lead">Ponga <strong>'+K+' mesas en fila</strong> y una persona en cada una. '
-    +'La pieza empieza en la mesa 1 y pasa de mano en mano, siempre en el mismo orden. '
-    +'Nadie se salta una mesa.</p>';
-  let p=0;
-  for(let k=0;k<K;k++){
-    const c=R.cortes[k], seg=R.L.cyc[k], lenta=(k===R.L.bn);
-    const capaFin=CAPA[c-1];
-    /* materiales: las capas distintas que toca esta mesa */
-    const capas=[]; for(let i=p;i<c;i++) if(capas.indexOf(CAPA[i])<0) capas.push(CAPA[i]);
-    h+='<div class="mesa'+(lenta?" lenta":"")+'">'
-      +'<div class="cab">'+hexa(capaFin,56)
-      +'<span class="t">Mesa '+(k+1)+(lenta?'<small>la más lenta · esta manda</small>':'')+'</span>'
-      +'<span class="s">'+n1(seg)+' s</span></div>'
-      +'<ol>';
-    for(let i=p;i<c;i++) h+='<li>'+esc(NOM[i])+' <b>'+n1(W_ACT[i])+' s</b></li>';
-    h+='</ol>'
-      +'<div class="kit"><b>Tenga sobre la mesa</b>'+capas.map(x=>CAPA_MAT[x-1]).join(' · ')+'</div>'
-      +'<div class="pasa"><b>'+(k===K-1?'Al terminar':'Le pasa a la mesa '+(k+2))+'</b>'
-      +(k===K-1?'La pieza sale armada. Revise que no le falte nada y póngala en la bandeja de buenas.'
-               :'la pieza con '+CAPA_PASA[capaFin-1]+'.')+'</div>'
-      +'</div>';
-    p=c;
-  }
-  h+='<div class="card a"><b class="t">Lo que hay que vigilar</b>'
-    +'La <strong>mesa '+(R.L.bn+1)+'</strong> se demora '+n1(R.L.cyc[R.L.bn])+' segundos. '
-    +'De la línea no va a salir una pieza más rápido que eso, por más que las otras mesas estén libres. '
-    +'Si quiere ir más rápido, hay que quitarle trabajo a esa mesa.</div>'
-    +'<button class="btn" id="volverc">Volver al resultado</button>';
-  stage.innerHTML=h;
-  window.scrollTo(0,0);
-  $("#volverc").onclick=verCierre;
 }
 
 /* ═══════════════ arranque ═══════════════ */
