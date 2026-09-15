@@ -137,13 +137,25 @@ h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;te
      color:var(--pmuted);font-weight:700;padding-bottom:12px;margin-bottom:16px;
      border-bottom:1px solid var(--prule)}
 .clk b{color:var(--pink);font-weight:800}
-.line{display:flex;gap:9px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;scrollbar-width:none}
-.line::-webkit-scrollbar{display:none}
-.stn{flex:0 0 66px;text-align:center}
-.stn .lb{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--pmuted);margin-top:5px}
-.stn .pb{height:5px;background:var(--prule);border-radius:3px;overflow:hidden;margin-top:6px}
-.stn .pb i{display:block;height:100%;background:var(--accent)}
-.stn.idle{opacity:.32}
+/* la línea, una fila por puesto: todo cabe sin deslizar de lado */
+.line{margin-bottom:16px}
+.stn{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto auto;
+     gap:2px 14px;align-items:center;padding:11px 13px;border-radius:6px;
+     background:var(--pline);margin-bottom:8px}
+.stn .hx{grid-column:1;grid-row:1/4;align-self:center;line-height:0}
+.stn .nm{grid-column:2;grid-row:1;font-size:1.02rem;font-weight:700;line-height:1.2}
+.stn .sub{grid-column:2;grid-row:2;font-size:.82rem;color:var(--pmuted);line-height:1.3}
+.stn .s{grid-column:3;grid-row:1/3;font-family:var(--mono);font-size:1.1rem;
+        font-weight:800;align-self:center;white-space:nowrap}
+.stn .pb{grid-column:2/4;grid-row:3;height:8px;background:var(--prule);
+         border-radius:4px;overflow:hidden;margin-top:7px}
+.stn .pb i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.stn.idle{opacity:.42}
+.stn.idle .sub{color:var(--pmuted)}
+.stn.dn{background:#2C1613;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.stn.dn .sub{color:var(--accent);font-weight:700}
+.stn.cuello{box-shadow:inset 4px 0 0 var(--accent)}
+.stn.cuello .s{color:var(--accent)}
 .split{display:grid;gap:8px;margin-bottom:6px}
 .split .lb2{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
             color:var(--pmuted);font-weight:700}
@@ -285,6 +297,10 @@ const NIV=[
 
 const BANDAS=[["<50 %",0,.50],["50-65 %",.50,.65],["65-80 %",.65,.80],[">80 %",.80,1.01]];
 const PARADAS_OPC=[0,1,2,3];
+/* en los niveles 1 y 2 la línea no se toca: preguntar cuántas veces la va a
+   parar tiene una sola respuesta posible y no mide nada. Allí se pregunta por
+   piezas, que obliga a pensar cuántas caben en ocho horas al ritmo que armó. */
+const BANDAS_PZA=[["menos de 600",0,600],["600 a 900",600,900],["900 a 1.200",900,1200],["más de 1.200",1200,9e9]];
 const RANGOS=[
  [450,"Ingeniero de mejora","Decide en el gemelo y toca la planta una sola vez. Este es el nivel al que se llega leyendo los tres factores antes de actuar, no después."],
  [370,"Jefe de planta","Casi siempre sabe dónde está la pérdida. Le falta afinar cuándo vale la pena parar."],
@@ -530,10 +546,12 @@ function verArmado(opts){
       +'<p class="lead">'+esc(v.pista)+'</p>';
   }
 
+  const metaTakt = v.meta.k==="takt" ? v.meta.v : 20;
   h+='<div class="met peg">'
-    +'<div><b>Sale cada</b><i class="'+(tk<= (v.meta.k==="takt"?v.meta.v:20)?"ok":"a")+'">'+n1(tk)+' s</i></div>'
-    +'<div><b>Puestos · personas</b><i>'+K+' de '+v.gente+'</i></div>'
-    +'</div>';
+    +'<div><b>Sale cada</b><i class="'+(tk<=metaTakt?"ok":"a")+'">'+n1(tk)+' s</i></div>'
+    +'<div><b>Meta</b><i>'+n1(metaTakt)+' s</i></div>'
+    +'</div>'
+    +'<p class="hint" style="margin:-12px 0 20px">'+K+' puestos · usa '+K+' de '+v.gente+' personas</p>';
 
   /* la cadena */
   h+='<div class="chain">';
@@ -543,7 +561,7 @@ function verArmado(opts){
     const cf=CAPA[c-1];
     h+='<div class="pst'+(k===bn?" bn":"")+'">'+hexa(cf,42)
       +'<span class="n">Puesto '+(k+1)
-      +'<span class="tag2">'+(k===bn?"el más lento de todos":"deja lista la "+CAPA_NOM[cf-1])+'</span></span>'
+      +'<span class="tag2">'+(k===bn?"el más lento de todos":"deja la pieza en: "+CAPA_NOM[cf-1])+'</span></span>'
       +'<span class="s">'+n1(tr[k])+' s</span></div>';
     for(let i=p;i<c;i++){
       h+='<div class="tsk"><span>'+esc(NOM[i])+'</span><span>'+n1(W[i])+'</span></div>';
@@ -593,20 +611,25 @@ function verArmado(opts){
 /* ═══════════════ 3 · apuesta ═══════════════ */
 function verApuesta(){
   const v=niv();
-  const h='<div class="eyebrow">Nivel '+v.n+' · antes de arrancar</div>'
+  const q2 = v.recfg
+    ? {p:"¿Cuántas veces va a parar la planta para mover las mesas?", sub:"", o:PARADAS_OPC.map(x=>x===3?"3 o más":String(x))}
+    : {p:"¿Cuántas piezas buenas cree que va a entregar hoy?",
+       sub:"Pista: el día tiene 8 horas, o sea 28.800 segundos.",
+       o:BANDAS_PZA.map(b=>b[0])};
+  stage.innerHTML=
+    '<div class="eyebrow">Nivel '+v.n+' · antes de arrancar</div>'
     +'<h2>Diga primero qué va a pasar</h2>'
     +'<p class="lead">Explicar un número después es fácil. La gracia es acertarlo antes.</p>'
     +'<div class="q"><p>1 · ¿Qué nota cree que va a sacar hoy?</p>'
       +'<p class="sub">La nota es el OEE: máquina sin parar, línea rápida y piezas buenas.</p>'
       +'<div class="opts" id="q1">'
       +BANDAS.map((b,i)=>'<button class="opt" data-i="'+i+'">'+b[0]+'</button>').join("")+'</div></div>'
-    +'<div class="q"><p>2 · ¿Cuántas veces va a parar la planta para mover las mesas?</p>'
+    +'<div class="q"><p>2 · '+q2.p+'</p>'
+      +(q2.sub?'<p class="sub">'+q2.sub+'</p>':'')
       +'<div class="opts" id="q2">'
-      +PARADAS_OPC.map((b,i)=>'<button class="opt" data-i="'+i+'">'+(b===3?"3 o más":b)+'</button>').join("")
-      +'</div>'+(v.recfg?'':'<p class="hint" style="text-align:left;margin-top:9px">En este nivel la línea no se puede tocar durante el día.</p>')+'</div>'
+      +q2.o.map((t,i)=>'<button class="opt" data-i="'+i+'">'+t+'</button>').join("")+'</div></div>'
     +'<button class="btn" id="go" disabled>Arrancar el día</button>'
     +'<p class="hint">Hay que responder las dos para poder arrancar.</p>';
-  stage.innerHTML=h;
   const chk=()=>{$("#go").disabled=(S.apOEE===null||S.apPar===null);};
   const sel=(cont,key)=>{
     stage.querySelectorAll("#"+cont+" .opt").forEach(b=>{
@@ -617,10 +640,7 @@ function verApuesta(){
     });
   };
   S.apOEE=null;S.apPar=null;sel("q1","apOEE");sel("q2","apPar");
-  $("#go").onclick=()=>{
-    S.R=mkRun(S.cortes,v.W,v.relx);
-    verCorrida();
-  };
+  $("#go").onclick=()=>{ S.R=mkRun(S.cortes,v.W,v.relx); verCorrida(); };
 }
 
 /* ═══════════════ 4 · corrida ═══════════════ */
@@ -637,7 +657,6 @@ function verCorrida(){
       +'</div>'
       +'<div id="oee"></div>'
       +'<div class="line" id="line"></div>'
-      +'<p class="hint" style="margin:-4px 0 14px;color:var(--pmuted)">Cada puesto le pone una capa · deslice el dedo para ver toda la fila</p>'
       +'<div class="split"><span class="lb2">Buenas / malas</span><span class="bar2" id="bar"><i class="g" style="width:100%"></i><i class="b" style="width:0"></i></span></div>'
     +'</div>'
     +(v.recfg
@@ -669,11 +688,20 @@ function pintarPlanta(){
                      +'<i class="b" style="width:'+(malas/tot*100)+'%"></i>';
   let h="";
   for(let i=0;i<L.N;i++){
-    const e=L.st[i], capa=Math.min(7,Math.floor(i/L.N*7)+1);
-    const idle=!e.h&&e.dt<=0;
-    h+='<div class="stn'+(idle?" idle":"")+'">'+hexa(capa,60)
-      +'<div class="lb">P'+(i+1)+'</div>'
-      +'<div class="pb"><i style="width:'+(e.dt>0?100:Math.min(100,e.t/L.cyc[i]*100)).toFixed(0)+'%"></i></div></div>';
+    const e=L.st[i], capa=CAPA[L.P[i][1]-1];
+    const dañada = e.dt>0, esperando = !e.h && !dañada;
+    const cls = dañada?"dn":(esperando?"idle":"") ;
+    const est = dañada    ? "máquina dañada"
+              : i===L.bn    ? "el puesto más lento de la fila"
+              : esperando   ? "esperando que le llegue pieza"
+              :               "armando · "+CAPA_NOM[capa-1];
+    h+='<div class="stn '+cls+(i===L.bn?" cuello":"")+'">'
+      +'<span class="hx">'+hexa(capa,60)+'</span>'
+      +'<span class="nm">Puesto '+(i+1)+'</span>'
+      +'<span class="sub">'+est+'</span>'
+      +'<span class="s">'+n1(L.cyc[i])+' s</span>'
+      +'<span class="pb"><i style="width:'+(dañada?100:Math.min(100,e.t/L.cyc[i]*100)).toFixed(0)+'%"></i></span>'
+      +'</div>';
   }
   el("line").innerHTML=h;
 }
@@ -715,7 +743,19 @@ function verCierre(){
              :                     m.good>=v.meta.v;
   let bi=0;for(let i=0;i<BANDAS.length;i++)if(m.OEE>=BANDAS[i][1]&&m.OEE<BANDAS[i][2])bi=i;
   const okOEE=S.apOEE===bi;
-  const parReal=Math.min(3,R.cambios), okPar=PARADAS_OPC[S.apPar]===parReal;
+  let okPar, dichoQ2, realQ2;
+  if(v.recfg){
+    const parReal=Math.min(3,R.cambios);
+    okPar = PARADAS_OPC[S.apPar]===parReal;
+    dichoQ2 = (PARADAS_OPC[S.apPar]===3?"3 o más paradas"
+              :PARADAS_OPC[S.apPar]===1?"1 parada":PARADAS_OPC[S.apPar]+" paradas");
+    realQ2 = "hizo "+R.cambios;
+  }else{
+    let pi=0;for(let i=0;i<BANDAS_PZA.length;i++)if(m.good>=BANDAS_PZA[i][1]&&m.good<BANDAS_PZA[i][2])pi=i;
+    okPar = S.apPar===pi;
+    dichoQ2 = "que entregaría "+BANDAS_PZA[S.apPar][0];
+    realQ2 = "fueron "+BANDAS_PZA[pi][0];
+  }
   const gan=(pasa?50:0)+(okOEE?25:0)+(okPar?25:0);
   S.puntos+=gan;
   S.hist[S.nivel]={pasa:pasa,oee:m.OEE,good:m.good,takt:tk,gan:gan};
@@ -765,9 +805,8 @@ function verCierre(){
   h+='<div class="card a"><b class="t">Su apuesta</b>'
     +'<div class="row"><span>Dijo que la nota daría '+BANDAS[S.apOEE][0]+'</span>'
       +'<span class="'+(okOEE?"g":"a")+'">'+(okOEE?"✓ +25":"✗ dio "+BANDAS[bi][0])+'</span></div>'
-    +'<div class="row" style="border:0"><span>Dijo '+(PARADAS_OPC[S.apPar]===3?"3 o más paradas"
-        :PARADAS_OPC[S.apPar]===1?"1 parada":PARADAS_OPC[S.apPar]+" paradas")+'</span>'
-      +'<span class="'+(okPar?"g":"a")+'">'+(okPar?"✓ +25":"✗ hizo "+R.cambios)+'</span></div>'
+    +'<div class="row" style="border:0"><span>Dijo '+dichoQ2+'</span>'
+      +'<span class="'+(okPar?"g":"a")+'">'+(okPar?"✓ +25":"✗ "+realQ2)+'</span></div>'
     +'<p style="margin-top:10px"><strong>'+gan+' puntos</strong> en este nivel.</p></div>';
 
   h+='<div class="card"><b class="t">Para armarlo en la mesa</b>'
