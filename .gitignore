@@ -7,3 +7,14 @@ dist/
 build/
 .venv/
 __pycache__/
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Entorno
+.env
+.env.local
+.env*.local
