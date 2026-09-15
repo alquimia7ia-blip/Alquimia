@@ -4,171 +4,209 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;700;800&display=swap">
 <style>
 :root{
-  --paper:#F7F6F3; --ink:#191817; --muted:#6B6762; --rule:#DDD9D2; --line:#F0EEEA;
+  --paper:#F7F6F3; --ink:#191817; --muted:#5E5A55; --rule:#D6D2CB; --line:#EDEAE5;
   --accent:#C9431C; --soft:#E8C6BA; --good:#2E6B41;
-  --panel:#17161A; --pink:#EDEBE7; --pmuted:#8B8783; --prule:#312E33; --pline:#232127;
+  --panel:#17161A; --pink:#F2F0EC; --pmuted:#A29D97; --prule:#39363D; --pline:#232127;
   --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --serif:"Instrument Serif",Georgia,serif;
   --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#121113; --ink:#EDEBE7; --muted:#918C86; --rule:#2C2A2E; --line:#232127;
-  --soft:#7A3A26; --good:#5FA877; --panel:#08080A; --prule:#252329; --pline:#1A181E;
+  --paper:#121113; --ink:#F2F0EC; --muted:#A7A29B; --rule:#333035; --line:#232127;
+  --soft:#7A3A26; --good:#6BB584; --panel:#08080A; --prule:#2B2930; --pline:#1A181E;
 }}
 :root[data-theme="dark"]{
-  --paper:#121113; --ink:#EDEBE7; --muted:#918C86; --rule:#2C2A2E; --line:#232127;
-  --soft:#7A3A26; --good:#5FA877; --panel:#08080A; --prule:#252329; --pline:#1A181E;
+  --paper:#121113; --ink:#F2F0EC; --muted:#A7A29B; --rule:#333035; --line:#232127;
+  --soft:#7A3A26; --good:#6BB584; --panel:#08080A; --prule:#2B2930; --pline:#1A181E;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;
-     line-height:1.5;padding:0 16px}
-.wrap{max-width:34rem;margin:0 auto;padding:18px 0 40px}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:19px;
+     line-height:1.55;padding:0 16px}
+.wrap{max-width:33rem;margin:0 auto;padding:20px 0 48px}
 
 /* ── barra superior ── */
-.top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
-     padding-bottom:12px;border-bottom:1px solid var(--rule);margin-bottom:20px}
-.brand{font-family:var(--mono);font-size:11px;letter-spacing:.15em;font-weight:700;text-transform:uppercase}
-.brand b{color:var(--accent);font-weight:700}
-#dots{display:flex;gap:5px;justify-content:center}
-#dots i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+.top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;
+     padding-bottom:14px;border-bottom:1px solid var(--rule);margin-bottom:24px}
+.brand{font-family:var(--mono);font-size:.75rem;letter-spacing:.13em;font-weight:800;text-transform:uppercase}
+.brand b{color:var(--accent);font-weight:800}
+#dots{display:flex;gap:7px;justify-content:center}
+#dots i{width:10px;height:10px;border-radius:50%;background:var(--rule)}
 #dots i.now{background:var(--accent)}
 #dots i.ok{background:var(--ink)}
 #dots i.no{background:var(--muted)}
-#pts{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+#pts{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--muted);white-space:nowrap}
 
-h1{font-size:1.45rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:8px}
-h2{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
-.lead{color:var(--muted);margin-bottom:20px}
-.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
-         color:var(--accent);font-weight:700;margin-bottom:7px}
+h1{font-size:1.85rem;font-weight:700;letter-spacing:-.022em;line-height:1.15;margin-bottom:10px;text-wrap:balance}
+h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;text-wrap:balance}
+.lead{color:var(--muted);margin-bottom:24px;font-size:1.02rem;line-height:1.55}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;
+         color:var(--accent);font-weight:800;margin-bottom:9px}
 
 /* ── bloques del objetivo ── */
-.ob{margin-bottom:18px}
-.ob p{color:var(--muted);font-size:.94rem;line-height:1.55}
+.ob{margin-bottom:24px}
+.ob p{color:var(--muted);font-size:1.02rem;line-height:1.55}
 .ob p strong{color:var(--ink);font-weight:700}
-.big{font-family:var(--mono);font-size:2.3rem;font-weight:800;letter-spacing:-.04em;line-height:1}
-.big s{text-decoration:none;font-size:1.2rem;font-weight:400;color:var(--muted)}
+.big{font-family:var(--mono);font-size:3rem;font-weight:800;letter-spacing:-.045em;line-height:1}
+.big s{text-decoration:none;font-size:1.4rem;font-weight:400;color:var(--muted)}
 .big.a{color:var(--accent)}
 
 /* ── métricas ── */
+.met.peg{position:sticky;top:0;z-index:5;box-shadow:0 6px 14px -8px rgba(0,0,0,.35)}
 .met{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
-     border:1px solid var(--rule);margin-bottom:16px}
-.met>div{background:var(--paper);padding:11px 13px}
-.met b{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
-       text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:400}
-.met i{font-style:normal;font-family:var(--mono);font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
+     border:1px solid var(--rule);margin-bottom:20px}
+.met>div{background:var(--paper);padding:14px 15px}
+.met b{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.11em;
+       text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
+.met i{font-style:normal;font-family:var(--mono);font-size:1.65rem;font-weight:800;letter-spacing:-.03em}
 .met i.a{color:var(--accent)} .met i.ok{color:var(--good)}
 
 /* ── medidores del OEE ── */
-.oee{border:1px solid var(--rule);padding:13px;margin-bottom:16px}
-.oee .h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
-.oee .h b{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
-          color:var(--muted);font-weight:400}
-.oee .h i{font-style:normal;font-family:var(--mono);font-size:1.7rem;font-weight:800;letter-spacing:-.03em}
-.fac{display:grid;grid-template-columns:6.2rem 1fr 2.8rem;gap:9px;align-items:center;
-     font-size:.78rem;color:var(--muted);margin-bottom:7px}
+.oee{border:1px solid var(--rule);padding:16px;margin-bottom:20px}
+.oee .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:16px}
+.oee .h b{font-family:var(--mono);font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;
+          color:var(--muted);font-weight:700}
+.oee .h i{font-style:normal;font-family:var(--mono);font-size:2.2rem;font-weight:800;letter-spacing:-.04em}
+.fac{display:grid;grid-template-columns:1fr 3.2rem;gap:5px 10px;align-items:baseline;margin-bottom:13px}
 .fac:last-child{margin-bottom:0}
-.fac .tr{height:6px;background:var(--rule);border-radius:3px;overflow:hidden}
-.fac .tr i{display:block;height:100%;background:var(--soft);border-radius:3px;transition:width .25s}
-.fac .vl{font-family:var(--mono);font-size:.78rem;text-align:right}
-.fac.low{color:var(--accent);font-weight:700}
+.fac .nm{font-size:.95rem;font-weight:700}
+.fac .ex{grid-column:1/-1;font-size:.82rem;color:var(--muted);line-height:1.35;margin-top:-3px}
+.fac .tr{grid-column:1/-1;height:10px;background:var(--rule);border-radius:5px;overflow:hidden;margin-top:5px}
+.fac .tr i{display:block;height:100%;background:var(--soft);border-radius:5px;transition:width .25s}
+.fac .vl{font-family:var(--mono);font-size:1.05rem;font-weight:700;text-align:right}
+.fac.low .nm,.fac.low .vl{color:var(--accent)}
 .fac.low .tr i{background:var(--accent)}
 
 /* ── la cadena de tareas ── */
-.chain{border:1px solid var(--rule);margin-bottom:16px}
-.pst{background:var(--line);padding:9px 12px;display:grid;grid-template-columns:1fr auto;
-     gap:10px;align-items:center;border-bottom:1px solid var(--rule)}
-.pst .n{font-family:var(--mono);font-size:10px;letter-spacing:.1em;font-weight:700;text-transform:uppercase}
-.pst .s{font-family:var(--mono);font-size:.85rem;font-weight:700}
-.pst.bn{background:color-mix(in srgb,var(--accent) 12%,var(--paper))}
+.chain{border:1px solid var(--rule);margin-bottom:20px}
+.pst{background:var(--line);padding:11px 13px;display:grid;grid-template-columns:auto 1fr auto;
+     gap:12px;align-items:center;border-bottom:1px solid var(--rule)}
+.pst .n{font-family:var(--mono);font-size:.78rem;letter-spacing:.07em;font-weight:800;text-transform:uppercase}
+.pst .s{font-family:var(--mono);font-size:1.15rem;font-weight:800}
+.pst.bn{background:color-mix(in srgb,var(--accent) 13%,var(--paper))}
 .pst.bn .n,.pst.bn .s{color:var(--accent)}
-.tsk{display:grid;grid-template-columns:1fr auto;padding:7px 12px 7px 26px;font-size:.84rem;
+.pst .tag2{display:block;font-size:.72rem;font-family:var(--sans);letter-spacing:0;
+           text-transform:none;font-weight:400;color:var(--muted);margin-top:2px}
+.pst.bn .tag2{color:var(--accent)}
+.tsk{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 13px 10px 30px;font-size:.95rem;
      color:var(--muted);border-bottom:1px solid var(--line)}
-.tsk span:last-child{font-family:var(--mono);font-size:.78rem}
-.cutrow{display:block;width:100%;background:var(--paper);border:0;border-bottom:1px solid var(--line);
-        padding:7px 12px;cursor:pointer;font:inherit}
-.cutrow .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px}
+.tsk span:last-child{font-family:var(--mono);font-size:.9rem;font-weight:700}
+.cutrow{display:block;width:100%;min-height:46px;background:var(--paper);border:0;
+        border-bottom:1px solid var(--line);padding:8px 13px;cursor:pointer;font:inherit}
+.cutrow .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:11px}
 .cutrow .in::before,.cutrow .in::after{content:"";border-top:1px dashed var(--rule)}
-.cutrow b{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;font-weight:700;
-          color:var(--muted);border:1px dashed var(--rule);border-radius:12px;padding:4px 11px;white-space:nowrap}
+.cutrow b{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;font-weight:800;
+          color:var(--muted);border:1.5px dashed var(--rule);border-radius:16px;
+          padding:7px 15px;white-space:nowrap}
 .cutrow.on{border-bottom-color:var(--rule)}
-.cutrow.on .in::before,.cutrow.on .in::after{border-top:1.5px dashed var(--accent)}
-.cutrow.on b{color:var(--accent);border:1.5px solid var(--accent)}
-.cutrow[disabled]{cursor:not-allowed;opacity:.45}
+.cutrow.on .in::before,.cutrow.on .in::after{border-top:2px dashed var(--accent)}
+.cutrow.on b{color:var(--accent);border:2px solid var(--accent)}
+.cutrow[disabled]{cursor:not-allowed;opacity:.4}
 
 /* ── botones ── */
-.btn{display:block;width:100%;text-align:center;padding:14px;border:1.5px solid var(--ink);
-     background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px;
-     letter-spacing:.12em;text-transform:uppercase;font-weight:700;border-radius:3px;
-     cursor:pointer;margin-bottom:8px}
+.btn{display:block;width:100%;min-height:56px;text-align:center;padding:17px;
+     border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-family:var(--mono);
+     font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;
+     border-radius:4px;cursor:pointer;margin-bottom:10px}
 .btn.gh{background:transparent;color:var(--ink)}
 .btn.dan{background:transparent;color:var(--accent);border-color:var(--accent)}
 .btn:disabled{background:var(--line);color:var(--muted);border-color:var(--rule);cursor:not-allowed}
-.hint{font-size:.78rem;color:var(--muted);text-align:center;margin:-4px 0 16px;line-height:1.4}
+.hint{font-size:.88rem;color:var(--muted);text-align:center;margin:-4px 0 20px;line-height:1.45}
 
 /* ── apuesta ── */
-.q{margin-bottom:20px}
-.q p{font-weight:600;margin-bottom:9px;font-size:.95rem}
-.opts{display:flex;gap:8px;flex-wrap:wrap}
-.opt{border:1.5px solid var(--rule);background:transparent;color:var(--muted);border-radius:3px;
-     padding:10px 14px;font-family:var(--mono);font-size:.8rem;font-weight:700;cursor:pointer}
-.opt.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.q{margin-bottom:26px}
+.q p{font-weight:700;margin-bottom:12px;font-size:1.08rem;line-height:1.4}
+.q .sub{font-weight:400;color:var(--muted);font-size:.9rem;margin:-8px 0 12px;line-height:1.4}
+.opts{display:flex;gap:10px;flex-wrap:wrap}
+.opt{flex:1 1 auto;min-width:4.6rem;min-height:54px;border:2px solid var(--rule);background:transparent;
+     color:var(--muted);border-radius:4px;padding:13px 16px;font-family:var(--mono);
+     font-size:.95rem;font-weight:800;cursor:pointer}
+.opt.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent)}
 
 /* ── panel oscuro de la corrida ── */
-.plant{background:var(--panel);color:var(--pink);border-radius:5px;padding:16px;margin-bottom:16px}
+.plant{background:var(--panel);color:var(--pink);border-radius:6px;padding:18px;margin-bottom:20px}
 .plant .met{background:var(--prule);border-color:var(--prule)}
 .plant .met>div{background:var(--panel)}
 .plant .met b{color:var(--pmuted)}
 .plant .oee{border-color:var(--prule)}
 .plant .oee .h b{color:var(--pmuted)}
-.plant .fac{color:var(--pmuted)}
+.plant .fac .ex{color:var(--pmuted)}
 .plant .fac .tr{background:var(--prule)}
-.clk{display:flex;justify-content:space-between;align-items:baseline;
-     font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
-     color:var(--pmuted);padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--prule)}
-.clk b{color:var(--pink);font-weight:700}
-.line{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
+.clk{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+     font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--pmuted);font-weight:700;padding-bottom:12px;margin-bottom:16px;
+     border-bottom:1px solid var(--prule)}
+.clk b{color:var(--pink);font-weight:800}
+.line{display:flex;gap:9px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;scrollbar-width:none}
 .line::-webkit-scrollbar{display:none}
-.stn{flex:0 0 46px;text-align:center}
-.stn .lb{font-family:var(--mono);font-size:8.5px;color:var(--pmuted);margin-top:3px}
-.stn .pb{height:3px;background:var(--prule);border-radius:2px;overflow:hidden;margin-top:4px}
+.stn{flex:0 0 66px;text-align:center}
+.stn .lb{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--pmuted);margin-top:5px}
+.stn .pb{height:5px;background:var(--prule);border-radius:3px;overflow:hidden;margin-top:6px}
 .stn .pb i{display:block;height:100%;background:var(--accent)}
-.stn.dn .pb i{background:var(--accent)}
-.stn.idle{opacity:.34}
-.split{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;
-       font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-       color:var(--pmuted);margin-bottom:6px}
-.bar2{height:9px;border-radius:2px;overflow:hidden;display:flex;background:var(--prule)}
+.stn.idle{opacity:.32}
+.split{display:grid;gap:8px;margin-bottom:6px}
+.split .lb2{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--pmuted);font-weight:700}
+.bar2{height:14px;border-radius:3px;overflow:hidden;display:flex;background:var(--prule)}
 .bar2 i{display:block;height:100%}
 .bar2 .g{background:var(--pink)} .bar2 .b{background:var(--accent)}
 
 /* ── cierre ── */
-.hero{text-align:center;padding:14px 0 18px;border-bottom:1px solid var(--rule);margin-bottom:18px}
-.hero .n{font-family:var(--mono);font-size:3.1rem;font-weight:800;letter-spacing:-.045em;line-height:1}
-.hero .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
-         color:var(--muted);margin-top:9px}
-.hero .v{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
-         font-weight:700;margin-top:10px}
+.hero{text-align:center;padding:18px 0 22px;border-bottom:1px solid var(--rule);margin-bottom:22px}
+.hero .n{font-family:var(--mono);font-size:3.9rem;font-weight:800;letter-spacing:-.05em;line-height:1}
+.hero .l{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--muted);margin-top:11px;font-weight:700}
+.hero .v{font-family:var(--mono);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;
+         font-weight:800;margin-top:14px}
 .hero .v.ok{color:var(--good)} .hero .v.no{color:var(--accent)}
-.row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:9px 0;
-     border-bottom:1px solid var(--line);font-size:.9rem}
-.row span:last-child{font-family:var(--mono);font-weight:700;white-space:nowrap}
+.row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;
+     border-bottom:1px solid var(--line);font-size:1rem}
+.row span:last-child{font-family:var(--mono);font-weight:800;white-space:nowrap}
 .row .a{color:var(--accent)} .row .g{color:var(--good)}
-.card{border:1.5px solid var(--ink);padding:14px;margin:18px 0;font-size:.9rem;line-height:1.55}
+.card{border:2px solid var(--ink);padding:16px;margin:22px 0;font-size:1rem;line-height:1.55}
 .card.a{border-color:var(--accent)}
-.card b.t{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
-          text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.code{font-family:var(--mono);font-size:.88rem;font-weight:700;margin:9px 0;word-spacing:.1em}
+.card b.t{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.11em;
+          text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:800}
+.code{font-family:var(--mono);font-size:1.05rem;font-weight:800;margin:11px 0;word-spacing:.12em}
 
-/* ── varios ── */
-.tag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
-     text-transform:uppercase;font-weight:700;border:1px solid var(--accent);color:var(--accent);
-     border-radius:3px;padding:4px 9px;margin-bottom:12px}
+/* ── gráfica de barras ── */
+.graf{margin:22px 0}
+.graf .tt{font-family:var(--mono);font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;
+          color:var(--muted);font-weight:700;margin-bottom:14px}
+.gb{display:grid;grid-template-columns:5.4rem 1fr;gap:10px;align-items:center;margin-bottom:11px}
+.gb .k{font-size:.88rem;color:var(--muted);line-height:1.25}
+.gb .v{display:flex;align-items:center;gap:9px}
+.gb .br{height:26px;background:var(--soft);border-radius:0 3px 3px 0;min-width:3px}
+.gb.a .br{background:var(--accent)}
+.gb .num{font-family:var(--mono);font-size:1rem;font-weight:800;white-space:nowrap}
+.gb.a .num,.gb.a .k{color:var(--accent)}
+.gb.a .k{font-weight:700}
+
+/* ── ayuda ── */
+.paso{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;
+      padding:18px 0;border-bottom:1px solid var(--line)}
+.paso .no{font-family:var(--mono);font-size:.9rem;font-weight:800;color:var(--paper);
+          background:var(--accent);width:34px;height:34px;border-radius:50%;
+          display:flex;align-items:center;justify-content:center}
+.paso h3{font-size:1.1rem;font-weight:700;margin-bottom:5px}
+.paso p{color:var(--muted);font-size:.98rem;line-height:1.5}
+.paso .fig{margin-top:12px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.demo{border:1px solid var(--rule);border-radius:4px;padding:10px 12px;margin-top:12px;
+      font-family:var(--mono);font-size:.88rem;font-weight:700}
+.demo .lbl{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+           color:var(--muted);margin-bottom:5px;font-weight:700}
+
+/* ── tira de la pieza ── */
+.tira{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:18px 0 6px}
+.tira .p{text-align:center}
+.tira .p .lb{font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.25}
+
+.tag{display:inline-block;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+     text-transform:uppercase;font-weight:800;border:2px solid var(--accent);color:var(--accent);
+     border-radius:4px;padding:7px 13px;margin-bottom:16px}
 .tag.w{background:var(--accent);color:var(--paper)}
-.note{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:14px}
-.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);
-      font-size:.76rem;color:var(--muted);line-height:1.6}
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
+      font-size:.85rem;color:var(--muted);line-height:1.6}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 
@@ -213,31 +251,36 @@ const DEFB=(function(){const d=new Array(28).fill(.0004);
   [22,23,24].forEach(i=>d[i]=.0014); d[26]=.0016; return d;})();
 const SOBRE_K=1.15, SOBRE_X=2.5;   /* puesto sobrecargado: se equivoca más */
 
+/* qué cara de la pieza deja lista cada tarea: sirve para dibujarla */
+const CAPA=[1,1,1,1, 2,2,2,2,2,2, 3,3,3,3, 4,4,4,4, 5,5,5,5, 6,6,6, 7,7,7];
+const CAPA_NOM=["base y espárragos","placa transparente","placa amarilla",
+  "placa verde","placa azul","tuercas","tapa y apriete"];
+
 const HOY=[4,10,14,18,22,25,28];
 const C7 =[5,10,14,18,22,25,28];
 const C10=[4,6,10,13,16,19,22,24,26,28];
 
 const NIV=[
  {n:1,t:"La línea de hoy",gente:7,W:W0,relx:1,cortes:HOY,recfg:false,
-  meta:{k:"takt",v:30,txt:"Sacar una pieza cada 30,0 s o menos"},
-  nuevo:"Siete puestos, siete personas, y los cortes donde están montados hoy en la Fábrica. No puede contratar a nadie ni parar la línea: lo único que puede hacer es mover los cortes.",
-  pista:"El puesto más lento manda sobre toda la línea. Mírelo antes de mover nada."},
- {n:2,t:"El escalón",gente:10,W:W0,relx:1,cortes:HOY,recfg:false,
-  meta:{k:"takt",v:20,txt:"Sacar una pieza cada 20,0 s o menos"},
-  nuevo:"Llegan tres personas más. Puede repartir la cadena hasta en diez puestos. La meta baja a veinte segundos.",
-  pista:"Agregar un puesto a la vez casi no mueve el número. Pruebe repartiendo de nuevo toda la cadena, no partiendo solo el cuello."},
- {n:3,t:"La propuesta de la IA",gente:10,W:W0,relx:1,cortes:HOY,recfg:true,
-  meta:{k:"oee",v:.72,txt:"Cerrar la jornada con OEE de 72 % o más"},
-  nuevo:"Ahora puede cambiar la línea con la jornada andando — pero mover las mesas para la planta 35 minutos. También puede ensayar en el gemelo cuantas veces quiera: eso no cuesta nada.",
-  pista:"Pídale una configuración a la IA en su celular, tradúzcala a cortes y pruébela en el gemelo antes de tocar la planta."},
- {n:4,t:"Equipo viejo",gente:10,W:W0,relx:.5,cortes:HOY,recfg:true,
-  meta:{k:"oee",v:.70,txt:"Cerrar la jornada con OEE de 70 % o más"},
-  nuevo:"Las mismas palancas, pero las máquinas se averían el doble. La meta casi no baja.",
-  pista:"Con más averías, cada parada que usted agregue encima pesa más. Decida bien cuántas veces va a tocar la línea."},
- {n:5,t:"Referencia nueva, sin parar",gente:10,W:W5,relx:1,cortes:C10,recfg:true,
+  meta:{k:"takt",v:30,txt:"Sacar una pieza cada 30 segundos o menos"},
+  nuevo:"Siete personas arman la pieza. Hoy sale una cada 36 segundos. Usted no puede contratar a nadie. Lo único que puede hacer es cambiar dónde empieza y dónde termina cada puesto.",
+  pista:"El puesto más lento manda sobre toda la línea. Búsquelo primero."},
+ {n:2,t:"Llegan tres personas más",gente:10,W:W0,relx:1,cortes:HOY,recfg:false,
+  meta:{k:"takt",v:20,txt:"Sacar una pieza cada 20 segundos o menos"},
+  nuevo:"Ahora puede tener hasta diez puestos. La meta baja a veinte segundos.",
+  pista:"Reparta toda la fila otra vez. Partir solo el puesto más lento no alcanza."},
+ {n:3,t:"La idea de la IA",gente:10,W:W0,relx:1,cortes:HOY,recfg:true,
+  meta:{k:"oee",v:.72,txt:"Terminar el día con nota de 72 o más"},
+  nuevo:"Ya puede mover las mesas con el día andando. Pero mover mesas para la planta 35 minutos. Probar en el computador no cuesta nada.",
+  pista:"Pídale un reparto a ChatGPT o a Claude en su celular. Pruébelo en el computador antes de mover una sola mesa."},
+ {n:4,t:"Máquinas viejas",gente:10,W:W0,relx:.5,cortes:HOY,recfg:true,
+  meta:{k:"oee",v:.70,txt:"Terminar el día con nota de 70 o más"},
+  nuevo:"Las mismas reglas. Pero las máquinas se dañan el doble. La meta casi no baja.",
+  pista:"Con más daños, cada parada suya pesa más. Piense bien cuántas veces va a mover las mesas."},
+ {n:5,t:"Llega una pieza nueva",gente:10,W:W5,relx:1,cortes:C10,recfg:true,
   meta:{k:"buenas",v:1000,txt:"Entregar 1.000 piezas buenas o más"},
-  nuevo:"Entra otra referencia del HEXA: la placa transparente ahora lleva sellador y cada mitad pasa de 8 a 15 segundos. El trabajo total es el mismo. Su línea de ayer ya no sirve.",
-  pista:"Vuelva a mirar los tramos antes de arrancar. El cuello se mudó de puesto."}
+  nuevo:"La placa transparente ahora lleva pegante: cada mitad pasa de 8 a 15 segundos. El trabajo total es el mismo, pero repartido distinto. Su línea de ayer ya no sirve.",
+  pista:"Mire los tiempos otra vez. El puesto más lento se cambió de lugar."}
 ];
 
 const BANDAS=[["<50 %",0,.50],["50-65 %",.50,.65],["65-80 %",.65,.80],[">80 %",.80,1.01]];
@@ -378,44 +421,91 @@ function hexa(n,w){
   return '<svg width="'+w+'" height="'+alto.toFixed(0)+'" viewBox="0 0 '+w+' '+alto.toFixed(0)+'" aria-hidden="true">'+s+'</svg>';
 }
 
+/* la pieza, capa por capa, en grande */
+function tiraPiezas(w){
+  let h='<div class="tira">';
+  for(let i=1;i<=7;i++) h+='<div class="p">'+hexa(i,w)+'<div class="lb">'+i+'<br>'+CAPA_NOM[i-1]+'</div></div>';
+  return h+'</div>';
+}
+
 function medidores(m,rotulo){
   const b=bajo(m);
-  const f=(k,nom,v)=>'<div class="fac'+(b===k?" low":"")+'"><span>'+nom+'</span>'
-    +'<span class="tr"><i style="width:'+(v*100).toFixed(1)+'%"></i></span>'
-    +'<span class="vl">'+(v*100).toFixed(1).replace(".",",")+'</span></div>';
+  const f=(k,nom,exp,v)=>'<div class="fac'+(b===k?" low":"")+'">'
+    +'<span class="nm">'+nom+'</span><span class="vl">'+(v*100).toFixed(1).replace(".",",")+'</span>'
+    +'<span class="ex">'+exp+'</span>'
+    +'<span class="tr"><i style="width:'+(v*100).toFixed(1)+'%"></i></span></div>';
   return '<div class="oee"><div class="h"><b>'+rotulo+'</b><i>'+pc(m.OEE)+'</i></div>'
-    +f("D","Disponibilidad",m.D)+f("R","Rendimiento",m.R)+f("Q","Calidad",m.Q)+'</div>';
+    +f("D","Disponibilidad","La máquina no paró",m.D)
+    +f("R","Rendimiento","La línea fue rápida",m.R)
+    +f("Q","Calidad","Las piezas salieron buenas",m.Q)+'</div>';
 }
 
 /* ═══════════════ 1 · objetivo ═══════════════ */
 function verObjetivo(){
   const v=niv(), tk=Math.max.apply(null,tramos(v.cortes,v.W));
   const hoy=simular(v.cortes,v.W,v.relx);
+  const meta = v.meta.k==="takt" ? n1(v.meta.v)+' <s>s</s>'
+             : v.meta.k==="oee"  ? (v.meta.v*100).toFixed(0)+' <s>de nota</s>'
+             :                     mil(v.meta.v)+' <s>piezas</s>';
   stage.innerHTML=
     '<div class="eyebrow">Nivel '+v.n+' de 5</div>'
     +'<h1>'+esc(v.t)+'</h1>'
     +'<p class="lead">'+esc(v.nuevo)+'</p>'
-    +'<div class="ob"><div class="eyebrow">Hoy sale una pieza cada</div>'
-      +'<div class="big">'+n1(tk)+' <s>s</s></div></div>'
-    +'<div class="ob"><div class="eyebrow">Tiene que llegar a</div>'
-      +'<div class="big a">'+(v.meta.k==="takt"?n1(v.meta.v)+" <s>s</s>"
-         :v.meta.k==="oee"?(v.meta.v*100).toFixed(0)+" <s>% de OEE</s>"
-         :mil(v.meta.v)+" <s>piezas</s>")+'</div></div>'
-    +'<div class="ob"><div class="eyebrow">Su eficiencia se mide con el OEE</div>'
-      +'<p>Disponibilidad × Rendimiento × Calidad. Con la línea como está hoy, el OEE va en '
-      +'<strong>'+pc(hoy.OEE)+'</strong>.</p></div>'
+    +'<div class="met">'
+      +'<div><b>Hoy sale cada</b><i class="a">'+n1(tk)+' s</i></div>'
+      +'<div><b>Tiene que llegar a</b><i>'+(v.meta.k==="takt"?n1(v.meta.v)+" s"
+          :v.meta.k==="oee"?(v.meta.v*100).toFixed(0)+" de nota":mil(v.meta.v)+" pzas")+'</i></div>'
+    +'</div>'
+    +'<div class="ob"><div class="eyebrow">Su nota de hoy · OEE</div>'
+      +'<div class="big">'+pc(hoy.OEE)+'</div>'
+      +'<p style="margin-top:8px">La nota sube cuando <strong>la máquina no para</strong>, '
+      +'<strong>la línea va rápida</strong> y <strong>las piezas salen buenas</strong>.</p></div>'
+    +'<div class="ob"><div class="eyebrow">Esta es la pieza que arman</div>'
+      +tiraPiezas(76)
+      +'<p style="margin-top:10px">Cada puesto le pone una capa. Sale armada al final de la fila.</p></div>'
     +(v.recfg
-      ?'<div class="ob"><div class="eyebrow">Sin parar la planta</div>'
-       +'<p>Reconfigurar la línea real <strong>para la producción 35 minutos</strong>. '
-       +'Ensayar en el gemelo digital no cuesta nada y la planta sigue andando.</p></div>'
-      :'<div class="ob"><div class="eyebrow">Se decide antes de arrancar</div>'
-       +'<p>En este nivel la línea se arma una vez y corre toda la jornada. <strong>No hay segunda '
-       +'oportunidad</strong> hasta el cierre.</p></div>')
+      ?'<div class="ob"><div class="eyebrow">Ojo con esto</div>'
+       +'<p>Mover las mesas <strong>para la planta 35 minutos</strong>. '
+       +'Probar en el computador <strong>no cuesta nada</strong>.</p></div>'
+      :'<div class="ob"><div class="eyebrow">Ojo con esto</div>'
+       +'<p>La línea se arma <strong>una sola vez</strong> y corre así todo el día. '
+       +'No hay segunda oportunidad.</p></div>')
     +'<div class="ob"><div class="eyebrow">Gana quien</div>'
-      +'<p>entregue <strong>más piezas buenas</strong>. El OEE no es el marcador: es el diagnóstico '
-      +'que dice dónde se está perdiendo.</p></div>'
-    +'<button class="btn" id="go">Empezar</button>';
+      +'<p>entregue <strong>más piezas buenas</strong>.</p></div>'
+    +'<button class="btn" id="go">Empezar</button>'
+    +'<button class="btn gh" id="ayuda">¿Cómo se juega?</button>';
   $("#go").onclick=()=>{S.cortes=v.cortes.slice();verArmado();};
+  $("#ayuda").onclick=verAyuda;
+}
+
+/* ═══════════════ 1b · cómo se juega ═══════════════
+   Explica cómo se maneja la pantalla, no cómo se gana: la lección la tiene
+   que descubrir el participante corriendo, que es el método de la Fábrica. */
+function verAyuda(){
+  const paso=(n,t,txt,fig)=>'<div class="paso"><span class="no">'+n+'</span><div>'
+    +'<h3>'+t+'</h3><p>'+txt+'</p>'+(fig||'')+'</div></div>';
+  stage.innerHTML=
+    '<div class="eyebrow">Cómo se juega</div>'
+    +'<h1>Cuatro pasos</h1>'
+    +'<p class="lead">Se juega con el dedo. No hay que escribir nada.</p>'
+    +paso(1,"Mire la fila de tareas",
+      "Son las 28 cosas que hay que hacer para armar una pieza, en orden. Cada una tiene sus segundos.",
+      '<div class="demo"><span class="lbl">Se ve así</span>Montar espárrago A · 5,0<br>Montar espárrago B · 5,0</div>')
+    +paso(2,"Toque ✂ para partir la fila",
+      "Cada pedazo de la fila es un puesto, y en cada puesto trabaja una persona. Toque la línea punteada para poner o quitar un corte.",
+      '<div class="demo"><span class="lbl">Toque aquí</span>— — — ✂ corte — — —</div>')
+    +paso(3,"Diga cómo le va a ir",
+      "Antes de arrancar tiene que responder dos preguntas. No se puede arrancar sin responder: la gracia es pensar antes, no después.")
+    +paso(4,"Vea correr el día",
+      "El día pasa en quince segundos. Al final le muestran cuántas piezas entregó y qué nota sacó.",
+      '<div class="fig">'+hexa(1,54)+hexa(4,54)+hexa(7,54)+'</div>')
+    +'<div class="card"><b class="t">Lo único que hay que saber</b>'
+      +'El puesto más lento manda sobre toda la línea. Si un puesto se demora 36 segundos, '
+      +'de la línea no sale una pieza más rápido que cada 36 segundos — '
+      +'por más que los demás estén desocupados.</div>'
+    +'<button class="btn" id="volver">Entendido, a jugar</button>';
+  window.scrollTo(0,0);
+  $("#volver").onclick=verObjetivo;
 }
 
 /* ═══════════════ 2 · armado ═══════════════ */
@@ -427,22 +517,22 @@ function verArmado(opts){
 
   let h="";
   if(opts.gemelo){
-    h+='<div class="tag">Gemelo digital · la planta sigue andando</div>'
-      +'<h2>Ensaye sin tocar la planta</h2>'
-      +'<p class="lead">Mueva los cortes y córralo. Esto no para la producción ni cuenta como cambio.</p>';
+    h+='<div class="tag">Computador · la planta sigue andando</div>'
+      +'<h2>Pruebe sin tocar la planta</h2>'
+      +'<p class="lead">Mueva los cortes y pruebe. Esto no para la planta ni cuenta como cambio.</p>';
   }else if(opts.parado){
     h+='<div class="tag w">Planta parada · 35 min</div>'
-      +'<h2>Reconfigure la línea</h2>'
-      +'<p class="lead">Ya está pagando la parada. Deje la línea como la quiere para el resto de la jornada.</p>';
+      +'<h2>Mueva las mesas</h2>'
+      +'<p class="lead">Ya está pagando los 35 minutos. Deje la línea como la quiere para el resto del día.</p>';
   }else{
     h+='<div class="eyebrow">Nivel '+v.n+' · armado</div>'
-      +'<h2>¿Dónde corta la línea?</h2>'
+      +'<h2>¿Dónde parte la fila?</h2>'
       +'<p class="lead">'+esc(v.pista)+'</p>';
   }
 
-  h+='<div class="met">'
+  h+='<div class="met peg">'
     +'<div><b>Sale cada</b><i class="'+(tk<= (v.meta.k==="takt"?v.meta.v:20)?"ok":"a")+'">'+n1(tk)+' s</i></div>'
-    +'<div><b>Puestos · gente</b><i>'+K+' de '+v.gente+'</i></div>'
+    +'<div><b>Puestos · personas</b><i>'+K+' de '+v.gente+'</i></div>'
     +'</div>';
 
   /* la cadena */
@@ -450,7 +540,10 @@ function verArmado(opts){
   let p=0;
   for(let k=0;k<K;k++){
     const c=S.cortes[k];
-    h+='<div class="pst'+(k===bn?" bn":"")+'"><span class="n">Puesto '+(k+1)+'</span>'
+    const cf=CAPA[c-1];
+    h+='<div class="pst'+(k===bn?" bn":"")+'">'+hexa(cf,42)
+      +'<span class="n">Puesto '+(k+1)
+      +'<span class="tag2">'+(k===bn?"el más lento de todos":"deja lista la "+CAPA_NOM[cf-1])+'</span></span>'
       +'<span class="s">'+n1(tr[k])+' s</span></div>';
     for(let i=p;i<c;i++){
       h+='<div class="tsk"><span>'+esc(NOM[i])+'</span><span>'+n1(W[i])+'</span></div>';
@@ -467,10 +560,10 @@ function verArmado(opts){
   h+='</div>';
 
   if(opts.gemelo){
-    if(S.ultTwin)h+=medidores(S.ultTwin,"Si la jornada entera corriera así");
-    h+='<button class="btn gh" id="twin">Correr en el gemelo</button>'
+    if(S.ultTwin)h+=medidores(S.ultTwin,"Si el día entero corriera así");
+    h+='<button class="btn gh" id="twin">Probar este reparto</button>'
       +'<button class="btn" id="back">Volver a la planta</button>'
-      +'<p class="hint">La planta no se detuvo mientras usted ensayaba.</p>';
+      +'<p class="hint">La planta siguió produciendo mientras usted probaba.</p>';
   }else if(opts.parado){
     h+='<button class="btn" id="ok">Arrancar así</button>';
   }else{
@@ -501,15 +594,18 @@ function verArmado(opts){
 function verApuesta(){
   const v=niv();
   const h='<div class="eyebrow">Nivel '+v.n+' · antes de arrancar</div>'
-    +'<h2>Comprométase primero</h2>'
-    +'<p class="lead">Nadie mejora un indicador que no sabe leer. Diga qué va a pasar <em>antes</em> de que pase.</p>'
-    +'<div class="q"><p>1 · ¿A qué OEE va a cerrar la jornada?</p><div class="opts" id="q1">'
+    +'<h2>Diga primero qué va a pasar</h2>'
+    +'<p class="lead">Explicar un número después es fácil. La gracia es acertarlo antes.</p>'
+    +'<div class="q"><p>1 · ¿Qué nota cree que va a sacar hoy?</p>'
+      +'<p class="sub">La nota es el OEE: máquina sin parar, línea rápida y piezas buenas.</p>'
+      +'<div class="opts" id="q1">'
       +BANDAS.map((b,i)=>'<button class="opt" data-i="'+i+'">'+b[0]+'</button>').join("")+'</div></div>'
-    +'<div class="q"><p>2 · ¿Cuántas veces va a parar la línea real hoy?</p><div class="opts" id="q2">'
+    +'<div class="q"><p>2 · ¿Cuántas veces va a parar la planta para mover las mesas?</p>'
+      +'<div class="opts" id="q2">'
       +PARADAS_OPC.map((b,i)=>'<button class="opt" data-i="'+i+'">'+(b===3?"3 o más":b)+'</button>').join("")
-      +'</div>'+(v.recfg?'':'<p class="hint" style="text-align:left;margin-top:9px">En este nivel la línea no se puede tocar durante la jornada.</p>')+'</div>'
-    +'<button class="btn" id="go" disabled>Arrancar la jornada</button>'
-    +'<p class="hint">Sin responder las dos, el botón no se habilita.</p>';
+      +'</div>'+(v.recfg?'':'<p class="hint" style="text-align:left;margin-top:9px">En este nivel la línea no se puede tocar durante el día.</p>')+'</div>'
+    +'<button class="btn" id="go" disabled>Arrancar el día</button>'
+    +'<p class="hint">Hay que responder las dos para poder arrancar.</p>';
   stage.innerHTML=h;
   const chk=()=>{$("#go").disabled=(S.apOEE===null||S.apPar===null);};
   const sel=(cont,key)=>{
@@ -531,7 +627,7 @@ function verApuesta(){
 function verCorrida(){
   const v=niv();
   stage.innerHTML=
-    '<div class="eyebrow">Nivel '+v.n+' · jornada en curso</div>'
+    '<div class="eyebrow">Nivel '+v.n+' · el día va corriendo</div>'
     +'<h2>'+esc(v.meta.txt)+'</h2>'
     +'<div class="plant">'
       +'<div class="clk"><span id="hora">Hora 0 de 8</span><span id="cmb">0 cambios</span></div>'
@@ -541,14 +637,15 @@ function verCorrida(){
       +'</div>'
       +'<div id="oee"></div>'
       +'<div class="line" id="line"></div>'
-      +'<div class="split"><span>Buenas / malas</span><span class="bar2" id="bar"><i class="g" style="width:100%"></i><i class="b" style="width:0"></i></span></div>'
+      +'<p class="hint" style="margin:-4px 0 14px;color:var(--pmuted)">Cada puesto le pone una capa · deslice el dedo para ver toda la fila</p>'
+      +'<div class="split"><span class="lb2">Buenas / malas</span><span class="bar2" id="bar"><i class="g" style="width:100%"></i><i class="b" style="width:0"></i></span></div>'
     +'</div>'
     +(v.recfg
-      ?'<button class="btn gh" id="twin">Ensayar en el gemelo</button>'
-       +'<p class="hint">Gratis. La planta sigue produciendo mientras usted ensaya.</p>'
-       +'<button class="btn dan" id="stop">⚠ Parar y reconfigurar</button>'
-       +'<p class="hint">Cuesta 35 minutos de planta y vacía la línea.</p>'
-      :'<p class="hint">La línea se armó una vez y corre así toda la jornada.</p>');
+      ?'<button class="btn gh" id="twin">Probar en el computador</button>'
+       +'<p class="hint">Es gratis. La planta sigue produciendo mientras usted prueba.</p>'
+       +'<button class="btn dan" id="stop">⚠ Parar y mover las mesas</button>'
+       +'<p class="hint">Cuesta 35 minutos parada. La línea queda vacía y hay que volver a llenarla.</p>'
+      :'<p class="hint">La línea se armó una vez y corre así todo el día.</p>');
   if(v.recfg){
     $("#twin").onclick=()=>{S.gemelo=true;S.ultTwin=null;verArmado({gemelo:true});};
     $("#stop").onclick=()=>{cancelAnimationFrame(S.raf);S.raf=0;verArmado({parado:true});};
@@ -566,7 +663,7 @@ function pintarPlanta(){
   el("mg").textContent=mil(R.good);
   const mp=el("mp");mp.textContent=Math.round(R.parado/60)+" min";
   mp.className=R.parado>0?"a":"ok";
-  el("oee").innerHTML=medidores(m,"OEE de la jornada");
+  el("oee").innerHTML=medidores(m,"Su nota de hoy · OEE");
   const malas=R.out-R.good, tot=Math.max(1,R.out);
   el("bar").innerHTML='<i class="g" style="width:'+(R.good/tot*100)+'%"></i>'
                      +'<i class="b" style="width:'+(malas/tot*100)+'%"></i>';
@@ -574,7 +671,7 @@ function pintarPlanta(){
   for(let i=0;i<L.N;i++){
     const e=L.st[i], capa=Math.min(7,Math.floor(i/L.N*7)+1);
     const idle=!e.h&&e.dt<=0;
-    h+='<div class="stn'+(idle?" idle":"")+'">'+hexa(capa,40)
+    h+='<div class="stn'+(idle?" idle":"")+'">'+hexa(capa,60)
       +'<div class="lb">P'+(i+1)+'</div>'
       +'<div class="pb"><i style="width:'+(e.dt>0?100:Math.min(100,e.t/L.cyc[i]*100)).toFixed(0)+'%"></i></div></div>';
   }
@@ -596,14 +693,26 @@ function correr(){
   S.raf=requestAnimationFrame(paso);
 }
 
+/* barras horizontales: una sola serie, etiqueta directa en cada barra */
+function grafica(titulo,filas,sufijo){
+  const max=Math.max.apply(null,filas.map(f=>f[1]))||1;
+  let h='<div class="graf"><div class="tt">'+titulo+'</div>';
+  filas.forEach(f=>{
+    h+='<div class="gb'+(f[2]?" a":"")+'"><span class="k">'+f[0]+'</span>'
+      +'<span class="v"><span class="br" style="width:'+Math.max(2,f[1]/max*100).toFixed(1)+'%"></span>'
+      +'<span class="num">'+(typeof f[1]==="number"&&f[1]%1?n1(f[1]):mil(f[1]))+(sufijo||"")+'</span></span></div>';
+  });
+  return h+'</div>';
+}
+
 /* ═══════════════ 5 · cierre ═══════════════ */
 function verCierre(){
   const v=niv(), m=medir(S.R), R=S.R;
   const tk=Math.max.apply(null,tramos(R.cortes,v.W));
+  const base=simular(v.cortes,v.W,v.relx);          /* como estaba al empezar el nivel */
   const pasa = v.meta.k==="takt" ? tk<=v.meta.v+1e-9
              : v.meta.k==="oee"  ? m.OEE>=v.meta.v
              :                     m.good>=v.meta.v;
-  /* apuesta */
   let bi=0;for(let i=0;i<BANDAS.length;i++)if(m.OEE>=BANDAS[i][1]&&m.OEE<BANDAS[i][2])bi=i;
   const okOEE=S.apOEE===bi;
   const parReal=Math.min(3,R.cambios), okPar=PARADAS_OPC[S.apPar]===parReal;
@@ -614,13 +723,16 @@ function verCierre(){
 
   const b=bajo(m);
   const DIAG={
-    D:["Disponibilidad","La planta estuvo quieta "+hm(m.down)+" de las ocho. "
-       +(R.parado>0?"De eso, "+Math.round(R.parado/60)+" minutos los puso usted al reconfigurar."
-                   :"Todo fue avería de máquina: no vino de sus decisiones.")],
-    R:["Rendimiento","La línea corrió a "+n1(tk)+" s por pieza contra los 18,2 s de diseño. "
-       +"Eso es desbalanceo: hay un puesto cargado y otros esperando."],
-    Q:["Calidad","Salieron "+mil(m.out-m.good)+" piezas malas de "+mil(m.out)+". "
-       +"Cuando un puesto queda sobrecargado, se equivoca más."]
+    D:["La máquina paró mucho",
+       "La planta estuvo quieta "+hm(m.down)+" de las ocho horas. "
+       +(R.parado>0?"De eso, "+Math.round(R.parado/60)+" minutos los puso usted al mover las mesas."
+                   :"Todo fue daño de máquina: eso no vino de sus decisiones.")],
+    R:["La línea fue lenta",
+       "Salió una pieza cada "+n1(tk)+" segundos. Si la fila estuviera bien repartida saldría cada 18,2. "
+       +"Eso pasa cuando un puesto tiene mucho trabajo y los otros lo esperan."],
+    Q:["Salieron piezas malas",
+       "De cada "+mil(m.out)+" piezas, "+mil(m.out-m.good)+" salieron malas. "
+       +"Cuando un puesto queda muy cargado, la persona se equivoca más."]
   }[b];
 
   let h='<div class="hero">'
@@ -628,45 +740,56 @@ function verCierre(){
     +'<div class="l">piezas buenas entregadas</div>'
     +'<div class="v '+(pasa?"ok":"no")+'">'+(pasa?"✓ pasó el nivel":"✗ no llegó a la meta")+'</div>'
     +'</div>'
-    +medidores(m,"OEE de la jornada")
-    +'<div class="row"><span>Sale cada</span><span>'+n1(tk)+' s</span></div>'
+    +grafica("Piezas buenas del día",[
+        ["Como estaba",base.good,false],
+        ["Como quedó",m.good,true]])
+    +'<p class="hint" style="margin:-8px 0 22px">'+(
+        m.good>base.good ? "Entregó <strong>"+mil(m.good-base.good)+" piezas más</strong> que si no hubiera tocado nada."
+      : m.good<base.good ? "Entregó <strong>"+mil(base.good-m.good)+" piezas menos</strong> que si no hubiera tocado nada."
+      :                    "Entregó <strong>lo mismo</strong> que si no hubiera tocado nada.")+'</p>'
+    +medidores(m,"Su nota de hoy · OEE")
+    +'<div class="row"><span>Sale una pieza cada</span><span>'+n1(tk)+' s</span></div>'
     +'<div class="row"><span>Puestos</span><span>'+R.cortes.length+' de '+v.gente+'</span></div>'
-    +'<div class="row"><span>Paradas de planta</span><span class="'+(R.cambios?"a":"g")+'">'
+    +'<div class="row"><span>Veces que paró la planta</span><span class="'+(R.cambios?"a":"g")+'">'
       +R.cambios+(R.cambios?' · '+Math.round(R.parado/60)+' min':'')+'</span></div>'
-    +'<div class="row"><span>Meta del nivel</span><span>'+esc(v.meta.txt.replace("Sacar una pieza cada ","").replace("Cerrar la jornada con ","").replace("Entregar ",""))+'</span></div>';
+    +'<div class="row"><span>La meta era</span><span>'+esc(v.meta.txt
+        .replace("Sacar una pieza cada ","").replace("Terminar el día con ","")
+        .replace("Entregar ",""))+'</span></div>';
 
-  h+='<div class="card"><b class="t">Dónde está su pérdida</b>'
-    +'<strong>'+DIAG[0]+'</strong> es el factor más bajo. '+DIAG[1]
-    +'<p style="margin-top:9px;color:var(--muted);font-size:.85rem">Regla para leerlo: '
-    +'<strong>Rendimiento</strong> mide su balanceo y <strong>Disponibilidad</strong> mide sus paradas. '
-    +'Si Disponibilidad se le acerca a Rendimiento, está parando la planta de más.</p></div>';
+  h+='<div class="card"><b class="t">Dónde perdió</b>'
+    +'<strong>'+DIAG[0]+'.</strong> '+DIAG[1]
+    +'<p style="margin-top:10px;color:var(--muted);font-size:.9rem">Para leerlo rápido: '
+    +'<strong>Rendimiento</strong> le dice si repartió bien la fila. '
+    +'<strong>Disponibilidad</strong> le dice si paró la planta de más.</p></div>';
 
-  h+='<div class="card a"><b class="t">La apuesta</b>'
-    +'<div class="row"><span>Dijo que el OEE cerraría en '+BANDAS[S.apOEE][0]+'</span>'
-      +'<span class="'+(okOEE?"g":"a")+'">'+(okOEE?"✓ +25":"✗ fue "+BANDAS[bi][0])+'</span></div>'
+  h+='<div class="card a"><b class="t">Su apuesta</b>'
+    +'<div class="row"><span>Dijo que la nota daría '+BANDAS[S.apOEE][0]+'</span>'
+      +'<span class="'+(okOEE?"g":"a")+'">'+(okOEE?"✓ +25":"✗ dio "+BANDAS[bi][0])+'</span></div>'
     +'<div class="row" style="border:0"><span>Dijo '+(PARADAS_OPC[S.apPar]===3?"3 o más paradas"
         :PARADAS_OPC[S.apPar]===1?"1 parada":PARADAS_OPC[S.apPar]+" paradas")+'</span>'
       +'<span class="'+(okPar?"g":"a")+'">'+(okPar?"✓ +25":"✗ hizo "+R.cambios)+'</span></div>'
-    +'<p style="margin-top:9px"><strong>'+gan+' puntos</strong> en este nivel.</p></div>';
+    +'<p style="margin-top:10px"><strong>'+gan+' puntos</strong> en este nivel.</p></div>';
 
-  h+='<div class="card"><b class="t">Lo que se lleva a la mesa</b>'
-    +'Corte la línea física después de estas tareas:'
+  h+='<div class="card"><b class="t">Para armarlo en la mesa</b>'
+    +'Parta la línea real después de estas tareas:'
     +'<div class="code">'+R.cortes.join(" · ")+'</div>'
-    +R.cortes.length+' puestos. El cuello queda en <strong>Puesto '+(R.L.bn+1)+'</strong>, a '
-    +n1(R.L.cyc[R.L.bn])+' s.</div>';
+    +R.cortes.length+' puestos. El más lento es el <strong>puesto '+(R.L.bn+1)+'</strong>, '
+    +'con '+n1(R.L.cyc[R.L.bn])+' segundos.</div>';
 
   if(S.nivel<NIV.length-1){
     h+='<button class="btn" id="next">Siguiente nivel</button>';
   }else{
     let r=RANGOS[RANGOS.length-1];
     for(const x of RANGOS)if(S.puntos>=x[0]){r=x;break;}
-    h+='<div class="card a"><b class="t">Cierre · '+S.puntos+' de 500 puntos</b>'
-      +'<strong style="font-size:1.05rem">'+r[1]+'</strong><p style="margin-top:6px">'+r[2]+'</p></div>'
-      +'<div class="card"><b class="t">Lo que hay que llevarse de todo esto</b>'
-      +'Ensayar en el gemelo es gratis y se siente improductivo. Parar la línea se siente '
-      +'productivo y cuesta. Quien reconfigura cuatro veces en un día entrega <strong>menos piezas '
-      +'que si no hubiera tocado nada</strong> — y con el OEE por debajo de como lo encontró. '
-      +'Esa es la razón de ser de un gemelo digital.</div>'
+    h+=grafica("Piezas buenas en los cinco niveles",
+        S.hist.map((x,i)=>["Nivel "+(i+1),x?x.good:0,x&&x.pasa]))
+      +'<div class="card a"><b class="t">Cierre · '+S.puntos+' de 500 puntos</b>'
+      +'<strong style="font-size:1.15rem">'+r[1]+'</strong><p style="margin-top:8px">'+r[2]+'</p></div>'
+      +'<div class="card"><b class="t">Lo que hay que llevarse</b>'
+      +'Probar en el computador es gratis y se siente inútil. Parar la línea se siente '
+      +'productivo y cuesta caro. Quien mueve las mesas cuatro veces en un día entrega '
+      +'<strong>menos piezas que si no hubiera hecho nada</strong>. '
+      +'Para eso sirve tener un gemelo digital.</div>'
       +'<button class="btn" id="next">Volver a empezar</button>';
   }
   stage.innerHTML=h;
