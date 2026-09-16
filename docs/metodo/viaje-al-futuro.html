@@ -84,10 +84,11 @@ h2{font-size:1.3rem;font-weight:700;letter-spacing:-.015em;margin:26px 0 8px;tex
 /* ── la cadena de pasos, como acordeón ── */
 .chain{border:1px solid var(--rule);margin-bottom:20px}
 .pst{width:100%;background:var(--line);padding:13px;display:grid;
-     grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;min-height:66px;
+     grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;min-height:66px;
      border:0;border-bottom:1px solid var(--rule);text-align:left;font:inherit;color:inherit;
      cursor:pointer}
-.pst .ch{font-size:.8rem;color:var(--muted);line-height:1}
+.pst .ch{font-size:.8rem;color:var(--muted);line-height:1;background:none;border:0;
+     font-family:inherit;cursor:pointer;padding:10px 4px}
 .pst.ab{background:var(--rule)}
 .pst.ab .ch{color:var(--ink)}
 .pst.bn.ab{background:color-mix(in srgb,var(--accent) 20%,var(--paper))}
@@ -120,13 +121,47 @@ h2{font-size:1.3rem;font-weight:700;letter-spacing:-.015em;margin:26px 0 8px;tex
      padding:13px 0;border-bottom:1px solid var(--line)}
 .fld .lb{font-size:1rem;line-height:1.3}
 .fld .lb s{display:block;text-decoration:none;font-size:.86rem;color:var(--muted);margin-top:2px}
-.fld input{width:7.2rem;min-height:50px;text-align:right;font-family:var(--mono);
-           font-size:1.2rem;font-weight:800;color:var(--ink);background:var(--paper);
-           border:2px solid var(--rule);border-radius:4px;padding:6px 10px}
-.fld input:focus{outline:0;border-color:var(--accent)}
-.fld .un{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-weight:700;
-         margin-left:-6px;white-space:nowrap}
+/* Una sola regla para TODAS las casillas del aplicativo. Antes las de dentro de un puesto
+   no la tenían y salían con el estilo del navegador: blancas sobre el panel oscuro. */
+.fld input,.pst input,.act input{min-height:50px;font-family:var(--mono);font-size:1.2rem;
+     font-weight:800;color:var(--ink);background:var(--paper);border:2px solid var(--rule);
+     border-radius:4px;padding:6px 10px;text-align:right}
+.fld input{width:7.2rem}
+.pst input{width:5rem}
+.fld input:focus,.pst input:focus,.act input:focus{outline:0;border-color:var(--accent)}
+.fld .un,.act .un{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-weight:700;
+         white-space:nowrap}
+.ent{display:flex;align-items:center;gap:7px;justify-content:flex-end}
 .fld.wide{grid-template-columns:1fr}
+
+/* ── cómo se llena: una caja por sección, con ejemplo ── */
+.como{border-left:5px solid var(--accent);background:var(--line);padding:14px 16px;
+      margin:0 0 20px;font-size:1rem;line-height:1.5}
+.como b{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+        text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:800}
+.como em{font-style:normal;color:var(--muted);display:block;margin-top:9px}
+.mapa{margin:12px 0;padding-left:0;list-style:none}
+.mapa li{padding:5px 0 5px 0;font-size:.96rem;line-height:1.35}
+.mapa b{font-family:var(--mono);font-size:.8rem;font-weight:800;color:var(--accent);
+        border:1.5px solid var(--accent);border-radius:3px;padding:1px 6px;margin-right:8px}
+
+/* ── la lista de actividades que ellos escriben ── */
+.resumen{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 16px}
+.resumen span{font-size:.86rem;color:var(--muted);background:var(--line);
+     border-radius:3px;padding:6px 9px;line-height:1.3}
+.lista{border-top:1px solid var(--rule);margin-bottom:14px}
+.act{display:grid;grid-template-columns:auto 1fr;gap:9px 10px;padding:13px 0;
+     border-bottom:1px solid var(--line);align-items:center}
+.act .nu{font-family:var(--mono);font-size:.74rem;font-weight:800;color:var(--muted);
+     border:1px solid var(--rule);border-radius:3px;padding:3px 7px;line-height:1.3}
+.act input.nm{grid-column:2;width:100%;text-align:left;font-family:var(--sans);
+     font-size:1rem;font-weight:400}
+.act .fi{grid-column:2;display:flex;align-items:center;gap:8px}
+.act .fi input{width:5rem}
+.act .mv{margin-left:auto;display:flex;gap:6px}
+.act .mv button{width:46px;height:46px;border:1.5px solid var(--rule);background:transparent;
+     color:var(--muted);border-radius:4px;font-size:.9rem;cursor:pointer;font-family:var(--mono)}
+.act .mv button:disabled{opacity:.3;cursor:not-allowed}
 .stp{display:flex;align-items:center;gap:10px}
 .stp button{width:50px;height:50px;border:2px solid var(--ink);background:transparent;
             color:var(--ink);border-radius:4px;font-size:1.5rem;font-weight:700;
@@ -329,7 +364,7 @@ h2{font-size:1.3rem;font-weight:700;letter-spacing:-.015em;margin:26px 0 8px;tex
    Esta línea NO TIENE MÁQUINAS: las tuercas se aprietan a mano. Por eso no hay averías
    de equipo y la única parada es la micro-parada de puesto, cuya frecuencia se deriva
    de los paros que ellos midan — no de un número mío. */
-const PASO=[
+let ACT=[
  {n:"Base y los 3 espárragos",            t:14, capa:1, def:.0008},
  {n:"Capa transparente · 2 mitades",      t:18, capa:2, def:.0015},
  {n:"Transición transparente + amarilla", t:16, capa:2, def:.0015},
@@ -346,7 +381,17 @@ const PASO=[
  {n:"2 tuercas de la hélice",             t:12, capa:7, def:.0018},
  {n:"Última tuerca y almacenar",          t:9,  capa:7, def:.0018}
 ];
-const NT=PASO.length;                       /* 15 pasos = 15 puestos como tope físico */
+/* ACT es MUTABLE a propósito: en el Paso 1 el equipo escribe las actividades que de
+   verdad hizo y en qué orden. El informe lo dice — los operarios deciden solos el
+   balanceo—, así que lo que hicieron puede no ser lo que dice el instructivo. Si el
+   aplicativo les impusiera mis 15 pasos, dejaría de ser la planta real.
+
+   Efecto de lado: el aplicativo deja de ser sólo del HEXA. Con otra lista de actividades
+   modela cualquier línea de ensamble manual. */
+const ACT_HEXA=ACT.map(a=>({n:a.n,t:a.t,capa:a.capa,def:a.def}));
+const DEF_NUEVA=.0012;                      /* defecto de una actividad que escriben ellos */
+let NT=ACT.length;                          /* tope físico: no hay más puestos que actividades */
+function reNT(){ NT=ACT.length; }
 const STEP=.25, SEED=11, CAP=4, T=28800, PARADA=2100, REAL=14;
 const PASOS_LIBRES=3, PEN_PASO=.25;
 const CAPA_NOM=["base y espárragos","placa transparente","placa amarilla","placa verde",
@@ -357,30 +402,38 @@ const CAPA_NOM=["base y espárragos","placa transparente","placa amarilla","plac
    si mañana falla el cronómetro. Todo es editable. */
 const D={
   cortes:[2,4,6,8,10,12,15],          /* dónde termina cada puesto */
-  seg:[32,32,32,26,17,14,30],         /* segundos medidos de cada puesto */
-  piezas:10, lote:660,                /* 10 piezas en 11 minutos */
+  piezas:10, lmin:11, lseg:0,         /* 10 piezas en 11:00 — el lote completo */
   buenas:8,                           /* malas = piezas - buenas */
   paros:3, paroSeg:40,                /* la duración NO está en el informe: se mide */
+  /* El ritmo YA ANDANDO. El tiempo del lote incluye el arranque en frío —la primera
+     pieza tiene que recorrer toda la fila— así que no dice a qué velocidad iba la línea
+     cuando ya estaba estable. Contar cuántas salieron en un rato sí lo dice, y es el
+     número que se compara de verdad contra el tiempo de ciclo del modelo. Opcional. */
+  rpza:0, rmin:0,
   costoHora:0                         /* opcional: $ por persona-hora */
 };
+const lote =()=>Math.max(10,D.lmin*60+D.lseg);
+const ritmo=()=>(D.rpza>0&&D.rmin>0)?(D.rmin*60)/D.rpza:0;
 
 /* ═══════════════ del dato medido al modelo ═══════════════ */
 
-/* Ellos cronometran POR PUESTO, no paso por paso: nadie alcanza a cronometrar quince
-   pasos sueltos en un taller. Para poder mover los cortes en el Paso 3 hace falta el
-   tiempo de cada paso, así que el tiempo medido del puesto se reparte entre sus pasos
-   en proporción al estimado. La suma queda EXACTA: la sombra reproduce su dato al
-   segundo. Se dice en pantalla, no se esconde. */
-function tareas(d){
-  const W=new Array(NT).fill(0);
-  let p=0;
-  for(let k=0;k<d.cortes.length;k++){
-    const c=d.cortes[k]; let ref=0;
-    for(let i=p;i<c;i++) ref+=PASO[i].t;
-    for(let i=p;i<c;i++) W[i]= ref>0 ? d.seg[k]*PASO[i].t/ref : d.seg[k]/(c-p);
-    p=c;
-  }
-  return W;
+/* El tiempo vive en cada ACTIVIDAD y el del puesto es la suma. Antes el dato se
+   cronometraba por puesto y se repartía entre sus pasos en proporción al estimado; con la
+   lista editable esa cuenta sobra y desaparece una fuente entera de error.
+
+   Se sigue pudiendo cronometrar por puesto, que es como se mide en un taller: escribir el
+   total de un puesto reescala sus actividades (ver escalarPuesto). */
+function tareas(){ return ACT.map(a=>a.t); }
+function segPuesto(k){
+  const ini=k===0?0:D.cortes[k-1];
+  let s=0;for(let i=ini;i<D.cortes[k];i++)s+=ACT[i].t;
+  return s;
+}
+function escalarPuesto(k,total){
+  const ini=k===0?0:D.cortes[k-1], fin=D.cortes[k], hoy=segPuesto(k);
+  if(fin-ini<=0)return;
+  if(hoy<=0){ for(let i=ini;i<fin;i++)ACT[i].t=total/(fin-ini); return; }
+  for(let i=ini;i<fin;i++)ACT[i].t=ACT[i].t*total/hoy;
 }
 /* El ciclo ideal de esta línea es SU PASO MÁS LARGO: los pasos no se pueden partir, así
    que por más gente que contrate nunca saca una pieza más rápido que eso. Es constante:
@@ -392,7 +445,7 @@ function cicloIdeal(W){ return Math.max.apply(null,W); }
    n paros repartidos entre N puestos durante el lote -> uno cada MTBF segundos. */
 function micro(d){
   if(d.paros<=0) return [1e12,0];
-  return [(d.cortes.length*d.lote)/d.paros, d.paroSeg];
+  return [(d.cortes.length*lote())/d.paros, d.paroSeg];
 }
 /* Un puesto con muchos pasos encima se equivoca más: se le olvida una tuerca. Hasta
    PASOS_LIBRES los tiene en la cabeza; de ahí en adelante cada paso extra suma riesgo. */
@@ -412,7 +465,7 @@ function mkLinea(cortes,W,mic){
   let bn=0;for(let i=1;i<N;i++)if(cyc[i]>cyc[bn])bn=i;
   const pdef=[];
   for(let k=0;k<N;k++){
-    let d=0;for(let i=P[k][0];i<P[k][1];i++)d+=PASO[i].def;
+    let d=0;for(let i=P[k][0];i<P[k][1];i++)d+=ACT[i].def;
     pdef.push(d*carga(P[k][1]-P[k][0]));
   }
   const st=[];for(let k=0;k<N;k++)
@@ -528,7 +581,7 @@ function desperdicio(filas){
 }
 
 /* ═══════════════ estado y utilidades ═══════════════ */
-const S={paso:1,abierto:null,ap:null,vistaProy:false,
+const S={paso:1,abierto:null,ap:null,f2:0,R2:null,R3:null,editAct:false,mantener:false,
          cortes3:null,abierto3:null,R:null,raf:0,gemelo:false,ultTwin:null,cerrado:false};
 
 const $=q=>document.querySelector(q), stage=$("#stage");
@@ -553,6 +606,15 @@ function ir(p,fn){ S.paso=p; barraPasos(); fn(); window.scrollTo(0,0); }
 const CAPAS=[["#E9E7E1","#9E9A92"],["#DCE9E8","#A9C4C2"],["#E6CF23","#B9A50F"],
              ["#3FA64B","#2C7735"],["#2E7FC2","#215C8D"],["#B9B4AC","#8C8881"],
              ["#E4E2DD","#BDB9B1"]];
+/* Qué tan armada va la pieza en esta actividad. Si escribieron su propia lista ya no hay
+   correspondencia con las capas del HEXA, así que se deriva de la posición: el dibujo
+   muestra que la pieza crece a lo largo de la fila, no afirma nada sobre la pieza. */
+function capaDe(i){
+  const a=ACT[i];
+  if(a&&a.capa&&ACT.length===ACT_HEXA.length&&a.n===ACT_HEXA[i].n)return a.capa;
+  return Math.max(1,Math.min(7,Math.ceil((i+1)/ACT.length*7)));
+}
+
 function hexa(n,w){
   const h=w*.9, dy=h*.085, base=h*.42;
   let g="";
@@ -605,54 +667,105 @@ function medidores(m,rotulo){
 }
 
 /* ═══════════════ PASO 1 · la planta real ═══════════════
-   Ellos arman, cronometran y escriben. El objetivo de esta pantalla no es que sea
-   bonita: es que el dato entre bien, porque todo lo demás cuelga de aquí. */
+   Ellos arman, cronometran y escriben. El objetivo de esta pantalla no es que sea bonita:
+   es que el dato entre bien, porque todo lo demás cuelga de aquí. */
 function cuentaOEE(){
-  const W=tareas(D), CI=cicloIdeal(W);
-  const paros=D.paros*D.paroSeg, plan=D.lote, oper=Math.max(1,plan-paros);
+  const W=tareas(), CI=cicloIdeal(W);
+  const paros=D.paros*D.paroSeg, plan=lote(), oper=Math.max(1,plan-paros);
   const tot=Math.max(1,D.piezas);
-  const Dd=Math.max(0,oper/plan), Rd=(CI*tot)/oper, Q=D.buenas/tot;
-  return {D:Dd,R:Math.min(Rd,9),Q:Q,OEE:Dd*Math.min(Rd,9)*Q,CI:CI,paros:paros,oper:oper,tot:tot,W:W};
+  const Dd=Math.max(0,oper/plan), Rd=Math.min((CI*tot)/oper,9), Q=D.buenas/tot;
+  return {D:Dd,R:Rd,Q:Q,OEE:Dd*Rd*Q,CI:CI,paros:paros,oper:oper,tot:tot,W:W};
 }
 
 function verPaso1(){
   const c=cuentaOEE(), W=c.W, tr=tramos(D.cortes,W);
   let bn=0;for(let i=1;i<tr.length;i++)if(tr[i]>tr[bn])bn=i;
-  const K=D.cortes.length;
+  const K=D.cortes.length, rt=ritmo();
 
   let h='<div class="eyebrow">Paso 1 de 3</div>'
-   +'<h1>La planta real</h1>'
-   +'<p class="lead">Armen la pieza de verdad, con cronómetro. Después escriban aquí lo que '
-   +'midieron. Este es el ancla: si el dato entra mal, el gemelo miente bonito.</p>'
+   +'<h1>Lo que pasó en la planta</h1>'
+   +'<p class="lead">Primero armen las piezas de verdad, con cronómetro en mano. '
+   +'Después copien aquí lo que midieron.</p>'
+   +como("Antes de empezar",
+     "Son <strong>cinco preguntas</strong>, de arriba hacia abajo. Se demoran unos 10 minutos:"
+     +"<ol class=\'mapa\'>"
+     +"<li><b>A</b> &mdash; qué hicieron, paso por paso</li>"
+     +"<li><b>B</b> &mdash; cómo se repartieron el trabajo</li>"
+     +"<li><b>C</b> &mdash; cómo les fue en la prueba</li>"
+     +"<li><b>D</b> &mdash; a qué velocidad iban de verdad</li>"
+     +"<li><b>E</b> &mdash; la nota, que sale sola</li>"
+     +"</ol>"
+     +"Todo viene lleno con un ejemplo: <strong>borren y pongan lo suyo.</strong>",
+     "si su puesto 1 se demoraba 25 segundos, borre el número que hay y escriba 25.")
 
-   +'<div class="secc">A · la línea que montaron</div>'
-   +'<p class="sx">Cuántos puestos pusieron y qué pasos hace cada uno. Toque un puesto para '
-   +'ver sus pasos y mover dónde empieza y dónde termina.</p>'
+   /* ── A · las actividades, escritas por ellos ── */
+   +'<div class="secc">A &middot; qué hicieron, paso por paso</div>'
+   +(S.editAct
+      ? como("Cómo se llena",
+          "Escriba cada cosa que hicieron, <strong>en el orden en que la hicieron</strong>, "
+          +"y cuántos segundos se demora esa cosa.<br><br>"
+          +"Con las flechas &#9650;&#9660; la sube o la baja de lugar. Con la &#10005; la quita. "
+          +"Abajo puede agregar las que falten.",
+          "«poner la base y los 3 tornillos» &mdash; 14 segundos.")
+      : '<p class="sx">Vienen las <strong>'+ACT.length+' del instructivo del HEXA</strong>. '
+        +'Si su equipo lo hizo distinto, cámbielas. El computador tiene que copiar lo que '
+        +'<strong>ustedes</strong> hicieron, no lo que dice el papel.</p>');
+
+  if(!S.editAct){
+    h+='<div class="resumen">'+ACT.map((a,i)=>'<span>'+(i+1)+' · '+esc(a.n)+'</span>').join("")+'</div>'
+      +'<button class="btn gh" id="edAct">Escribir nuestras actividades</button>';
+  }else{
+    h+='<div class="lista">';
+    for(let i=0;i<ACT.length;i++){
+      h+='<div class="act"><span class="nu">'+(i+1)+'</span>'
+        +'<input class="nm" data-nm="'+i+'" value="'+esc(ACT[i].n)+'" aria-label="nombre de la actividad '+(i+1)+'">'
+        +'<span class="fi"><input type="number" inputmode="decimal" min="1" max="600" step="0.5" '
+        +'data-at="'+i+'" value="'+(Math.round(ACT[i].t*10)/10)+'" aria-label="segundos de la actividad '+(i+1)+'">'
+        +'<span class="un">s</span><span class="mv">'
+        +'<button data-up="'+i+'" '+(i===0?"disabled":"")+' aria-label="subir">&#9650;</button>'
+        +'<button data-dn="'+i+'" '+(i===ACT.length-1?"disabled":"")+' aria-label="bajar">&#9660;</button>'
+        +'<button data-del="'+i+'" '+(ACT.length<=2?"disabled":"")+' aria-label="quitar">&#10005;</button>'
+        +'</span></span></div>';
+    }
+    h+='</div>'
+      +'<button class="btn gh" id="addAct">+ agregar una actividad</button>'
+      +'<button class="btn gh" id="resAct">Volver a las del instructivo</button>'
+      +'<p class="hint">El orden importa: la pieza se apila, así que una capa no se puede '
+      +'montar antes que la de abajo. Escriba lo que de verdad hicieron.</p>';
+  }
+
+   /* ── B · los puestos ── */
+  h+='<div class="secc">B &middot; cómo se repartieron el trabajo</div>'
+   +como("Cómo se llena",
+     "Primero ponga <strong>cuántos puestos</strong> tenían, con los botones &minus; y +. "
+     +"Una persona por puesto.<br><br>"
+     +"Después, en cada puesto, escriba <strong>cuántos segundos se demoraba</strong> en hacer "
+     +"una pieza. Ese es el número del cronómetro de esa persona.<br><br>"
+     +"Para ver o cambiar qué le tocó a cada uno, toque la flechita &#9656;.",
+     "el puesto 1 se demoraba 32 segundos en cada pieza.")
    +'<div class="fld"><span class="lb">Puestos de trabajo<s>una persona en cada uno</s></span>'
-   +'<span class="stp"><button id="pm" '+(K<=1?"disabled":"")+'>−</button>'
+   +'<span class="stp"><button id="pm" '+(K<=1?"disabled":"")+'>&minus;</button>'
    +'<span class="v">'+K+'</span><button id="pp" '+(K>=NT?"disabled":"")+'>+</button></span></div>'
    +'<div class="chain">';
 
   let p=0;
   for(let k=0;k<K;k++){
-    const c2=D.cortes[k], abierto=(S.abierto===k), cf=PASO[c2-1].capa;
-    h+='<div class="pst'+(k===bn?" bn":"")+(abierto?" ab":"")+'">'+hexa(cf,40)
+    const c2=D.cortes[k], abierto=(S.abierto===k);
+    h+='<div class="pst'+(k===bn?" bn":"")+(abierto?" ab":"")+'">'+hexa(capaDe(c2-1),40)
       +'<span class="n">Puesto '+(k+1)
-      +'<span class="tag2">'+(c2-p)+(c2-p===1?" paso":" pasos")+(k===bn?" · el más lento":"")+'</span></span>'
-      +'<input type="number" inputmode="numeric" min="1" max="600" data-seg="'+k+'" '
-      +'value="'+Math.round(D.seg[k])+'" aria-label="segundos del puesto '+(k+1)+'">'
-      +'<button class="ch" data-ab="'+k+'" aria-label="ver los pasos del puesto '+(k+1)+'" '
-      +'style="background:none;border:0;font:inherit;color:inherit;cursor:pointer;padding:8px">'
+      +'<span class="tag2">'+(c2-p)+(c2-p===1?" actividad":" actividades")+(k===bn?" · el más lento":"")+'</span></span>'
+      +'<input type="number" inputmode="numeric" min="1" max="3000" data-seg="'+k+'" '
+      +'value="'+Math.round(tr[k])+'" aria-label="segundos del puesto '+(k+1)+'">'
+      +'<button class="ch" data-ab="'+k+'" aria-label="ver las actividades del puesto '+(k+1)+'">'
       +(abierto?"&#9662;":"&#9656;")+'</button></div>';
     if(abierto){
       for(let i=p;i<c2;i++){
-        h+='<div class="tsk"><span class="np">'+(i+1)+'</span><span>'+esc(PASO[i].n)+'</span>'
+        h+='<div class="tsk"><span class="np">'+(i+1)+'</span><span>'+esc(ACT[i].n)+'</span>'
           +'<span>'+n1(W[i])+' s</span></div>';
         if(i<NT-1){
-          const esCorte=D.cortes.indexOf(i+1)>=0;
-          const puedeCortar=esCorte||K<NT;
-          h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'" '
-            +(puedeCortar?"":"disabled")+'><span class="in"><b>'
+          const esCorte=D.cortes.indexOf(i+1)>=0, puede=esCorte||K<NT;
+          h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'" '+(puede?"":"disabled")
+            +'><span class="in"><b>'
             +(esCorte?"&#9986; aquí termina el puesto "+(k+1):"+ partir aquí")
             +'</b></span></button>';
         }
@@ -661,228 +774,397 @@ function verPaso1(){
     p=c2;
   }
   h+='</div>'
-   +'<p class="hint">Cada puesto son los segundos que se demora una persona en hacer sus pasos. '
-   +'Todos juntos suman <strong>'+n1(W.reduce((a,b)=>a+b,0))+' s</strong> de trabajo por pieza.</p>'
+   +'<p class="hint">Escribir el total de un puesto reparte ese tiempo entre sus actividades. '
+   +'Todas juntas suman <strong>'+n1(W.reduce((a,b)=>a+b,0))+' s</strong> de trabajo por pieza.</p>'
 
-   +'<div class="secc">B · la corrida de prueba</div>'
-   +'<p class="sx">Lo que pasó mientras armaban. Sin estos cinco números no hay OEE.</p>'
+   /* ── C · la corrida ── */
+   +'<div class="secc">C &middot; cómo les fue en la prueba</div>'
+   +como("Cómo se llena",
+     "Miren el cronómetro grande y la mesa donde dejaron las piezas terminadas.<br><br>"
+     +"<strong>Una parada</strong> es cada vez que la línea dejó de producir: se acabó el "
+     +"material, alguien se retiró del puesto, tocó volver a hacer una pieza. "
+     +"Anoten cuántas veces se paró y cuánto duró cada vez.",
+     "«armamos 10 piezas en 11 minutos; 8 quedaron bien y 2 mal; se paró 3 veces, "
+     +"como 40 segundos cada vez».")
    +fld("Piezas que armaron","en total, buenas y malas","piezas",D.piezas,"u")
-   +fld("Cuánto se demoraron","desde la primera hasta la última","lote",Math.round(D.lote),"s")
+   +fldMS("Cuánto se demoraron","desde que arrancaron hasta la última pieza",D.lmin,D.lseg)
    +fld("Cuántas salieron buenas","las demás son defectuosas","buenas",D.buenas,"u")
    +fld("Cuántas veces se detuvo la línea","falta de material, relevo, reproceso","paros",D.paros,"veces")
    +fld("Cuánto duró cada parada","en promedio","paroSeg",Math.round(D.paroSeg),"s")
 
-   +'<div class="secc">C · el OEE, a mano</div>'
-   +'<p class="sx">Esta es la cuenta que usted mismo puede hacer en una hoja. El gemelo no '
-   +'la inventa: la copia.</p>'
-   +tarjetaCuenta(c)
-   +'<button class="btn" id="ir2">Construir la sombra digital</button>'
-   +'<p class="hint">La sombra es la misma línea, copiada al computador. Tiene que dar '
-   +'exactamente este mismo número.</p>';
+   /* ── D · el ritmo ya andando ── */
+   +'<div class="secc">D &middot; a qué velocidad iban de verdad</div>'
+   +como("Por qué se pregunta aparte",
+     "La primera pieza se demora mucho, porque tiene que pasar por toda la fila. Eso hace "
+     +"ver la línea más lenta de lo que es.<br><br>"
+     +"Por eso se mide otra vez <strong>cuando ya está andando</strong>: alguien mira el reloj "
+     +"un rato y cuenta cuántas piezas salieron por el final de la línea.",
+     "«en 5 minutos salieron 4 piezas». Entonces escriba 4 y 5.")
+   +fld("Piezas que salieron en ese rato","ya estando la línea estable","rpza",D.rpza||"","u")
+   +fld("Cuánto duró ese rato","en minutos","rmin",D.rmin||"","min")
+   +(rt>0
+      ? '<div class="cuenta" style="margin-top:14px"><div class="tot" style="border:0;margin:0;padding:0">'
+        +'<b>Salía una cada</b><i>'+n1(rt)+' s</i></div></div>'
+      : '<p class="hint" style="text-align:left">Si no alcanzaron a medirlo, déjenlo vacío: '
+        +'todo lo demás funciona igual. Pero es el número que más enseña.</p>')
 
-  const sy=S.abierto!==null?window.scrollY:0;
+   /* ── E · el OEE ── */
+   +'<div class="secc">E &middot; la nota de su línea</div>'
+   +como("Qué es esto y qué hay que llenar",
+     "<strong>Aquí no hay que llenar nada</strong>: esta cuenta sale sola de lo que ustedes "
+     +"escribieron arriba.<br><br>"
+     +"El <strong>OEE</strong> es la nota de una planta, de 0 a 100. Son tres notas "
+     +"multiplicadas:<br><br>"
+     +"&bull; <strong>Disponibilidad</strong>: cuánto del tiempo estuvo produciendo.<br>"
+     +"&bull; <strong>Rendimiento</strong>: qué tan rápido, comparado con lo que podría.<br>"
+     +"&bull; <strong>Calidad</strong>: cuántas salieron buenas.<br><br>"
+     +"<strong>Hagan la misma cuenta en el papel</strong> y comparen. Es la misma.")
+   +tarjetaCuenta(c)
+   +'<button class="btn" id="ir2">Pasar esto al computador</button>'
+   +'<p class="hint">El computador va a armar las mismas piezas, con estos mismos números. '
+   +'Tiene que darle la misma nota.</p>';
+
+  const sy=window.scrollY;
   stage.innerHTML=h;
-  if(S.abierto!==null)window.scrollTo(0,sy);
+  window.scrollTo(0,S.mantener?sy:0);
+  S.mantener=false;
   cablearPaso1();
+}
+
+function como(titulo,texto,ejemplo){
+  return '<div class="como"><b>'+esc(titulo)+'</b>'+texto
+    +(ejemplo?'<em>Por ejemplo: '+ejemplo+'</em>':'')+'</div>';
 }
 
 function fld(lb,sub,campo,val,un){
   return '<div class="fld"><span class="lb">'+esc(lb)+'<s>'+esc(sub)+'</s></span>'
-    +'<span style="display:flex;align-items:center;gap:7px">'
-    +'<input type="number" inputmode="numeric" min="0" data-c="'+campo+'" value="'+val+'" '
-    +'aria-label="'+esc(lb)+'"><span class="un">'+esc(un)+'</span></span></div>';
+    +'<span class="ent"><input type="number" inputmode="numeric" min="0" data-c="'+campo+'" '
+    +'value="'+val+'" placeholder="0" aria-label="'+esc(lb)+'"><span class="un">'+esc(un)+'</span></span></div>';
+}
+/* El cronómetro se lee en minutos y segundos: pedir 660 obliga a hacer la cuenta a mano. */
+function fldMS(lb,sub,vm,vs){
+  return '<div class="fld"><span class="lb">'+esc(lb)+'<s>'+esc(sub)+'</s></span>'
+    +'<span class="ent"><input type="number" inputmode="numeric" min="0" data-c="lmin" '
+    +'value="'+vm+'" style="width:4.2rem" aria-label="minutos"><span class="un">min</span>'
+    +'<input type="number" inputmode="numeric" min="0" max="59" data-c="lseg" '
+    +'value="'+vs+'" style="width:4.2rem" aria-label="segundos"><span class="un">s</span></span></div>';
 }
 
 function tarjetaCuenta(c){
   return '<div class="cuenta">'
-   +'<div class="ln"><span class="k">Disponibilidad<s>('+Math.round(D.lote)+' − '+Math.round(c.paros)+') ÷ '+Math.round(D.lote)+'</s></span>'
+   +'<div class="ln"><span class="k">Disponibilidad<s>('+Math.round(lote())+' &minus; '+Math.round(c.paros)+') &divide; '+Math.round(lote())+'</s></span>'
    +'<span class="v">'+pc(c.D)+'</span></div>'
-   +'<div class="ln"><span class="k">Rendimiento<s>('+n1(c.CI)+' × '+c.tot+') ÷ '+Math.round(c.oper)+'</s></span>'
+   +'<div class="ln"><span class="k">Rendimiento<s>('+n1(c.CI)+' &times; '+c.tot+') &divide; '+Math.round(c.oper)+'</s></span>'
    +'<span class="v">'+pc(c.R)+'</span></div>'
-   +'<div class="ln"><span class="k">Calidad<s>'+D.buenas+' ÷ '+c.tot+'</s></span>'
+   +'<div class="ln"><span class="k">Calidad<s>'+D.buenas+' &divide; '+c.tot+'</s></span>'
    +'<span class="v">'+pc(c.Q)+'</span></div>'
-   +'<div class="tot"><b>Las tres multiplicadas</b><i>'+pc(c.OEE)+'</i></div>'
+   +'<div class="tot"><b>Las tres multiplicadas</b><i id="oeeMano">'+pc(c.OEE)+'</i></div>'
    +'<p style="font-size:.92rem;color:var(--muted);line-height:1.45;margin-top:14px">'
-   +'El <strong>'+n1(c.CI)+'</strong> es el ciclo ideal: el paso más largo del ensamble. '
+   +'El <strong>'+n1(c.CI)+'</strong> es el ciclo ideal: la actividad más larga de la lista. '
    +'Por más gente que ponga, esta línea nunca saca una pieza más rápido que eso.</p></div>';
 }
 
 function cablearPaso1(){
-  const re=()=>verPaso1();
+  const re=(mantener)=>{S.mantener=!!mantener;verPaso1();};
   const btn=(id,f)=>{const e=$("#"+id);if(e)e.onclick=f;};
-  btn("pm",()=>{ if(D.cortes.length>1){repartir(D.cortes.length-1);S.abierto=null;re();} });
-  btn("pp",()=>{ if(D.cortes.length<NT){repartir(D.cortes.length+1);S.abierto=null;re();} });
+
+  /* la lista de actividades */
+  btn("edAct",()=>{S.editAct=true;re(true);});
+  btn("addAct",()=>{
+    ACT.push({n:"Actividad "+(ACT.length+1),t:10,capa:0,def:DEF_NUEVA});
+    reNT(); D.cortes[D.cortes.length-1]=NT; re(true);
+  });
+  btn("resAct",()=>{
+    ACT=ACT_HEXA.map(a=>({n:a.n,t:a.t,capa:a.capa,def:a.def}));
+    reNT(); D.cortes=[2,4,6,8,10,12,15]; S.abierto=null; re(true);
+  });
+  stage.querySelectorAll("[data-nm]").forEach(i=>{
+    i.onchange=()=>{ const k=+i.dataset.nm; ACT[k].n=(i.value||"Actividad "+(k+1)).slice(0,60); re(true); };
+  });
+  stage.querySelectorAll("[data-at]").forEach(i=>{
+    i.onchange=()=>{ const k=+i.dataset.at; ACT[k].t=Math.max(1,Math.min(600,+i.value||1)); re(true); };
+  });
+  stage.querySelectorAll("[data-up]:not([disabled])").forEach(b=>{
+    b.onclick=()=>{ const k=+b.dataset.up; const t=ACT[k-1];ACT[k-1]=ACT[k];ACT[k]=t; re(true); };
+  });
+  stage.querySelectorAll("[data-dn]:not([disabled])").forEach(b=>{
+    b.onclick=()=>{ const k=+b.dataset.dn; const t=ACT[k+1];ACT[k+1]=ACT[k];ACT[k]=t; re(true); };
+  });
+  stage.querySelectorAll("[data-del]:not([disabled])").forEach(b=>{
+    b.onclick=()=>{ quitarActividad(+b.dataset.del); re(true); };
+  });
+
+  /* los puestos */
+  btn("pm",()=>{ if(D.cortes.length>1){repartir(D.cortes.length-1);S.abierto=null;re(true);} });
+  btn("pp",()=>{ if(D.cortes.length<NT){repartir(D.cortes.length+1);S.abierto=null;re(true);} });
   stage.querySelectorAll("[data-ab]").forEach(b=>{
-    b.onclick=()=>{const k=+b.dataset.ab;S.abierto=(S.abierto===k?null:k);re();};
+    b.onclick=()=>{const k=+b.dataset.ab;S.abierto=(S.abierto===k?null:k);re(true);};
   });
   stage.querySelectorAll(".cutrow:not([disabled])").forEach(b=>{
-    b.onclick=()=>{ moverCorte(+b.dataset.i); re(); };
+    b.onclick=()=>{ moverCorte(+b.dataset.i); re(true); };
   });
   stage.querySelectorAll("[data-seg]").forEach(inp=>{
-    inp.onchange=()=>{ const k=+inp.dataset.seg;
-      D.seg[k]=Math.max(1,Math.min(600,+inp.value||1)); re(); };
+    inp.onchange=()=>{ escalarPuesto(+inp.dataset.seg,Math.max(1,Math.min(3000,+inp.value||1))); re(true); };
   });
+
+  /* la corrida */
   stage.querySelectorAll("[data-c]").forEach(inp=>{
     inp.onchange=()=>{
       const c=inp.dataset.c, v=Math.max(0,+inp.value||0);
       if(c==="piezas"){ D.piezas=Math.max(1,v); D.buenas=Math.min(D.buenas,D.piezas); }
       else if(c==="buenas") D.buenas=Math.min(v,D.piezas);
-      else if(c==="lote")   D.lote=Math.max(10,v);
+      else if(c==="lseg")   D.lseg=Math.min(59,v);
       else D[c]=v;
-      re();
+      re(true);
     };
   });
-  btn("ir2",()=>{ S.ap=null; S.vistaProy=false; ir(2,verPaso2); });
+  btn("ir2",()=>{ S.ap=null; S.f2=0; S.R2=null; S.R3=null; S.ctx=null; ir(2,verPaso2); });
 }
 
-/* Mover un corte: quitarlo une dos puestos, ponerlo parte uno en dos. Los segundos
-   medidos se reparten o se suman para que el total no cambie nunca. */
+/* Quitar una actividad: los cortes que quedaban después se corren, y si un puesto se
+   queda sin nada se elimina. El trabajo total baja en lo que valía esa actividad. */
+function quitarActividad(i){
+  if(ACT.length<=2)return;
+  ACT.splice(i,1); reNT();
+  const c=[];
+  for(const x of D.cortes){ const y=x>i?x-1:x; if(y>0&&c.indexOf(y)<0)c.push(y); }
+  c[c.length-1]=NT;
+  D.cortes=c.filter((v,k)=>k===c.length-1||v<NT);
+  if(D.cortes.length===0)D.cortes=[NT];
+  if(S.abierto!==null&&S.abierto>=D.cortes.length)S.abierto=null;
+}
+/* Mover un corte: quitarlo une dos puestos, ponerlo parte uno en dos. Los tiempos viven
+   en las actividades, así que el total no cambia y no hay nada que repartir. */
 function moverCorte(i){
   const idx=D.cortes.indexOf(i);
   if(idx>=0){
     if(D.cortes.length<=1)return;
-    D.seg[idx+1]=(D.seg[idx]||0)+(D.seg[idx+1]||0);
-    D.seg.splice(idx,1); D.cortes.splice(idx,1);
+    D.cortes.splice(idx,1);
     if(S.abierto!==null&&S.abierto>idx)S.abierto--;
   }else{
     if(D.cortes.length>=NT)return;
     let k=0;while(k<D.cortes.length&&D.cortes[k]<i)k++;
-    const ini=k===0?0:D.cortes[k-1], fin=D.cortes[k];
-    let a=0,b=0;
-    for(let j=ini;j<i;j++)a+=PASO[j].t;
-    for(let j=i;j<fin;j++)b+=PASO[j].t;
-    const total=D.seg[k]||0;
-    D.seg.splice(k,1,total*a/(a+b),total*b/(a+b));
     D.cortes.splice(k,0,i);
   }
 }
-/* Repartir los pasos parejo entre k puestos, conservando el trabajo total medido. */
+/* Repartir las actividades lo más parejo posible entre k puestos. */
 function repartir(k){
-  const total=D.seg.reduce((a,b)=>a+b,0);
-  const W=PASO.map(p=>p.t), sum=W.reduce((a,b)=>a+b,0);
+  const W=tareas();
   const c=mejorCortes(k,W)||[NT];
-  while(c.length<k&&c.length<NT){ for(let i=1;i<=NT;i++){ if(c.indexOf(i)<0){c.push(i);break;} } c.sort((a,b)=>a-b); }
+  while(c.length<k&&c.length<NT){
+    for(let i=1;i<=NT;i++){ if(c.indexOf(i)<0){c.push(i);break;} }
+    c.sort((a,b)=>a-b);
+  }
   D.cortes=c;
-  D.seg=tramos(c,W).map(x=>total*x/sum);
 }
 
 /* ═══════════════ PASO 2 · la sombra digital ═══════════════
-   Una réplica, no una mejora. Copia sus puestos, sus tiempos, su calidad y sus paros, y
-   tiene que dar el MISMO OEE que calcularon a mano. Eso es lo que la hace creíble.
-   Después proyecta: la misma línea, sin tocar nada, durante un turno entero. */
+   Una copia, no una mejora. Y no se cuenta: SE VE. El computador arma delante de ellos
+   las mismas piezas que acaban de armar a mano, con las barras moviéndose. Ver salir su
+   propio lote en la pantalla convence más que cualquier número. */
 function sombra(){
   const c=cuentaOEE(), W=c.W, mic=micro(D), tr=tramos(D.cortes,W);
   const takt=Math.max.apply(null,tr);
   const trabajo=W.reduce((a,b)=>a+b,0);
-  /* lo que el modelo dice que DEBERÍA haber durado el lote */
-  const pred=trabajo+(D.piezas-1)*takt+c.paros;
-  const turno=simular(D.cortes,W,mic);
-  /* el ritmo que midieron, proyectado al turno: la vara con la que se apuesta */
-  const ritmo=Math.round(D.piezas*(T/D.lote)/10)*10;
+  const pred=trabajo+(D.piezas-1)*takt+c.paros;     /* lo que el modelo dice que dura el lote */
+  const turno=simular(D.cortes,W,mic);              /* la misma línea, 8 horas */
+  const vara=Math.round(D.piezas*(T/lote())/10)*10; /* su ritmo del lote, a 8 h: la vara */
+  const rt=ritmo();                                 /* el ritmo ya andando, si lo midieron */
+  const porRitmo=rt>0?Math.max(0,(rt-takt)*(D.piezas-1)):0;
   return {c:c,W:W,mic:mic,tr:tr,takt:takt,trabajo:trabajo,pred:pred,
-          falta:D.lote-pred,turno:turno,ritmo:ritmo};
+          falta:lote()-pred,turno:turno,vara:vara,rt:rt,porRitmo:porRitmo};
 }
 
 function verPaso2(){
   const s=sombra(), c=s.c;
   let bn=0;for(let i=1;i<s.tr.length;i++)if(s.tr[i]>s.tr[bn])bn=i;
-  const cuadra=Math.abs(s.falta)<=0.10*D.lote;
 
   let h='<div class="eyebrow">Paso 2 de 3</div>'
-   +'<h1>La sombra digital</h1>'
-   +'<p class="lead">La misma línea, copiada al computador. No mejora nada todavía: '
-   +'copia. Y si la copia es fiel, después se le puede creer.</p>'
+   +'<h1>La copia en el computador</h1>'
+   +'<p class="lead">Metimos sus números al computador. Ahora va a armar las mismas piezas '
+   +'que ustedes armaron. Si le sale igual, es porque la copia quedó bien hecha.</p>'
 
-   /* 1 · su línea, dibujada */
-   +'<div class="plant"><div class="bh">Su línea · '+s.tr.length+' puestos</div>'
+   +'<h2>Así quedó su línea</h2>'
+   +'<div class="plant"><div class="bh">'+s.tr.length+' puestos</div>'
    +barras(s.tr,bn,null)
-   +'<p class="leg">Cada barra es un puesto y lo <b>alto</b> es lo que se demora. '
-   +'La barra <span class="ac">naranja</span> es la más lenta: esa manda sobre toda la fila. '
-   +'Sale una pieza cada <b>'+n1(s.takt)+' s</b>, no cada '+n1(s.trabajo/s.tr.length)+' s.</p></div>'
+   +'<p class="leg">Cada barra es un puesto. Entre <b>más alta</b>, más se demora. '
+   +'La <span class="ac">naranja</span> es la más lenta, y esa manda: '
+   +'la línea entera va a su velocidad. Sale una pieza cada <b>'+n1(s.takt)+' segundos</b>.</p></div>'
 
-   /* 2 · el espejo */
-   +'<h2>El espejo</h2>'
-   +'<p class="sx" style="margin-bottom:14px">Tienen que ser el mismo número. La sombra no '
-   +'arregla nada: lee sus datos y hace su misma cuenta.</p>'
-   +'<div class="esp"><div><b>Usted, a mano</b><i>'+pc(c.OEE)+'</i></div>'
-   +'<div><b>La sombra, con sus datos</b><i>'+pc(c.OEE)+'</i></div></div>'
-   +'<div class="sello">&#10003; la réplica quedó fiel</div>'
+   +'<h2>La nota es la misma</h2>'
+   +'<p class="sx" style="margin-bottom:14px">El computador no arregla nada. Hace la misma '
+   +'cuenta que ustedes hicieron en el papel, con los mismos números.</p>'
+   +'<div class="esp"><div><b>Ustedes, a mano</b><i>'+pc(c.OEE)+'</i></div>'
+   +'<div><b>El computador</b><i>'+pc(c.OEE)+'</i></div></div>'
+   +'<div class="sello">&#10003; la copia quedó bien hecha</div>'
 
-   /* 3 · los minutos que no aparecen */
-   +'<h2>Los minutos que no aparecen</h2>'
-   +'<p class="sx" style="margin-bottom:14px">Con sus tiempos por puesto, el modelo arma esas '
-   +D.piezas+' piezas así:</p>'
-   +'<div class="cuenta">'
-   +'<div class="ln"><span class="k">Armar la primera pieza entera<s>los '+s.tr.length+' puestos en fila</s></span>'
-   +'<span class="v">'+mmss(s.trabajo)+'</span></div>'
-   +'<div class="ln"><span class="k">Las otras '+(D.piezas-1)+', una cada '+n1(s.takt)+' s<s>al ritmo del puesto más lento</s></span>'
-   +'<span class="v">'+mmss((D.piezas-1)*s.takt)+'</span></div>'
-   +'<div class="ln"><span class="k">Las '+D.paros+' paradas<s>'+Math.round(D.paroSeg)+' s cada una</s></span>'
-   +'<span class="v">'+mmss(c.paros)+'</span></div>'
-   +'<div class="tot"><b>Debería haber durado</b><i style="color:var(--ink)">'+mmss(s.pred)+'</i></div>'
-   +'<div class="tot" style="border-top:1px solid var(--line);margin-top:8px;padding-top:12px">'
-   +'<b>Se demoraron</b><i style="color:var(--ink)">'+mmss(D.lote)+'</i></div>'
-   +'</div>';
+   /* ── la corrida repetida, con movimiento ── */
+   +'<h2>Ahora míre­lo armar sus '+D.piezas+' piezas</h2>';
 
-  if(cuadra){
-    h+='<div class="sello">&#10003; cuadra · la sombra reproduce su corrida</div>';
-  }else if(s.falta>0){
-    h+='<div class="card a"><b class="t">Faltan '+mmss(s.falta)+' sin explicar</b>'
-      +'Ese tiempo existió: nadie lo anotó. Casi siempre son tres cosas — <strong>el arranque '
-      +'en frío</strong> mientras la fila se llena, <strong>el que se quedó buscando una pieza</strong> '
-      +'y no contó eso como parada, y <strong>lo que se rehízo</strong>. '
-      +'Encontrar esos minutos es exactamente para lo que sirve un gemelo: usted no puede '
-      +'mejorar lo que no está midiendo.</div>';
+  if(S.f2===0){
+    h+='<p class="sx" style="margin-bottom:16px">Las mismas '+D.piezas+' piezas, los mismos '
+     +'puestos, los mismos tiempos. Mire cuánto se demora.</p>'
+     +'<button class="btn" id="lote">Armar las '+D.piezas+' piezas</button>'
+     +'<p class="hint">Dura unos ocho segundos.</p>';
   }else{
-    h+='<div class="card a"><b class="t">Sobran '+mmss(-s.falta)+'</b>'
-      +'El lote salió más rápido de lo que permiten los tiempos por puesto que anotaron. '
-      +'O los puestos trabajaron en paralelo en vez de en fila, o algún tiempo quedó '
-      +'anotado de más. Vuelvan al Paso 1 y revisen.</div>';
+    h+='<div class="plant" id="pl2"></div>';
+    if(S.f2>=2){
+      h+='<div class="esp"><div><b>El computador</b><i>'+mmss(s.pred)+'</i></div>'
+       +'<div><b>Ustedes</b><i'+(s.falta>0?' style="color:var(--accent)"':'')+'>'+mmss(lote())+'</i></div></div>'
+       +'<div class="cuenta" style="margin-top:14px">'
+       +'<div class="ln"><span class="k">La primera pieza, de principio a fin<s>tiene que pasar por los '+s.tr.length+' puestos</s></span>'
+       +'<span class="v">'+mmss(s.trabajo)+'</span></div>'
+       +'<div class="ln"><span class="k">Las otras '+(D.piezas-1)+'<s>una cada '+n1(s.takt)+' s</s></span>'
+       +'<span class="v">'+mmss((D.piezas-1)*s.takt)+'</span></div>'
+       +'<div class="ln"><span class="k">Las '+D.paros+' paradas<s>'+Math.round(D.paroSeg)+' s cada una</s></span>'
+       +'<span class="v">'+mmss(c.paros)+'</span></div>'
+       +'<div class="tot"><b>Total</b><i style="color:var(--ink)">'+mmss(s.pred)+'</i></div></div>';
+
+      const cuadra=Math.abs(s.falta)<=0.10*lote();
+      if(cuadra){
+        h+='<div class="sello">&#10003; les dio casi lo mismo</div>';
+      }else if(s.falta>0){
+        h+='<div class="card a"><b class="t">Faltan '+mmss(s.falta)+' que nadie anotó</b>'
+          +'Ese tiempo pasó, pero no está en ninguna de sus casillas. Casi siempre son tres '
+          +'cosas: <strong>lo que se demoró en arrancar</strong> mientras la fila se llenaba, '
+          +'<strong>el que se quedó buscando una pieza</strong> y no lo contó como parada, y '
+          +'<strong>lo que tocó volver a hacer</strong>.'
+          +'<p style="margin-top:10px">Encontrar ese tiempo perdido es para lo que sirve todo '
+          +'esto. <strong>Nadie puede mejorar lo que no está midiendo.</strong></p></div>';
+      }else{
+        h+='<div class="card a"><b class="t">Sobran '+mmss(-s.falta)+'</b>'
+          +'Salió más rápido de lo que dejan los tiempos que anotaron. O los puestos no '
+          +'trabajaron en fila sino al tiempo, o algún tiempo quedó anotado de más. '
+          +'Vuelvan al Paso 1 y revisen.</div>';
+      }
+    }
   }
 
-  /* 4 · la apuesta, antes de revelar la proyección */
-  h+='<h2>Y ahora, el viaje</h2>'
-   +'<p class="sx" style="margin-bottom:18px">La sombra puede correr esa misma línea durante '
-   +'un turno completo de 8 horas, sin tocar nada y sin esperar a que pase el día. '
-   +'Antes de verlo: <strong>apueste.</strong></p>';
-
-  const bandas=bandasPza(s.ritmo);
-  h+='<div class="q"><p>¿Cuántas piezas buenas cree que entregaría su línea en 8 horas?</p>'
-   +'<p class="sub">Al ritmo de su corrida de prueba serían unas '+n0(s.ritmo)+'.</p>'
-   +'<div class="opts" id="ap">'
-   +bandas.map((b,i)=>'<button class="opt'+(S.ap===i?" sel":"")+'" data-i="'+i+'">'+b[0]+'</button>').join("")
-   +'</div></div>';
-
-  if(!S.vistaProy){
-    h+='<button class="btn" id="ver" '+(S.ap===null?"disabled":"")+'>Viajar al futuro</button>'
-     +'<p class="hint">'+(S.ap===null?"Escoja una para seguir.":"Ocho horas en catorce segundos.")+'</p>';
-  }else{
-    const g=s.turno.good;
-    let bi=0;for(let i=0;i<bandas.length;i++)if(g>=bandas[i][1]&&g<bandas[i][2])bi=i;
-    const ok=S.ap===bi;
-    h+='<div class="hero"><div class="n">'+n0(g)+'</div>'
-      +'<div class="l">piezas buenas en el turno</div>'
-      +'<div class="v '+(ok?"ok":"no")+'">'+(ok?"&#10003; le atinó":"usted dijo "+bandas[S.ap][0])+'</div></div>'
-      +'<div class="met">'
-      +'<div><b>Sale una cada</b><i>'+n1(s.takt)+'<s> s</s></i></div>'
-      +'<div><b>Contra la prueba</b><i>'+(g/Math.max(1,s.ritmo)).toFixed(1).replace(".",",")+'<s> veces</s></i></div></div>'
-      +medidores(s.turno,"La nota del turno completo")
-      +'<div class="card"><b class="t">Lo que acaba de pasar</b>'
-      +'Nadie armó nada y ya sabe cómo le iría mañana. Eso es el viaje al futuro: '
-      +'<strong>ver el resultado de un día entero sin gastar el día</strong>. '
-      +'Y hasta aquí la sombra sólo <em>copia</em> — todavía no ha cambiado una sola cosa.</div>'
-      +'<button class="btn" id="ir3">Ahora sí: mover la línea</button>'
-      +'<p class="hint">En el Paso 3 la sombra se vuelve gemelo y empieza a aceptar cambios.</p>';
+  /* ── el ritmo ya andando ── */
+  if(S.f2>=2&&s.rt>0){
+    const lento=s.rt>s.takt*1.05;
+    h+='<h2>¿A qué velocidad iban de verdad?</h2>'
+     +'<p class="sx" style="margin-bottom:14px">Esto es lo que midieron con la línea ya '
+     +'andando, sin contar el arranque.</p>'
+     +'<div class="esp"><div><b>Deberían sacar una cada</b><i>'+n1(s.takt)+' s</i></div>'
+     +'<div><b>Sacaban una cada</b><i'+(lento?' style="color:var(--accent)"':'')+'>'+n1(s.rt)+' s</i></div></div>';
+    if(lento){
+      h+='<div class="card a"><b class="t">Cada pieza se demoró '+n1(s.rt-s.takt)+' s de más</b>'
+        +'Con los tiempos que ustedes anotaron, debería salir una cada <strong>'+n1(s.takt)+' s</strong>. '
+        +'Pero salía una cada <strong>'+n1(s.rt)+' s</strong>. En '+D.piezas+' piezas eso son '
+        +'<strong>'+mmss(s.porRitmo)+'</strong>.'
+        +'<p style="margin-top:10px">Ese segundito es pasar la pieza, acomodarse, esperar al de '
+        +'al lado. <strong>Es mejora que no cuesta contratar a nadie.</strong></p></div>';
+    }else{
+      h+='<div class="sello">&#10003; iban a la velocidad que deberían</div>';
+    }
   }
 
-  const sy=S.vistaProy?0:window.scrollY;
+  /* ── la apuesta y el viaje al futuro ── */
+  if(S.f2>=2){
+    h+='<h2>Y ahora, el viaje</h2>'
+     +'<p class="sx" style="margin-bottom:16px">El computador puede trabajar esa misma línea '
+     +'un turno completo de 8 horas, sin que ustedes tengan que esperar el día. '
+     +'Antes de verlo: <strong>adivinen.</strong></p>';
+    const bandas=bandasPza(s.vara);
+    h+='<div class="q"><p>¿Cuántas piezas buenas van a salir en 8 horas?</p>'
+     +'<p class="sub">Al ritmo con que armaron la prueba, serían unas '+n0(s.vara)+'.</p>'
+     +'<div class="opts" id="ap">'
+     +bandas.map((b,i)=>'<button class="opt'+(S.ap===i?" sel":"")+'" data-i="'+i+'">'+b[0]+'</button>').join("")
+     +'</div></div>';
+
+    if(S.f2===2){
+      h+='<button class="btn" id="ver" '+(S.ap===null?"disabled":"")+'>Viajar al futuro</button>'
+       +'<p class="hint">'+(S.ap===null?"Escojan una para seguir.":"Ocho horas en catorce segundos.")+'</p>';
+    }else{
+      h+='<div class="plant" id="pl3"></div>';
+      if(S.f2===4){
+        const g=s.turno.good;
+        let bi=0;for(let i=0;i<bandas.length;i++)if(g>=bandas[i][1]&&g<bandas[i][2])bi=i;
+        const acerto=S.ap===bi;
+        h+='<div class="hero"><div class="n">'+n0(g)+'</div>'
+         +'<div class="l">piezas buenas en 8 horas</div>'
+         +'<div class="v '+(acerto?"ok":"no")+'">'+(acerto?"&#10003; le atinaron":"ustedes dijeron "+bandas[S.ap][0])+'</div></div>'
+         +'<div class="met"><div><b>Sale una cada</b><i>'+n1(s.takt)+'<s> s</s></i></div>'
+         +'<div><b>Veces lo de la prueba</b><i>'+(g/Math.max(1,s.vara)).toFixed(1).replace(".",",")+'</i></div></div>'
+         +medidores(s.turno,"La nota del día completo")
+         +'<div class="card"><b class="t">Eso fue un viaje al futuro</b>'
+         +'Nadie armó nada y ya saben cómo les iría mañana. <strong>Vieron el resultado de un '
+         +'día entero sin gastar el día.</strong>'
+         +'<p style="margin-top:10px">Y hasta aquí el computador sólo <em>copia</em>. '
+         +'Todavía no ha cambiado ni una sola cosa de su línea.</p></div>'
+         +'<button class="btn" id="ir3">Ahora sí: mover la línea</button>'
+         +'<p class="hint">En el Paso 3 empieza a aceptar cambios.</p>';
+      }
+    }
+  }
+
+  const sy=window.scrollY;
   stage.innerHTML=h;
-  if(!S.vistaProy&&S.ap!==null)window.scrollTo(0,sy);
+  window.scrollTo(0,S.mantener?sy:0);
+  S.mantener=false;
+
   stage.querySelectorAll("#ap .opt").forEach(b=>{
-    b.onclick=()=>{S.ap=+b.dataset.i;verPaso2();};
+    b.onclick=()=>{S.ap=+b.dataset.i;S.mantener=true;verPaso2();};
   });
-  const v=$("#ver"); if(v)v.onclick=()=>{S.vistaProy=true;verPaso2();window.scrollTo(0,0);};
-  const i3=$("#ir3"); if(i3)i3.onclick=()=>{S.cortes3=D.cortes.slice();S.abierto3=null;ir(3,verPaso3);};
+  const bl=$("#lote"); if(bl)bl.onclick=()=>correrLote(s);
+  const bv=$("#ver");  if(bv)bv.onclick=()=>correrTurno(s);
+  const i3=$("#ir3");  if(i3)i3.onclick=()=>{S.cortes3=D.cortes.slice();S.abierto3=null;S.ctx=null;ir(3,verPaso3);};
+  if(S.f2===2&&S.R2)  pintar2("#pl2",S.R2,"Sus "+D.piezas+" piezas");
+  if(S.f2===4&&S.R3)  pintar2("#pl3",S.R3,"El día completo");
+}
+
+/* El panel que se mueve. Es el mismo dibujo de barras del Paso 3: se aprende a leer una
+   vez, no tres. */
+function pintar2(sel,R,rotulo){
+  const el=$(sel); if(!el)return;
+  const L=R.L;
+  el.innerHTML='<div class="clk"><span>Reloj <b>'+mmss(Math.min(R.clock,T))+'</b></span>'
+   +'<span>Buenas <b>'+n0(R.good)+'</b></span>'
+   +'<span>Malas <b>'+n0(R.out-R.good)+'</b></span></div>'
+   +'<div class="bh">'+esc(rotulo)+'</div>'
+   +barras(L.cyc,L.bn,L.st)
+   +'<div class="split"><span class="lb2">van saliendo</span>'
+   +'<span class="bar2"><i class="g" style="width:'+(R.out?R.good/R.out*100:0).toFixed(1)+'%"></i>'
+   +'<i class="b" style="width:'+(R.out?(R.out-R.good)/R.out*100:0).toFixed(1)+'%"></i></span></div>';
+}
+
+/* Repetir el lote que ellos armaron a mano: corre hasta que salgan sus mismas piezas. */
+function correrLote(s){
+  S.f2=1;
+  S.R2=mkRun(D.cortes,s.W,s.mic);
+  S.mantener=true; verPaso2();
+  const meta=D.piezas, dur=8, porSeg=s.pred/dur;
+  let ant=performance.now(), acc=0;
+  const paso=(now)=>{
+    const R=S.R2; if(!R)return;
+    const d=Math.min(.1,(now-ant)/1000); ant=now;
+    acc+=d*porSeg;
+    while(acc>=STEP&&R.out<meta&&!R.fin){ tick(R,STEP); acc-=STEP; }
+    pintar2("#pl2",R,"Sus "+meta+" piezas");
+    if(R.out>=meta||R.fin){ S.f2=2; S.mantener=true; verPaso2(); return; }
+    requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
+}
+
+/* El viaje al futuro: 8 horas en 14 segundos, como en SIN PARAR. */
+function correrTurno(s){
+  S.f2=3;
+  S.R3=mkRun(D.cortes,s.W,s.mic);
+  S.mantener=true; verPaso2();
+  const porSeg=T/REAL;
+  let ant=performance.now(), acc=0;
+  const paso=(now)=>{
+    const R=S.R3; if(!R)return;
+    const d=Math.min(.1,(now-ant)/1000); ant=now;
+    acc+=d*porSeg;
+    while(acc>=STEP&&!R.fin){ tick(R,STEP); acc-=STEP; }
+    pintar2("#pl3",R,"El día completo");
+    if(R.fin){ S.f2=4; S.mantener=true; setTimeout(()=>verPaso2(),400); return; }
+    requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
 }
 
 /* Las bandas salen del ritmo que ELLOS midieron, no de la respuesta: si se armaran
@@ -899,7 +1181,7 @@ function bandasPza(r){
    gente dividido producción — el número que de verdad decide en una empresa. */
 function ctx3(){
   if(S.ctx)return S.ctx;
-  const W=tareas(D), mic=micro(D);
+  const W=tareas(), mic=micro(D);
   const filas=escalera(W,mic);
   const base=simular(D.cortes,W,mic);
   const meta=metaDia(base.good,filas);
@@ -924,25 +1206,33 @@ const costoPieza=(g,n)=>D.costoHora>0?(n*8*D.costoHora)/Math.max(1,g):0;
 function verPaso3(){
   const x=ctx3();
   let h='<div class="eyebrow">Paso 3 de 3</div>'
-   +'<h1>El gemelo activo</h1>'
-   +'<p class="lead">Hasta ahora la sombra sólo copiaba. Desde aquí acepta cambios: usted '
-   +'mueve la línea en el computador, la ve correr un día entero, y sólo cuando sabe que '
-   +'sirve la monta de verdad.</p>'
+   +'<h1>Ahora sí: muévala</h1>'
+   +'<p class="lead">Hasta aquí el computador sólo copiaba. De aquí en adelante acepta '
+   +'cambios. Usted mueve la línea en la pantalla, la ve trabajar un día entero, y sólo '
+   +'cuando ya sabe que sirve la monta de verdad.</p>'
+   +como("De qué se trata",
+     "Le vamos a pedir que llegue a una meta de piezas. Tiene dos cosas para mover:<br><br>"
+     +"<strong>1. Dónde se parte la fila.</strong> Cada corte es un puesto, y cada puesto es "
+     +"una persona.<br><br>"
+     +"<strong>2. Cuánta gente pone.</strong> Más puestos es más gente, y más gente es más "
+     +"nómina.<br><br>"
+     +"Probar en la pantalla <strong>no cuesta nada</strong>. Mover los puestos de verdad "
+     +"cuesta 35 minutos con la planta apagada.")
    +'<div class="ob"><p>Su línea de hoy entrega</p>'
    +'<div class="big">'+n0(x.base.good)+' <s>piezas buenas al día</s></div></div>'
    +'<div class="ob"><p>La meta</p>'
    +'<div class="big a">'+n0(x.meta)+' <s>piezas buenas al día</s></div></div>'
-   +'<div class="card"><b class="t">Las reglas</b>'
-   +'Una persona por puesto: <strong>mover un corte contrata o despide</strong>. '
-   +'Los '+NT+' pasos no se pueden partir, así que no puede haber más de '+NT+' puestos. '
-   +'<p style="margin-top:10px">Gana quien llegue a la meta <strong>con la menor cantidad '
-   +'de gente</strong>. Llegar poniendo a todo el mundo no es ganar: es pagar de más.</p></div>';
+   +'<div class="card"><b class="t">Cómo se gana</b>'
+   +'Gana quien llegue a la meta <strong>con la menor cantidad de gente</strong>. '
+   +'<p style="margin-top:10px">Llegar poniendo a todo el mundo no es ganar: es pagar de más. '
+   +'Y no puede haber más de '+NT+' puestos, porque las actividades no se pueden partir por '
+   +'la mitad.</p></div>';
 
   if(x.desp){
     h+='<div class="card a"><b class="t">Ojo con esto</b>'
-      +'En su línea, pasar de <strong>'+x.desp.a.N+'</strong> a <strong>'+x.desp.b.N+' puestos</strong> '
-      +'hace que cada persona entregue <strong>'+n0(x.desp.a.pp)+'</strong> piezas en vez de '
-      +'<strong>'+n0(x.desp.b.pp)+'</strong>. Contratar no siempre compra producción.</div>';
+      +'En <strong>su</strong> línea, pasar de '+x.desp.a.N+' a '+x.desp.b.N+' puestos hace que cada '
+      +'persona entregue <strong>'+n0(x.desp.b.pp)+'</strong> piezas en vez de '
+      +'<strong>'+n0(x.desp.a.pp)+'</strong>.<br><br>Contratar no siempre compra producción.</div>';
   }
   h+='<button class="btn" id="go">Armar la línea</button>'
    +'<button class="btn gh" id="volver2">Volver a la sombra</button>';
@@ -962,15 +1252,24 @@ function verArmado3(mantener){
 
   let h='<div class="takt"><span>Sale una cada<b'+(prev.good>=x.meta?' class="ok"':'')+'>'
    +n1(takt)+' s</b></span><span>Gente<b>'+K+'</b></span></div>'
-   +'<h1>'+(S.gemelo?"Probar otro reparto":"Arme su línea")+'</h1>'
-   +'<p class="lead">'+(S.gemelo
-      ? "La planta sigue produciendo mientras usted prueba aquí. Probar no cuesta nada."
-      : "Toque un puesto para ver sus pasos y mover dónde termina.")+'</p>'
+   +'<h1>'+(S.gemelo?"Pruebe otro reparto":"Arme su línea")+'</h1>'
+   +(S.gemelo
+      ? '<p class="lead">Mientras usted prueba aquí, <strong>la planta sigue trabajando</strong>. '
+        +'Probar en la pantalla no cuesta ni un minuto.</p>'
+      : '<p class="lead">Toque un puesto para abrirlo y mover dónde termina.</p>'
+        +como("Cómo se mueve",
+          "Dentro de un puesto, <strong>«+ partir aquí»</strong> lo corta en dos y contrata a "
+          +"una persona más.<br><br>"
+          +"<strong>«&#9986; aquí termina»</strong> quita ese corte y une los dos puestos: "
+          +"una persona menos.<br><br>"
+          +"Arriba ve siempre cada cuánto sale una pieza y cuánta gente lleva. Abajo, cuántas "
+          +"piezas daría al día.",
+          "el puesto naranja es el más lento. Quítele trabajo a ese."))
    +'<div class="chain">';
 
   let p=0;
   for(let k=0;k<K;k++){
-    const c=S.cortes3[k], abierto=(k===ab), cf=PASO[c-1].capa;
+    const c=S.cortes3[k], abierto=(k===ab), cf=capaDe(c-1);
     h+='<button class="pst'+(k===bn?" bn":"")+(abierto?" ab":"")+'" data-k="'+k+'">'+hexa(cf,40)
       +'<span class="n">Puesto '+(k+1)
       +'<span class="tag2">'+(k===bn?"el más lento · ":"")+(c-p)+(c-p===1?" paso":" pasos")+'</span></span>'
@@ -978,7 +1277,7 @@ function verArmado3(mantener){
       +'<span class="ch">'+(abierto?"&#9662;":"&#9656;")+'</span></button>';
     if(abierto){
       for(let i=p;i<c;i++){
-        h+='<div class="tsk"><span class="np">'+(i+1)+'</span><span>'+esc(PASO[i].n)+'</span>'
+        h+='<div class="tsk"><span class="np">'+(i+1)+'</span><span>'+esc(ACT[i].n)+'</span>'
           +'<span>'+n1(W[i])+' s</span></div>';
         if(i<NT-1){
           const esCorte=S.cortes3.indexOf(i+1)>=0, puede=esCorte||K<NT;
@@ -995,8 +1294,8 @@ function verArmado3(mantener){
    +'<div class="met"><div><b>Al día</b><i'+(prev.good>=x.meta?' class="ok"':' class="a"')+'>'
    +n0(prev.good)+'</i></div>'
    +'<div><b>Por persona</b><i>'+n0(porPersona(prev.good,K))+'</i></div></div>'
-   +'<p class="hint">La meta es '+n0(x.meta)+' piezas buenas. '
-   +(K>=NT?'<br><strong>Ya usó los '+NT+' puestos posibles.</strong> Para partir otro, primero quite un corte.':'')
+   +'<p class="hint">La meta es '+n0(x.meta)+' piezas buenas al día. '
+   +(K>=NT?'<br><strong>Ya usó los '+NT+' puestos posibles.</strong> Para partir otro, primero quite un corte de otro lado.':'')
    +'</p>';
 
   if(S.gemelo){
@@ -1005,12 +1304,12 @@ function verArmado3(mantener){
       +'<div class="n2">gratis</div><p>La planta no se detiene.</p></div>'
       +'<div class="mal"><div class="t2">Cambiar la línea<br>de verdad</div>'
       +'<div class="n2">35 min</div><p>Nadie arma nada en ese rato.</p></div></div>'
-      +'<button class="btn dan" id="ok" '+(mismo?"disabled":"")+'>Detener la línea y montar este reparto</button>'
-      +'<button class="btn gh" id="seguir">Dejar la línea como está</button>'
-      +'<p class="hint">'+(mismo?"Mueva algún corte para poder montarlo.":"Los 35 minutos se cobran de su jornada.")+'</p>';
+      +'<button class="btn dan" id="ok" '+(mismo?"disabled":"")+'>Apagar la planta y montar este reparto</button>'
+      +'<button class="btn gh" id="seguir">Dejarla como está y seguir</button>'
+      +'<p class="hint">'+(mismo?"Mueva algún corte para poder montarlo.":"Esos 35 minutos se le descuentan del día.")+'</p>';
   }else{
-    h+='<button class="btn" id="correr">Arrancar la jornada</button>'
-      +'<p class="hint">Ocho horas en catorce segundos.</p>';
+    h+='<button class="btn" id="correr">Arrancar el día</button>'
+      +'<p class="hint">Ocho horas en catorce segundos. Va a ver las barras moverse.</p>';
   }
 
   const sy=mantener?window.scrollY:0;
@@ -1059,8 +1358,8 @@ function verCorrida3(){
   stage.innerHTML='<div class="takt"><span>Meta<b>'+n0(x.meta)+'</b></span>'
    +'<span>Gente<b>'+R.cortes.length+'</b></span></div>'
    +'<div class="plant" id="pl"></div>'
-   +'<button class="btn gh" id="twin">Probar otro reparto en el computador</button>'
-   +'<p class="hint">La planta no se detiene mientras usted prueba.</p>';
+   +'<button class="btn gh" id="twin">Probar otro reparto sin parar la planta</button>'
+   +'<p class="hint">Mire las barras: la más alta es la que frena a todas las demás.</p>';
   $("#twin").onclick=()=>{S.gemelo=true;S.cortes3=R.cortes.slice();S.abierto3=null;verArmado3();window.scrollTo(0,0);};
   pintar3();
 }
@@ -1087,8 +1386,8 @@ function verParada3(){
   const plata=D.costoHora>0?Math.round(R.cortes.length*D.costoHora*PARADA/3600):0;
   stage.innerHTML='<div class="tag w">La línea está detenida</div>'
    +'<h1>Nadie está armando nada</h1>'
-   +'<p class="lead">Mover los puestos de verdad cuesta 35 minutos de planta quieta. '
-   +'Probarlo en el computador no le habría costado ninguno.</p>'
+   +'<p class="lead">Mover los puestos de verdad cuesta 35 minutos con todo el mundo quieto. '
+   +'Probarlo en la pantalla no le habría costado ni uno.</p>'
    +'<div class="plant"><div class="paro"><div class="rel" id="rel">35:00</div>'
    +'<div class="rl">sin producir</div></div>'
    +barras(L.cyc,-1,L.st,true)
@@ -1187,9 +1486,9 @@ function verCierre3(){
       +'<span class="v"><span class="br" style="width:'+(f.good/mx*100).toFixed(1)+'%"></span>'
       +'<span class="num">'+n0(f.good)+'</span></span></div>';
   }
-  h+='<p class="hint" style="text-align:left;margin:4px 0 0">Las filas en gris entregan lo '
-   +'mismo que la anterior: esa persona de más no tiene dónde ponerse, porque los '+NT+' pasos '
-   +'no se pueden partir más.</p></div>';
+  h+='<p class="hint" style="text-align:left;margin:4px 0 0">Las filas en gris dan lo mismo '
+   +'que la de arriba: <strong>esa persona de más no tiene dónde ponerse.</strong> Se le paga '
+   +'el sueldo y no entrega ni una pieza extra.</p></div>';
 
   /* el entregable: lo que se monta en la Fábrica */
   const tr=tramos(R.cortes,x.W);

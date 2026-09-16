@@ -70,18 +70,28 @@ lote; que contratar de a uno casi no sirve; dónde está el cuello.
 
 1. **Arman 10 piezas de verdad** (20 min), con la hoja de toma de datos de abajo:
    un cronómetro por puesto, un anotador para los paros y uno para las piezas malas.
+   **Y una persona al final de la línea** que, con la línea ya andando, cuente cuántas
+   piezas salen en cinco minutos. Ese dato es el que más enseña en el Paso 2.
 2. **Cargan sus datos en el Paso 1** (10 min) y calculan el OEE a mano con la pantalla.
 3. **Pasan al Paso 2** (15 min): la sombra tiene que dar el mismo número.
 
 **Métrica:** el OEE de cada equipo, escrito en el tablero.
 
-**Lo crítico y fácil de olvidar:** que alguien cronometre **cuánto dura cada parada**,
-no sólo cuántas hubo. Sin eso no hay Disponibilidad y el taller se queda sin OEE.
+**Lo crítico y fácil de olvidar**, dos cosas:
+
+1. Que alguien cronometre **cuánto dura cada parada**, no sólo cuántas hubo. Sin eso no
+   hay Disponibilidad y el taller se queda sin OEE.
+2. Que alguien mida el **ritmo con la línea ya andando**. El tiempo del lote incluye el
+   arranque en frío —la primera pieza tiene que recorrer toda la fila— y eso hace ver la
+   línea más lenta de lo que es. Sin este dato el Paso 2 pierde su mejor tarjeta.
 
 ## MOMENTO 6 · EXTENDER · 15 min
 
 **La conclusión que tiene que salir:** *los tiempos por puesto no explican todo lo que
 duró el lote. La diferencia es lo que nadie está midiendo, y ahí está la mejora.*
+
+Y la segunda, si midieron el ritmo: *la línea iba más despacio de lo que permiten sus
+propios puestos. Ese segundo de más por pieza es mejora que no cuesta contratar a nadie.*
 
 **La información que entrego para corregir:** la tarjeta «los minutos que no aparecen»
 del Paso 2, con los números de cada equipo.
@@ -148,7 +158,7 @@ EQUIPO: ______________________   FECHA: ____________
 A · LA LÍNEA QUE MONTAMOS
    Puestos: ____      Personas: ____
 
-   Puesto   Pasos que hace (del 1 al 15)   Segundos por pieza
+   Puesto   Actividades que hace (n.º)     Segundos por pieza
    ------   ----------------------------   ------------------
      1      del ____ al ____                     ______
      2      del ____ al ____                     ______
@@ -161,7 +171,7 @@ A · LA LÍNEA QUE MONTAMOS
      9      del ____ al ____                     ______
     10      del ____ al ____                     ______
 
-B · LA CORRIDA DE PRUEBA
+B · CÓMO NOS FUE EN LA PRUEBA
    Piezas que armamos en total .................. ______
    Cuánto nos demoramos (min:seg) ............... ____ : ____
    Cuántas salieron buenas ...................... ______
@@ -173,17 +183,28 @@ B · LA CORRIDA DE PRUEBA
    2) _______________________________________________________
    3) _______________________________________________________
 
-C · LO QUE NOS DIO EL PASO 1
+C · A QUÉ VELOCIDAD ÍBAMOS DE VERDAD
+   >>> Esto se mide APARTE, con la línea YA ANDANDO. Una persona
+   >>> se para al final de la línea con el reloj y cuenta cuántas
+   >>> piezas salen. No incluye el arranque.
+
+   Piezas que salieron en ese rato .............. ______
+   Cuánto duró ese rato (minutos) ............... ______
+
+D · LO QUE NOS DIO EL PASO 1
    Disponibilidad ____ %   Rendimiento ____ %   Calidad ____ %
    OEE ____ %
 
-D · LO QUE NOS DIJO EL PASO 2
+E · LO QUE NOS DIJO EL PASO 2
    El lote debería haber durado ____ : ____
    Se demoró ____ : ____      Sin explicar: ____ : ____
+   Deberíamos sacar una cada ____ s · sacábamos una cada ____ s
    Proyección a 8 horas: ______ piezas buenas
 ```
 
-**Los 15 pasos del ensamble** (instructivo oficial del HEXA):
+**Los 15 pasos del ensamble** (instructivo oficial del HEXA). *Si su equipo lo hizo
+distinto, escriba los suyos: el aplicativo deja cambiarlos, agregarlos, quitarlos y
+moverlos de orden en la sección A.*
 
 | # | Paso | # | Paso |
 |---|---|---|---|

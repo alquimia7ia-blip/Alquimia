@@ -587,6 +587,40 @@ muestra.** No se inventa una lección que no sea cierta para esa línea.
 - `:nth-of-type(2)` cuenta hermanos del mismo **tag**, no de la misma clase. Si una casilla
   hay que verificarla, se le pone un `id`.
 
+### La segunda vuelta: lo que pidió el usuario mirando la pantalla
+
+Cuatro correcciones que no salieron de ningún test, sino de que él abrió el aplicativo.
+
+1. **«Que ellos puedan escribir qué actividades hicieron y en qué orden.»** Tenía razón de
+   fondo y el informe lo respalda: *los operarios deciden solos el balanceo*, así que lo
+   que hicieron puede no ser lo que dice el instructivo. `ACT` pasó a ser **mutable**:
+   renombrar, agregar, quitar y mover de orden. Efecto de lado que vale plata: **el
+   aplicativo dejó de ser sólo del HEXA** — con otra lista modela cualquier línea manual.
+2. **«También debe medir cuántas sacaron en X tiempo.»** Esto tapó un hueco real del
+   modelo. El tiempo del lote **incluye el arranque en frío**, así que no dice a qué
+   velocidad iba la línea ya estable. Contar piezas en una ventana sí lo dice, y se compara
+   contra el tiempo de ciclo: con los datos de referencia el modelo permite una cada 32 s y
+   ellos sacaban una cada 75 s. Esa diferencia, por pieza, **es mejora que no cuesta
+   contratar a nadie**. Es el mejor diagnóstico del Paso 2 y no se me había ocurrido.
+3. **«Que se vea movimiento como en SIN PARAR.»** El Paso 2 dejó de contar y pasó a
+   **mostrar**: el computador arma delante de ellos las mismas piezas que acaban de armar a
+   mano, con las barras llenándose, y después viaja las 8 horas. Ver salir su propio lote
+   convence más que cualquier número.
+4. **«Explique en cada parte cómo llenarlo, lenguaje simple.»** Ocho cajas `.como` con
+   ejemplo concreto, y un mapa de las cinco secciones al principio para que la longitud no
+   asuste. El formulario son 6,5 pantallas de celular: largo, pero se llena una sola vez de
+   arriba abajo y cada sección dice exactamente qué anotar.
+
+**El tiempo dejó de vivir en el puesto y pasó a vivir en la actividad.** Antes se
+cronometraba por puesto y se repartía entre sus pasos en proporción al estimado; con la
+lista editable esa cuenta sobra y **desapareció una fuente entera de error**. Escribir el
+total de un puesto sigue funcionando: reescala sus actividades.
+
+**Lección de método, y es la que más duele:** seis de mis reemplazos de texto fallaron en
+silencio porque la cadena ya había cambiado, y el aplicativo quedó con una sola de las seis
+cajas de ayuda. No lo vi hasta que el verificador contó `.como`. **Todo reemplazo de texto
+va con `assert`**, y **toda sección nueva va con un test que la cuente**.
+
 ### Lo que sigue sin confirmar con la Fábrica
 
 Sigue pendiente **cuántos puestos físicos se pueden montar**. El aplicativo deja el tope
