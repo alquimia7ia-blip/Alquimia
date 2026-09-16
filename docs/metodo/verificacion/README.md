@@ -1,4 +1,4 @@
-# Verificación de «SIN PARAR»
+# Verificación de los gemelos
 
 Un gemelo roto se ve igual de bien que uno que funciona. Nada se publica sin correr esto.
 
@@ -23,6 +23,34 @@ npm i playwright && node drive7.mjs
    está en el gemelo, y **reconfigurar cuesta 2.100 s exactos**.
 
 Lo tercero es lo que se olvida: un motor correcto con la trampa rota no enseña nada.
+
+---
+
+## «VIAJE AL FUTURO»
+
+| Archivo | Qué hace |
+|---|---|
+| `cal-viaje.py` | El modelo de referencia. Además **barre 40 juegos de tiempos a ±40 %**: si la lección sólo funciona con los estimados, no sirve para un taller donde los tiempos los miden ellos. |
+| `esperado-viaje.json` | El contrato que exporta `cal-viaje.py`: lo que la interfaz tiene que mostrar. |
+| `drive-viaje.mjs` | Maneja los tres pasos en 390 px y los contrasta contra el contrato. |
+
+```bash
+python3 cal-viaje.py     # el modelo, los invariantes y el barrido
+node drive-viaje.mjs
+```
+
+El criterio duro es la **fidelidad**: el OEE que muestra el Paso 2 tiene que ser idéntico
+al que calculó el Paso 1. Si no coincide, la sombra no es espejo y el aplicativo miente.
+
+`cal-viaje.py` separa **invariantes duros** —si fallan, el modelo está mal— de **blandos**,
+que enriquecen la lección y dependen de cómo caigan los tiempos. Mezclarlos lleva a aflojar
+un criterio que sí importaba con tal de que «pase».
+
+**Y hay que mirar las capturas, no sólo los asserts.** El verificador daba cero fallas
+mientras la pantalla le decía a un empresario *«le faltó reparto, no gente»* cuando con esa
+gente no llegaba ni con el mejor reparto posible.
+
+---
 
 Los únicos recursos que fallan al cargar son las fuentes de Google, que el contenedor de
 desarrollo no alcanza. En un navegador con red cargan bien.

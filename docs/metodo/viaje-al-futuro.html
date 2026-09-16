@@ -1,0 +1,1223 @@
+<title>Viaje al Futuro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;700;800&display=swap">
+<style>
+:root{
+  --paper:#F7F6F3; --ink:#191817; --muted:#5E5A55; --rule:#D6D2CB; --line:#EDEAE5;
+  --accent:#C9431C; --soft:#E8C6BA; --good:#2E6B41;
+  --panel:#17161A; --pink:#F2F0EC; --pmuted:#A29D97; --prule:#39363D; --pline:#232127;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Instrument Serif",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121113; --ink:#F2F0EC; --muted:#A7A29B; --rule:#333035; --line:#232127;
+  --soft:#7A3A26; --good:#6BB584; --panel:#08080A; --prule:#2B2930; --pline:#1A181E;
+}}
+:root[data-theme="dark"]{
+  --paper:#121113; --ink:#F2F0EC; --muted:#A7A29B; --rule:#333035; --line:#232127;
+  --soft:#7A3A26; --good:#6BB584; --panel:#08080A; --prule:#2B2930; --pline:#1A181E;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:21px;
+     line-height:1.55;padding:0 16px}
+.wrap{max-width:33rem;margin:0 auto;padding:20px 0 48px}
+
+/* ── barra superior: los tres pasos, siempre a la vista ── */
+.top{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px;
+     padding-bottom:14px;border-bottom:1px solid var(--rule);margin-bottom:24px}
+.brand{font-family:var(--mono);font-size:.75rem;letter-spacing:.13em;font-weight:800;text-transform:uppercase}
+.brand b{color:var(--accent);font-weight:800}
+#pasos{display:flex;gap:6px;justify-content:flex-end}
+#pasos i{font-style:normal;font-family:var(--mono);font-size:.64rem;font-weight:800;
+         letter-spacing:.06em;color:var(--muted);border:1.5px solid var(--rule);
+         border-radius:3px;padding:4px 7px;white-space:nowrap}
+#pasos i.now{border-color:var(--accent);color:var(--accent)}
+#pasos i.ok{border-color:var(--ink);color:var(--ink)}
+
+h1{font-size:1.85rem;font-weight:700;letter-spacing:-.022em;line-height:1.15;margin-bottom:10px;text-wrap:balance}
+h2{font-size:1.3rem;font-weight:700;letter-spacing:-.015em;margin:26px 0 8px;text-wrap:balance}
+.lead{color:var(--muted);margin-bottom:24px;font-size:1.06rem;line-height:1.55}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;
+         color:var(--accent);font-weight:800;margin-bottom:9px}
+.ob{margin-bottom:24px}
+.ob p{color:var(--muted);font-size:1.06rem;line-height:1.55}
+.ob p strong{color:var(--ink);font-weight:700}
+.big{font-family:var(--mono);font-size:3rem;font-weight:800;letter-spacing:-.045em;line-height:1}
+.big s{text-decoration:none;font-size:1.4rem;font-weight:400;color:var(--muted)}
+.big.a{color:var(--accent)}
+
+.takt{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;
+      align-items:baseline;gap:14px;background:var(--paper);border-bottom:2px solid var(--ink);
+      padding:12px 2px;margin-bottom:18px;font-family:var(--mono);font-size:.74rem;
+      letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted);
+      box-shadow:0 8px 12px -10px rgba(0,0,0,.4)}
+.takt b{font-size:1.3rem;font-weight:800;letter-spacing:-.025em;color:var(--ink);margin-left:6px}
+.takt b.a{color:var(--accent)} .takt b.ok{color:var(--good)}
+.met{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+     border:1px solid var(--rule);margin-bottom:20px}
+.met>div{background:var(--paper);padding:14px 15px}
+.met b{display:block;font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;
+       text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
+.met i{font-style:normal;font-family:var(--mono);font-size:1.65rem;font-weight:800;letter-spacing:-.03em}
+.met i.a{color:var(--accent)} .met i.ok{color:var(--good)}
+.met i s{text-decoration:none;font-size:.9rem;font-weight:700;color:var(--muted)}
+
+/* ── medidores del OEE ── */
+.oee{border:1px solid var(--rule);padding:16px;margin-bottom:20px}
+.oee .h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 10px;margin-bottom:16px}
+.oee .h b{font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;text-transform:uppercase;
+          color:var(--muted);font-weight:700}
+.oee .h i{font-style:normal;font-family:var(--mono);font-size:2.2rem;font-weight:800;letter-spacing:-.04em}
+.fac{display:grid;grid-template-columns:1fr 3.2rem;gap:5px 10px;align-items:baseline;margin-bottom:13px}
+.fac:last-child{margin-bottom:0}
+.fac .nm{font-size:1rem;font-weight:700}
+.fac .ex{grid-column:1/-1;font-size:.9rem;color:var(--muted);line-height:1.35;margin-top:-3px}
+.fac .tr{grid-column:1/-1;height:10px;background:var(--rule);border-radius:5px;overflow:hidden;margin-top:5px}
+.fac .tr i{display:block;height:100%;background:var(--soft);border-radius:5px;transition:width .25s}
+.fac .vl{font-family:var(--mono);font-size:1.05rem;font-weight:700;text-align:right}
+.fac.low .nm,.fac.low .vl{color:var(--accent)}
+.fac.low .tr i{background:var(--accent)}
+
+/* ── la cadena de pasos, como acordeón ── */
+.chain{border:1px solid var(--rule);margin-bottom:20px}
+.pst{width:100%;background:var(--line);padding:13px;display:grid;
+     grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;min-height:66px;
+     border:0;border-bottom:1px solid var(--rule);text-align:left;font:inherit;color:inherit;
+     cursor:pointer}
+.pst .ch{font-size:.8rem;color:var(--muted);line-height:1}
+.pst.ab{background:var(--rule)}
+.pst.ab .ch{color:var(--ink)}
+.pst.bn.ab{background:color-mix(in srgb,var(--accent) 20%,var(--paper))}
+.pst.bn .ch{color:var(--accent)}
+.pst .n{font-family:var(--mono);font-size:.78rem;letter-spacing:.07em;font-weight:800;text-transform:uppercase}
+.pst .s{font-family:var(--mono);font-size:1.15rem;font-weight:800}
+.pst.bn{background:color-mix(in srgb,var(--accent) 13%,var(--paper))}
+.pst.bn .n,.pst.bn .s{color:var(--accent)}
+.pst .tag2{display:block;font-size:.72rem;font-family:var(--sans);letter-spacing:0;
+           text-transform:none;font-weight:400;color:var(--muted);margin-top:2px}
+.pst.bn .tag2{color:var(--accent)}
+.tsk{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:10px 13px 10px 16px;
+     font-size:.98rem;color:var(--muted);border-bottom:1px solid var(--line);align-items:center}
+.tsk .np{font-family:var(--mono);font-size:.74rem;font-weight:800;color:var(--muted);
+         border:1px solid var(--rule);border-radius:3px;padding:2px 6px;line-height:1.3}
+.tsk span:last-child{font-family:var(--mono);font-size:.88rem;font-weight:700}
+.cutrow{display:block;width:100%;min-height:46px;background:var(--paper);border:0;
+        border-bottom:1px solid var(--line);padding:8px 13px;cursor:pointer;font:inherit}
+.cutrow .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:11px}
+.cutrow .in::before,.cutrow .in::after{content:"";border-top:1px dashed var(--rule)}
+.cutrow b{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;font-weight:800;
+          color:var(--muted);border:1.5px dashed var(--rule);border-radius:16px;
+          padding:7px 15px;white-space:nowrap}
+.cutrow.on .in::before,.cutrow.on .in::after{border-top:2px dashed var(--accent)}
+.cutrow.on b{color:var(--accent);border:2px solid var(--accent)}
+.cutrow[disabled]{cursor:not-allowed;opacity:.4}
+
+/* ── formulario de captura: el Paso 1 ── */
+.fld{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+     padding:13px 0;border-bottom:1px solid var(--line)}
+.fld .lb{font-size:1rem;line-height:1.3}
+.fld .lb s{display:block;text-decoration:none;font-size:.86rem;color:var(--muted);margin-top:2px}
+.fld input{width:7.2rem;min-height:50px;text-align:right;font-family:var(--mono);
+           font-size:1.2rem;font-weight:800;color:var(--ink);background:var(--paper);
+           border:2px solid var(--rule);border-radius:4px;padding:6px 10px}
+.fld input:focus{outline:0;border-color:var(--accent)}
+.fld .un{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-weight:700;
+         margin-left:-6px;white-space:nowrap}
+.fld.wide{grid-template-columns:1fr}
+.stp{display:flex;align-items:center;gap:10px}
+.stp button{width:50px;height:50px;border:2px solid var(--ink);background:transparent;
+            color:var(--ink);border-radius:4px;font-size:1.5rem;font-weight:700;
+            line-height:1;cursor:pointer;font-family:var(--mono)}
+.stp button:disabled{border-color:var(--rule);color:var(--rule);cursor:not-allowed}
+.stp .v{font-family:var(--mono);font-size:1.5rem;font-weight:800;min-width:2.2rem;text-align:center}
+.secc{font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--accent);font-weight:800;margin:30px 0 4px;padding-top:18px;
+      border-top:2px solid var(--ink)}
+.secc:first-child{border-top:0;padding-top:0;margin-top:0}
+.sx{font-size:.95rem;color:var(--muted);line-height:1.45;margin-bottom:10px}
+
+/* ── la cuenta del OEE a mano, escrita ── */
+.cuenta{border:2px solid var(--ink);padding:16px;margin:20px 0}
+.cuenta .ln{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;
+            padding:11px 0;border-bottom:1px solid var(--line)}
+.cuenta .ln:last-of-type{border-bottom:0}
+.cuenta .ln .k{font-size:.98rem}
+.cuenta .ln .k s{display:block;text-decoration:none;font-family:var(--mono);font-size:.8rem;
+                 color:var(--muted);margin-top:3px}
+.cuenta .ln .v{font-family:var(--mono);font-size:1.25rem;font-weight:800;white-space:nowrap}
+.cuenta .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+             margin-top:14px;padding-top:14px;border-top:2px solid var(--ink)}
+.cuenta .tot b{font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;
+               text-transform:uppercase;color:var(--muted);font-weight:800}
+.cuenta .tot i{font-style:normal;font-family:var(--mono);font-size:2.3rem;font-weight:800;
+               letter-spacing:-.04em;color:var(--accent)}
+
+/* ── el espejo: a mano contra la sombra ── */
+.esp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+     border:2px solid var(--ink);margin-bottom:8px}
+.esp>div{background:var(--paper);padding:15px}
+.esp b{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+       text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:800;
+       line-height:1.3;min-height:2.6em}
+.esp i{font-style:normal;font-family:var(--mono);font-size:2rem;font-weight:800;letter-spacing:-.04em}
+.sello{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;
+       letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:var(--good);
+       margin-bottom:22px}
+.sello.no{color:var(--accent)}
+
+/* ── botones ── */
+.btn{display:block;width:100%;min-height:56px;text-align:center;padding:17px;
+     border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-family:var(--mono);
+     font-size:.86rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;
+     border-radius:4px;cursor:pointer;margin-bottom:10px}
+.btn.gh{background:transparent;color:var(--ink)}
+.btn.dan{background:transparent;color:var(--accent);border-color:var(--accent)}
+.btn:disabled{background:var(--line);color:var(--muted);border-color:var(--rule);cursor:not-allowed}
+.hint{font-size:.95rem;color:var(--muted);text-align:center;margin:-4px 0 20px;line-height:1.45}
+
+/* ── apuesta ── */
+.q{margin-bottom:26px}
+.q p{font-weight:700;margin-bottom:12px;font-size:1.08rem;line-height:1.4}
+.q .sub{font-weight:400;color:var(--muted);font-size:.98rem;margin:-8px 0 12px;line-height:1.4}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{min-width:0;min-height:58px;border:2px solid var(--rule);background:transparent;
+     color:var(--muted);border-radius:4px;padding:13px 16px;font-family:var(--mono);
+     font-size:1.05rem;font-weight:800;cursor:pointer}
+.opt.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent)}
+
+/* ── panel oscuro de la planta ── */
+.plant{background:var(--panel);color:var(--pink);border-radius:6px;padding:18px;margin-bottom:20px}
+.plant .met{background:var(--prule);border-color:var(--prule)}
+.plant .met>div{background:var(--panel)}
+.plant .met b{color:var(--pmuted)}
+.plant .met i s{color:var(--pmuted)}
+.plant .oee{border-color:var(--prule)}
+.plant .oee .h b{color:var(--pmuted)}
+.plant .fac .ex{color:var(--pmuted)}
+.plant .fac .tr{background:var(--prule)}
+.clk{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+     font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--pmuted);font-weight:700;padding-bottom:12px;margin-bottom:16px;
+     border-bottom:1px solid var(--prule)}
+.clk b{color:var(--pink);font-weight:800}
+/* ── la línea: una barra por puesto ──────────────────────────────────────
+   Lo alto de la barra es lo que se demora ese puesto. El desbalanceo se ve de un
+   vistazo en vez de leerse número por número. El mismo dibujo en los tres pasos. */
+.bh{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--pmuted);font-weight:700;margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:4px;border-bottom:1.5px solid rgba(242,240,236,.32)}
+.bfoot{display:flex;gap:4px;margin:9px 0 12px}
+.bcol,.bl{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center}
+.bx{position:relative;width:100%;height:calc(var(--h)*1.4px);border-radius:5px 5px 0 0;
+    overflow:hidden;background:rgba(242,240,236,.24);
+    box-shadow:inset 0 0 0 1px rgba(242,240,236,.36)}
+.bx i{position:absolute;left:0;right:0;bottom:0;background:rgba(242,240,236,.88)}
+.bl .sg{font-family:var(--mono);font-size:.7rem;font-weight:800;color:var(--pink);
+        white-space:nowrap;line-height:1}
+.bl .px{font-family:var(--mono);font-size:.66rem;color:var(--pmuted);margin-top:5px;
+        font-weight:700;line-height:1}
+.cuello .bx{background:rgba(201,67,28,.3);box-shadow:inset 0 0 0 2px var(--accent)}
+.cuello .bx i{background:var(--accent)}
+.cuello .sg{color:var(--accent)}
+.idle{opacity:.34}
+.dn .bx{background:#3A1712;box-shadow:inset 0 0 0 2px var(--accent)}
+.dn .bx i{background:repeating-linear-gradient(45deg,var(--accent) 0 4px,transparent 4px 9px)}
+.dn .sg{color:var(--accent)}
+.leg{font-size:.95rem;color:var(--pmuted);line-height:1.45;margin-bottom:18px}
+.leg b{color:var(--pink);font-weight:700}
+.leg .ac{color:var(--accent);font-weight:700}
+.paro{text-align:center;padding:6px 0 20px;border-bottom:1px solid var(--prule);margin-bottom:20px}
+.rel{font-family:var(--mono);font-size:3.4rem;font-weight:800;letter-spacing:-.045em;
+     line-height:1;color:var(--accent)}
+.rl{font-family:var(--mono);font-size:.74rem;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--pmuted);margin-top:11px;font-weight:700}
+.split{display:grid;gap:8px;margin-bottom:6px}
+.split .lb2{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--pmuted);font-weight:700}
+.bar2{height:14px;border-radius:3px;overflow:hidden;display:flex;background:var(--prule)}
+.bar2 i{display:block;height:100%}
+.bar2 .g{background:var(--pink)} .bar2 .b{background:var(--accent)}
+
+/* ── comparación de dos jugadas ── */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 4px}
+.vs>div{border:2px solid var(--rule);border-radius:6px;padding:14px}
+.vs>div.mal{border-color:var(--accent)}
+.vs .t2{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+        font-weight:800;margin-bottom:10px;line-height:1.35;color:var(--muted)}
+.vs .mal .t2{color:var(--accent)}
+.vs .n2{font-family:var(--mono);font-size:1.5rem;font-weight:800;letter-spacing:-.035em;line-height:1}
+.vs .mal .n2{color:var(--accent)}
+.vs p{font-size:.92rem;color:var(--muted);line-height:1.4;margin-top:9px}
+
+/* ── cierre y tablas ── */
+.hero{text-align:center;padding:18px 0 22px;border-bottom:1px solid var(--rule);margin-bottom:22px}
+.hero .n{font-family:var(--mono);font-size:3.9rem;font-weight:800;letter-spacing:-.05em;line-height:1}
+.hero .l{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--muted);margin-top:11px;font-weight:700}
+.hero .v{font-family:var(--mono);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;
+         font-weight:800;margin-top:14px}
+.hero .v.ok{color:var(--good)} .hero .v.no{color:var(--accent)}
+.row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;
+     border-bottom:1px solid var(--line);font-size:1rem}
+.row span:last-child{font-family:var(--mono);font-weight:800;white-space:nowrap}
+.row .a{color:var(--accent)} .row .g{color:var(--good)}
+.card{border:2px solid var(--ink);padding:16px;margin:22px 0;font-size:1rem;line-height:1.55}
+.card.a{border-color:var(--accent)}
+.card b.t{display:block;font-family:var(--mono);font-size:.76rem;letter-spacing:.11em;
+          text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:800}
+.code{font-family:var(--mono);font-size:1.05rem;font-weight:800;margin:11px 0;word-spacing:.12em}
+.graf{margin:22px 0}
+.graf .tt{font-family:var(--mono);font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;
+          color:var(--muted);font-weight:700;margin-bottom:14px}
+.gb{display:grid;grid-template-columns:4.6rem 1fr;gap:10px;align-items:center;margin-bottom:11px}
+.gb .k{font-size:.95rem;color:var(--muted);line-height:1.25}
+.gb .v{display:flex;align-items:center;gap:9px}
+.gb .br{height:26px;background:var(--soft);border-radius:0 3px 3px 0;min-width:3px}
+.gb.a .br{background:var(--accent)}
+.gb.g .br{background:var(--good)}
+.gb .num{font-family:var(--mono);font-size:1rem;font-weight:800;white-space:nowrap}
+.gb.a .num,.gb.a .k{color:var(--accent)}
+.gb.g .num{color:var(--good)}
+.gb.a .k{font-weight:700}
+
+/* ── pasos numerados de la ayuda ── */
+.paso{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;
+      padding:18px 0;border-bottom:1px solid var(--line)}
+.paso .no{font-family:var(--mono);font-size:.9rem;font-weight:800;color:var(--paper);
+          background:var(--accent);width:34px;height:34px;border-radius:50%;
+          display:flex;align-items:center;justify-content:center}
+.paso h3{font-size:1.16rem;font-weight:700;margin-bottom:5px}
+.paso p{color:var(--muted);font-size:1.02rem;line-height:1.5}
+.tira{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:18px 0 6px}
+.tira .p{text-align:center}
+.tira .p .lb{font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.25}
+.tag{display:inline-block;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+     text-transform:uppercase;font-weight:800;border:2px solid var(--accent);color:var(--accent);
+     border-radius:4px;padding:7px 13px;margin-bottom:16px}
+.tag.w{background:var(--accent);color:var(--paper)}
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
+      font-size:.92rem;color:var(--muted);line-height:1.6}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <span class="brand">VIAJE AL <b>FUTURO</b></span>
+    <span id="pasos"></span>
+  </div>
+  <main id="stage" aria-live="polite"></main>
+  <div class="foot">
+    Fábrica de Aprendizaje · de la planta real al gemelo digital, en tres pasos.
+    Los 15 pasos del ensamble son los del instructivo oficial del HEXA.
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════════ los 15 pasos oficiales del HEXA ═══════════════
+   Salen del instructivo de la Fábrica (Pasos_Ensamble_Rompecabezas.pdf): una página
+   por paso, con foto de antes y de después. No son tareas inventadas.
+
+   Los segundos son ESTIMADOS de las fotos y sólo sirven para precargar el formulario:
+   el dato bueno lo pone el participante con cronómetro en el Paso 1. El calibrador
+   cal-viaje.py probó 40 juegos de tiempos a ±40% y el juego aguanta los cuarenta.
+
+   Esta línea NO TIENE MÁQUINAS: las tuercas se aprietan a mano. Por eso no hay averías
+   de equipo y la única parada es la micro-parada de puesto, cuya frecuencia se deriva
+   de los paros que ellos midan — no de un número mío. */
+const PASO=[
+ {n:"Base y los 3 espárragos",            t:14, capa:1, def:.0008},
+ {n:"Capa transparente · 2 mitades",      t:18, capa:2, def:.0015},
+ {n:"Transición transparente + amarilla", t:16, capa:2, def:.0015},
+ {n:"Capa amarilla · 2 mitades",          t:16, capa:3, def:.0015},
+ {n:"Capa verde · 2 mitades",             t:16, capa:4, def:.0015},
+ {n:"Transición verde + azul",            t:16, capa:5, def:.0015},
+ {n:"Capa azul · 2 mitades",              t:16, capa:5, def:.0015},
+ {n:"Columnas: círculo grande y triángulo",t:10, capa:6, def:.0010},
+ {n:"Columnas: círculo pequeño y pentágono",t:10,capa:6, def:.0010},
+ {n:"Tuerca 1 · a mano",                  t:7,  capa:6, def:.0018},
+ {n:"Tuerca 2 · a mano",                  t:7,  capa:6, def:.0018},
+ {n:"Tuerca 3 · a mano",                  t:7,  capa:6, def:.0018},
+ {n:"Colocar la hélice",                  t:9,  capa:7, def:.0012},
+ {n:"2 tuercas de la hélice",             t:12, capa:7, def:.0018},
+ {n:"Última tuerca y almacenar",          t:9,  capa:7, def:.0018}
+];
+const NT=PASO.length;                       /* 15 pasos = 15 puestos como tope físico */
+const STEP=.25, SEED=11, CAP=4, T=28800, PARADA=2100, REAL=14;
+const PASOS_LIBRES=3, PEN_PASO=.25;
+const CAPA_NOM=["base y espárragos","placa transparente","placa amarilla","placa verde",
+                "placa azul","columnas y tuercas","hélice"];
+
+/* ═══════════════ lo que se captura en el Paso 1 ═══════════════
+   Precargado con lo que trae el informe de la Fábrica, para que el taller no se trabe
+   si mañana falla el cronómetro. Todo es editable. */
+const D={
+  cortes:[2,4,6,8,10,12,15],          /* dónde termina cada puesto */
+  seg:[32,32,32,26,17,14,30],         /* segundos medidos de cada puesto */
+  piezas:10, lote:660,                /* 10 piezas en 11 minutos */
+  buenas:8,                           /* malas = piezas - buenas */
+  paros:3, paroSeg:40,                /* la duración NO está en el informe: se mide */
+  costoHora:0                         /* opcional: $ por persona-hora */
+};
+
+/* ═══════════════ del dato medido al modelo ═══════════════ */
+
+/* Ellos cronometran POR PUESTO, no paso por paso: nadie alcanza a cronometrar quince
+   pasos sueltos en un taller. Para poder mover los cortes en el Paso 3 hace falta el
+   tiempo de cada paso, así que el tiempo medido del puesto se reparte entre sus pasos
+   en proporción al estimado. La suma queda EXACTA: la sombra reproduce su dato al
+   segundo. Se dice en pantalla, no se esconde. */
+function tareas(d){
+  const W=new Array(NT).fill(0);
+  let p=0;
+  for(let k=0;k<d.cortes.length;k++){
+    const c=d.cortes[k]; let ref=0;
+    for(let i=p;i<c;i++) ref+=PASO[i].t;
+    for(let i=p;i<c;i++) W[i]= ref>0 ? d.seg[k]*PASO[i].t/ref : d.seg[k]/(c-p);
+    p=c;
+  }
+  return W;
+}
+/* El ciclo ideal de esta línea es SU PASO MÁS LARGO: los pasos no se pueden partir, así
+   que por más gente que contrate nunca saca una pieza más rápido que eso. Es constante:
+   se fija con los tiempos del Paso 1 y no se vuelve a tocar. Con CI = trabajo/puestos el
+   OEE se iba por encima de 100% al pasar de cierto número de puestos. */
+function cicloIdeal(W){ return Math.max.apply(null,W); }
+
+/* La frecuencia de micro-paradas no se inventa: sale de los paros que ellos midieron.
+   n paros repartidos entre N puestos durante el lote -> uno cada MTBF segundos. */
+function micro(d){
+  if(d.paros<=0) return [1e12,0];
+  return [(d.cortes.length*d.lote)/d.paros, d.paroSeg];
+}
+/* Un puesto con muchos pasos encima se equivoca más: se le olvida una tuerca. Hasta
+   PASOS_LIBRES los tiene en la cabeza; de ahí en adelante cada paso extra suma riesgo. */
+function carga(n){ return 1+PEN_PASO*Math.max(0,n-PASOS_LIBRES); }
+
+/* ═══════════════ motor ═══════════════
+   Idéntico a cal-viaje.py: mismo paso fijo, misma semilla, mismas reglas. */
+function mk(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;
+  t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+function tramos(cortes,W){const r=[];let p=0;
+  for(const c of cortes){let s=0;for(let i=p;i<c;i++)s+=W[i];r.push(s);p=c;}return r;}
+
+function mkLinea(cortes,W,mic){
+  const P=[];let p=0;for(const c of cortes){P.push([p,c]);p=c;}
+  const N=P.length, cyc=tramos(cortes,W);
+  let bn=0;for(let i=1;i<N;i++)if(cyc[i]>cyc[bn])bn=i;
+  const pdef=[];
+  for(let k=0;k<N;k++){
+    let d=0;for(let i=P[k][0];i<P[k][1];i++)d+=PASO[i].def;
+    pdef.push(d*carga(P[k][1]-P[k][0]));
+  }
+  const st=[];for(let k=0;k<N;k++)
+    st.push({h:false,dn:false,t:0,buf:0,qb:0,dt:0,bad:false,down:0,op:0,nxt:mic[0]});
+  return {N:N,P:P,cyc:cyc,bn:bn,pdef:pdef,st:st,mic:mic};
+}
+function mkRun(cortes,W,mic,seed){
+  return {L:mkLinea(cortes,W,mic),W:W,mic:mic,cortes:cortes.slice(),CI:cicloIdeal(W),
+          rng:mk(seed===undefined?SEED:seed),clock:0,parado:0,downBn:0,
+          out:0,good:0,cambios:0,fin:false};
+}
+function reconfig(R,cortes){
+  R.downBn+=R.L.st[R.L.bn].down;
+  R.clock+=PARADA; R.parado+=PARADA; R.cambios++;
+  R.cortes=cortes.slice();
+  R.L=mkLinea(cortes,R.W,R.mic);
+  if(R.clock>=T)R.fin=true;
+}
+function push(R,i,bad){
+  const L=R.L;
+  if(i===L.N-1){R.out++;if(!bad)R.good++;return true;}
+  if(L.st[i+1].buf<CAP){L.st[i+1].buf++;if(bad)L.st[i+1].qb++;return true;}
+  return false;
+}
+function tick(R,dt){
+  const L=R.L,N=L.N,st=L.st,mic=L.mic;
+  R.clock+=dt;
+  for(let i=N-1;i>=0;i--){
+    const e=st[i];
+    if(e.dt>0){e.dt-=dt;e.down+=dt;continue;}
+    if(e.dn){ if(push(R,i,e.bad))e.dn=false; else continue; }
+    if(!e.h){
+      if(i===0){e.h=true;e.t=0;e.bad=false;}
+      else if(e.buf>0){e.buf--;e.h=true;e.t=0;e.bad=e.qb>0;if(e.qb>0)e.qb--;}
+    }
+    if(e.h){
+      e.t+=dt; e.op+=dt;
+      if(e.op>=e.nxt){e.dt=mic[1];e.nxt=e.op+mic[0];}
+      if(e.t>=L.cyc[i]){
+        e.h=false;e.t=0;
+        if(R.rng()<L.pdef[i])e.bad=true;
+        if(!push(R,i,e.bad))e.dn=true;
+      }
+    }
+  }
+  if(R.clock>=T)R.fin=true;
+}
+/* El tiempo planeado es el TRANSCURRIDO, no la jornada entera: si no, durante la corrida
+   el OEE arranca en casi cero y sube solo porque el día avanza. Al cerrar da idéntico. */
+function medir(R){
+  const plan=Math.max(1,Math.min(R.clock,T));
+  const down=R.downBn+R.L.st[R.L.bn].down+R.parado;
+  const oper=Math.max(1,plan-down);
+  const Dd=oper/plan, Rd=(R.CI*R.out)/oper, Q=R.out?R.good/R.out:0;
+  return {D:Dd,R:Rd,Q:Q,OEE:Dd*Rd*Q,out:R.out,good:R.good,down:down,oper:oper,plan:plan};
+}
+function simular(cortes,W,mic){
+  const R=mkRun(cortes,W,mic);
+  while(!R.fin)tick(R,STEP);
+  return medir(R);
+}
+
+/* ═══════════════ reparto de cortes ═══════════════ */
+function greedy(cap,W){
+  const c=[];let s=0;
+  for(let i=0;i<W.length;i++){
+    if(W[i]>cap+1e-9)return null;
+    if(s+W[i]>cap+1e-9){c.push(i);s=W[i];}else s+=W[i];
+  }
+  c.push(W.length);return c;
+}
+function mejorCortes(k,W){
+  let lo=Math.max.apply(null,W), hi=W.reduce((a,b)=>a+b,0), best=null;
+  for(let i=0;i<90;i++){
+    const m=(lo+hi)/2, c=greedy(m,W);
+    if(c&&c.length<=k){hi=m;best=c;}else lo=m;
+  }
+  return best;
+}
+/* La escalera: para cada número de puestos, el mejor reparto y lo que produce. */
+function escalera(W,mic){
+  const vistos={},filas=[];
+  for(let k=1;k<=NT;k++){
+    const c=mejorCortes(k,W); if(!c)continue;
+    const key=c.join(",");if(vistos[key])continue;vistos[key]=1;
+    const m=simular(c,W,mic);
+    filas.push({N:c.length,cortes:c,takt:Math.max.apply(null,tramos(c,W)),
+                good:m.good,out:m.out,OEE:m.OEE,pp:m.good/c.length});
+  }
+  return filas;
+}
+/* La meta del día sale de SU dato: una cuarta parte más de lo que produce hoy, sin bajar
+   de lo que ya hace y sin exigir más del 80% de los puestos posibles. */
+function metaDia(hoy,filas){
+  let m=Math.floor(hoy*1.25/50)*50;
+  const topeK=filas[filas.length-1].N*.8;
+  let alc=0;for(const f of filas)if(f.N<=topeK&&f.good>alc)alc=f.good;
+  if(alc>0)m=Math.min(m,Math.floor(alc/50)*50);
+  return Math.max(50,m);
+}
+/* LA TRAMPA: no es que más gente sea peor, es que hay dotaciones que se pagan solas y
+   otras que queman sueldos. Se busca el par donde contratar hunde las piezas por persona.
+   Si en SUS datos no existe, la app no lo muestra: no se inventa una lección. */
+function desperdicio(filas){
+  let peor=null;
+  for(let i=0;i<filas.length;i++)for(let j=i+1;j<filas.length;j++){
+    if(filas[j].pp<.80*filas[i].pp){
+      const c=filas[j].pp/filas[i].pp;
+      if(!peor||c<peor.c)peor={a:filas[i],b:filas[j],c:c};
+    }
+  }
+  return peor;
+}
+
+/* ═══════════════ estado y utilidades ═══════════════ */
+const S={paso:1,abierto:null,ap:null,vistaProy:false,
+         cortes3:null,abierto3:null,R:null,raf:0,gemelo:false,ultTwin:null,cerrado:false};
+
+const $=q=>document.querySelector(q), stage=$("#stage");
+const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const n1=v=>v.toFixed(1).replace(".",",");
+const n0=v=>Math.round(v).toLocaleString("es-CO");
+const pc=v=>(v*100).toFixed(1).replace(".",",")+" %";
+const mmss=s=>Math.floor(s/60)+":"+String(Math.round(s%60)).padStart(2,"0");
+const hm=s=>{const h=Math.floor(s/3600),m=Math.round((s%3600)/60);return h+" h "+String(m).padStart(2,"0");};
+const malas=()=>Math.max(0,D.piezas-D.buenas);
+
+function barraPasos(){
+  const nm=["1 · Planta real","2 · Sombra","3 · Gemelo"];
+  $("#pasos").innerHTML=nm.map((t,i)=>{
+    const k=i+1;
+    return '<i class="'+(k===S.paso?"now":(k<S.paso?"ok":""))+'">'+esc(t)+'</i>';
+  }).join("");
+}
+function ir(p,fn){ S.paso=p; barraPasos(); fn(); window.scrollTo(0,0); }
+
+/* la pieza HEXA, capa por capa */
+const CAPAS=[["#E9E7E1","#9E9A92"],["#DCE9E8","#A9C4C2"],["#E6CF23","#B9A50F"],
+             ["#3FA64B","#2C7735"],["#2E7FC2","#215C8D"],["#B9B4AC","#8C8881"],
+             ["#E4E2DD","#BDB9B1"]];
+function hexa(n,w){
+  const h=w*.9, dy=h*.085, base=h*.42;
+  let g="";
+  for(let i=0;i<Math.min(n,7);i++){
+    const y=base-i*dy, c=CAPAS[i];
+    g+='<g transform="translate(0,'+y.toFixed(1)+')">'
+      +'<polygon points="'+hexPts(w*.36)+'" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1.1"/>'
+      +'</g>';
+  }
+  return '<svg viewBox="'+(-w/2)+' '+(-h/2)+' '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true">'+g+'</svg>';
+}
+function hexPts(r){
+  const p=[];
+  for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);p.push((r*Math.cos(a)).toFixed(1)+","+(r*.62*Math.sin(a)).toFixed(1));}
+  return p.join(" ");
+}
+
+/* Una barra por puesto. Lo ALTO es lo que se demora: así el desbalanceo se ve sin leer. */
+function barras(cyc,bn,st,muerto){
+  const maxc=Math.max.apply(null,cyc);
+  let arr="",pie="";
+  for(let i=0;i<cyc.length;i++){
+    const e=st?st[i]:null;
+    const dañada=!muerto&&!!e&&e.dt>0;
+    const esperando=muerto||(!!e&&!e.h&&!dañada);
+    const cls=(i===bn&&!muerto?" cuello":"")+(dañada?" dn":(esperando?" idle":""));
+    const alt=Math.max(10,Math.round(cyc[i]/maxc*100));
+    const llen=(muerto||!e)?0:(dañada?100:Math.min(100,e.t/cyc[i]*100));
+    arr+='<div class="bcol'+cls+'"><span class="bx" style="--h:'+alt+'">'
+        +'<i style="height:'+llen.toFixed(0)+'%"></i></span></div>';
+    pie+='<div class="bl'+cls+'"><span class="sg">'+Math.round(cyc[i])+'</span>'
+        +'<span class="px">'+(i+1)+'</span></div>';
+  }
+  return '<div class="bars">'+arr+'</div><div class="bfoot">'+pie+'</div>';
+}
+
+function medidores(m,rotulo){
+  const f=[["Disponibilidad",m.D,"cuánto tiempo estuvo produciendo"],
+           ["Rendimiento",m.R,"qué tan rápido, contra su velocidad de diseño"],
+           ["Calidad",m.Q,"cuántas salieron buenas"]];
+  let lo=0;for(let i=1;i<3;i++)if(f[i][1]<f[lo][1])lo=i;
+  let h='<div class="oee"><div class="h"><b>'+esc(rotulo||"La nota de la línea")+'</b>'
+       +'<i>'+pc(m.OEE)+'</i></div>';
+  f.forEach((x,i)=>{
+    h+='<div class="fac'+(i===lo?" low":"")+'"><span class="nm">'+x[0]+'</span>'
+      +'<span class="vl">'+pc(x[1])+'</span><span class="ex">'+x[2]+'</span>'
+      +'<span class="tr"><i style="width:'+Math.min(100,x[1]*100).toFixed(1)+'%"></i></span></div>';
+  });
+  return h+'</div>';
+}
+
+/* ═══════════════ PASO 1 · la planta real ═══════════════
+   Ellos arman, cronometran y escriben. El objetivo de esta pantalla no es que sea
+   bonita: es que el dato entre bien, porque todo lo demás cuelga de aquí. */
+function cuentaOEE(){
+  const W=tareas(D), CI=cicloIdeal(W);
+  const paros=D.paros*D.paroSeg, plan=D.lote, oper=Math.max(1,plan-paros);
+  const tot=Math.max(1,D.piezas);
+  const Dd=Math.max(0,oper/plan), Rd=(CI*tot)/oper, Q=D.buenas/tot;
+  return {D:Dd,R:Math.min(Rd,9),Q:Q,OEE:Dd*Math.min(Rd,9)*Q,CI:CI,paros:paros,oper:oper,tot:tot,W:W};
+}
+
+function verPaso1(){
+  const c=cuentaOEE(), W=c.W, tr=tramos(D.cortes,W);
+  let bn=0;for(let i=1;i<tr.length;i++)if(tr[i]>tr[bn])bn=i;
+  const K=D.cortes.length;
+
+  let h='<div class="eyebrow">Paso 1 de 3</div>'
+   +'<h1>La planta real</h1>'
+   +'<p class="lead">Armen la pieza de verdad, con cronómetro. Después escriban aquí lo que '
+   +'midieron. Este es el ancla: si el dato entra mal, el gemelo miente bonito.</p>'
+
+   +'<div class="secc">A · la línea que montaron</div>'
+   +'<p class="sx">Cuántos puestos pusieron y qué pasos hace cada uno. Toque un puesto para '
+   +'ver sus pasos y mover dónde empieza y dónde termina.</p>'
+   +'<div class="fld"><span class="lb">Puestos de trabajo<s>una persona en cada uno</s></span>'
+   +'<span class="stp"><button id="pm" '+(K<=1?"disabled":"")+'>−</button>'
+   +'<span class="v">'+K+'</span><button id="pp" '+(K>=NT?"disabled":"")+'>+</button></span></div>'
+   +'<div class="chain">';
+
+  let p=0;
+  for(let k=0;k<K;k++){
+    const c2=D.cortes[k], abierto=(S.abierto===k), cf=PASO[c2-1].capa;
+    h+='<div class="pst'+(k===bn?" bn":"")+(abierto?" ab":"")+'">'+hexa(cf,40)
+      +'<span class="n">Puesto '+(k+1)
+      +'<span class="tag2">'+(c2-p)+(c2-p===1?" paso":" pasos")+(k===bn?" · el más lento":"")+'</span></span>'
+      +'<input type="number" inputmode="numeric" min="1" max="600" data-seg="'+k+'" '
+      +'value="'+Math.round(D.seg[k])+'" aria-label="segundos del puesto '+(k+1)+'">'
+      +'<button class="ch" data-ab="'+k+'" aria-label="ver los pasos del puesto '+(k+1)+'" '
+      +'style="background:none;border:0;font:inherit;color:inherit;cursor:pointer;padding:8px">'
+      +(abierto?"&#9662;":"&#9656;")+'</button></div>';
+    if(abierto){
+      for(let i=p;i<c2;i++){
+        h+='<div class="tsk"><span class="np">'+(i+1)+'</span><span>'+esc(PASO[i].n)+'</span>'
+          +'<span>'+n1(W[i])+' s</span></div>';
+        if(i<NT-1){
+          const esCorte=D.cortes.indexOf(i+1)>=0;
+          const puedeCortar=esCorte||K<NT;
+          h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'" '
+            +(puedeCortar?"":"disabled")+'><span class="in"><b>'
+            +(esCorte?"&#9986; aquí termina el puesto "+(k+1):"+ partir aquí")
+            +'</b></span></button>';
+        }
+      }
+    }
+    p=c2;
+  }
+  h+='</div>'
+   +'<p class="hint">Cada puesto son los segundos que se demora una persona en hacer sus pasos. '
+   +'Todos juntos suman <strong>'+n1(W.reduce((a,b)=>a+b,0))+' s</strong> de trabajo por pieza.</p>'
+
+   +'<div class="secc">B · la corrida de prueba</div>'
+   +'<p class="sx">Lo que pasó mientras armaban. Sin estos cinco números no hay OEE.</p>'
+   +fld("Piezas que armaron","en total, buenas y malas","piezas",D.piezas,"u")
+   +fld("Cuánto se demoraron","desde la primera hasta la última","lote",Math.round(D.lote),"s")
+   +fld("Cuántas salieron buenas","las demás son defectuosas","buenas",D.buenas,"u")
+   +fld("Cuántas veces se detuvo la línea","falta de material, relevo, reproceso","paros",D.paros,"veces")
+   +fld("Cuánto duró cada parada","en promedio","paroSeg",Math.round(D.paroSeg),"s")
+
+   +'<div class="secc">C · el OEE, a mano</div>'
+   +'<p class="sx">Esta es la cuenta que usted mismo puede hacer en una hoja. El gemelo no '
+   +'la inventa: la copia.</p>'
+   +tarjetaCuenta(c)
+   +'<button class="btn" id="ir2">Construir la sombra digital</button>'
+   +'<p class="hint">La sombra es la misma línea, copiada al computador. Tiene que dar '
+   +'exactamente este mismo número.</p>';
+
+  const sy=S.abierto!==null?window.scrollY:0;
+  stage.innerHTML=h;
+  if(S.abierto!==null)window.scrollTo(0,sy);
+  cablearPaso1();
+}
+
+function fld(lb,sub,campo,val,un){
+  return '<div class="fld"><span class="lb">'+esc(lb)+'<s>'+esc(sub)+'</s></span>'
+    +'<span style="display:flex;align-items:center;gap:7px">'
+    +'<input type="number" inputmode="numeric" min="0" data-c="'+campo+'" value="'+val+'" '
+    +'aria-label="'+esc(lb)+'"><span class="un">'+esc(un)+'</span></span></div>';
+}
+
+function tarjetaCuenta(c){
+  return '<div class="cuenta">'
+   +'<div class="ln"><span class="k">Disponibilidad<s>('+Math.round(D.lote)+' − '+Math.round(c.paros)+') ÷ '+Math.round(D.lote)+'</s></span>'
+   +'<span class="v">'+pc(c.D)+'</span></div>'
+   +'<div class="ln"><span class="k">Rendimiento<s>('+n1(c.CI)+' × '+c.tot+') ÷ '+Math.round(c.oper)+'</s></span>'
+   +'<span class="v">'+pc(c.R)+'</span></div>'
+   +'<div class="ln"><span class="k">Calidad<s>'+D.buenas+' ÷ '+c.tot+'</s></span>'
+   +'<span class="v">'+pc(c.Q)+'</span></div>'
+   +'<div class="tot"><b>Las tres multiplicadas</b><i>'+pc(c.OEE)+'</i></div>'
+   +'<p style="font-size:.92rem;color:var(--muted);line-height:1.45;margin-top:14px">'
+   +'El <strong>'+n1(c.CI)+'</strong> es el ciclo ideal: el paso más largo del ensamble. '
+   +'Por más gente que ponga, esta línea nunca saca una pieza más rápido que eso.</p></div>';
+}
+
+function cablearPaso1(){
+  const re=()=>verPaso1();
+  const btn=(id,f)=>{const e=$("#"+id);if(e)e.onclick=f;};
+  btn("pm",()=>{ if(D.cortes.length>1){repartir(D.cortes.length-1);S.abierto=null;re();} });
+  btn("pp",()=>{ if(D.cortes.length<NT){repartir(D.cortes.length+1);S.abierto=null;re();} });
+  stage.querySelectorAll("[data-ab]").forEach(b=>{
+    b.onclick=()=>{const k=+b.dataset.ab;S.abierto=(S.abierto===k?null:k);re();};
+  });
+  stage.querySelectorAll(".cutrow:not([disabled])").forEach(b=>{
+    b.onclick=()=>{ moverCorte(+b.dataset.i); re(); };
+  });
+  stage.querySelectorAll("[data-seg]").forEach(inp=>{
+    inp.onchange=()=>{ const k=+inp.dataset.seg;
+      D.seg[k]=Math.max(1,Math.min(600,+inp.value||1)); re(); };
+  });
+  stage.querySelectorAll("[data-c]").forEach(inp=>{
+    inp.onchange=()=>{
+      const c=inp.dataset.c, v=Math.max(0,+inp.value||0);
+      if(c==="piezas"){ D.piezas=Math.max(1,v); D.buenas=Math.min(D.buenas,D.piezas); }
+      else if(c==="buenas") D.buenas=Math.min(v,D.piezas);
+      else if(c==="lote")   D.lote=Math.max(10,v);
+      else D[c]=v;
+      re();
+    };
+  });
+  btn("ir2",()=>{ S.ap=null; S.vistaProy=false; ir(2,verPaso2); });
+}
+
+/* Mover un corte: quitarlo une dos puestos, ponerlo parte uno en dos. Los segundos
+   medidos se reparten o se suman para que el total no cambie nunca. */
+function moverCorte(i){
+  const idx=D.cortes.indexOf(i);
+  if(idx>=0){
+    if(D.cortes.length<=1)return;
+    D.seg[idx+1]=(D.seg[idx]||0)+(D.seg[idx+1]||0);
+    D.seg.splice(idx,1); D.cortes.splice(idx,1);
+    if(S.abierto!==null&&S.abierto>idx)S.abierto--;
+  }else{
+    if(D.cortes.length>=NT)return;
+    let k=0;while(k<D.cortes.length&&D.cortes[k]<i)k++;
+    const ini=k===0?0:D.cortes[k-1], fin=D.cortes[k];
+    let a=0,b=0;
+    for(let j=ini;j<i;j++)a+=PASO[j].t;
+    for(let j=i;j<fin;j++)b+=PASO[j].t;
+    const total=D.seg[k]||0;
+    D.seg.splice(k,1,total*a/(a+b),total*b/(a+b));
+    D.cortes.splice(k,0,i);
+  }
+}
+/* Repartir los pasos parejo entre k puestos, conservando el trabajo total medido. */
+function repartir(k){
+  const total=D.seg.reduce((a,b)=>a+b,0);
+  const W=PASO.map(p=>p.t), sum=W.reduce((a,b)=>a+b,0);
+  const c=mejorCortes(k,W)||[NT];
+  while(c.length<k&&c.length<NT){ for(let i=1;i<=NT;i++){ if(c.indexOf(i)<0){c.push(i);break;} } c.sort((a,b)=>a-b); }
+  D.cortes=c;
+  D.seg=tramos(c,W).map(x=>total*x/sum);
+}
+
+/* ═══════════════ PASO 2 · la sombra digital ═══════════════
+   Una réplica, no una mejora. Copia sus puestos, sus tiempos, su calidad y sus paros, y
+   tiene que dar el MISMO OEE que calcularon a mano. Eso es lo que la hace creíble.
+   Después proyecta: la misma línea, sin tocar nada, durante un turno entero. */
+function sombra(){
+  const c=cuentaOEE(), W=c.W, mic=micro(D), tr=tramos(D.cortes,W);
+  const takt=Math.max.apply(null,tr);
+  const trabajo=W.reduce((a,b)=>a+b,0);
+  /* lo que el modelo dice que DEBERÍA haber durado el lote */
+  const pred=trabajo+(D.piezas-1)*takt+c.paros;
+  const turno=simular(D.cortes,W,mic);
+  /* el ritmo que midieron, proyectado al turno: la vara con la que se apuesta */
+  const ritmo=Math.round(D.piezas*(T/D.lote)/10)*10;
+  return {c:c,W:W,mic:mic,tr:tr,takt:takt,trabajo:trabajo,pred:pred,
+          falta:D.lote-pred,turno:turno,ritmo:ritmo};
+}
+
+function verPaso2(){
+  const s=sombra(), c=s.c;
+  let bn=0;for(let i=1;i<s.tr.length;i++)if(s.tr[i]>s.tr[bn])bn=i;
+  const cuadra=Math.abs(s.falta)<=0.10*D.lote;
+
+  let h='<div class="eyebrow">Paso 2 de 3</div>'
+   +'<h1>La sombra digital</h1>'
+   +'<p class="lead">La misma línea, copiada al computador. No mejora nada todavía: '
+   +'copia. Y si la copia es fiel, después se le puede creer.</p>'
+
+   /* 1 · su línea, dibujada */
+   +'<div class="plant"><div class="bh">Su línea · '+s.tr.length+' puestos</div>'
+   +barras(s.tr,bn,null)
+   +'<p class="leg">Cada barra es un puesto y lo <b>alto</b> es lo que se demora. '
+   +'La barra <span class="ac">naranja</span> es la más lenta: esa manda sobre toda la fila. '
+   +'Sale una pieza cada <b>'+n1(s.takt)+' s</b>, no cada '+n1(s.trabajo/s.tr.length)+' s.</p></div>'
+
+   /* 2 · el espejo */
+   +'<h2>El espejo</h2>'
+   +'<p class="sx" style="margin-bottom:14px">Tienen que ser el mismo número. La sombra no '
+   +'arregla nada: lee sus datos y hace su misma cuenta.</p>'
+   +'<div class="esp"><div><b>Usted, a mano</b><i>'+pc(c.OEE)+'</i></div>'
+   +'<div><b>La sombra, con sus datos</b><i>'+pc(c.OEE)+'</i></div></div>'
+   +'<div class="sello">&#10003; la réplica quedó fiel</div>'
+
+   /* 3 · los minutos que no aparecen */
+   +'<h2>Los minutos que no aparecen</h2>'
+   +'<p class="sx" style="margin-bottom:14px">Con sus tiempos por puesto, el modelo arma esas '
+   +D.piezas+' piezas así:</p>'
+   +'<div class="cuenta">'
+   +'<div class="ln"><span class="k">Armar la primera pieza entera<s>los '+s.tr.length+' puestos en fila</s></span>'
+   +'<span class="v">'+mmss(s.trabajo)+'</span></div>'
+   +'<div class="ln"><span class="k">Las otras '+(D.piezas-1)+', una cada '+n1(s.takt)+' s<s>al ritmo del puesto más lento</s></span>'
+   +'<span class="v">'+mmss((D.piezas-1)*s.takt)+'</span></div>'
+   +'<div class="ln"><span class="k">Las '+D.paros+' paradas<s>'+Math.round(D.paroSeg)+' s cada una</s></span>'
+   +'<span class="v">'+mmss(c.paros)+'</span></div>'
+   +'<div class="tot"><b>Debería haber durado</b><i style="color:var(--ink)">'+mmss(s.pred)+'</i></div>'
+   +'<div class="tot" style="border-top:1px solid var(--line);margin-top:8px;padding-top:12px">'
+   +'<b>Se demoraron</b><i style="color:var(--ink)">'+mmss(D.lote)+'</i></div>'
+   +'</div>';
+
+  if(cuadra){
+    h+='<div class="sello">&#10003; cuadra · la sombra reproduce su corrida</div>';
+  }else if(s.falta>0){
+    h+='<div class="card a"><b class="t">Faltan '+mmss(s.falta)+' sin explicar</b>'
+      +'Ese tiempo existió: nadie lo anotó. Casi siempre son tres cosas — <strong>el arranque '
+      +'en frío</strong> mientras la fila se llena, <strong>el que se quedó buscando una pieza</strong> '
+      +'y no contó eso como parada, y <strong>lo que se rehízo</strong>. '
+      +'Encontrar esos minutos es exactamente para lo que sirve un gemelo: usted no puede '
+      +'mejorar lo que no está midiendo.</div>';
+  }else{
+    h+='<div class="card a"><b class="t">Sobran '+mmss(-s.falta)+'</b>'
+      +'El lote salió más rápido de lo que permiten los tiempos por puesto que anotaron. '
+      +'O los puestos trabajaron en paralelo en vez de en fila, o algún tiempo quedó '
+      +'anotado de más. Vuelvan al Paso 1 y revisen.</div>';
+  }
+
+  /* 4 · la apuesta, antes de revelar la proyección */
+  h+='<h2>Y ahora, el viaje</h2>'
+   +'<p class="sx" style="margin-bottom:18px">La sombra puede correr esa misma línea durante '
+   +'un turno completo de 8 horas, sin tocar nada y sin esperar a que pase el día. '
+   +'Antes de verlo: <strong>apueste.</strong></p>';
+
+  const bandas=bandasPza(s.ritmo);
+  h+='<div class="q"><p>¿Cuántas piezas buenas cree que entregaría su línea en 8 horas?</p>'
+   +'<p class="sub">Al ritmo de su corrida de prueba serían unas '+n0(s.ritmo)+'.</p>'
+   +'<div class="opts" id="ap">'
+   +bandas.map((b,i)=>'<button class="opt'+(S.ap===i?" sel":"")+'" data-i="'+i+'">'+b[0]+'</button>').join("")
+   +'</div></div>';
+
+  if(!S.vistaProy){
+    h+='<button class="btn" id="ver" '+(S.ap===null?"disabled":"")+'>Viajar al futuro</button>'
+     +'<p class="hint">'+(S.ap===null?"Escoja una para seguir.":"Ocho horas en catorce segundos.")+'</p>';
+  }else{
+    const g=s.turno.good;
+    let bi=0;for(let i=0;i<bandas.length;i++)if(g>=bandas[i][1]&&g<bandas[i][2])bi=i;
+    const ok=S.ap===bi;
+    h+='<div class="hero"><div class="n">'+n0(g)+'</div>'
+      +'<div class="l">piezas buenas en el turno</div>'
+      +'<div class="v '+(ok?"ok":"no")+'">'+(ok?"&#10003; le atinó":"usted dijo "+bandas[S.ap][0])+'</div></div>'
+      +'<div class="met">'
+      +'<div><b>Sale una cada</b><i>'+n1(s.takt)+'<s> s</s></i></div>'
+      +'<div><b>Contra la prueba</b><i>'+(g/Math.max(1,s.ritmo)).toFixed(1).replace(".",",")+'<s> veces</s></i></div></div>'
+      +medidores(s.turno,"La nota del turno completo")
+      +'<div class="card"><b class="t">Lo que acaba de pasar</b>'
+      +'Nadie armó nada y ya sabe cómo le iría mañana. Eso es el viaje al futuro: '
+      +'<strong>ver el resultado de un día entero sin gastar el día</strong>. '
+      +'Y hasta aquí la sombra sólo <em>copia</em> — todavía no ha cambiado una sola cosa.</div>'
+      +'<button class="btn" id="ir3">Ahora sí: mover la línea</button>'
+      +'<p class="hint">En el Paso 3 la sombra se vuelve gemelo y empieza a aceptar cambios.</p>';
+  }
+
+  const sy=S.vistaProy?0:window.scrollY;
+  stage.innerHTML=h;
+  if(!S.vistaProy&&S.ap!==null)window.scrollTo(0,sy);
+  stage.querySelectorAll("#ap .opt").forEach(b=>{
+    b.onclick=()=>{S.ap=+b.dataset.i;verPaso2();};
+  });
+  const v=$("#ver"); if(v)v.onclick=()=>{S.vistaProy=true;verPaso2();window.scrollTo(0,0);};
+  const i3=$("#ir3"); if(i3)i3.onclick=()=>{S.cortes3=D.cortes.slice();S.abierto3=null;ir(3,verPaso3);};
+}
+
+/* Las bandas salen del ritmo que ELLOS midieron, no de la respuesta: si se armaran
+   alrededor del resultado, la banda correcta sería siempre la misma. */
+function bandasPza(r){
+  const a=Math.round(r/10)*10, b=a*2, c=a*3;
+  return [["menos de "+n0(a),0,a],[n0(a)+" a "+n0(b),a,b],
+          [n0(b)+" a "+n0(c),b,c],["más de "+n0(c),c,9e9]];
+}
+
+/* ═══════════════ PASO 3 · el gemelo activo ═══════════════
+   Aquí la réplica se pone en movimiento y acepta cambios. Dos palancas: dónde se corta
+   la cadena y cuánta gente. Y el veredicto no es el OEE sino el costo por pieza, que es
+   gente dividido producción — el número que de verdad decide en una empresa. */
+function ctx3(){
+  if(S.ctx)return S.ctx;
+  const W=tareas(D), mic=micro(D);
+  const filas=escalera(W,mic);
+  const base=simular(D.cortes,W,mic);
+  const meta=metaDia(base.good,filas);
+  S.ctx={W:W,mic:mic,filas:filas,base:base,meta:meta,desp:desperdicio(filas)};
+  return S.ctx;
+}
+/* Lo que se alcanza con EXACTAMENTE n personas. Cuando contratar al séptimo no compra
+   nada, el mejor reparto sigue siendo el de seis y esa persona se queda mirando: la fila
+   repite el mismo número y ahí se ve el escalón. La escalera de arriba sólo lista las
+   dotaciones que cambian algo; ésta lista a todo el mundo, que es la pregunta del jefe. */
+function porGente(filas){
+  const r=[];
+  for(let n=1;n<=NT;n++){
+    let f=null;for(const x of filas)if(x.N<=n)f=x;
+    r.push({N:n,good:f?f.good:0,pp:(f?f.good:0)/n,repite:!!(f&&f.N<n),usa:f?f.N:0});
+  }
+  return r;
+}
+const porPersona=(g,n)=>g/Math.max(1,n);
+const costoPieza=(g,n)=>D.costoHora>0?(n*8*D.costoHora)/Math.max(1,g):0;
+
+function verPaso3(){
+  const x=ctx3();
+  let h='<div class="eyebrow">Paso 3 de 3</div>'
+   +'<h1>El gemelo activo</h1>'
+   +'<p class="lead">Hasta ahora la sombra sólo copiaba. Desde aquí acepta cambios: usted '
+   +'mueve la línea en el computador, la ve correr un día entero, y sólo cuando sabe que '
+   +'sirve la monta de verdad.</p>'
+   +'<div class="ob"><p>Su línea de hoy entrega</p>'
+   +'<div class="big">'+n0(x.base.good)+' <s>piezas buenas al día</s></div></div>'
+   +'<div class="ob"><p>La meta</p>'
+   +'<div class="big a">'+n0(x.meta)+' <s>piezas buenas al día</s></div></div>'
+   +'<div class="card"><b class="t">Las reglas</b>'
+   +'Una persona por puesto: <strong>mover un corte contrata o despide</strong>. '
+   +'Los '+NT+' pasos no se pueden partir, así que no puede haber más de '+NT+' puestos. '
+   +'<p style="margin-top:10px">Gana quien llegue a la meta <strong>con la menor cantidad '
+   +'de gente</strong>. Llegar poniendo a todo el mundo no es ganar: es pagar de más.</p></div>';
+
+  if(x.desp){
+    h+='<div class="card a"><b class="t">Ojo con esto</b>'
+      +'En su línea, pasar de <strong>'+x.desp.a.N+'</strong> a <strong>'+x.desp.b.N+' puestos</strong> '
+      +'hace que cada persona entregue <strong>'+n0(x.desp.a.pp)+'</strong> piezas en vez de '
+      +'<strong>'+n0(x.desp.b.pp)+'</strong>. Contratar no siempre compra producción.</div>';
+  }
+  h+='<button class="btn" id="go">Armar la línea</button>'
+   +'<button class="btn gh" id="volver2">Volver a la sombra</button>';
+  stage.innerHTML=h;
+  $("#go").onclick=()=>{S.abierto3=null;verArmado3();window.scrollTo(0,0);};
+  $("#volver2").onclick=()=>{ir(2,verPaso2);};
+}
+
+/* El armado: la cadena como acordeón. Se ven los PUESTOS completos —que es lo que se
+   compara para balancear— y se abre uno para mover sus cortes. Arranca abierto el más
+   lento, que es donde hay que actuar. */
+function verArmado3(mantener){
+  const x=ctx3(), W=x.W, tr=tramos(S.cortes3,W), K=S.cortes3.length;
+  let bn=0;for(let i=1;i<K;i++)if(tr[i]>tr[bn])bn=i;
+  const ab=(S.abierto3===null||S.abierto3===undefined)?bn:Math.min(S.abierto3,K-1);
+  const takt=tr[bn], prev=simular(S.cortes3,W,x.mic);
+
+  let h='<div class="takt"><span>Sale una cada<b'+(prev.good>=x.meta?' class="ok"':'')+'>'
+   +n1(takt)+' s</b></span><span>Gente<b>'+K+'</b></span></div>'
+   +'<h1>'+(S.gemelo?"Probar otro reparto":"Arme su línea")+'</h1>'
+   +'<p class="lead">'+(S.gemelo
+      ? "La planta sigue produciendo mientras usted prueba aquí. Probar no cuesta nada."
+      : "Toque un puesto para ver sus pasos y mover dónde termina.")+'</p>'
+   +'<div class="chain">';
+
+  let p=0;
+  for(let k=0;k<K;k++){
+    const c=S.cortes3[k], abierto=(k===ab), cf=PASO[c-1].capa;
+    h+='<button class="pst'+(k===bn?" bn":"")+(abierto?" ab":"")+'" data-k="'+k+'">'+hexa(cf,40)
+      +'<span class="n">Puesto '+(k+1)
+      +'<span class="tag2">'+(k===bn?"el más lento · ":"")+(c-p)+(c-p===1?" paso":" pasos")+'</span></span>'
+      +'<span class="s">'+n1(tr[k])+' s</span>'
+      +'<span class="ch">'+(abierto?"&#9662;":"&#9656;")+'</span></button>';
+    if(abierto){
+      for(let i=p;i<c;i++){
+        h+='<div class="tsk"><span class="np">'+(i+1)+'</span><span>'+esc(PASO[i].n)+'</span>'
+          +'<span>'+n1(W[i])+' s</span></div>';
+        if(i<NT-1){
+          const esCorte=S.cortes3.indexOf(i+1)>=0, puede=esCorte||K<NT;
+          h+='<button class="cutrow'+(esCorte?" on":"")+'" data-i="'+(i+1)+'" '+(puede?"":"disabled")
+            +'><span class="in"><b>'
+            +(esCorte?"&#9986; aquí termina el puesto "+(k+1):"+ partir aquí")
+            +'</b></span></button>';
+        }
+      }
+    }
+    p=c;
+  }
+  h+='</div>'
+   +'<div class="met"><div><b>Al día</b><i'+(prev.good>=x.meta?' class="ok"':' class="a"')+'>'
+   +n0(prev.good)+'</i></div>'
+   +'<div><b>Por persona</b><i>'+n0(porPersona(prev.good,K))+'</i></div></div>'
+   +'<p class="hint">La meta es '+n0(x.meta)+' piezas buenas. '
+   +(K>=NT?'<br><strong>Ya usó los '+NT+' puestos posibles.</strong> Para partir otro, primero quite un corte.':'')
+   +'</p>';
+
+  if(S.gemelo){
+    const mismo=S.cortes3.join()===S.R.cortes.join();
+    h+='<div class="vs"><div><div class="t2">Probar aquí<br>en el computador</div>'
+      +'<div class="n2">gratis</div><p>La planta no se detiene.</p></div>'
+      +'<div class="mal"><div class="t2">Cambiar la línea<br>de verdad</div>'
+      +'<div class="n2">35 min</div><p>Nadie arma nada en ese rato.</p></div></div>'
+      +'<button class="btn dan" id="ok" '+(mismo?"disabled":"")+'>Detener la línea y montar este reparto</button>'
+      +'<button class="btn gh" id="seguir">Dejar la línea como está</button>'
+      +'<p class="hint">'+(mismo?"Mueva algún corte para poder montarlo.":"Los 35 minutos se cobran de su jornada.")+'</p>';
+  }else{
+    h+='<button class="btn" id="correr">Arrancar la jornada</button>'
+      +'<p class="hint">Ocho horas en catorce segundos.</p>';
+  }
+
+  const sy=mantener?window.scrollY:0;
+  stage.innerHTML=h;
+  window.scrollTo(0,sy);
+  stage.querySelectorAll(".pst").forEach(b=>{
+    b.onclick=()=>{const k=+b.dataset.k;S.abierto3=(k===ab?-1:k);verArmado3(true);};
+  });
+  stage.querySelectorAll(".cutrow:not([disabled])").forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i, idx=S.cortes3.indexOf(i);
+      if(idx>=0){ if(S.cortes3.length>1)S.cortes3.splice(idx,1); }
+      else S.cortes3.splice(S.cortes3.findIndex(c=>c>i),0,i);
+      verArmado3(true);
+    };
+  });
+  const cr=$("#correr"); if(cr)cr.onclick=()=>{arrancar();};
+  const sg=$("#seguir"); if(sg)sg.onclick=()=>{S.gemelo=false;S.cortes3=S.R.cortes.slice();verCorrida3();window.scrollTo(0,0);};
+  const okb=$("#ok"); if(okb)okb.onclick=()=>{S.gemelo=false;reconfig(S.R,S.cortes3);verParada3();};
+}
+
+function arrancar(){
+  const x=ctx3();
+  S.R=mkRun(S.cortes3,x.W,x.mic);
+  S.cerrado=false; S.gemelo=false;
+  verCorrida3();
+  window.scrollTo(0,0);
+  let ant=performance.now(), acc=0;
+  const porSeg=T/REAL;
+  const paso=(now)=>{
+    if(!S.R||S.cerrado)return;
+    const d=Math.min(.1,(now-ant)/1000); ant=now;
+    acc+=d*porSeg;
+    /* paso fijo de 0,25 s: sólo ticks completos, idénticos a cal-viaje.py. Con pasos
+       parciales los números se corren y dejan de coincidir con la calibración. */
+    while(acc>=STEP && !S.R.fin){ tick(S.R,STEP); acc-=STEP; }
+    pintar3();
+    if(S.R.fin){ S.raf=0; S.cerrado=true; setTimeout(()=>{verCierre3();window.scrollTo(0,0);},420); return; }
+    S.raf=requestAnimationFrame(paso);
+  };
+  S.raf=requestAnimationFrame(paso);
+}
+
+function verCorrida3(){
+  const R=S.R, x=ctx3();
+  stage.innerHTML='<div class="takt"><span>Meta<b>'+n0(x.meta)+'</b></span>'
+   +'<span>Gente<b>'+R.cortes.length+'</b></span></div>'
+   +'<div class="plant" id="pl"></div>'
+   +'<button class="btn gh" id="twin">Probar otro reparto en el computador</button>'
+   +'<p class="hint">La planta no se detiene mientras usted prueba.</p>';
+  $("#twin").onclick=()=>{S.gemelo=true;S.cortes3=R.cortes.slice();S.abierto3=null;verArmado3();window.scrollTo(0,0);};
+  pintar3();
+}
+
+function pintar3(){
+  const pl=$("#pl"); if(!pl)return;
+  const R=S.R, L=R.L, m=medir(R), x=ctx3();
+  pl.innerHTML='<div class="clk"><span>Hora <b>'+hm(Math.min(R.clock,T))+'</b></span>'
+   +'<span>Buenas <b>'+n0(R.good)+'</b></span>'
+   +'<span>Paradas <b>'+Math.round(R.parado/60)+' min</b></span></div>'
+   +'<div class="bh">La línea · '+L.N+' puestos</div>'
+   +barras(L.cyc,L.bn,L.st)
+   +'<div class="split"><span class="lb2">buenas contra malas</span>'
+   +'<span class="bar2"><i class="g" style="width:'+(R.out?R.good/R.out*100:0).toFixed(1)+'%"></i>'
+   +'<i class="b" style="width:'+(R.out?(R.out-R.good)/R.out*100:0).toFixed(1)+'%"></i></span></div>'
+   +medidores(m,"La nota, hasta ahora");
+}
+
+/* La línea detenida: reconfig() ya cobró los 2.100 s. Esta pantalla no cambia el modelo,
+   lo hace visible — y ahora también en plata, si pusieron el costo. */
+function verParada3(){
+  const R=S.R, L=R.L, tk=Math.max.apply(null,L.cyc);
+  const perdidas=Math.round(PARADA/tk);
+  const plata=D.costoHora>0?Math.round(R.cortes.length*D.costoHora*PARADA/3600):0;
+  stage.innerHTML='<div class="tag w">La línea está detenida</div>'
+   +'<h1>Nadie está armando nada</h1>'
+   +'<p class="lead">Mover los puestos de verdad cuesta 35 minutos de planta quieta. '
+   +'Probarlo en el computador no le habría costado ninguno.</p>'
+   +'<div class="plant"><div class="paro"><div class="rel" id="rel">35:00</div>'
+   +'<div class="rl">sin producir</div></div>'
+   +barras(L.cyc,-1,L.st,true)
+   +'<p class="leg">Los '+L.N+' puestos, quietos.</p></div>'
+   +'<div class="met"><div><b>Piezas que no saldrán</b><i class="a" id="pp2">0</i></div>'
+   +'<div><b>'+(plata?"Le costó":"A ritmo de")+'</b><i class="a">'
+   +(plata?"$"+n0(plata):n1(tk)+'<s> s</s>')+'</i></div></div>'
+   +'<button class="btn" id="sigue">Volver a arrancar la línea</button>';
+  window.scrollTo(0,0);
+  $("#sigue").onclick=()=>{verCorrida3();window.scrollTo(0,0);};
+  const t0=performance.now(), DUR=3200, rel=$("#rel"), pp=$("#pp2");
+  (function cuenta(now){
+    const f=Math.min(1,((now||t0)-t0)/DUR), q=Math.round(PARADA*(1-f));
+    if(!rel.isConnected)return;
+    rel.textContent=Math.floor(q/60)+":"+String(Math.floor(q%60)).padStart(2,"0");
+    pp.textContent=n0(Math.round(perdidas*f));
+    if(f<1)requestAnimationFrame(cuenta);
+  })(t0);
+}
+
+/* ═══════════════ el cierre · lo que se lleva a la planta ═══════════════ */
+function verCierre3(){
+  const R=S.R, x=ctx3(), m=medir(R), K=R.cortes.length;
+  const pasa=m.good>=x.meta, pp=porPersona(m.good,K);
+  /* la dotación más pequeña que habría cumplido la meta, y lo mejor que se podía hacer
+     con LA MISMA gente que él puso: sin eso el consejo sale al revés. */
+  const gente=porGente(x.filas);
+  const minimo=x.filas.filter(f=>f.good>=x.meta)[0]||null;
+  const sobra=minimo?K-minimo.N:0;
+  const mejorConSuGente=gente[Math.min(K,NT)-1];
+
+  let h='<div class="eyebrow">Fin de la jornada</div>'
+   +'<div class="hero"><div class="n">'+n0(m.good)+'</div>'
+   +'<div class="l">piezas buenas · la meta era '+n0(x.meta)+'</div>'
+   +'<div class="v '+(pasa?"ok":"no")+'">'+(pasa?"&#10003; cumplió":"no alcanzó")+'</div></div>'
+   +'<div class="met"><div><b>Personas</b><i>'+K+'</i></div>'
+   +'<div><b>Piezas por persona</b><i>'+n0(pp)+'</i></div></div>';
+
+  if(D.costoHora>0){
+    h+='<div class="met"><div><b>Nómina del turno</b><i>$'+n0(K*8*D.costoHora)+'</i></div>'
+      +'<div><b>Costo por pieza</b><i class="a" id="cpz">$'+n0(costoPieza(m.good,K))+'</i></div></div>';
+  }
+  h+='<div class="fld"><span class="lb">Lo que le cuesta una persona-hora<s>opcional · para ver su costo por pieza</s></span>'
+   +'<span style="display:flex;align-items:center;gap:7px"><input type="number" inputmode="numeric" '
+   +'min="0" id="ch" value="'+(D.costoHora||"")+'" placeholder="0" aria-label="costo por persona hora">'
+   +'<span class="un">$/h</span></span></div>';
+
+  h+=medidores(m,"La nota del turno");
+
+  /* el veredicto de negocio: llegar con la gente justa */
+  if(pasa&&sobra>0){
+    h+='<div class="card a"><b class="t">Llegó, pero pagando de más</b>'
+      +'Cumplió la meta con <strong>'+K+' personas</strong>. Con <strong>'+minimo.N+'</strong> '
+      +'también habría llegado ('+n0(minimo.good)+' piezas), y cada una habría entregado '
+      +'<strong>'+n0(minimo.pp)+'</strong> piezas en vez de '+n0(pp)+'. '
+      +'Le sobran <strong>'+sobra+(sobra===1?' sueldo':' sueldos')+'</strong> al día.</div>';
+  }else if(pasa){
+    h+='<div class="card"><b class="t">Con la gente justa</b>'
+      +'Cumplió la meta y no le sobra nadie: '+K+' personas era el mínimo que llegaba. '
+      +'Esto es lo que un gemelo le permite decidir antes de contratar.</div>';
+  }else if(mejorConSuGente.good>=x.meta){
+    h+='<div class="card a"><b class="t">Le faltó reparto, no gente</b>'
+      +'Con las mismas <strong>'+K+' personas</strong>, bien repartidas, se llegaba a '
+      +n0(mejorConSuGente.good)+' piezas. Usted sacó '+n0(m.good)+'. '
+      +'El problema no era cuántos, era dónde estaban los cortes.</div>';
+  }else if(minimo){
+    h+='<div class="card a"><b class="t">Con '+K+' no alcanza, ni con el mejor reparto</b>'
+      +'Lo máximo que dan <strong>'+K+' personas</strong> en esta línea son '
+      +n0(mejorConSuGente.good)+' piezas, y la meta es '+n0(x.meta)+'. '
+      +'Necesita al menos <strong>'+minimo.N+'</strong>. '
+      +'<p style="margin-top:10px">Esto es exactamente lo que un gemelo le dice antes de '
+      +'contratar: cuánta gente hace falta, y cuánta sobra.</p></div>';
+  }
+
+  if(R.cambios>0){
+    const costoParo=Math.round(R.parado/Math.max(1,x.base.good/8/60)); /* referencia informativa */
+    h+='<div class="card a"><b class="t">Detuvo la línea '+R.cambios+(R.cambios===1?' vez':' veces')+'</b>'
+      +'Fueron <strong>'+Math.round(R.parado/60)+' minutos</strong> de planta quieta'
+      +(D.costoHora>0?' y <strong>$'+n0(Math.round(K*D.costoHora*R.parado/3600))+'</strong> de nómina pagada sin producir':'')
+      +'. Probar el mismo reparto en el computador no habría costado ni un minuto.</div>';
+  }else{
+    h+='<div class="card"><b class="t">No detuvo la línea ni una vez</b>'
+      +'Decidió en el gemelo y montó una sola línea. Esa es la frase del taller: '
+      +'<strong>la forma de mejorar sin parar es tener un gemelo digital.</strong></div>';
+  }
+
+  /* la escalera: se ve dónde quedó y qué había al lado */
+  h+='<div class="graf"><div class="tt">Piezas al día, según cuánta gente contrate</div>';
+  const mx=Math.max.apply(null,gente.map(f=>f.good));
+  for(const f of gente){
+    const yo=f.N===K, esMin=!!minimo&&f.N===minimo.N;
+    const cls=yo?" a":(esMin?" g":"");
+    const nota=yo?" · usted":(esMin?" · el mínimo":(f.repite?" · sobra":""));
+    h+='<div class="gb'+cls+(f.repite&&!yo&&!esMin?'" style="opacity:.55':'')+'">'
+      +'<span class="k">'+f.N+nota+'</span>'
+      +'<span class="v"><span class="br" style="width:'+(f.good/mx*100).toFixed(1)+'%"></span>'
+      +'<span class="num">'+n0(f.good)+'</span></span></div>';
+  }
+  h+='<p class="hint" style="text-align:left;margin:4px 0 0">Las filas en gris entregan lo '
+   +'mismo que la anterior: esa persona de más no tiene dónde ponerse, porque los '+NT+' pasos '
+   +'no se pueden partir más.</p></div>';
+
+  /* el entregable: lo que se monta en la Fábrica */
+  const tr=tramos(R.cortes,x.W);
+  let bn=0;for(let i=1;i<tr.length;i++)if(tr[i]>tr[bn])bn=i;
+  let repartoTxt="",p=0;
+  for(let k=0;k<R.cortes.length;k++){
+    repartoTxt+=(k?" · ":"")+"P"+(k+1)+": pasos "+(p+1)+(R.cortes[k]-p>1?"-"+R.cortes[k]:"");
+    p=R.cortes[k];
+  }
+  h+='<div class="card"><b class="t">Lo que se lleva a la línea real</b>'
+   +'Monte <strong>'+R.cortes.length+' puestos</strong>, una persona en cada uno, así:'
+   +'<div class="code">'+esc(repartoTxt)+'</div>'
+   +'El puesto <strong>'+(bn+1)+'</strong> es el más lento, con '+n1(tr[bn])+' segundos: '
+   +'si quiere ir más rápido, quítele trabajo a ese y repártalo entre los que esperan. '
+   +'<p style="margin-top:10px">Ármelo así con cronómetro y compare el dato contra estas '
+   +n0(m.good)+' piezas. <strong>Donde no coincida, ahí está lo que al modelo le falta saber.</strong></p></div>'
+
+   +'<button class="btn" id="otra">Probar otro reparto</button>'
+   +'<button class="btn gh" id="v1">Volver al Paso 1 y cambiar los datos</button>';
+
+  stage.innerHTML=h;
+  $("#ch").onchange=function(){ D.costoHora=Math.max(0,+this.value||0); verCierre3(); };
+  $("#otra").onclick=()=>{S.cortes3=R.cortes.slice();S.abierto3=null;S.cerrado=true;verArmado3();window.scrollTo(0,0);};
+  $("#v1").onclick=()=>{S.ctx=null;S.abierto=null;ir(1,verPaso1);};
+}
+
+/* ═══════════════ arranque ═══════════════ */
+barraPasos();
+verPaso1();
+})();
+</script>

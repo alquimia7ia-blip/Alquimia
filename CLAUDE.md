@@ -28,6 +28,8 @@ funciona.*
 | `docs/metodo/jefe-de-planta.html` | **Jefe de Planta** — el mismo tema, jugable en celular, 5 niveles con puntaje. Artifact: `ce881141-c424-4b71-b3c7-65707c2e49f0` |
 | `docs/metodo/sin-parar.html` | **SIN PARAR** — tercer gemelo, línea HEXA de 7 puestos. Artifact: <https://claude.ai/artifact/Pk9dYZtNESYkdsxW5StUyq> |
 | `docs/metodo/ficha-sin-parar.md` | Ficha del taller de SIN PARAR, con el prompt que se le entrega a la IA |
+| `docs/metodo/viaje-al-futuro.html` | **VIAJE AL FUTURO** — cuarto gemelo, en 3 pasos, con los datos que miden ellos. Artifact: <https://claude.ai/artifact/G4TPSJZnU77pPc79omKJtd> |
+| `docs/metodo/ficha-viaje-al-futuro.md` | Ficha del taller + **hoja de toma de datos imprimible** |
 
 ### Preferencias de forma, aprendidas a los golpes
 
@@ -464,3 +466,130 @@ todos de lo mismo: **la pantalla pedía leer en vez de mirar.**
 2. **Si se pueden montar más de 7 puestos.** Si no, el taller físico no reproduce el resultado.
 3. **Los tiempos reales por tarea, con cronómetro.** Los actuales son estimados de las fotos y
    están marcados como tales en la ficha.
+
+---
+
+## «VIAJE AL FUTURO» — cuarto gemelo · 3 pasos · `docs/metodo/viaje-al-futuro.html`
+
+Artifact <https://claude.ai/artifact/G4TPSJZnU77pPc79omKJtd>. Ficha en
+`docs/metodo/ficha-viaje-al-futuro.md`. Calibrador `cal-viaje.py`, verificador
+`drive-viaje.mjs`, contrato `esperado-viaje.json`.
+
+Nace del informe «Sincronización entre Planta Real y Gemelo Digital» y del **instructivo
+oficial del HEXA** (`Pasos_Ensamble_Rompecabezas.pdf`: 15 páginas, un paso por página, con
+foto de antes y de después). Reemplaza a SIN PARAR en el taller y lo absorbe como Paso 3.
+
+**La diferencia con los tres anteriores, y es la que importa:** en SIN PARAR la línea la
+inventé yo. Aquí **la línea es la que el participante mide esa mañana con cronómetro**, y
+el aplicativo tiene que demostrarle que el modelo es fiel antes de pedirle que le crea.
+Eso es lo que el informe llama *el ancla de verdad*.
+
+### Los tres pasos
+
+| Paso | Qué hace | Por qué existe |
+|---|---|---|
+| **1 · La planta real** | formulario: puestos, pasos por puesto, segundos, lote, buenas/malas, paros **y su duración** · cierra con el OEE calculado a mano, con las tres divisiones escritas en pantalla | si el operario no *siente* la cuenta, no le cree a la proyección |
+| **2 · La sombra digital** | el espejo (mismo OEE, por construcción) · **«los minutos que no aparecen»** · la proyección a 8 h, con apuesta antes de revelarla | una réplica **copia**, no mejora. Es lo que la hace creíble |
+| **3 · El gemelo activo** | SIN PARAR con dos palancas —dónde se corta y cuánta gente— y veredicto en **piezas por persona y costo por pieza** | aquí empieza el juego |
+
+**«Los minutos que no aparecen» es la mejor tarjeta del producto.** Los tiempos por puesto
+suman menos de lo que duró el lote: `trabajo + (n−1)·ciclo + paros` contra el cronómetro.
+Con los datos del informe faltan 1:09 sin explicar. Esa diferencia —arranque en frío, el
+que se quedó buscando una pieza, el reproceso— es exactamente lo que un gemelo sirve para
+encontrar, y sale de la aritmética, no de un discurso.
+
+### Configuración — no tocar sin correr `cal-viaje.py`
+
+```
+15 pasos oficiales · trabajo de referencia 183 s · jornada 8 h · cola CAP=4
+paso fijo 0,25 s · semilla 11 · reconfigurar la línea real: 2.100 s (35 min)
+ciclo ideal CI = max(W) — el paso más largo. CONSTANTE, fijado en el Paso 1
+defectos: .0008 base · .0015 capas (mitades chuecas) · .0010 columnas · .0018 tuercas
+sobrecarga: 1 + 0,25 × (pasos del puesto − 3)
+micro-parada: MTBF = (puestos × tiempo del lote) ÷ paros medidos · MTTR = duración medida
+```
+
+### Las cuatro decisiones de modelo, y las cuatro salieron de que el calibrador falló
+
+1. **NO HAY MÁQUINAS. Las tuercas se aprietan a mano** — lo corrigió el usuario. Esta línea
+   es ensamble 100 % manual, así que no hay averías de equipo y **no hay que inventar
+   MTBF**: la única parada es la micro-parada de puesto y su frecuencia **se deriva de los
+   paros que ellos midieron**. Es más fiel y quita una invención entera del modelo.
+2. **`CI = max(W)`, no `W/N`.** Con el ciclo ideal atado al número de puestos, el OEE se iba
+   **por encima de 100 %** al pasar de cierta dotación. El ideal de esta línea es su paso
+   más largo: los pasos no se pueden partir, así que por más gente que contrate nunca sale
+   una pieza más rápido que eso. Es la placa de la línea, y da una frase que el taller usa.
+3. **La sobrecarga se mide en PASOS, no contra el promedio.** La regla de SIN PARAR
+   —`ciclo > 1,15 × promedio`— aquí producía un artefacto grave: al agregar gente baja el
+   promedio, y puestos que no habían cambiado de trabajo quedaban marcados como
+   sobrecargados, así que **contratar empeoraba la calidad**. Falso. Lo verdadero y
+   absoluto: *una persona con muchos pasos encima se olvida de uno.*
+4. **La monotonía se verifica con tolerancia.** Las piezas buenas llevan azar: una caída del
+   0,4 % entre dos dotaciones es ruido, no un error. Se compara la producción total en
+   estricto y las buenas con 2 % de holgura.
+
+### La trampa — y NO era la que yo había diseñado
+
+Yo esperaba «más gente = más piezas pero menos piezas por persona», monótono. **El modelo
+dijo otra cosa y es mejor:** las piezas por persona no bajan parejo, oscilan. La trampa real
+es que **hay dotaciones que se pagan solas y otras que queman sueldos, y desde afuera no se
+distinguen.**
+
+```
+6 puestos → 844 piezas      9 puestos  →   877     (tres personas por 33 piezas)
+7 puestos → 844 piezas      10 puestos → 1.043     (una persona por 166)
+8 puestos → 844 piezas
+```
+
+**Contratar al séptimo y al octavo no compra ni una pieza.** La gráfica del cierre lista
+las quince dotaciones, no sólo las que cambian algo, y marca en gris las que sobran: la
+lección se ve sin que nadie la explique. Es la pregunta literal del informe —*¿es rentable
+duplicar la nómina para un incremento marginal?*— contestada con sus propios datos.
+
+**El reto se plantea como negocio:** entregar la meta **con la menor cantidad de gente**.
+Con «baje el ciclo» se gana poniendo gente hasta el tope, que es lo contrario de la lección.
+
+**La meta sale de su dato, con dos topes:** 1,25 × lo que produce hoy, nunca por debajo de
+lo que ya hace y nunca por encima de lo que se logra con el 80 % de los puestos posibles.
+Se probó con 1,5× y quedaba pegada al tope.
+
+### El barrido — la prueba que SIN PARAR nunca tuvo
+
+Mañana miden con cronómetro y los tiempos van a ser otros. Si el juego sólo funciona con
+mis estimados, no sirve. `cal-viaje.py` prueba **40 juegos de tiempos a ±40 %**:
+
+```
+DUROS  (modelo roto)              0 de 40
+la dotación que quema sueldos    36 de 40
+el escalón                       35 de 40
+```
+
+**Cuando una lección blanda no está en los datos de ese equipo, el aplicativo no la
+muestra.** No se inventa una lección que no sea cierta para esa línea.
+
+### Reglas nuevas aprendidas aquí
+
+- **Calibrar no es ajustar números: es descubrir que el modelo miente.** Los cuatro errores
+  de arriba los encontró el calibrador antes de que existiera una sola pantalla. Ninguno se
+  habría visto en el navegador, porque **una simulación equivocada también se ve bonita**.
+- **Separar invariantes duros de blandos.** Los duros dicen si el modelo está mal; los
+  blandos enriquecen la lección y dependen de cómo caigan los tiempos. Mezclarlos lleva a
+  aflojar un criterio que sí importaba para que «pase».
+- **Cronometran por PUESTO, no por paso.** Nadie mide quince pasos sueltos en un taller. El
+  tiempo del puesto se reparte entre sus pasos en proporción al estimado; la suma queda
+  exacta, así que la sombra reproduce su dato al segundo. **Se rotula en pantalla.**
+- **El bucle de corrida sólo puede ticar pasos completos.** `tick(R, Math.min(STEP,q))` tica
+  pasos parciales y los números dejan de coincidir con la calibración. Se acumula y se ticа
+  de a `STEP`, como en SIN PARAR.
+- **Mirar las capturas, no sólo los asserts.** El verificador daba cero fallas mientras la
+  pantalla decía *«le faltó reparto, no gente»* a alguien que con esa gente no llegaba ni
+  con el mejor reparto: un consejo equivocado para un empresario, invisible para un test.
+- `:nth-of-type(2)` cuenta hermanos del mismo **tag**, no de la misma clase. Si una casilla
+  hay que verificarla, se le pone un `id`.
+
+### Lo que sigue sin confirmar con la Fábrica
+
+Sigue pendiente **cuántos puestos físicos se pueden montar**. El aplicativo deja el tope
+configurable y marca los escenarios que hoy no se pueden montar, pero el número real hay
+que ponerlo. Con 15 pasos el máximo teórico son **15 puestos, no 16** — aunque cada capa
+son dos mitades, así que los pasos de capa se podrían partir si algún día hace falta.
