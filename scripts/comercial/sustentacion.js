@@ -84,6 +84,30 @@ const costos = [
     ],
   }),
   parrafo(" ", { after: 40 }),
+  h2("Previsto, todavía sin pagar"),
+  parrafo("Estos dos no están en el cuadro de arriba a propósito. Cargarlos al costo " +
+          "corriente infla el precio con servicios que hoy no se usan, y el precio " +
+          "inflado se nota en la mesa."),
+  tabla({
+    anchos: [4760, 2300, 2300],
+    cabecera: ["Rubro", "USD / mes", "COP / mes"],
+    filas: [
+      ...Object.entries(n.infraPrevistaUsd).map(([k, v]) => [k, usd(v), cop(v * n.trm)]),
+      [{ t: "Si ambos entraran", bold: true, fondo: C.suave },
+       { t: usd(n.infraPrevistaUsdTotal), bold: true, fondo: C.suave },
+       { t: cop(n.infraPrevistaCop), bold: true, fondo: C.suave }],
+    ],
+    tono: "turquesa",
+  }),
+  punto([texto("Sentry ", { bold: true }),
+         texto("entra cuando haya clientes pagando y enterarse de una falla después que " +
+               "ellos deje de ser aceptable. Hoy no está instalado en el proyecto.")]),
+  punto([texto("Resend Pro ", { bold: true }),
+         texto("entra por encima de 3.000 correos al mes. El plan gratuito sobra para una " +
+               "cohorte de noventa personas.")]),
+  parrafo([texto("Aun sumando los dos, la infraestructura pesa menos del 10 % del costo " +
+                 "fijo. Lo que decide el precio es el overhead, no los servidores.",
+                 { italics: true, color: C.apagado })], { before: 90 }),
   h2("Los dos supuestos que mueven todo"),
   punto([texto(`TRM de ${cop(n.trm)}. `, { bold: true }),
          texto("La infraestructura se paga en dólares y el contrato se cobra en pesos. El " +

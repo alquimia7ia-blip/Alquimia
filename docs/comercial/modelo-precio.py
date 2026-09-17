@@ -12,12 +12,23 @@ que 100 a $36.000—, de modo que contratar un usuario más salía más barato.
 
 TRM = 3200  # COP/USD, agosto 2026 (docs/finanzas/04-esquema-financiero.md)
 
-INFRA_USD = {
+# Lo que se paga desde el día en que se abre la cohorte. Son precios de lista
+# publicados, verificables en un clic (docs/DESPLIEGUE.md).
+INFRA_HOY = {
     "Supabase Pro (base de datos, autenticación)": 25,
     "Vercel Pro (despliegue y red de entrega)": 20,
-    "Resend (correo transaccional)": 20,
-    "Sentry (monitoreo de errores)": 26,
     "Dominio propio": 1.25,
+}
+
+# Previsto, todavía no se paga. Cargarlo al costo corriente infla el precio
+# con servicios que no existen: Sentry no está instalado en el proyecto, y el
+# plan gratuito de Resend —3.000 correos al mes— sobra para una cohorte.
+#   · Sentry entra cuando haya clientes pagando y enterarse de una falla
+#     después que ellos deje de ser aceptable.
+#   · Resend Pro, por encima de esos 3.000 correos mensuales.
+INFRA_PREVISTA = {
+    "Sentry (monitoreo de errores)": 26,
+    "Resend Pro (correo transaccional)": 20,
 }
 
 OVERHEAD_BASE = 7_500_000   # Escenario 1 "fundador solo"
@@ -35,7 +46,12 @@ IVA = 0.19
 
 
 def infra_cop() -> int:
-    return round(sum(INFRA_USD.values()) * TRM)
+    """Infraestructura que se paga hoy. Lo previsto no entra en el precio."""
+    return round(sum(INFRA_HOY.values()) * TRM)
+
+
+def infra_prevista_cop() -> int:
+    return round(sum(INFRA_PREVISTA.values()) * TRM)
 
 
 def costo_fijo() -> int:
@@ -90,9 +106,12 @@ def cifras() -> dict:
         previo = tope if tope else previo
     return {
         "trm": TRM,
-        "infraUsd": INFRA_USD,
-        "infraUsdTotal": round(sum(INFRA_USD.values()), 2),
+        "infraUsd": INFRA_HOY,
+        "infraUsdTotal": round(sum(INFRA_HOY.values()), 2),
         "infraCop": infra_cop(),
+        "infraPrevistaUsd": INFRA_PREVISTA,
+        "infraPrevistaUsdTotal": round(sum(INFRA_PREVISTA.values()), 2),
+        "infraPrevistaCop": infra_prevista_cop(),
         "overheadBase": OVERHEAD_BASE,
         "overheadPct": OVERHEAD_PCT,
         "overheadCop": round(OVERHEAD_BASE * OVERHEAD_PCT),
@@ -139,7 +158,8 @@ if __name__ == "__main__":
 
     print("SUPUESTOS")
     print(f"  TRM                      {cop(TRM)} COP/USD")
-    print(f"  Infraestructura          USD {sum(INFRA_USD.values()):.2f}/mes = {cop(infra_cop())}/mes")
+    print(f"  Infraestructura          USD {sum(INFRA_HOY.values()):.2f}/mes = {cop(infra_cop())}/mes")
+    print(f"  (prevista, aún sin pagar USD {sum(INFRA_PREVISTA.values()):.2f}/mes = {cop(infra_prevista_cop())}/mes)")
     print(f"  Overhead asignado        {OVERHEAD_PCT:.0%} de {cop(OVERHEAD_BASE)} = {cop(round(OVERHEAD_BASE*OVERHEAD_PCT))}/mes")
     print(f"  COSTO FIJO TOTAL         {cop(costo_fijo())}/mes · {cop(costo_fijo()*12)}/año\n")
 
