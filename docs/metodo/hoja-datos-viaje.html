@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Hoja de toma de datos · VIAJE AL FUTURO</title>
+<style>
+/* Hoja para IMPRIMIR, una por equipo. Blanco y negro, sin depender de internet ni de
+   fuentes descargadas: en una impresora de taller eso es lo único que se puede garantizar.
+   El orden de las secciones es EXACTAMENTE el del aplicativo, para que transcribir sea
+   leer de arriba abajo y no buscar. */
+@page{size:letter;margin:14mm 13mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,"Times New Roman",serif;color:#000;background:#fff;
+     font-size:10pt;line-height:1.32}
+.hoja{page-break-after:always;break-after:page}
+.hoja:last-child{page-break-after:auto}
+h1{font-size:15pt;letter-spacing:-.2pt;margin-bottom:1mm}
+h1 small{display:block;font-size:9pt;font-weight:400;font-style:italic;margin-top:1mm}
+.cab{display:flex;justify-content:space-between;align-items:flex-end;
+     border-bottom:2pt solid #000;padding-bottom:2mm;margin-bottom:3mm}
+.cab .id{text-align:right;font-size:9.5pt;line-height:1.9}
+.sec{font-family:Arial,Helvetica,sans-serif;font-size:9pt;font-weight:bold;
+     letter-spacing:.8pt;text-transform:uppercase;border-bottom:1pt solid #000;
+     padding-bottom:1mm;margin:4mm 0 1.5mm}
+.sec span{font-weight:normal;font-style:italic;text-transform:none;letter-spacing:0;
+          font-family:Georgia,serif;font-size:9pt}
+p.n{font-size:9pt;font-style:italic;margin-bottom:2.5mm}
+table{width:100%;border-collapse:collapse;margin-bottom:2mm}
+th{font-family:Arial,Helvetica,sans-serif;font-size:7.5pt;font-weight:bold;
+   letter-spacing:.5pt;text-transform:uppercase;text-align:left;
+   border-bottom:1pt solid #000;padding:1mm 1.5mm}
+td{border-bottom:.5pt solid #999;padding:1.6mm 1.5mm;font-size:9.5pt}
+td.c{text-align:center}
+.lin{display:inline-block;border-bottom:.8pt solid #000;min-width:16mm}
+.lin.lg{min-width:34mm}
+.lin.xl{min-width:62mm}
+.campo{display:grid;grid-template-columns:1fr auto;gap:3mm;align-items:baseline;
+       padding:1.8mm 0;border-bottom:.5pt solid #999}
+.campo b{font-weight:normal}
+.campo i{font-style:normal;white-space:nowrap}
+.caja{border:1.5pt solid #000;padding:2.4mm 3mm;margin:2.5mm 0}
+.caja .t{font-family:Arial,Helvetica,sans-serif;font-size:8pt;font-weight:bold;
+         letter-spacing:.7pt;text-transform:uppercase;margin-bottom:1.5mm}
+.caja p{font-size:9.5pt;line-height:1.4}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:0 7mm}
+ol.pasos{columns:3;column-gap:6mm;font-size:8.3pt;padding-left:4.5mm;margin-top:1mm}
+ol.pasos li{padding:.25mm 0;break-inside:avoid;line-height:1.3}
+/* la sección E se copia de la pantalla al final: va apretada, no es de llenar a mano */
+.compacto .campo{padding:1.2mm 0;font-size:9.3pt}
+.pie{margin-top:5mm;padding-top:2mm;border-top:.5pt solid #999;
+     font-size:8pt;font-style:italic}
+</style></head><body>
+
+<!-- ─────────────────────────── PÁGINA 1 · la captura ─────────────────────────── -->
+<div class="hoja">
+  <div class="cab">
+    <h1>Hoja de toma de datos
+      <small>VIAJE AL FUTURO · Fábrica de Aprendizaje · línea HEXA</small></h1>
+    <div class="id">Equipo: <span class="lin lg"></span><br>Fecha: <span class="lin"></span></div>
+  </div>
+
+  <div class="caja">
+    <div class="t">Cómo se usa esta hoja</div>
+    <p>Se llena <b>a mano durante la corrida</b> y después se transcribe al aplicativo: las
+    letras A, B, C y D son las mismas del Paso 1. Hacen falta <b>tres personas anotando</b>
+    &mdash; cronómetros, piezas buenas y malas, y paros.</p>
+  </div>
+
+  <div class="sec">A · qué hicieron, paso por paso <span>— las del instructivo están al respaldo; si lo hicieron distinto, escriban las suyas</span></div>
+  <table>
+    <tr><th style="width:9mm">N.º</th><th style="width:41%">Actividad</th><th style="width:9mm">N.º</th><th>Actividad</th></tr>
+    <tr><td class="c">1</td><td></td><td class="c">9</td><td></td></tr>
+    <tr><td class="c">2</td><td></td><td class="c">10</td><td></td></tr>
+    <tr><td class="c">3</td><td></td><td class="c">11</td><td></td></tr>
+    <tr><td class="c">4</td><td></td><td class="c">12</td><td></td></tr>
+    <tr><td class="c">5</td><td></td><td class="c">13</td><td></td></tr>
+    <tr><td class="c">6</td><td></td><td class="c">14</td><td></td></tr>
+    <tr><td class="c">7</td><td></td><td class="c">15</td><td></td></tr>
+    <tr><td class="c">8</td><td></td><td class="c">&nbsp;</td><td></td></tr>
+  </table>
+
+  <div class="sec">B · cómo se repartieron el trabajo <span>— una persona por puesto</span></div>
+  <p class="n">En «actividades», los números que le tocaron a ese puesto («1 y 2», «del 3 al 5»).
+  En segundos, lo que marcó el cronómetro de esa persona para <b>una</b> pieza.</p>
+  <table>
+    <tr><th style="width:18mm">Puesto</th><th>Actividades que hace</th>
+        <th style="width:32mm">Segundos por pieza</th></tr>
+    <tr><td class="c">1</td><td></td><td></td></tr>
+    <tr><td class="c">2</td><td></td><td></td></tr>
+    <tr><td class="c">3</td><td></td><td></td></tr>
+    <tr><td class="c">4</td><td></td><td></td></tr>
+    <tr><td class="c">5</td><td></td><td></td></tr>
+    <tr><td class="c">6</td><td></td><td></td></tr>
+    <tr><td class="c">7</td><td></td><td></td></tr>
+    <tr><td class="c">8</td><td></td><td></td></tr>
+    <tr><td class="c">9</td><td></td><td></td></tr>
+    <tr><td class="c">10</td><td></td><td></td></tr>
+  </table>
+
+  <div class="pie">Sigue al respaldo &#9654;</div>
+</div>
+
+<!-- ─────────────────────────── PÁGINA 2 · corrida, ritmo y resultados ─────────────────────────── -->
+<div class="hoja">
+  <div class="cab">
+    <h1>Hoja de toma de datos <small>página 2 de 2</small></h1>
+    <div class="id">Equipo: <span class="lin lg"></span></div>
+  </div>
+
+  <div class="sec">C · cómo les fue en la prueba</div>
+  <div class="campo"><b>Piezas que armaron, en total</b><i><span class="lin"></span> piezas</i></div>
+  <div class="campo"><b>Cuánto se demoraron, desde que arrancaron hasta la última pieza</b>
+    <i><span class="lin"></span> min <span class="lin"></span> seg</i></div>
+  <div class="campo"><b>Cuántas salieron buenas</b><i><span class="lin"></span> piezas</i></div>
+  <div class="campo"><b>Cuántas veces se detuvo la línea</b><i><span class="lin"></span> veces</i></div>
+  <div class="campo"><b>Cuánto duró cada parada, en promedio</b><i><span class="lin"></span> seg</i></div>
+
+  <p class="n" style="margin-top:2.5mm"><b>Una parada</b> es cada vez que la línea dejó de
+  producir: se acabó el material, alguien se retiró del puesto, tocó volver a hacer una pieza.
+  Anoten qué pasó en cada una:</p>
+  <div class="campo"><b>1.</b><i><span class="lin xl"></span></i></div>
+  <div class="campo"><b>2.</b><i><span class="lin xl"></span></i></div>
+
+  <div class="sec">D · a qué velocidad iban de verdad</div>
+  <div class="caja" style="margin-top:2mm">
+    <div class="t">Esto se mide aparte, y es el dato que más enseña</div>
+    <p>La primera pieza se demora mucho porque tiene que pasar por toda la fila, y eso hace
+    ver la línea más lenta de lo que es. Por eso se mide otra vez <b>cuando ya está
+    andando</b>: alguien se para al final de la línea con el reloj y cuenta cuántas piezas
+    salen. <b>No incluye el arranque.</b></p>
+  </div>
+  <div class="campo"><b>Piezas que salieron en ese rato</b><i><span class="lin"></span> piezas</i></div>
+  <div class="campo"><b>Cuánto duró ese rato</b><i><span class="lin"></span> minutos</i></div>
+
+  <div class="sec">E · lo que nos dijo el aplicativo <span>— esto se llena después, copiando de la pantalla</span></div>
+  <div class="dos compacto">
+    <div>
+      <div class="campo"><b>Disponibilidad</b><i><span class="lin"></span> %</i></div>
+      <div class="campo"><b>Rendimiento</b><i><span class="lin"></span> %</i></div>
+      <div class="campo"><b>Calidad</b><i><span class="lin"></span> %</i></div>
+      <div class="campo"><b>OEE &mdash; la nota</b><i><span class="lin"></span> %</i></div>
+    </div>
+    <div>
+      <div class="campo"><b>El lote debía durar</b><i><span class="lin"></span></i></div>
+      <div class="campo"><b>Se demoró</b><i><span class="lin"></span></i></div>
+      <div class="campo"><b>Sin explicar</b><i><span class="lin"></span></i></div>
+      <div class="campo"><b>En 8 horas daría</b><i><span class="lin"></span> piezas</i></div>
+    </div>
+  </div>
+  <div class="compacto"><div class="campo"><b>Deberíamos sacar una cada</b>
+    <i><span class="lin"></span> s &nbsp;&nbsp;<b style="font-weight:normal">pero sacábamos una cada</b>
+    <span class="lin"></span> s</i></div></div>
+
+  <div class="sec">Los 15 pasos del instructivo oficial del HEXA <span>— para copiar en la sección A</span></div>
+  <ol class="pasos">
+    <li>Base y los 3 espárragos</li>
+    <li>Capa transparente &middot; 2 mitades</li>
+    <li>Transición transparente + amarilla</li>
+    <li>Capa amarilla &middot; 2 mitades</li>
+    <li>Capa verde &middot; 2 mitades</li>
+    <li>Transición verde + azul</li>
+    <li>Capa azul &middot; 2 mitades</li>
+    <li>Columnas: círculo grande y triángulo</li>
+    <li>Columnas: círculo pequeño y pentágono</li>
+    <li>Tuerca 1 &middot; a mano</li>
+    <li>Tuerca 2 &middot; a mano</li>
+    <li>Tuerca 3 &middot; a mano</li>
+    <li>Colocar la hélice</li>
+    <li>2 tuercas de la hélice</li>
+    <li>Última tuerca y almacenar</li>
+  </ol>
+
+  <div class="pie">Las tuercas se aprietan a mano: no hace falta llave.
+    &nbsp;·&nbsp; Fábrica de Aprendizaje &mdash; VIAJE AL FUTURO</div>
+</div>
+
+</body></html>

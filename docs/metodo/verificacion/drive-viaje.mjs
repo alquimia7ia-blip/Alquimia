@@ -34,7 +34,11 @@ p.on("pageerror", (e) => errores.push(String(e)));
 const deLaRed = (t) => /fonts\.g|ERR_CERT|Failed to load resource/.test(t);
 p.on("console", (m) => { if (m.type() === "error" && !deLaRed(m.text())) errores.push(m.text()); });
 
-await p.goto("file://" + join(AQUI, "..", "viaje-al-futuro.html"));
+/* VIAJE_HTML permite correr el mismo verificador contra la versión web (docs/metodo/web/
+   index.html), que es la misma aplicación con el andamiaje HTML que la plataforma de
+   Claude pone sola. Lo que se despliega en internet tiene que pasar las mismas pruebas. */
+const ARCHIVO = process.env.VIAJE_HTML || join(AQUI, "..", "viaje-al-futuro.html");
+await p.goto("file://" + ARCHIVO);
 await p.waitForSelector(".cuenta");
 
 /* ═══ PASO 1 · lo que pasó en la planta ═══ */

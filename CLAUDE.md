@@ -682,6 +682,31 @@ y no se estorban. Eso ya funcionaba; lo que faltaba era otra cosa.
 de compartir de la página. Antes de un taller hay que **probar el enlace desde un celular en
 ventana de incógnito**, que es lo más parecido a lo que va a hacer un participante.
 
+### La versión web · `docs/metodo/web/`
+
+Para un taller, el artifact de Claude no basta: **nace privado** y hay que compartirlo desde
+el menú de la página. Para que tres grupos lo abran en su celular sin cuenta, se despliega
+como sitio estático.
+
+`node docs/metodo/web/construir.mjs` arma `index.html` desde el artifact. **No es una copia:
+le pone el andamiaje que la plataforma de Claude pone sola.** Y lo que de verdad importa ahí
+es el `<meta viewport>`: **sin él, un celular dibuja la página a 980 px y se ve diminuta.**
+Ese solo detalle habría dañado el taller, y no lo cubría ningún test porque dentro del
+artifact la plataforma lo pone.
+
+- `drive-viaje.mjs` acepta `VIAJE_HTML=<ruta>`: **lo que se despliega pasa las mismas 61
+  pruebas** que el artifact.
+- La prueba del celular hay que hacerla con `isMobile:true` (perfil de dispositivo real),
+  que es cuando Chromium honra el `<meta viewport>`. Con sólo `viewport:{width:390}` el meta
+  no se ejercita y el error no aparece.
+- Va con `noindex` y `robots.txt`: abre sin cuenta, pero no sale en buscadores.
+- **Plan hobby de Vercel = no hay protección con contraseña.** Es pública por enlace, y eso
+  hay que decírselo al usuario antes de desplegar, no después.
+
+**Ojo con la rama:** la rama por defecto del remoto es `claude/alquimia-market-strategy-22nbvx`,
+no la de trabajo. Vercel despliega desde la rama de producción del repo, así que enlazar el
+repo sin más no publica lo de esta rama.
+
 ### Lo que sigue sin confirmar con la Fábrica
 
 Sigue pendiente **cuántos puestos físicos se pueden montar**. El aplicativo deja el tope
