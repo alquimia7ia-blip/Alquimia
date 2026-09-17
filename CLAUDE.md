@@ -654,6 +654,34 @@ escribieron**. Uno sobrevivió hasta la captura («2 pasos» donde debía decir 
 Cuando un lote falle, hay que **volver a verificar los que creía hechos**, no sólo los que
 faltaban.
 
+### Tres grupos al tiempo (v4)
+
+El aplicativo **no tiene servidor, ni red, ni estado compartido**: todo vive en `D` y `ACT`
+dentro de la página. Tres grupos abriendo el mismo enlace tienen tres copias independientes
+y no se estorban. Eso ya funcionaba; lo que faltaba era otra cosa.
+
+- **No guardaba nada.** Llenar el Paso 1 son diez minutos; si a alguien se le bloqueaba el
+  celular o le daba «atrás», perdía todo. Ahora se guarda en `localStorage` del navegador de
+  cada quien, en cada acción del usuario.
+- **No se restaura solo, y eso es lo importante.** En un computador compartido de la Fábrica
+  el grupo 2 abriría los datos del grupo 1 sin enterarse. Al abrir, si hay algo guardado sale
+  un aviso con dos botones: **«seguir con esos»** o **«empezar de cero»**. La decisión es de
+  ellos, no del aplicativo.
+- **Hay que guardar en la acción, no en la pintada.** `verPaso1()` corre al abrir con los
+  valores por defecto: si el guardado estuviera ahí, borraría de una lo que hubiera. Va en
+  `re()`, que sólo se llama cuando el usuario toca algo.
+- **Y «empezar de cero» no puede pasar por `re()`**, porque `re()` guarda: borraba y volvía a
+  guardar en el mismo clic, y el aviso reaparecía en la siguiente recarga. Lo encontró el
+  test, no yo.
+- **Nombre del equipo**, porque son tres comparando en el tablero: sale en la barra de arriba
+  y en la tarjeta «lo que se lleva a la línea real».
+- Todo el `localStorage` va en `try/catch`: en ventana privada o con el almacenamiento
+  bloqueado falla, y el aplicativo tiene que seguir funcionando igual.
+
+**Publicar no es compartir.** Los artifacts nacen privados; el enlace se abre desde el menú
+de compartir de la página. Antes de un taller hay que **probar el enlace desde un celular en
+ventana de incógnito**, que es lo más parecido a lo que va a hacer un participante.
+
 ### Lo que sigue sin confirmar con la Fábrica
 
 Sigue pendiente **cuántos puestos físicos se pueden montar**. El aplicativo deja el tope

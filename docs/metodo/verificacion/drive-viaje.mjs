@@ -81,6 +81,36 @@ await p.waitForTimeout(200);
 ok("volver al instructivo restaura el OEE original",
    Math.abs(pct(await p.textContent("#oeeMano")) - oee1) < 1e-9);
 
+/* el nombre del equipo y el guardado: tres grupos usan esto al tiempo */
+await set(p, "#equipo", "Equipo 2");
+ok("el nombre del equipo queda a la vista en la barra",
+   (await p.textContent(".brand")).includes("Equipo 2"));
+await set(p, '[data-c="paros"]', 5);
+await p.reload();
+await p.waitForSelector(".cuenta");
+ok("al recargar avisa que hay datos guardados", !!(await p.$("#seguirG")),
+   "no se pierde lo que llevaban llenando");
+ok("y no los restaura solo, los ofrece",
+   (await p.inputValue('[data-c="paros"]')) === "3",
+   "en un computador compartido, el grupo 2 no hereda los datos del grupo 1 sin querer");
+await p.click("#seguirG");
+await p.waitForTimeout(200);
+ok("«seguir con esos» recupera lo que habían escrito",
+   (await p.inputValue('[data-c="paros"]')) === "5" &&
+   (await p.inputValue("#equipo")) === "Equipo 2");
+await set(p, '[data-c="paros"]', 3);
+await p.reload();
+await p.waitForSelector(".cuenta");
+await p.click("#cero");
+await p.waitForTimeout(200);
+await p.reload();
+await p.waitForSelector(".cuenta");
+ok("«empezar de cero» borra el guardado", !(await p.$("#seguirG")));
+ok("y el OEE vuelve al de arranque",
+   Math.abs(pct(await p.textContent("#oeeMano")) - oee1) < 1e-9);
+await p.click("#edAct");
+await p.waitForSelector(".act");
+
 /* juntar todo en un puesto y volver a repartir: no puede cambiar ni un segundo del total */
 const trab0 = (await p.textContent("#trabTot")).trim();
 await p.click("#juntar1");

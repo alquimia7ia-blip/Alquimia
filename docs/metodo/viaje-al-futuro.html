@@ -425,7 +425,8 @@ const D={
      cuando ya estaba estable. Contar cuántas salieron en un rato sí lo dice, y es el
      número que se compara de verdad contra el tiempo de ciclo del modelo. Opcional. */
   rpza:0, rmin:0,
-  costoHora:0                         /* opcional: $ por persona-hora */
+  costoHora:0,                        /* opcional: $ por persona-hora */
+  equipo:""                           /* tres grupos al tiempo: cada uno se pone nombre */
 };
 const lote =()=>Math.max(10,D.lmin*60+D.lseg);
 const ritmo=()=>(D.rpza>0&&D.rmin>0)?(D.rmin*60)/D.rpza:0;
@@ -605,10 +606,43 @@ function desperdicio(filas){
 }
 
 /* ═══════════════ estado y utilidades ═══════════════ */
-const S={paso:1,abierto:null,ap:null,f2:0,R2:null,R3:null,editAct:false,mantener:false,
+const S={paso:1,abierto:null,ap:null,f2:0,R2:null,R3:null,editAct:false,mantener:false,guardado:null,
          cortes3:null,abierto3:null,R:null,raf:0,gemelo:false,ultTwin:null,cerrado:false};
 
 const $=q=>document.querySelector(q), stage=$("#stage");
+
+/* ═══════════════ guardar en el navegador ═══════════════
+   Tres grupos llenan esto al tiempo, cada uno en su equipo, y llenar el Paso 1 son
+   diez minutos. Si a alguien se le bloquea el celular o le da «atrás» sin querer,
+   hoy perdía todo. Se guarda en el navegador de cada quien.
+
+   NO se restaura solo, a propósito: en un computador compartido de la Fábrica el
+   grupo 2 abriría los datos del grupo 1 sin enterarse. Se pregunta y ellos deciden.
+
+   Todo va en try/catch: en una ventana privada o con el almacenamiento bloqueado
+   esto falla, y el aplicativo tiene que seguir funcionando igual. */
+const CLAVE="viaje-al-futuro-v1";
+function guardar(){
+  try{ localStorage.setItem(CLAVE,JSON.stringify({D:D,ACT:ACT,t:Date.now()})); }catch(e){}
+}
+function leerGuardado(){
+  try{ const t=localStorage.getItem(CLAVE); const g=t?JSON.parse(t):null;
+       return (g&&g.D&&g.ACT&&g.ACT.length)?g:null; }catch(e){ return null; }
+}
+function borrarGuardado(){ try{ localStorage.removeItem(CLAVE); }catch(e){} }
+function restaurar(g){
+  if(!g)return false;
+  ACT=g.ACT.map(a=>({n:String(a.n||"Actividad"),t:Math.max(1,+a.t||1),
+                     capa:+a.capa||0,def:+a.def||DEF_NUEVA}));
+  reNT();
+  for(const k in D) if(k in g.D && k!=="cortes") D[k]=g.D[k];
+  /* los cortes se saneaan: un guardado viejo puede traer cortes fuera de rango */
+  let c=(g.D.cortes||[]).map(Number).filter(x=>x>0&&x<=NT);
+  c=c.filter((x,i)=>c.indexOf(x)===i).sort((a,b)=>a-b);
+  if(!c.length||c[c.length-1]!==NT)c.push(NT);
+  D.cortes=c;
+  return true;
+}
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const n1=v=>v.toFixed(1).replace(".",",");
 const n0=v=>Math.round(v).toLocaleString("es-CO");
@@ -618,6 +652,10 @@ const hm=s=>{const h=Math.floor(s/3600),m=Math.round((s%3600)/60);return h+" h "
 const malas=()=>Math.max(0,D.piezas-D.buenas);
 
 function barraPasos(){
+  const br=document.querySelector(".brand");
+  if(br)br.innerHTML='VIAJE AL <b>FUTURO</b>'
+    +(D.equipo?'<s style="display:block;text-decoration:none;color:var(--accent);'
+      +'font-size:.68rem;margin-top:3px;letter-spacing:.08em">'+esc(D.equipo)+'</s>':'');
   const nm=["1 · Planta real","2 · Sombra","3 · Gemelo"];
   $("#pasos").innerHTML=nm.map((t,i)=>{
     const k=i+1;
@@ -710,6 +748,19 @@ function verPaso1(){
    +'<h1>Lo que pasó en la planta</h1>'
    +'<p class="lead">Primero armen las piezas de verdad, con cronómetro en mano. '
    +'Después copien aquí lo que midieron.</p>'
+   +(S.guardado
+      ? '<div class="card a"><b class="t">Hay datos guardados en este equipo</b>'
+        +'Alguien ya había empezado a llenar esto aquí'
+        +(S.guardado.D&&S.guardado.D.equipo?' &mdash; <strong>'+esc(S.guardado.D.equipo)+'</strong>':'')
+        +'. ¿Siguen con esos datos o empiezan de cero?'
+        +'<div class="pareja" style="margin-top:16px">'
+        +'<button class="btn" id="seguirG">Seguir con esos</button>'
+        +'<button class="btn gh" id="cero">Empezar de cero</button></div></div>'
+      : '')
+   +'<div class="fld"><span class="lb">¿Qué equipo son?<s>para no confundir los resultados entre grupos</s></span>'
+   +'<span class="ent"><input type="text" id="equipo" maxlength="24" value="'+esc(D.equipo)+'" '
+   +'placeholder="Equipo 1" style="width:9.5rem;text-align:left" aria-label="nombre del equipo">'
+   +'</span></div>'
    +como("Antes de empezar",
      "Son <strong>cinco preguntas</strong>, de arriba hacia abajo. Se demoran unos 10 minutos:"
      +"<ol class=\'mapa\'>"
@@ -898,8 +949,18 @@ function tarjetaCuenta(c){
 }
 
 function cablearPaso1(){
-  const re=(mantener)=>{S.mantener=!!mantener;verPaso1();};
+  /* guardar aquí y no al pintar: al abrir, verPaso1() corre con los valores por
+     defecto y borraría de una lo que hubiera guardado. */
+  const re=(mantener)=>{S.mantener=!!mantener;guardar();verPaso1();};
   const btn=(id,f)=>{const e=$("#"+id);if(e)e.onclick=f;};
+
+  const eq=$("#equipo");
+  if(eq)eq.onchange=()=>{ D.equipo=(eq.value||"").slice(0,24); guardar(); barraPasos(); };
+  btn("seguirG",()=>{ restaurar(S.guardado); S.guardado=null; S.abierto=null; S.ctx=null; re(false); });
+  /* Ojo: aquí NO se puede pasar por re(), porque re() guarda — borraría y volvería a
+     guardar de una, y el aviso reaparecía en la siguiente recarga. Se vuelve a guardar
+     sólo cuando el equipo escriba algo suyo. */
+  btn("cero",()=>{ borrarGuardado(); S.guardado=null; S.mantener=false; verPaso1(); });
 
   /* la lista de actividades */
   btn("edAct",()=>{S.editAct=true;re(true);});
@@ -1560,7 +1621,8 @@ function verCierre3(){
     repartoTxt+=(k?" · ":"")+"P"+(k+1)+": pasos "+(p+1)+(R.cortes[k]-p>1?"-"+R.cortes[k]:"");
     p=R.cortes[k];
   }
-  h+='<div class="card"><b class="t">Lo que se lleva a la línea real</b>'
+  h+='<div class="card"><b class="t">Lo que se lleva a la línea real'
+   +(D.equipo?' &middot; '+esc(D.equipo):'')+'</b>'
    +'Monte <strong>'+R.cortes.length+' puestos</strong>, una persona en cada uno, así:'
    +'<div class="code">'+esc(repartoTxt)+'</div>'
    +'El puesto <strong>'+(bn+1)+'</strong> es el más lento, con '+n1(tr[bn])+' segundos: '
@@ -1578,6 +1640,7 @@ function verCierre3(){
 }
 
 /* ═══════════════ arranque ═══════════════ */
+S.guardado=leerGuardado();
 barraPasos();
 verPaso1();
 })();
