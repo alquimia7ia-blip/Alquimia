@@ -81,6 +81,24 @@ await p.waitForTimeout(200);
 ok("volver al instructivo restaura el OEE original",
    Math.abs(pct(await p.textContent("#oeeMano")) - oee1) < 1e-9);
 
+/* juntar todo en un puesto y volver a repartir: no puede cambiar ni un segundo del total */
+const trab0 = (await p.textContent("#trabTot")).trim();
+await p.click("#juntar1");
+await p.waitForTimeout(150);
+ok("juntar todo deja un solo puesto",
+   (await p.$$eval(".chain .pst", (e) => e.length)) === 1);
+ok("y el trabajo total no cambia", (await p.textContent("#trabTot")).trim() === trab0,
+   `${trab0} -> ${(await p.textContent("#trabTot")).trim()}`);
+ok("al juntar abre el puesto para ver todas las actividades seguidas",
+   (await p.$$eval(".chain .tsk", (e) => e.length)) === 15);
+await p.click("#pp");               /* el + vuelve a partir */
+await p.waitForTimeout(150);
+ok("desde un puesto se puede volver a repartir",
+   (await p.$$eval(".chain .pst", (e) => e.length)) === 2);
+ok("y el total sigue igual", (await p.textContent("#trabTot")).trim() === trab0);
+await p.click("#resAct");
+await p.waitForTimeout(200);
+
 /* el ritmo ya andando */
 await set(p, '[data-c="rpza"]', 4);
 await set(p, '[data-c="rmin"]', 5);
@@ -145,6 +163,14 @@ await p.waitForSelector(".hero .n", { timeout: 40000 });
 const proy = num(await p.textContent(".hero .n"));
 ok("la proyección del turno coincide con el modelo", proy === E.turno.good,
    `pantalla ${proy} · esperado ${E.turno.good}`);
+const cierre2 = await p.textContent("#stage");
+ok("ya no está la casilla «veces lo de la prueba»", !/[Vv]eces lo de la prueba/.test(cierre2));
+ok("ningún panel oscuro queda vacío al final",
+   await p.evaluate(() => [...document.querySelectorAll(".plant")]
+     .every((e) => e.querySelector(".bars"))),
+   "el del lote y el del día siguen dibujados");
+ok("y en su lugar explica por qué el día da más que la prueba",
+   /no se parece a los primeros diez minutos/.test(cierre2));
 
 /* ═══ PASO 3 · el gemelo ═══ */
 await p.click("#ir3");
@@ -213,10 +239,26 @@ await set(p, "#ch", 12000);
 await p.waitForSelector("#cpz");
 ok("con el costo puesto calcula el costo por pieza",
    /^\$/.test((await p.textContent("#cpz")).trim()), (await p.textContent("#cpz")).trim());
+ok("«piezas por persona» sale con su referencia al lado",
+   /de \d+ posibles/.test(cierre) && /son las\s+piezas del día divididas/.test(cierre.replace(/\s+/g, " ")),
+   "muestra el máximo alcanzable y explica qué es");
 
-/* ═══ celular ═══ */
+/* ═══ celular y computador ═══ */
+console.log("\nPANTALLAS");
 const desborde = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
 ok("sin desborde horizontal en 390 px", desborde <= 0, `${desborde} px`);
+await p.setViewportSize({ width: 1280, height: 900 });
+await p.waitForTimeout(250);
+const desk = await p.evaluate(() => ({
+  over: document.documentElement.scrollWidth - window.innerWidth,
+  ancho: document.querySelector(".wrap").getBoundingClientRect().width,
+  fuente: parseFloat(getComputedStyle(document.body).fontSize)
+}));
+ok("sin desborde horizontal en 1280 px", desk.over <= 0, `${desk.over} px`);
+ok("en computador usa más ancho que en celular", desk.ancho > 700,
+   `${Math.round(desk.ancho)} px de columna`);
+ok("y baja el tamaño de letra para esa columna", desk.fuente < 21, `${desk.fuente} px`);
+await p.setViewportSize({ width: 390, height: 844 });
 ok("sin errores de consola", errores.length === 0, errores.slice(0, 3).join(" | "));
 
 console.log(`\n${"=".repeat(60)}\nfallas: ${fallas}\n${"=".repeat(60)}`);

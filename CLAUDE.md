@@ -621,6 +621,39 @@ silencio porque la cadena ya había cambiado, y el aplicativo quedó con una sol
 cajas de ayuda. No lo vi hasta que el verificador contó `.como`. **Todo reemplazo de texto
 va con `assert`**, y **toda sección nueva va con un test que la cuente**.
 
+### La tercera vuelta: seis cosas que sólo se ven abriéndolo (v3)
+
+- **No había ni una regla para pantallas grandes.** El único `@media` del archivo era el del
+  tema oscuro, así que en un computador se veía una columna de celular de 693 px con dos
+  márgenes enormes. Un solo bloque `@media (min-width:820px)` —columna a 44rem, letra a
+  19 px, `.met`/`.opts` con `auto-fit`— y queda diseñado en los dos lados. **Es `min-width` a
+  propósito: el celular no se toca.** Y ahora el verificador mide el desborde en 390 **y** en
+  1280 px.
+- **Un número sin con qué compararse no comunica nada.** «Veces lo de la prueba: 1,9» era
+  cierto y nadie lo entendía: se quitó y su contenido pasó a una frase. «Piezas por persona:
+  106» se quedó, pero ahora sale como **«121 de 141 posibles»** y con una línea que dice para
+  qué sirve. La regla: *si un número obliga a preguntar «¿qué es esto?», o se explica al lado
+  o se va.*
+- **Trabajo total y tiempo de ciclo son dos números distintos y hay que decirlo.** Armar una
+  pieza son 183 s de trabajo, pero sale una cada 32 s porque los puestos trabajan al tiempo.
+  Estaba escondido en una nota de pie; ahora es una caja propia, y es justo lo que el taller
+  enseña.
+- **Los puestos deben sumar a la vista.** Se mostraban redondeados con decimales por dentro,
+  así que lo que el participante suma no daba el total que ve. `escalarPuesto()` redondea a un
+  decimal y le carga el sobrante a la actividad más larga: el total del puesto queda exacto.
+- **«Juntar todo en un puesto» / «Repartir parejo».** Lo pidió él para ver la lista completa y
+  el total sumado. Con los tiempos viviendo en las actividades, juntar y volver a partir **no
+  cambia un solo segundo** — el verificador lo comprueba: 183,0 antes y después.
+- **Una franja negra vacía que ningún test veía.** El panel del lote del Paso 2 sólo se
+  repintaba en `S.f2===2`, así que al pasar al viaje quedaba un rectángulo negro en blanco.
+  Se vio en una captura. Test nuevo: **ningún `.plant` puede quedar sin `.bars`**.
+
+**Y la lección de método se repitió, con costo:** un lote de reemplazos abortó a la mitad por
+un `assert`, y como el script escribe al final, **cuatro cambios que creí aplicados nunca se
+escribieron**. Uno sobrevivió hasta la captura («2 pasos» donde debía decir «2 actividades»).
+Cuando un lote falle, hay que **volver a verificar los que creía hechos**, no sólo los que
+faltaban.
+
 ### Lo que sigue sin confirmar con la Fábrica
 
 Sigue pendiente **cuántos puestos físicos se pueden montar**. El aplicativo deja el tope
