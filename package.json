@@ -15,6 +15,8 @@
     "test:rls": "bash scripts/db-local.sh test",
     "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts && tsx scripts/verificar-lecturas.ts && pnpm verify:edicion",
     "verify:edicion": "tsx --tsconfig tsconfig.scripts.json scripts/verificar-edicion.mts",
+    "comercial": "node scripts/comercial/propuesta.js && node scripts/comercial/sustentacion.js",
+    "verify:comercial": "python3 scripts/comercial/verificar.py",
     "check": "tsc --noEmit && next build",
     "seed:sql": "tsx scripts/emitir-siembra.ts",
     "exportar:html": "node scripts/exportar-html.mjs",
