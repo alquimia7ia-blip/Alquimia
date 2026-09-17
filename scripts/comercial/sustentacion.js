@@ -14,7 +14,7 @@ const {
   Footer, PageNumber, TextRun,
 } = require("docx");
 const {
-  C, FUENTE, cifras, cop, pct, texto, parrafo, h1, h2, punto,
+  C, FUENTE, cifras, cop, pct, texto, parrafo, h1, h2, punto, numerado,
   destacado, tabla, numeracion, estilos, seccion,
 } = require("./comun");
 
@@ -207,6 +207,63 @@ const equilibrio = [
                  `${pct(n.contratoTipo.margen)} de margen de la tabla anterior. La cifra que ` +
                  "hay que mirar para decidir si el negocio existe es la del año dos, no la " +
                  "del año uno.")], { before: 120 }),
+  h2("Cuando el presupuesto de la cámara manda"),
+  parrafo("A veces la cámara no negocia sobre la lista de precios: llega con una partida ya " +
+          "aprobada y pregunta si alcanza. Este cuadro responde esa conversación para una " +
+          `cohorte de ${n.cohorteBaja} usuarios, midiendo contra las dos bases de costo, ` +
+          "porque las dos son ciertas y dicen cosas opuestas."),
+  tabla({
+    anchos: [2100, 1700, 2200, 1700, 1660],
+    cabecera: [{ t: "Por usuario/año", alignment: AlignmentType.LEFT }, "En USD", "Contrato",
+               "vs mantenim.", { t: "Contratos", alignment: AlignmentType.CENTER }],
+    filas: n.escenariosBajos.map((e) => {
+      const basta = e.contratosNecesarios <= 1;
+      const fondo = basta ? C.turquesaSuave : e.vsAsignado < -15_000_000 ? C.alertaSuave : undefined;
+      return [
+        { t: cop(e.precioUsuarioAnual), alignment: AlignmentType.LEFT, fondo, bold: basta },
+        { t: usd(e.usdAnual), fondo },
+        { t: cop(e.contrato), fondo },
+        { t: `${cop(e.vsMantenimiento)} (${pct(e.margenMantenimiento)})`, fondo },
+        { t: String(e.contratosNecesarios), alignment: AlignmentType.CENTER, fondo,
+          bold: basta, color: basta ? C.turquesa : C.alerta },
+      ];
+    }),
+  }),
+  parrafo([texto("La última columna es la que decide: cuántos contratos de ese tamaño hacen " +
+                 "falta para cubrir el costo asignado del año. A ", { bold: true }),
+           texto(`${cop(n.precioAutosuficiente)} por usuario/año una sola cohorte de ` +
+                 `${n.cohorteBaja} se sostiene sola. Por debajo, el negocio depende de ` +
+                 "conseguir los otros dos clientes.")], { before: 120 }),
+  ...destacado([
+    [texto("Referencia externa", { bold: true })],
+    [texto("Plataformas comparables de formación empresarial cobran entre USD 240 y 600 " +
+           "por usuario al año (sabionet.com/mejores-plataformas-lms, consultado en " +
+           "septiembre de 2026). A USD 25–31, un contrato de $80.000–$100.000 anuales está " +
+           "entre nueve y veinticuatro veces por debajo de esa banda. No es un precio " +
+           "competitivo: es otra categoría de producto.")],
+  ]),
+  h2("Las tres condiciones que harían viable un precio bajo"),
+  parrafo("Un precio de entrada bajo puede ser una decisión correcta. Deja de serlo cuando " +
+          "es el resultado de no haberse atrevido a pedir más. Si se toma, se toma con las " +
+          "tres condiciones:"),
+  numerado([texto("Por cohorte, no por año. ", { bold: true }),
+            texto("Una cámara que corre dos o tres cohortes anuales convierte el mismo " +
+                  "presupuesto en dos o tres veces el contrato, y así presupuestan sus " +
+                  "programas de todos modos.")]),
+  numerado([texto("El editor de contenido, antes del segundo cliente. ", { bold: true }),
+            texto("A este precio no se puede regalar una implementación de 40 a 150 horas; " +
+                  "la cámara tiene que poder cargar su propio programa.")]),
+  numerado([texto("Decisión deliberada de entrada. ", { bold: true }),
+            texto("A cambio de algo que valga: caso de referencia con permiso escrito para " +
+                  "nombrarla ante otras cámaras, carta de recomendación, o el compromiso de " +
+                  "una segunda cohorte.")]),
+  ...destacado([
+    [texto("Lo que cuesta de verdad un precio de entrada bajo", { bold: true, color: C.alerta })],
+    [texto("El precio unitario fija el techo de todas las renovaciones. De $85.000 no se " +
+           "sube a $190.000 en el año dos: se sube a $95.000, con suerte. Bajar el precio " +
+           "una vez es una concesión que se paga cada año mientras dure la relación; " +
+           "regalar meses de gracia o talleres de implementación se paga una sola vez.")],
+  ], "alerta"),
   h2("Vender ancho, no profundo"),
   parrafo("Los escalones aplican por contrato, no sobre el total agregado de la empresa. " +
           "Dos contratos de 90 usuarios facturan más que uno de 180, porque ninguno de los " +

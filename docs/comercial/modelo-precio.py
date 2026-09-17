@@ -38,6 +38,15 @@ OVERHEAD_PCT = 0.40         # porción asignada a esta línea de producto
 # dentro de él, como la tarifa de un impuesto.
 ESCALONES = [(100, 42_000), (250, 36_000), (500, 30_000), (None, 25_000)]
 
+# Mantenimiento: lo que cuesta tener la plataforma viva, sin contar evolución
+# ni tiempo comercial. Las dos cifras son SUPUESTOS, no datos: 13 horas salen
+# de estimar 6 de correctivo, 4 de soporte, 2 de dependencias y 1 de
+# monitoreo; 160 horas productivas al mes es el nominal, y si en la práctica
+# son 120, la tarifa sube de $46.875 a $62.500. Revisarlas contra horas reales
+# en cuanto se lleve registro.
+HORAS_MANTENIMIENTO_MES = 13
+HORAS_PRODUCTIVAS_MES = 160
+
 MINIMO_FACTURABLE = 50
 MAX_USUARIOS_EMPRESA = 5
 IMPLEMENTACION_POR_TALLER = 350_000
@@ -94,6 +103,49 @@ def implementacion(talleres: int) -> int:
     return max(talleres * IMPLEMENTACION_POR_TALLER, IMPLEMENTACION_MINIMA)
 
 
+def tarifa_hora() -> float:
+    return OVERHEAD_BASE / HORAS_PRODUCTIVAS_MES
+
+
+def mantenimiento() -> int:
+    """Costo de tener la plataforma viva: infraestructura más las horas.
+
+    Es la base de costo más baja que se puede defender. No incluye evolución
+    del producto ni tiempo comercial, así que un precio fijado contra esta
+    cifra mantiene la plataforma encendida y no financia nada más.
+    """
+    return round(infra_cop() + HORAS_MANTENIMIENTO_MES * tarifa_hora())
+
+
+def escenario_bajo(precio_usuario_anual: int, usuarios: int) -> dict:
+    """Un contrato por debajo del modelo, medido contra las dos bases de costo.
+
+    Aparece cuando el presupuesto de la cámara manda sobre la lista de precios.
+    Devuelve las dos lecturas porque las dos son ciertas y dicen cosas
+    opuestas: contra mantenimiento el contrato deja dinero, contra el costo
+    asignado del negocio pierde.
+    """
+    contrato = precio_usuario_anual * usuarios
+    mant_anual = mantenimiento() * 12
+    asignado = costo_fijo() * 12
+    return {
+        "precioUsuarioAnual": precio_usuario_anual,
+        "usuarios": usuarios,
+        "contrato": contrato,
+        "vsMantenimiento": contrato - mant_anual,
+        "margenMantenimiento": round((contrato - mant_anual) / contrato, 4) if contrato else 0,
+        "vsAsignado": contrato - asignado,
+        # Contratos como éste que hacen falta para cubrir el costo asignado.
+        "contratosNecesarios": -(-asignado // contrato) if contrato else 0,
+        "usdAnual": round(precio_usuario_anual / TRM, 2),
+    }
+
+
+def precio_autosuficiente(usuarios: int) -> int:
+    """Precio por usuario/año con el que una sola cohorte se sostiene sola."""
+    return round(costo_fijo() * 12 / usuarios)
+
+
 def cifras() -> dict:
     """Todo lo que los .docx necesitan, en un solo objeto.
 
@@ -126,6 +178,15 @@ def cifras() -> dict:
         "implementacionMinima": IMPLEMENTACION_MINIMA,
         "iva": IVA,
         "equilibrio": equilibrio(),
+        "horasMantenimiento": HORAS_MANTENIMIENTO_MES,
+        "horasProductivas": HORAS_PRODUCTIVAS_MES,
+        "tarifaHora": round(tarifa_hora()),
+        "mantenimiento": mantenimiento(),
+        "mantenimientoAnual": mantenimiento() * 12,
+        "cohorteBaja": 200,
+        "precioAutosuficiente": precio_autosuficiente(200),
+        "escenariosBajos": [escenario_bajo(p, 200)
+                            for p in (80_000, 85_000, 100_000, precio_autosuficiente(200))],
         "escala": [
             {"usuarios": n, "mensual": mensual(n), "efectivo": round(efectivo(n)),
              "anual": mensual(n) * 12, "margen": round(margen(n), 4)}
