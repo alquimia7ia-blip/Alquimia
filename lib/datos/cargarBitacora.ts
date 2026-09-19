@@ -2,6 +2,9 @@ import { clienteServidor } from "@/lib/supabase/servidor";
 import type { TallerVista } from "@/components/bitacora/VistaModulo";
 import { camposEsperados, progresoTaller, progresoModulo } from "@/lib/talleres/progreso";
 import type { Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
+import { presentacionDe, type Presentacion } from "./presentacion";
+
+export type { Presentacion };
 
 /**
  * Carga la bitácora de un módulo para quien esté en sesión.
@@ -27,6 +30,8 @@ export type BitacoraCargada = {
   /** Los módulos que esta persona puede abrir. Sale de sus bitácoras, no de
    *  `modulos`, para que la lista y el permiso no puedan discrepar. */
   modulos: ModuloAbierto[];
+  /** Dónde presenta la cámara este módulo. Nulo si no configuró ninguna. */
+  presentacion: Presentacion | null;
   talleres: TallerVista[];
   respuestas: Map<string, ValorCampo>;
   filas: Fila[];
@@ -46,7 +51,7 @@ export async function cargarBitacora(moduloSlug: string): Promise<Carga> {
 
   const { data: modulo } = await supabase
     .from("modulos")
-    .select("id, numero, slug, titulo, pregunta")
+    .select("id, numero, slug, titulo, pregunta, presentacion_url, presentacion_etiqueta")
     .eq("slug", moduloSlug)
     .maybeSingle();
   if (!modulo) return { estado: "sin-modulo" };
@@ -79,6 +84,7 @@ export async function cargarBitacora(moduloSlug: string): Promise<Carga> {
       empresa: empresa?.nombre ?? "",
       moduloTitulo: `Módulo ${modulo.numero} · ${modulo.pregunta}`,
       moduloSlug: modulo.slug,
+      presentacion: presentacionDe(modulo.presentacion_url, modulo.presentacion_etiqueta),
       modulos: (abiertos ?? [])
         .map((b) => b.modulos as unknown as ModuloAbierto & { publicado: boolean })
         .filter((m) => m?.publicado)

@@ -7,6 +7,8 @@ import { ProveedorBitacora } from "@/components/campos/contexto";
 import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo";
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
 import { CierreModulo, type Valoracion } from "@/components/cierre/CierreModulo";
+import { Presentacion } from "@/components/bitacora/Presentacion";
+import type { Presentacion as DatosPresentacion } from "@/lib/datos/presentacion";
 import { bloques } from "@/lib/talleres/rutas";
 import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
 
@@ -17,6 +19,7 @@ type Props = {
   moduloTitulo: string;
   moduloSlug: string;
   modulos: { numero: number; slug: string; titulo: string }[];
+  presentacion: DatosPresentacion | null;
   talleres: TallerVista[];
   dudas: Duda[];
   valoracion?: Valoracion;
@@ -27,7 +30,7 @@ type Props = {
 
 export function Bitacora({
   bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, modulos,
-  talleres, respuestas, filas, dudas, valoracion, avance,
+  talleres, respuestas, filas, dudas, valoracion, avance, presentacion,
 }: Props) {
   const supabase = useMemo(() => clienteNavegador(), []);
 
@@ -75,6 +78,7 @@ export function Bitacora({
         estado={bitacora.estado}
         acciones={
           <>
+            <Presentacion presentacion={presentacion} />
             <a className="btn pri" href={`/${moduloSlug}/tablero`}>Ver conclusiones</a>
             <a className="btn" href={`/api/informe/${bitacoraId}`}>Descargar informe</a>
           </>

@@ -49,6 +49,7 @@ export default async function PaginaModulo({
       moduloTitulo={datos.moduloTitulo}
       moduloSlug={datos.moduloSlug}
       modulos={datos.modulos}
+      presentacion={datos.presentacion}
       dudas={dudas}
       avance={avanceDe(datos)}
       valoracion={mia

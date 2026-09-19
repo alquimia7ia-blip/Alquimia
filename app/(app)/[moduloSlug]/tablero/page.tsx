@@ -3,6 +3,7 @@ import type { Route } from "next";
 import { notFound, redirect } from "next/navigation";
 import { cargarBitacora, avanceDe } from "@/lib/datos/cargarBitacora";
 import { SinBitacora } from "@/components/bitacora/SinBitacora";
+import { Presentacion } from "@/components/bitacora/Presentacion";
 import { Tablero } from "@/components/informe/Tablero";
 import { Observaciones, type Observacion } from "@/components/informe/Observaciones";
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
@@ -107,6 +108,7 @@ export default async function PaginaTableroModulo({
           <div className="ident" style={{ fontFamily: "var(--display)", fontWeight: 700, fontSize: 16 }}>
             Conclusiones del módulo
           </div>
+          <Presentacion presentacion={datos.presentacion} />
           <a className="btn" href={`/api/informe/${datos.bitacoraId}`}>Descargar informe</a>
           <Link className="btn" href={`/${datos.moduloSlug}` as Route}>← Volver al taller</Link>
         </header>
