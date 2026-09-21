@@ -1,7 +1,7 @@
 # Dossier Alquimia — Estrategia de entrada al mercado
 
 **Medellín, agosto de 2026.** Documento de trabajo interno.
-Versión navegable e interactiva: `docs/dossier-alquimia.html`.
+Versión navegable e interactiva (Brújula empresarial): `docs/brujula-empresarial.html`.
 
 Los cuatro informes de investigación que sustentan este documento están en
 `docs/investigacion/` y `docs/finanzas/`, cada uno con sus fuentes enlazadas.
@@ -249,7 +249,7 @@ El precio por usuario (US$20-50/mes, estándar en EE.UU.) rara vez es viable par
 - **Zeus u otro incumbente reacciona.** Tu defensa es el enfoque: IPS de 1 a 10 sedes, implementación en días y no en meses.
 - **Profundidad normativa.** Cumplir cinco requisitos simultáneos (RIPS JSON con CUV, HL7 FHIR R4, SIIFA con CUCON, CIE-11, prescripción vía RDA) te protege una vez adentro, pero te cuesta entrar.
 
-### Datos que este dossier no pudo confirmar
+### Datos que este informe no pudo confirmar
 
 - **Cuántas IPS hay realmente en Antioquia** (se manejó ~808 privadas + 129 públicas, sin confirmar contra el REPS del Ministerio de Salud). **Es la variable que define el tamaño de tu mercado: verifícala primero.**
 - Empresas de transporte de carga en Antioquia (~1.838, sin confirmar contra RNDC o Supertransporte), relevante solo para el plan B.
