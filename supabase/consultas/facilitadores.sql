@@ -7,6 +7,18 @@
 -- Dar este permiso es dejar que alguien lea las finanzas de todas las
 -- empresas de esa cohorte. No es un rol administrativo menor.
 
+-- 0 · Cómo se crea un facilitador.
+--
+--    No hay «cuenta de facilitador»: es un permiso sobre una cuenta normal.
+--    a) La persona se registra en /registro como cualquiera.
+--    b) NO elige empresa. Si lo hiciera quedaría inscrita en la cohorte y
+--       aparecería como participante de su propio programa.
+--    c) Se le añade la fila de abajo. Desde ese momento /cohorte es su
+--       pantalla de inicio.
+--
+--    Quien ya tiene empresa también puede facilitar: verá su bitácora y,
+--    además, el panel. Es el caso de quien dirige el programa y participa.
+
 -- 1 · Quién facilita hoy.
 select p.nombre_completo, p.correo, c.nombre as cohorte, f.rol, f.creado_at
 from facilitadores_cohorte f
