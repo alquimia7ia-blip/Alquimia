@@ -8,6 +8,7 @@ import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
 import { CierreModulo, type Valoracion } from "@/components/cierre/CierreModulo";
 import { Presentacion } from "@/components/bitacora/Presentacion";
+import { usePublicarPresencia, type Presente } from "@/lib/datos/usePresencia";
 import type { Presentacion as DatosPresentacion } from "@/lib/datos/presentacion";
 import { bloques } from "@/lib/talleres/rutas";
 import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
@@ -20,6 +21,10 @@ type Props = {
   moduloSlug: string;
   modulos: { numero: number; slug: string; titulo: string }[];
   presentacion: DatosPresentacion | null;
+  /** Quién soy, para anunciarme en el canal de la cohorte. */
+  presencia: Omit<Presente, "perfilId">  & { cohorteId: string };
+  /** Si facilito alguna cohorte, aparece la entrada al panel. */
+  facilita: boolean;
   talleres: TallerVista[];
   dudas: Duda[];
   valoracion?: Valoracion;
@@ -31,6 +36,7 @@ type Props = {
 export function Bitacora({
   bitacoraId, perfilId, empresa, moduloTitulo, moduloSlug, modulos,
   talleres, respuestas, filas, dudas, valoracion, avance, presentacion,
+  presencia, facilita,
 }: Props) {
   const supabase = useMemo(() => clienteNavegador(), []);
 
@@ -41,6 +47,11 @@ export function Bitacora({
     for (const t of talleres) for (const b of bloques(t.definicion)) m[b.id] = t.id;
     return m;
   }, [talleres]);
+
+  // Anunciarse en el canal de la cohorte. Solo viajan nombre y empresa.
+  usePublicarPresencia(presencia.cohorteId, {
+    perfilId, nombre: presencia.nombre, empresa: presencia.empresa,
+  });
 
   const bitacora = useBitacoraRemota({
     supabase, bitacoraId, perfilId,
@@ -87,6 +98,7 @@ export function Bitacora({
           <>
             <a className="mini" href={`/${moduloSlug}/tablero`}>📊 Conclusiones del módulo</a>
             <a className="mini" href="/equipo">👥 Equipo de la empresa</a>
+            {facilita && <a className="mini" href="/cohorte">🧭 Panel de la cohorte</a>}
             <p style={{ fontSize: 11.5, color: "var(--faint)", lineHeight: 1.45, margin: 0 }}>
               Si alguien más de tu empresa está respondiendo ahora mismo, sus cambios
               aparecen al recargar la página.

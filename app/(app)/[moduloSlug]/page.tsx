@@ -20,7 +20,8 @@ export default async function PaginaModulo({
 
   // RLS ya limita las dudas a esta bitácora; no hace falta filtrar por empresa.
   const supabase = await clienteServidor();
-  const [{ data: crudas }, { data: mia }] = await Promise.all([
+  const [{ data: crudas }, { data: mia }, { data: yo }, { count: facilita }] =
+    await Promise.all([
     supabase
       .from("dudas")
       .select("id, cuerpo, taller_id, estado, creado_at, autor_id")
@@ -33,6 +34,11 @@ export default async function PaginaModulo({
       .eq("bitacora_id", datos.bitacoraId)
       .eq("autor_id", perfilId)
       .maybeSingle(),
+    supabase.from("perfiles").select("nombre_completo").eq("id", perfilId).maybeSingle(),
+    // Solo quien facilita ve la puerta al panel. Mostrársela a todos
+    // invitaría a pulsarla y encontrar una negativa.
+    supabase.from("facilitadores_cohorte")
+      .select("id", { count: "exact", head: true }).eq("perfil_id", perfilId),
   ]);
 
   const dudas: Duda[] = (crudas ?? []).map((d) => ({
@@ -50,6 +56,12 @@ export default async function PaginaModulo({
       moduloSlug={datos.moduloSlug}
       modulos={datos.modulos}
       presentacion={datos.presentacion}
+      facilita={(facilita ?? 0) > 0}
+      presencia={{
+        cohorteId: datos.cohorteId,
+        nombre: yo?.nombre_completo?.trim() || "Alguien del equipo",
+        empresa: datos.empresa,
+      }}
       dudas={dudas}
       avance={avanceDe(datos)}
       valoracion={mia

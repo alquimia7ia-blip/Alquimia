@@ -428,3 +428,43 @@ th .f{font-family:var(--mono); font-size:14.6px; padding:3px 7px; max-width:120p
   padding:11px 13px; margin-bottom:14px; line-height:1.45;
 }
 .consentimiento input{margin-top:2px; flex:none; accent-color:var(--accent)}
+
+/* ---------------------------------------------------------------- cohorte
+   Panel del facilitador. Una tabla, no tarjetas: la pregunta que responde
+   —quién se quedó atrás— se contesta comparando filas, y comparar es lo
+   que una tabla hace bien. */
+.cohorte-barra{
+  display:flex; gap:12px; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; margin-bottom:14px;
+}
+.cohorte-modulos{display:flex; gap:8px; flex-wrap:wrap}
+.cohorte-resumen{font-size:15.4px; color:var(--muted); margin:0 0 12px}
+.cohorte-vivo{display:inline-flex; align-items:center; gap:6px; color:var(--fav); font-weight:600}
+
+.cohorte-tabla{width:100%; border-collapse:collapse; font-size:15.4px}
+.cohorte-tabla th{
+  text-align:left; padding:11px 14px; font-size:13.2px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--faint); font-weight:600;
+  border-bottom:1px solid var(--line); white-space:nowrap;
+}
+.cohorte-tabla td{padding:12px 14px; border-bottom:1px solid var(--line-2); vertical-align:middle}
+.cohorte-tabla tr:last-child td{border-bottom:none}
+.cohorte-tabla tbody tr:hover{background:var(--surface-2)}
+.cohorte-persona{display:inline-flex; align-items:center; gap:8px; font-weight:600}
+.cohorte-donde{display:block; font-size:13px; color:var(--faint); margin-top:3px; margin-left:15px}
+/* Gris, no rojo: llevar días sin entrar no es un error de nadie. */
+.cohorte-frio{color:var(--faint)}
+.dot.apagado{background:var(--line)}
+
+.cohorte-aviso{
+  display:inline-flex; align-items:center; gap:6px; font-size:13.6px; font-weight:600;
+  color:var(--pista); background:var(--pista-soft); border:1px solid var(--pista-line);
+  border-radius:99px; padding:5px 13px; white-space:nowrap;
+}
+.cohorte-cinta{
+  display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+  background:var(--accent-soft); border-bottom:1px solid var(--accent-line);
+  padding:9px 18px; font-size:14.6px; color:var(--text);
+}
+.cohorte-cinta a{color:var(--accent); font-weight:600; text-decoration:none}
+.cohorte-cinta a:hover{text-decoration:underline}
