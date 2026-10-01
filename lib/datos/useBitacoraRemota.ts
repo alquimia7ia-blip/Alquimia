@@ -11,6 +11,9 @@ const REINTENTO = 5000;     // ms entre intentos cuando la red falla
 
 export type EstadoGuardado = { texto: string; ocupado?: boolean };
 
+/** Un envío aplazado, con la escritura que tiene en espera. */
+type Temporizador = { id: ReturnType<typeof setTimeout>; encolar: () => void };
+
 type Args = {
   supabase: SupabaseClient;
   bitacoraId: string;
@@ -32,17 +35,21 @@ type Args = {
  */
 export function useBitacoraRemota({
   supabase, bitacoraId, perfilId, inicial, tallerDeBloque, soloLectura,
-}: Args): BitacoraCtx & { estado: EstadoGuardado } {
+}: Args): BitacoraCtx & { estado: EstadoGuardado; guardarYa: () => Promise<number> } {
   const [respuestas, setRespuestas] = useState(() => new Map(Object.entries(inicial.respuestas)));
   const [filas, setFilas] = useState<Fila[]>(inicial.filas);
   const [estado, setEstado] = useState<EstadoGuardado>({ texto: "Guardado" });
 
   const cola = useMemo(() => new ColaOffline(`bitacora:${bitacoraId}:pendientes`), [bitacoraId]);
-  const temporizadores = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  // Cada temporizador va con la escritura que tiene pendiente. Guardar solo
+  // el identificador obligaba a cancelarlo a ciegas, y cancelar sin encolar
+  // tira lo escrito: hay que poder ejecutarlo antes de tiempo.
+  const temporizadores = useRef(new Map<string, Temporizador>());
   const enviando = useRef(false);
 
-  const enviar = useCallback(async () => {
-    if (enviando.current || cola.tamano === 0) return;
+  /** `false` si la red falló y la cola sigue con trabajo. */
+  const enviar = useCallback(async (): Promise<boolean> => {
+    if (enviando.current || cola.tamano === 0) return true;
     enviando.current = true;
     const lote = cola.listar();
     setEstado({ texto: "Guardando…", ocupado: true });
@@ -63,13 +70,14 @@ export function useBitacoraRemota({
       // Lo escrito sigue en la cola y en localStorage: no se pierde.
       setEstado({ texto: `Sin conexión · ${cola.tamano} por guardar` });
       setTimeout(() => void enviar(), REINTENTO);
-      return;
+      return false;
     }
     cola.confirmar(lote);
     setEstado(cola.tamano === 0
       ? { texto: "Guardado" }
       : { texto: "Guardando…", ocupado: true });
     if (cola.tamano > 0) void enviar();
+    return true;
   }, [supabase, bitacoraId, perfilId, cola]);
 
   const escribir = useCallback(
@@ -81,33 +89,76 @@ export function useBitacoraRemota({
       const tallerId = tallerDeBloque[bloqueId];
       if (!tallerId) return;
 
-      const encolar = () => {
-        cola.encolar({ campoId, tallerId, valor, en: Date.now() });
-        void enviar();
-      };
+      const encolar = () => cola.encolar({ campoId, tallerId, valor, en: Date.now() });
 
       const previo = temporizadores.current.get(campoId);
-      if (previo) clearTimeout(previo);
+      if (previo) clearTimeout(previo.id);
 
       // Un clic en una escala es un evento atómico: se envía ya. El texto
       // espera a que la persona deje de escribir, y cada campo tiene su
       // propio temporizador para no arrastrar a los demás.
       if (opciones?.inmediato) {
         encolar();
+        void enviar();
       } else {
         setEstado({ texto: "Guardando…", ocupado: true });
-        temporizadores.current.set(campoId, setTimeout(encolar, ESPERA_TEXTO));
+        const id = setTimeout(() => {
+          temporizadores.current.delete(campoId);
+          encolar();
+          void enviar();
+        }, ESPERA_TEXTO);
+        temporizadores.current.set(campoId, { id, encolar });
       }
     },
     [soloLectura, tallerDeBloque, cola, enviar],
   );
 
+  /**
+   * Adelanta los temporizadores en vuelo: lo que esperaba a que la persona
+   * dejara de escribir pasa a la cola ya mismo.
+   *
+   * Antes esto solo los cancelaba, y cancelar un temporizador que todavía no
+   * encoló es tirar lo escrito: quien tecleaba una frase y cambiaba de
+   * pestaña dentro de los 600 ms de reposo la veía en pantalla —el estado de
+   * React sí la tenía— pero no llegaba ni a `localStorage`, así que al
+   * recargar había desaparecido.
+   */
+  const adelantar = useCallback(() => {
+    for (const { id, encolar } of temporizadores.current.values()) {
+      clearTimeout(id);
+      encolar();
+    }
+    temporizadores.current.clear();
+  }, []);
+
   /** Vacía los temporizadores pendientes: al salir del campo o de la pestaña. */
   const descargar = useCallback(() => {
-    for (const t of temporizadores.current.values()) clearTimeout(t);
-    temporizadores.current.clear();
+    adelantar();
     void enviar();
-  }, [enviar]);
+  }, [adelantar, enviar]);
+
+  /**
+   * Guarda todo lo pendiente y dice cuánto quedó sin guardar.
+   *
+   * La usa el botón de cerrar sesión: salir con la cola llena deja el trabajo
+   * encerrado en el `localStorage` de este navegador, donde solo se recupera
+   * si la misma persona vuelve a entrar aquí. Devolver el número permite
+   * advertirlo antes, en vez de descubrirlo después.
+   */
+  const guardarYa = useCallback(async (): Promise<number> => {
+    adelantar();
+    // Con tope: si la red no está, no se puede esperar indefinidamente. El
+    // número que vuelve es justamente para poder avisar.
+    const limite = Date.now() + 4000;
+    while (cola.tamano > 0 && Date.now() < limite) {
+      if (enviando.current) {
+        await new Promise((listo) => setTimeout(listo, 120));
+        continue;
+      }
+      if (!(await enviar())) break;   // la red falló; el reintento ya quedó programado
+    }
+    return cola.tamano;
+  }, [adelantar, cola, enviar]);
 
   useEffect(() => {
     const alOcultar = () => { if (document.visibilityState === "hidden") descargar(); };
@@ -158,5 +209,6 @@ export function useBitacoraRemota({
     eliminarFila,
     soloLectura,
     estado,
-  }), [respuestas, filas, escribir, agregarFila, eliminarFila, soloLectura, estado]);
+    guardarYa,
+  }), [respuestas, filas, escribir, agregarFila, eliminarFila, soloLectura, estado, guardarYa]);
 }

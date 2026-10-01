@@ -5,6 +5,7 @@ import { clienteNavegador } from "@/lib/supabase/cliente";
 import { useBitacoraRemota } from "@/lib/datos/useBitacoraRemota";
 import { ProveedorBitacora } from "@/components/campos/contexto";
 import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo";
+import { CerrarSesion } from "@/components/ui/CerrarSesion";
 import { bloques } from "@/lib/talleres/rutas";
 import type { Fila, ValorCampo } from "@/lib/talleres/tipos";
 
@@ -57,9 +58,15 @@ export function BitacoraAjena({
         empresa={empresa}
         acciones={<span className="cohorte-aviso">Solo lectura</span>}
         pieRail={
-          <p style={{ fontSize: 11.5, color: "var(--faint)", lineHeight: 1.45, margin: 0 }}>
-            Estás leyendo la bitácora de {empresa}. Tu lectura queda registrada.
-          </p>
+          <>
+            <a className="mini" href="/cohorte">🧭 Volver al panel</a>
+            {/* Sin `antesDeSalir`: esta vista es de solo lectura, no hay cola
+                que vaciar porque nunca se escribe nada. */}
+            <CerrarSesion />
+            <p style={{ fontSize: 11.5, color: "var(--faint)", lineHeight: 1.45, margin: 0 }}>
+              Estás leyendo la bitácora de {empresa}. Tu lectura queda registrada.
+            </p>
+          </>
         }
       />
     </ProveedorBitacora>

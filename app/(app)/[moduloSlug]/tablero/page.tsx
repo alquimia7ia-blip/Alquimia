@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { cargarBitacora, avanceDe } from "@/lib/datos/cargarBitacora";
 import { SinBitacora } from "@/components/bitacora/SinBitacora";
 import { Presentacion } from "@/components/bitacora/Presentacion";
+import { CerrarSesion } from "@/components/ui/CerrarSesion";
 import { Tablero } from "@/components/informe/Tablero";
 import { Observaciones, type Observacion } from "@/components/informe/Observaciones";
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
@@ -111,6 +112,7 @@ export default async function PaginaTableroModulo({
           <Presentacion presentacion={datos.presentacion} />
           <a className="btn" href={`/api/informe/${datos.bitacoraId}`}>Descargar informe</a>
           <Link className="btn" href={`/${datos.moduloSlug}` as Route}>← Volver al taller</Link>
+          <CerrarSesion clase="btn" />
         </header>
         <Tablero
           lecturas={lecturas(paraInforme)}

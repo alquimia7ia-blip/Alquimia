@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { clienteNavegador } from "@/lib/supabase/cliente";
+import { CerrarSesion } from "@/components/ui/CerrarSesion";
 
 /**
  * A qué empresa pertenece quien acaba de registrarse.
@@ -116,6 +117,11 @@ export default function Empresa() {
         <button className="btn pri btn-ancho" type="submit" disabled={enviando}>
           {enviando ? "Un momento…" : "Continuar"}
         </button>
+
+        {/* Quien no quiera elegir empresa ahora —o entró con la cuenta
+            equivocada— necesita poder salir: el middleware protege esta
+            ruta, así que ya está dentro y sin elegir no avanza. */}
+        <div style={{ marginTop: 14 }}><CerrarSesion /></div>
       </form>
     </div>
   );

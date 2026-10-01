@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { Invitar } from "./Invitar";
 import { Solicitud } from "./Solicitud";
+import { CerrarSesion } from "@/components/ui/CerrarSesion";
 
 export const metadata = { title: "Equipo · Brújula empresarial" };
 
@@ -137,6 +138,7 @@ export default async function Equipo() {
         )}
 
         <div className="pie-sesion"><Link href="/">Volver a la bitácora</Link></div>
+        <div style={{ marginTop: 12 }}><CerrarSesion /></div>
       </div>
     </div>
   );

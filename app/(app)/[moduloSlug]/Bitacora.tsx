@@ -8,6 +8,7 @@ import { VistaModulo, type TallerVista } from "@/components/bitacora/VistaModulo
 import { Dudas, type Duda } from "@/components/dudas/Dudas";
 import { CierreModulo, type Valoracion } from "@/components/cierre/CierreModulo";
 import { Presentacion } from "@/components/bitacora/Presentacion";
+import { CerrarSesion } from "@/components/ui/CerrarSesion";
 import { usePublicarPresencia, type Presente } from "@/lib/datos/usePresencia";
 import type { Presentacion as DatosPresentacion } from "@/lib/datos/presentacion";
 import { bloques } from "@/lib/talleres/rutas";
@@ -99,6 +100,7 @@ export function Bitacora({
             <a className="mini" href={`/${moduloSlug}/tablero`}>📊 Conclusiones del módulo</a>
             <a className="mini" href="/equipo">👥 Equipo de la empresa</a>
             {facilita && <a className="mini" href="/cohorte">🧭 Panel de la cohorte</a>}
+            <CerrarSesion antesDeSalir={bitacora.guardarYa} />
             <p style={{ fontSize: 11.5, color: "var(--faint)", lineHeight: 1.45, margin: 0 }}>
               Si alguien más de tu empresa está respondiendo ahora mismo, sus cambios
               aparecen al recargar la página.

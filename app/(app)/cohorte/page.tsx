@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import { cargarCohorte } from "@/lib/datos/cohorte";
 import { ListaCohorte } from "@/components/cohorte/ListaCohorte";
+import { CerrarSesion } from "@/components/ui/CerrarSesion";
 
 /**
  * Panel del facilitador: cómo va su cohorte.
@@ -34,6 +35,7 @@ export default async function PaginaCohorte({
             permiso.
           </p>
           <div className="pie-sesion"><Link href={"/" as Route}>Volver a mi bitácora</Link></div>
+          <div style={{ marginTop: 12 }}><CerrarSesion /></div>
         </div>
       </div>
     );
@@ -50,6 +52,7 @@ export default async function PaginaCohorte({
             Cohorte · {cohortes.map((c) => c.nombre).join(" · ")}
           </div>
           <Link className="btn" href={"/" as Route}>← Mi bitácora</Link>
+          <CerrarSesion clase="btn" />
         </header>
 
         <main className="stage">
