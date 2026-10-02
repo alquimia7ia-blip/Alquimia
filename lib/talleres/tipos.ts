@@ -131,6 +131,63 @@ export type BloqueTabla = Base & {
   columnasEditables?: { id: string; valorPorDefecto: string }[];
 };
 
+/** Un criterio de la matriz de priorización. */
+export type CriterioPriorizacion = {
+  id: string;
+  titulo: string;
+  /** Qué significa calificar alto en este criterio. Va como ayuda de columna. */
+  ayuda?: string;
+  /**
+   * Para los criterios donde calificar alto debe **restar** prioridad: la
+   * inversión requerida. Un proyecto carísimo no se vuelve urgente por ser
+   * caro, así que su nota entra invertida (`maximo + 1 − nota`).
+   */
+  invertido?: boolean;
+};
+
+/**
+ * Proyectos calificados contra varios criterios, con puntaje y orden.
+ *
+ * No es una `tabla` con columnas numéricas: lo que el Taller 1 del Módulo 4
+ * pide es «identificar el orden de ejecución», y ese orden es el resultado,
+ * no un dato que la empresa teclee. El bloque suma los criterios —invirtiendo
+ * los que lo pidan— y ordena solo. La fórmula se muestra en pantalla: un
+ * puntaje que nadie puede reconstruir no se puede discutir en una asesoría,
+ * y esta matriz existe para discutirse.
+ */
+export type BloqueMatrizPriorizacion = Base & {
+  tipo: "matriz_priorizacion";
+  /** Columnas de texto que describen la fila: el proyecto y su atributo. */
+  columnas: ColumnaTabla[];
+  criterios: CriterioPriorizacion[];
+  /** Nota máxima de cada criterio. Con 5, un criterio invertido da 6 − nota. */
+  maximo: number;
+  filasIniciales?: number;
+  filasMinimas?: number;
+  sugerencias?: string[];
+};
+
+/**
+ * Cuándo queda concretado cada proyecto, dentro de un horizonte de años.
+ *
+ * El Taller 2 del Módulo 4 es una rejilla de meses de 2026 a 2028 donde se
+ * marca la fecha de cierre de cada proyecto. Un año suelto no sirve —la
+ * diferencia entre enero y diciembre del mismo año es todo el plan— y la
+ * `linea_tiempo` que ya existe guarda año y hecho, sin mes ni proyecto. De
+ * ahí el tipo propio: año y mes por fila, y la posición dibujada en la
+ * franja del horizonte para que el plan se lea de un vistazo.
+ */
+export type BloqueCronograma = Base & {
+  tipo: "cronograma";
+  /** Columnas de texto de cada fila: el proyecto y su atributo. */
+  columnas: ColumnaTabla[];
+  /** Años del horizonte, en orden. */
+  anios: number[];
+  filasIniciales?: number;
+  filasMinimas?: number;
+  sugerencias?: string[];
+};
+
 /** Etiquetas que se agregan y se quitan. Los procesos del Taller 7. */
 export type BloqueChipsAgregables = Base & {
   tipo: "chips_agregables";
@@ -179,6 +236,8 @@ export type Bloque =
   | BloqueMatrizEscala
   | BloqueRankingEscala
   | BloqueTabla
+  | BloqueMatrizPriorizacion
+  | BloqueCronograma
   | BloqueChipsAgregables
   | BloqueLineaTiempo
   | BloqueCuadrantes;

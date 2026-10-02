@@ -204,14 +204,18 @@ a{color:var(--accent)}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .chip[aria-pressed="true"]{color:#fff}}
 
 /* ---------- campos ---------- */
-textarea.f, input.f{
+textarea.f, input.f, select.f{
   width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
   padding:9px 12px; font-size:17.4px; resize:none; transition:.18s ease; font-family:var(--body);
 }
 textarea.f{min-height:44px; overflow:hidden; line-height:1.5}
-textarea.f:hover, input.f:hover{border-color:var(--accent-line)}
-textarea.f:focus, input.f:focus{background:var(--surface); border-color:var(--accent); outline:none; box-shadow:0 0 0 3px var(--accent-soft)}
+textarea.f:hover, input.f:hover, select.f:hover{border-color:var(--accent-line)}
+textarea.f:focus, input.f:focus, select.f:focus{background:var(--surface); border-color:var(--accent); outline:none; box-shadow:0 0 0 3px var(--accent-soft)}
 input.f.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+select.f{cursor:pointer; -webkit-appearance:none; appearance:none; padding-right:28px;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 15px) 50%, calc(100% - 10px) 50%;
+  background-size:5px 5px, 5px 5px; background-repeat:no-repeat}
 .lbl{font-size:13.2px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); font-weight:600; display:block; margin-bottom:6px}
 .row-n{
   display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start;
@@ -468,3 +472,53 @@ th .f{font-family:var(--mono); font-size:14.6px; padding:3px 7px; max-width:120p
 }
 .cohorte-cinta a{color:var(--accent); font-weight:600; text-decoration:none}
 .cohorte-cinta a:hover{text-decoration:underline}
+
+/* ---------- matriz de priorización · Módulo 4 ---------- */
+.pri-puesto{
+  font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:19px;
+  font-weight:700; color:var(--accent); text-align:center; width:48px;
+}
+th.pri-puesto{font-size:13.2px; color:var(--faint)}
+/* El criterio invertido se marca en el encabezado: sin esto, calificar 5 en
+   inversión parece bueno y es justo lo contrario. */
+.pri-inv{
+  display:inline-block; margin-left:5px; font-size:14px; font-weight:700;
+  color:var(--des); cursor:help;
+}
+.pri-ayuda{
+  display:block; font-weight:400; text-transform:none; letter-spacing:0;
+  font-size:12.8px; color:var(--faint); line-height:1.35; margin-top:3px;
+}
+.pri-sin{font-size:13.4px; color:var(--faint); font-style:italic}
+.pri-pts{display:block; min-width:92px}
+.pri-pts b{
+  font-family:var(--mono); font-variant-numeric:tabular-nums;
+  font-size:19px; color:var(--text);
+}
+.pri-pts i{
+  display:block; height:5px; margin-top:4px; border-radius:99px;
+  background:var(--accent); min-width:3px;
+}
+
+/* ---------- cronograma · Módulo 4 ---------- */
+.crono-sel{display:flex; gap:6px; min-width:220px}
+.crono-sel select.f{font-size:15.6px; padding:7px 10px; padding-right:26px}
+/* La franja es lectura, no control: los selectores de al lado guardan el
+   dato. Sirve para ver si todo el plan se prometió para el mismo trimestre. */
+.crono-franja{display:flex; gap:9px; align-items:flex-end}
+.crono-anio{display:flex; gap:1.5px; align-items:flex-end; position:relative; padding-top:13px}
+.crono-rotulo{
+  position:absolute; top:0; left:0; font-family:var(--mono); font-size:11px;
+  font-style:normal; color:var(--faint); letter-spacing:.04em;
+}
+.crono-anio.activo .crono-rotulo{color:var(--accent); font-weight:700}
+.crono-mes{
+  display:block; width:7px; height:14px; border-radius:2px;
+  background:var(--line); transition:.18s ease;
+}
+.crono-mes.hito{background:var(--accent); height:22px; box-shadow:0 0 0 2px var(--accent-soft)}
+
+@media (max-width:720px){
+  .crono-franja{display:none}
+  .crono-sel{min-width:150px; flex-direction:column}
+}

@@ -1,6 +1,9 @@
 import { campo } from "@/lib/talleres/rutas";
 import { opcion } from "@/lib/talleres/escalas";
 import { lleno, camposEsperados, progresoTaller } from "@/lib/talleres/progreso";
+import {
+  MESES, puntaje, puestos, type NotasFila,
+} from "@/lib/talleres/priorizacion";
 import type { Bloque, ColorEscala, Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
 
 /**
@@ -157,6 +160,63 @@ function bloqueANodos(b: Bloque, d: DatosInforme, tallerId: string): Nodo[] {
         .map((f) => b.columnas.map((c) => texto(campo.fila(b.id, f.id, c.id))))
         .filter((f) => f.some((c) => c.trim() !== "") && (f[0] ?? "").trim() !== "");
       return [tabla(b.columnas.map(encabezado), filas)];
+    }
+
+    // El informe sí lleva el puntaje y el puesto, aunque no sean campos: son
+    // la conclusión del taller. Y van ordenados, que en pantalla no se puede
+    // —reordenar mientras alguien escribe le mueve el campo del cursor— pero
+    // en un documento que se lee es justo lo que se necesita.
+    case "matriz_priorizacion": {
+      const puntajes = filasDe(b.id).map((f) => {
+        const notas: NotasFila = Object.fromEntries(b.criterios.map((cr) => {
+          const n = Number(texto(campo.fila(b.id, f.id, cr.id)));
+          return [cr.id, Number.isFinite(n) && n > 0 ? n : null];
+        }));
+        return {
+          filaId: f.id,
+          puntaje: puntaje(notas, b.criterios, b.maximo),
+          celdas: [
+            ...b.columnas.map((c) => texto(campo.fila(b.id, f.id, c.id))),
+            ...b.criterios.map((cr) => texto(campo.fila(b.id, f.id, cr.id))),
+          ],
+        };
+      });
+      const puesto = puestos(puntajes);
+      const filas = puntajes
+        .filter((p) => p.celdas.some((c) => c.trim() !== ""))
+        .sort((a, c) => (puesto.get(a.filaId) ?? 99) - (puesto.get(c.filaId) ?? 99))
+        .map((p) => [
+          String(puesto.get(p.filaId) ?? "—"),
+          ...p.celdas,
+          p.puntaje == null ? "" : String(p.puntaje),
+        ]);
+      return [tabla(
+        ["#", ...b.columnas.map((c) => c.titulo), ...b.criterios.map((c) => c.titulo), "Puntaje"],
+        filas,
+      )];
+    }
+
+    case "cronograma": {
+      const filas = filasDe(b.id)
+        .map((f) => {
+          const iMes = Number(texto(campo.fila(b.id, f.id, "mes")));
+          const anio = texto(campo.fila(b.id, f.id, "anio"));
+          return {
+            anio,
+            iMes,
+            celdas: [
+              ...b.columnas.map((c) => texto(campo.fila(b.id, f.id, c.id))),
+              anio && MESES[iMes] ? `${MESES[iMes]} de ${anio}` : "",
+            ],
+          };
+        })
+        .filter((f) => f.celdas.some((c) => c.trim() !== ""))
+        // En orden cronológico: el cronograma impreso se lee como calendario.
+        .sort((a, c) =>
+          (a.anio || "9999").localeCompare(c.anio || "9999")
+          || (Number.isFinite(a.iMes) ? a.iMes : 99) - (Number.isFinite(c.iMes) ? c.iMes : 99))
+        .map((f) => f.celdas);
+      return [tabla([...b.columnas.map((c) => c.titulo), "Queda concretado en"], filas)];
     }
 
     case "chips_agregables": {

@@ -107,6 +107,26 @@ function camposDeBloque(b: Bloque, filas: Fila[]): CampoEsperado[] {
       return [...encabezados, ...celdas];
     }
 
+    // El puntaje y el puesto no son campos: se calculan a partir de las
+    // notas, así que no entran al progreso. Contarlos haría que el taller
+    // marcara avance por algo que la empresa no respondió.
+    case "matriz_priorizacion":
+      return filasDe(filas, b.id).flatMap((f) => [
+        ...b.columnas.map((col) =>
+          c(campo.fila(b.id, f.id, col.id), (col.requerida ?? true) && req),
+        ),
+        ...b.criterios.map((cr) => c(campo.fila(b.id, f.id, cr.id))),
+      ]);
+
+    case "cronograma":
+      return filasDe(filas, b.id).flatMap((f) => [
+        ...b.columnas.map((col) =>
+          c(campo.fila(b.id, f.id, col.id), (col.requerida ?? true) && req),
+        ),
+        c(campo.fila(b.id, f.id, "anio")),
+        c(campo.fila(b.id, f.id, "mes")),
+      ]);
+
     case "chips_agregables":
       return [c(campo.simple(b.id))];
 

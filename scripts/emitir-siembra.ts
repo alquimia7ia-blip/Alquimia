@@ -11,6 +11,7 @@
 import { MODULO_1, MODULOS_PENDIENTES } from "../supabase/seed/modulo-1";
 import { MODULO_2 } from "../supabase/seed/modulo-2";
 import { MODULO_3 } from "../supabase/seed/modulo-3";
+import { MODULO_4 } from "../supabase/seed/modulo-4";
 import { validarDefinicion } from "../lib/talleres/esquema";
 import { camposEsperados } from "../lib/talleres/progreso";
 import { bloques } from "../lib/talleres/rutas";
@@ -48,6 +49,10 @@ const modulos = [
   { ...MODULO_1, publicado: true },
   { ...MODULO_2, publicado: true },
   { ...MODULO_3, publicado: true },
+  // El 4 se siembra publicado pero sin bitácoras para toda la cohorte: cada
+  // empresa lo ve cuando se le crea la suya. Así se puede revisar el módulo
+  // con una empresa antes de abrirlo a las demás.
+  { ...MODULO_4, publicado: true },
   ...MODULOS_PENDIENTES.map((m) => ({ ...m, publicado: false, talleres: [] as TallerSemilla[] })),
 ];
 

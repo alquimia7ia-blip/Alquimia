@@ -482,7 +482,12 @@ export const MODULO_1 = {
  * presentaciones: 1 ¿Dónde estamos? · 2 ¿A dónde queremos ir? ·
  * 3 ¿Con quién lo haremos? · 4 ¿Cómo lo haremos?
  */
-export const MODULOS_PENDIENTES = [
-  { numero: 4, slug: "plan-de-accion", pregunta: "¿Cómo lo haremos?", titulo: "Plan de acción",
-    lead: "Cuáles son las acciones que nos llevarán a cumplir nuestras declaraciones." },
-];
+/**
+ * Módulos anunciados y todavía sin contenido.
+ *
+ * Se siembran sin publicar para que el programa completo se vea venir desde
+ * el primer día. Vacío desde que el Módulo 4 tiene sus talleres.
+ */
+export const MODULOS_PENDIENTES: {
+  numero: number; slug: string; pregunta: string; titulo: string; lead: string;
+}[] = [];

@@ -30,6 +30,17 @@ export function Escala({ campoId, escalaId }: { campoId: string; escalaId: strin
   );
 }
 
+/**
+ * Calificación de 1..N. La nota de un criterio de la matriz de priorización.
+ *
+ * Es el mismo control que el ranking y por eso lo reutiliza, pero no
+ * significa lo mismo: aquí dos proyectos pueden sacar 4 en impacto sin que
+ * eso sea un error, así que no hay números «ya usados» que atenuar.
+ */
+export function Nota({ campoId, maximo }: { campoId: string; maximo: number }) {
+  return <Ranking campoId={campoId} maximo={maximo} usados={[]} />;
+}
+
 /** Prioridad 1..N, excluyente dentro del bloque. Las cinco fuerzas. */
 export function Ranking({
   campoId, maximo, usados,

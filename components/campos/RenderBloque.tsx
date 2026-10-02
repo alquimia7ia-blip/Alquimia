@@ -2,10 +2,15 @@
 
 import { campo } from "@/lib/talleres/rutas";
 import { opcion } from "@/lib/talleres/escalas";
-import type { Bloque, ColorEscala } from "@/lib/talleres/tipos";
+import {
+  MESES, puntaje, puestos, puntajeMaximo, type NotasFila,
+} from "@/lib/talleres/priorizacion";
+import type {
+  Bloque, ColorEscala, CriterioPriorizacion, Fila,
+} from "@/lib/talleres/tipos";
 import { useBitacora, conNegritas } from "./contexto";
 import { Texto } from "./Texto";
-import { Escala, Ranking } from "./Escala";
+import { Escala, Nota, Ranking } from "./Escala";
 
 /**
  * Un bloque, renderizado.
@@ -29,6 +34,119 @@ function Ayuda({ texto }: { texto?: string }) {
         </summary>
       <div className="cuerpo">{conNegritas(texto)}</div>
     </details>
+  );
+}
+
+/**
+ * La fórmula del puntaje, a la vista.
+ *
+ * No es decoración. El orden que sale de esta matriz decide en qué gasta la
+ * empresa el año siguiente, y una cifra que aparece sin explicación se
+ * acepta o se descarta en bloque. Escrita, se puede discutir criterio por
+ * criterio en la asesoría, que es para lo que sirve.
+ */
+function Formula({
+  criterios, maximo, tope,
+}: { criterios: CriterioPriorizacion[]; maximo: number; tope: number }) {
+  const invertidos = criterios.filter((c) => c.invertido);
+  return (
+    <div className="hint">
+      <b>Cómo se calcula el puntaje.</b>{" "}
+      Cada criterio se califica de 1 a {maximo} y se suman: máximo {tope} puntos.
+      {invertidos.length > 0 && (
+        <>
+          {" "}
+          {invertidos.map((c) => c.titulo.toLowerCase()).join(" y ")}{" "}
+          {invertidos.length === 1 ? "entra invertido" : "entran invertidos"} ({maximo + 1} − nota),
+          porque exigir más recursos no vuelve más prioritario a un proyecto.
+        </>
+      )}{" "}
+      El número de la izquierda es el orden de ejecución que resulta. Si no te
+      cuadra, la discusión es sobre las notas, no sobre la suma.
+    </div>
+  );
+}
+
+/** Textos que se insertan de un clic en la primera columna de una tabla. */
+function Sugerencias({
+  bloqueId, columna, textos, filas,
+}: { bloqueId: string; columna: string; textos?: string[]; filas: Fila[] }) {
+  const bit = useBitacora();
+  if (!textos?.length || bit.soloLectura) return null;
+  return (
+    <div>
+      <span className="lbl">Sugerencias · un clic las agrega</span>
+      <div className="sugs">
+        {textos.map((s) => (
+          <button key={s} className="sug" type="button"
+            onClick={() => {
+              const libre = filas.find((f) => !bit.valor(campo.fila(bloqueId, f.id, columna)));
+              if (libre) bit.escribir(campo.fila(bloqueId, libre.id, columna), s);
+              else bit.agregarFila(bloqueId);
+            }}>{s}</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Año y mes en que el proyecto queda concretado. */
+function Fecha({
+  bloqueId, filaId, anios,
+}: { bloqueId: string; filaId: string; anios: number[] }) {
+  const bit = useBitacora();
+  const campoAnio = campo.fila(bloqueId, filaId, "anio");
+  const campoMes = campo.fila(bloqueId, filaId, "mes");
+  const anio = bit.valor(campoAnio);
+  const mes = bit.valor(campoMes);
+
+  return (
+    <div className="crono-sel">
+      <select className="f" value={typeof mes === "string" ? mes : ""}
+              disabled={bit.soloLectura}
+              onChange={(e) => bit.escribir(campoMes, e.target.value, { inmediato: true })}>
+        <option value="">Mes…</option>
+        {MESES.map((m, i) => <option key={m} value={String(i)}>{m}</option>)}
+      </select>
+      <select className="f" value={typeof anio === "string" ? anio : ""}
+              disabled={bit.soloLectura}
+              onChange={(e) => bit.escribir(campoAnio, e.target.value, { inmediato: true })}>
+        <option value="">Año…</option>
+        {anios.map((a) => <option key={a} value={String(a)}>{a}</option>)}
+      </select>
+    </div>
+  );
+}
+
+/**
+ * El horizonte dibujado, con el mes elegido marcado.
+ *
+ * Los dos selectores ya guardan el dato; esto existe para que el plan se lea
+ * como plan. Doce proyectos con sus fechas en texto son doce datos sueltos;
+ * en la franja se ve de un golpe si todo se prometió para el mismo trimestre,
+ * que es el error más común al cerrar este taller.
+ */
+function Franja({
+  bloqueId, filaId, anios,
+}: { bloqueId: string; filaId: string; anios: number[] }) {
+  const bit = useBitacora();
+  const anio = bit.valor(campo.fila(bloqueId, filaId, "anio"));
+  const mes = bit.valor(campo.fila(bloqueId, filaId, "mes"));
+  const iMes = typeof mes === "string" && mes !== "" ? Number(mes) : null;
+
+  return (
+    <div className="crono-franja" aria-hidden="true">
+      {anios.map((a) => (
+        <span key={a} className={`crono-anio ${String(a) === anio ? "activo" : ""}`}>
+          <i className="crono-rotulo">{String(a).slice(2)}</i>
+          {MESES.map((m, i) => (
+            <i key={m}
+               className={`crono-mes ${String(a) === anio && i === iMes ? "hito" : ""}`}
+               title={`${m} ${a}`} />
+          ))}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -322,22 +440,151 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
               </button>
             </div>
           )}
-          {b.sugerencias && !bit.soloLectura && (
-            <div>
-              <span className="lbl">Sugerencias · un clic las agrega</span>
-              <div className="sugs">
-                {b.sugerencias.map((s) => (
-                  <button key={s} className="sug" type="button"
-                    onClick={() => {
-                      const primeraCol = b.columnas[0]!.id;
-                      const libre = filas.find((f) => !bit.valor(campo.fila(b.id, f.id, primeraCol)));
-                      if (libre) bit.escribir(campo.fila(b.id, libre.id, primeraCol), s);
-                      else bit.agregarFila(b.id);
-                    }}>{s}</button>
-                ))}
-              </div>
-            </div>
+          <Sugerencias bloqueId={b.id} columna={b.columnas[0]!.id}
+                       textos={b.sugerencias} filas={filas} />
+        </div>
+      );
+    }
+
+    case "matriz_priorizacion": {
+      const filas = bit.filas(b.id);
+      const notasDe = (filaId: string): NotasFila =>
+        Object.fromEntries(b.criterios.map((cr) => {
+          const v = bit.valor(campo.fila(b.id, filaId, cr.id));
+          const n = typeof v === "string" && v.trim() !== "" ? Number(v) : NaN;
+          return [cr.id, Number.isFinite(n) ? n : null];
+        }));
+
+      const puntajes = filas.map((f) => ({
+        filaId: f.id,
+        puntaje: puntaje(notasDe(f.id), b.criterios, b.maximo),
+      }));
+      const puesto = puestos(puntajes);
+      const tope = puntajeMaximo(b.criterios, b.maximo);
+
+      return (
+        <div className="stack">
+          <Ayuda texto={b.ayuda} />
+          <Formula criterios={b.criterios} maximo={b.maximo} tope={tope} />
+          <div className="tw">
+            <table style={{
+              minWidth: b.columnas.reduce((n, c) => n + (c.numerica ? 132 : 224), 0)
+                + b.criterios.length * 170 + 190,
+            }}>
+              <thead>
+                <tr>
+                  <th className="pri-puesto">#</th>
+                  {b.columnas.map((c) => <th key={c.id}>{c.titulo}</th>)}
+                  {b.criterios.map((cr) => (
+                    <th key={cr.id}>
+                      {cr.titulo}
+                      {cr.invertido && <span className="pri-inv" title="Una nota alta resta prioridad">↓</span>}
+                      {cr.ayuda && <span className="pri-ayuda">{cr.ayuda}</span>}
+                    </th>
+                  ))}
+                  <th>Puntaje</th>
+                  {!bit.soloLectura && <th />}
+                </tr>
+              </thead>
+              <tbody>
+                {filas.map((f, i) => {
+                  const p = puntajes[i]!.puntaje;
+                  return (
+                    <tr key={f.id}>
+                      <td className="pri-puesto">{puesto.get(f.id) ?? "—"}</td>
+                      {b.columnas.map((c) => (
+                        <td key={c.id}>
+                          <Texto campoId={campo.fila(b.id, f.id, c.id)} marcador={c.marcador}
+                                 multilinea={c.multilinea ?? false} numerica={c.numerica}
+                                 filas={c.multilinea ? 2 : 1} />
+                        </td>
+                      ))}
+                      {b.criterios.map((cr) => (
+                        <td key={cr.id}>
+                          <Nota campoId={campo.fila(b.id, f.id, cr.id)} maximo={b.maximo} />
+                        </td>
+                      ))}
+                      <td>
+                        {p == null ? (
+                          <span className="pri-sin">Sin calificar</span>
+                        ) : (
+                          <span className="pri-pts">
+                            <b>{p}</b>
+                            <i style={{ width: `${(p / tope) * 100}%` }} />
+                          </span>
+                        )}
+                      </td>
+                      {!bit.soloLectura && (
+                        <td>
+                          <button className="del" type="button" title="Eliminar"
+                            onClick={() => bit.eliminarFila(f.id)}>×</button>
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {!bit.soloLectura && (
+            <button className="padd" type="button" onClick={() => bit.agregarFila(b.id)}>
+              + Proyecto
+            </button>
           )}
+          <Sugerencias bloqueId={b.id} columna={b.columnas[0]!.id}
+                       textos={b.sugerencias} filas={filas} />
+        </div>
+      );
+    }
+
+    case "cronograma": {
+      const filas = bit.filas(b.id);
+      return (
+        <div className="stack">
+          <Ayuda texto={b.ayuda} />
+          <div className="tw">
+            <table style={{
+              minWidth: b.columnas.reduce((n, c) => n + (c.numerica ? 132 : 224), 0)
+                + b.anios.length * 190 + 240,
+            }}>
+              <thead>
+                <tr>
+                  {b.columnas.map((c) => <th key={c.id}>{c.titulo}</th>)}
+                  <th>Queda concretado en</th>
+                  <th>Horizonte {b.anios[0]}–{b.anios[b.anios.length - 1]}</th>
+                  {!bit.soloLectura && <th />}
+                </tr>
+              </thead>
+              <tbody>
+                {filas.map((f) => (
+                  <tr key={f.id}>
+                    {b.columnas.map((c) => (
+                      <td key={c.id}>
+                        <Texto campoId={campo.fila(b.id, f.id, c.id)} marcador={c.marcador}
+                               multilinea={c.multilinea ?? false} numerica={c.numerica}
+                               filas={c.multilinea ? 2 : 1} />
+                      </td>
+                    ))}
+                    <td><Fecha bloqueId={b.id} filaId={f.id} anios={b.anios} /></td>
+                    <td><Franja bloqueId={b.id} filaId={f.id} anios={b.anios} /></td>
+                    {!bit.soloLectura && (
+                      <td>
+                        <button className="del" type="button" title="Eliminar"
+                          onClick={() => bit.eliminarFila(f.id)}>×</button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {!bit.soloLectura && (
+            <button className="padd" type="button" onClick={() => bit.agregarFila(b.id)}>
+              + Proyecto
+            </button>
+          )}
+          <Sugerencias bloqueId={b.id} columna={b.columnas[0]!.id}
+                       textos={b.sugerencias} filas={filas} />
         </div>
       );
     }

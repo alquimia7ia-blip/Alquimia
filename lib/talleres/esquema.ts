@@ -28,6 +28,17 @@ const base = {
 
 const color = z.enum(["fav", "med", "des", "na", "acento"]);
 
+/** Columna de texto de una fila dinámica: la comparten tabla, priorización
+ *  y cronograma. */
+const columna = z.object({
+  id: identificador,
+  titulo: z.string().min(1),
+  multilinea: z.boolean().optional(),
+  numerica: z.boolean().optional(),
+  marcador: z.string().optional(),
+  requerida: z.boolean().optional(),
+});
+
 const bloque = z.discriminatedUnion("tipo", [
   z.object({ ...base, tipo: z.literal("nota"), cuerpo: z.string().min(1) }),
 
@@ -105,24 +116,43 @@ const bloque = z.discriminatedUnion("tipo", [
   z.object({
     ...base,
     tipo: z.literal("tabla"),
-    columnas: z
-      .array(
-        z.object({
-          id: identificador,
-          titulo: z.string().min(1),
-          multilinea: z.boolean().optional(),
-          numerica: z.boolean().optional(),
-          marcador: z.string().optional(),
-          requerida: z.boolean().optional(),
-        }),
-      )
-      .min(1),
+    columnas: z.array(columna).min(1),
     filasIniciales: z.number().int().min(0).max(50).optional(),
     filasMinimas: z.number().int().min(0).max(50).optional(),
     sugerencias: z.array(z.string()).optional(),
     columnasEditables: z
       .array(z.object({ id: identificador, valorPorDefecto: z.string() }))
       .optional(),
+  }),
+
+  z.object({
+    ...base,
+    tipo: z.literal("matriz_priorizacion"),
+      columnas: z.array(columna).min(1),
+      criterios: z
+        .array(
+          z.object({
+            id: identificador,
+            titulo: z.string().min(1),
+            ayuda: z.string().optional(),
+            invertido: z.boolean().optional(),
+          }),
+        )
+        .min(2),
+      maximo: z.number().int().min(2).max(10),
+    filasIniciales: z.number().int().min(0).max(50).optional(),
+    filasMinimas: z.number().int().min(0).max(50).optional(),
+    sugerencias: z.array(z.string()).optional(),
+  }),
+
+  z.object({
+    ...base,
+    tipo: z.literal("cronograma"),
+    columnas: z.array(columna).min(1),
+    anios: z.array(z.number().int().min(2000).max(2100)).min(1).max(10),
+    filasIniciales: z.number().int().min(0).max(50).optional(),
+    filasMinimas: z.number().int().min(0).max(50).optional(),
+    sugerencias: z.array(z.string()).optional(),
   }),
 
   z.object({
@@ -185,6 +215,33 @@ export const definicionSchema = z
           });
         }
         vistos.add(b.id);
+
+        // Columnas y criterios comparten el espacio de nombres del campo_id
+        // (`<bloque>.<fila>.<id>`). Un id repetido entre los dos haría que la
+        // nota de un criterio y el texto de una columna se escribieran sobre
+        // el mismo campo, y el puntaje leería texto.
+        if (b.tipo === "matriz_priorizacion") {
+          const ids = [...b.columnas, ...b.criterios].map((x) => x.id);
+          if (new Set(ids).size !== ids.length) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `bloque "${b.id}": columnas y criterios comparten un id`,
+            });
+          }
+        }
+
+        // «anio» y «mes» son los campos que el propio bloque escribe en cada
+        // fila; una columna con ese id los sobrescribiría.
+        if (b.tipo === "cronograma") {
+          for (const col of b.columnas) {
+            if (col.id === "anio" || col.id === "mes") {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `bloque "${b.id}": la columna "${col.id}" choca con la fecha`,
+              });
+            }
+          }
+        }
 
         if (b.tipo === "cuadrantes" && b.alimentadoPor) {
           const ids = new Set(b.cuadrantes.map((q) => q.id));
