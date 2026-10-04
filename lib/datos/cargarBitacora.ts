@@ -20,7 +20,14 @@ export type { Presentacion };
  * mejor así: el filtro vive en la base y no en cada consulta.
  */
 
-export type ModuloAbierto = { numero: number; slug: string; titulo: string };
+export type ModuloAbierto = {
+  numero: number;
+  slug: string;
+  titulo: string;
+  /** A qué programa pertenece. Con dos programas, el número ya no basta
+   *  para distinguir un módulo: hay dos «Módulo 1». */
+  programa: string;
+};
 
 export type BitacoraCargada = {
   bitacoraId: string;
@@ -53,6 +60,13 @@ export type Carga =
  * también las bitácoras de su cohorte, y entonces `maybeSingle()` recibiría
  * varias filas, devolvería error, y la página diría «sin bitácora». El tutor
  * perdería su propio taller el día que se le dieran permisos.
+ *
+ * El slug tampoco se resuelve con `maybeSingle()`, y por la misma clase de
+ * razón: `modulos.slug` es único **por programa**, no en toda la tabla. Con
+ * dos programas en la plataforma, dos módulos pueden llamarse igual, la
+ * consulta devolvería dos filas y la página diría «este módulo no existe»
+ * sobre un módulo que sí existe. Se resuelve por la bitácora: entre los
+ * módulos que llevan ese slug, el que esta persona tenga abierto.
  */
 export async function cargarBitacora(moduloSlug: string): Promise<Carga> {
   const supabase = await clienteServidor();
@@ -60,23 +74,26 @@ export async function cargarBitacora(moduloSlug: string): Promise<Carga> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { estado: "sin-sesion" };
 
-  const { data: modulo } = await supabase
+  const { data: candidatos } = await supabase
     .from("modulos")
     .select(CAMPOS_MODULO)
-    .eq("slug", moduloSlug)
-    .maybeSingle();
-  if (!modulo) return { estado: "sin-modulo" };
+    .eq("slug", moduloSlug);
+  if (!candidatos || candidatos.length === 0) return { estado: "sin-modulo" };
 
   const propias = await empresasPropias(supabase, user.id);
   if (propias.length === 0) return { estado: "sin-bitacora" };
 
-  const { data: bitacora } = await supabase
+  const { data: bitacoras } = await supabase
     .from("bitacoras")
     .select(CAMPOS_BITACORA)
-    .eq("modulo_id", modulo.id)
+    .in("modulo_id", candidatos.map((m) => m.id))
     .in("empresa_id", propias)
-    .maybeSingle();
+    .order("creado_at", { ascending: true });
+
+  const bitacora = bitacoras?.[0];
   if (!bitacora) return { estado: "sin-bitacora" };
+  const modulo = candidatos.find((m) => m.id === bitacora.modulo_id);
+  if (!modulo) return { estado: "sin-modulo" };
 
   return armar(supabase, user.id, modulo, bitacora, propias);
 }
@@ -113,15 +130,22 @@ export async function cargarBitacoraPorId(bitacoraId: string): Promise<Carga> {
 }
 
 const CAMPOS_MODULO =
-  "id, numero, slug, titulo, pregunta, presentacion_url, presentacion_etiqueta";
-const CAMPOS_BITACORA = "id, empresa_id, cohorte_id, estado, empresas(nombre)";
+  "id, numero, slug, titulo, pregunta, programa_id, presentacion_url, presentacion_etiqueta";
+const CAMPOS_BITACORA = "id, empresa_id, cohorte_id, estado, modulo_id, empresas(nombre)";
 
 type ModuloFila = {
-  id: string; numero: number; slug: string; pregunta: string;
+  id: string; numero: number; slug: string; pregunta: string; programa_id: string;
   presentacion_url: string | null; presentacion_etiqueta: string | null;
 };
 type BitacoraFila = {
   id: string; empresa_id: string; cohorte_id: string; empresas: unknown;
+};
+
+/** Un módulo con bitácora abierta, tal como vuelve de la consulta. */
+type ModuloConPrograma = ModuloAbierto & {
+  publicado: boolean;
+  programa_id: string;
+  programas: { nombre: string } | null;
 };
 
 /** Empresas activas de una persona. RLS ya limita la consulta a las suyas. */
@@ -153,8 +177,11 @@ async function armar(
       supabase.from("filas").select("id, bloque_id, taller_id, orden")
         .eq("bitacora_id", bitacora.id).is("eliminada_at", null),
       // Acotado a la misma empresa: sin esto, un facilitador vería los módulos
-      // de toda la cohorte repetidos en el selector.
-      supabase.from("bitacoras").select("modulos(numero, slug, titulo, publicado)")
+      // de toda la cohorte repetidos en el selector. El nombre del programa
+      // viene porque con dos programas hay dos «Módulo 1», y el selector los
+      // tiene que separar en vez de intercalarlos.
+      supabase.from("bitacoras")
+        .select("modulos(numero, slug, titulo, publicado, programa_id, programas(nombre))")
         .in("empresa_id", empresas),
     ]);
 
@@ -171,10 +198,19 @@ async function armar(
       cohorteId: bitacora.cohorte_id,
       presentacion: presentacionDe(modulo.presentacion_url, modulo.presentacion_etiqueta),
       modulos: (abiertos ?? [])
-        .map((b) => b.modulos as unknown as ModuloAbierto & { publicado: boolean })
+        .map((b) => b.modulos as unknown as ModuloConPrograma)
         .filter((m) => m?.publicado)
-        .map(({ numero, slug, titulo }) => ({ numero, slug, titulo }))
-        .sort((a, b) => a.numero - b.numero),
+        .map(({ numero, slug, titulo, programa_id, programas }) => ({
+          numero, slug, titulo,
+          programa: programas?.nombre ?? "",
+          // El programa en curso primero: es donde está trabajando.
+          propio: programa_id === modulo.programa_id,
+        }))
+        .sort((a, b) =>
+          Number(b.propio) - Number(a.propio)
+          || a.programa.localeCompare(b.programa)
+          || a.numero - b.numero)
+        .map(({ numero, slug, titulo, programa }) => ({ numero, slug, titulo, programa })),
       talleres: (talleres ?? []).map((t): TallerVista => ({
         id: t.id, numero: t.numero, slug: t.slug, corto: t.corto,
         titulo: t.titulo, lead: t.lead ?? "",

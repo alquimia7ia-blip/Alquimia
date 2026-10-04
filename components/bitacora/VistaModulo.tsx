@@ -28,7 +28,7 @@ type Props = {
   talleres: TallerVista[];
   moduloTitulo: string;
   /** Módulos entre los que se puede saltar. */
-  modulos?: { numero: number; slug: string; titulo: string }[];
+  modulos?: { numero: number; slug: string; titulo: string; programa?: string }[];
   moduloSlug?: string;
   /** Sin esto el salto navega a /<slug>. El archivo autónomo, que no tiene
    *  rutas, lo usa para cambiar de módulo en memoria. */
@@ -379,39 +379,60 @@ function Resumen({
  * Hasta que se publicó el Módulo 2 no existía: con un solo módulo el riel
  * bastaba. Se dibuja solo cuando hay más de uno, así que el archivo autónomo
  * —que lleva un módulo y ningún enlace— no cambia.
+ *
+ * Con más de un programa se agrupa por programa y cada grupo lleva su
+ * nombre. Sin eso, los módulos de los dos programas quedaban intercalados y
+ * el riel mostraba dos veces «1», «2», «3» sin decir de qué son: el salto
+ * entre programas sería un acto de fe.
  */
 function SelectorModulos({
   modulos, actual, onModulo,
 }: {
-  modulos?: { numero: number; slug: string; titulo: string }[];
+  modulos?: { numero: number; slug: string; titulo: string; programa?: string }[];
   actual?: string;
   onModulo?: (slug: string) => void;
 }) {
   if (!modulos || modulos.length < 2) return null;
+
+  // Agrupa respetando el orden recibido: quien carga la bitácora ya puso
+  // primero el programa en curso.
+  const grupos: { programa: string; modulos: typeof modulos }[] = [];
+  for (const m of modulos) {
+    const programa = m.programa ?? "";
+    const ultimo = grupos[grupos.length - 1];
+    if (ultimo && ultimo.programa === programa) ultimo.modulos.push(m);
+    else grupos.push({ programa, modulos: [m] });
+  }
+  const variosProgramas = grupos.length > 1;
+
   return (
     <>
-      <div className="ruta-h">Programa</div>
-      <nav className="modulos" aria-label="Módulos del programa">
-        {modulos.map((m) => {
-          const contenido = (
-            <>
-              <span className="mod-n">{m.numero}</span>
-              <span className="mod-t">{m.titulo}</span>
-            </>
-          );
-          const marcado = m.slug === actual ? "true" : undefined;
-          return onModulo ? (
-            <button key={m.slug} className="mod" type="button" aria-current={marcado}
-                    onClick={() => onModulo(m.slug)}>
-              {contenido}
-            </button>
-          ) : (
-            <a key={m.slug} className="mod" href={`/${m.slug}`} aria-current={marcado}>
-              {contenido}
-            </a>
-          );
-        })}
-      </nav>
+      {grupos.map((g) => (
+        <div key={g.programa || "unico"}>
+          <div className="ruta-h">{variosProgramas && g.programa ? g.programa : "Programa"}</div>
+          <nav className="modulos" aria-label={`Módulos de ${g.programa || "el programa"}`}>
+            {g.modulos.map((m) => {
+              const contenido = (
+                <>
+                  <span className="mod-n">{m.numero}</span>
+                  <span className="mod-t">{m.titulo}</span>
+                </>
+              );
+              const marcado = m.slug === actual ? "true" : undefined;
+              return onModulo ? (
+                <button key={m.slug} className="mod" type="button" aria-current={marcado}
+                        onClick={() => onModulo(m.slug)}>
+                  {contenido}
+                </button>
+              ) : (
+                <a key={m.slug} className="mod" href={`/${m.slug}`} aria-current={marcado}>
+                  {contenido}
+                </a>
+              );
+            })}
+          </nav>
+        </div>
+      ))}
     </>
   );
 }

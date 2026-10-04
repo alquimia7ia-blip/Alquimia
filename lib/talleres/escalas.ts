@@ -57,6 +57,53 @@ export const ESCALAS: Record<string, Escala> = {
       { valor: "na", etiqueta: "No aplica", color: "na" },
     ],
   },
+  // Programa Lean · cada cuánto aparece el desperdicio.
+  //
+  // Invertida respecto a las demás escalas: aquí lo frecuente es lo malo.
+  // «Todos los días» es rojo y «nunca» es verde, y eso hay que sostenerlo en
+  // los colores o quien responde marca verde creyendo que es bueno.
+  frecuencia: {
+    id: "frecuencia",
+    opciones: [
+      { valor: "nunca", etiqueta: "Nunca", color: "fav" },
+      { valor: "veces", etiqueta: "Alguna vez", color: "med" },
+      { valor: "seguido", etiqueta: "Seguido", color: "acento" },
+      { valor: "diario", etiqueta: "Todos los días", color: "des" },
+      { valor: "na", etiqueta: "No aplica", color: "na" },
+    ],
+  },
+  // Programa Lean · qué tan firme está un pilar de la Industria 5.0.
+  solidez: {
+    id: "solidez",
+    opciones: [
+      { valor: "solido", etiqueta: "Sólido", color: "fav", sugiere: "fortaleza" },
+      { valor: "aceptable", etiqueta: "Aceptable", color: "med" },
+      { valor: "debil", etiqueta: "Es nuestro eslabón débil", color: "des", sugiere: "debilidad" },
+    ],
+  },
+  // Programa Lean · dónde está la empresa con cada tecnología habilitante.
+  // Los tres niveles son los de la conferencia: básico, en desarrollo y
+  // avanzado. «No aplica» se agrega porque una planta de ocho personas no
+  // tiene por qué querer un gemelo digital, y forzarla a calificarlo
+  // «básico» la haría parecer atrasada en algo que no necesita.
+  madurez_digital: {
+    id: "madurez_digital",
+    opciones: [
+      { valor: "basico", etiqueta: "Básico", color: "des" },
+      { valor: "desarrollo", etiqueta: "En desarrollo", color: "med" },
+      { valor: "avanzado", etiqueta: "Avanzado", color: "fav" },
+      { valor: "na", etiqueta: "No nos aplica", color: "na" },
+    ],
+  },
+  // Programa Lean · tres grados para lo que se cumple a medias.
+  grado: {
+    id: "grado",
+    opciones: [
+      { valor: "no", etiqueta: "No", color: "des" },
+      { valor: "parte", etiqueta: "En parte", color: "med" },
+      { valor: "si", etiqueta: "Sí", color: "fav" },
+    ],
+  },
 };
 
 export function escala(id: string): Escala {

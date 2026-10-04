@@ -231,6 +231,156 @@ export type BloqueFlujoCaja = Base & {
   salidas: { id: string; titulo: string }[];
 };
 
+// ---------------------------------------------------------------------
+// Tabla calculada
+// ---------------------------------------------------------------------
+
+/** De dónde sale un operando de una fórmula. */
+export type RefCalculo =
+  /** Valor de esa columna en la fila que se está calculando. */
+  | { de: "columna"; id: string }
+  /** Uno de los parámetros globales del bloque. */
+  | { de: "parametro"; id: string }
+  /** Suma de esa columna en todas las filas. Solo para indicadores. */
+  | { de: "total"; columna: string }
+  /** Promedio de esa columna sobre las filas con dato. Solo para indicadores. */
+  | { de: "promedio"; columna: string }
+  /** Otro indicador, declarado antes que este. Solo para indicadores. */
+  | { de: "indicador"; id: string }
+  | { de: "constante"; valor: number };
+
+/**
+ * Las cinco operaciones que hacen falta.
+ *
+ * Es deliberadamente un lenguaje pobre y no una expresión que se evalúe: la
+ * definición del taller viaja en JSONB y la escribe quien carga contenido,
+ * no quien programa. Un `eval` ahí sería ejecutar texto de la base de datos
+ * en el navegador de la empresa. Con estas cinco se arman el OEE, el takt
+ * time, el porcentaje de valor agregado y el costo del desperdicio, que es
+ * todo lo que los talleres piden.
+ */
+export type Operacion =
+  | { op: "suma"; de: RefCalculo[] }
+  | { op: "resta"; de: [RefCalculo, RefCalculo] }
+  | { op: "producto"; de: RefCalculo[] }
+  | { op: "division"; de: [RefCalculo, RefCalculo] }
+  /** a ÷ b × 100. */
+  | { op: "porcentaje"; de: [RefCalculo, RefCalculo] };
+
+export type FormatoCifra = "numero" | "pesos" | "porcentaje";
+
+/** Columna de una tabla calculada: se teclea, o se calcula. */
+export type ColumnaCalculada = ColumnaTabla & {
+  /** Sufijo bajo el título: «min», «m», «unidades/mes». */
+  unidad?: string;
+  /** Qué significa la columna. Va bajo el título, como en la priorización. */
+  pista?: string;
+  /** Si está, la columna no se teclea: la calcula el bloque. */
+  calculada?: Operacion;
+  formato?: FormatoCifra;
+  decimales?: number;
+  /** Suma la columna en el pie de la tabla. */
+  total?: boolean;
+};
+
+/** Dato global del bloque: alimenta las fórmulas de todas las filas. */
+export type ParametroCalculo = {
+  id: string;
+  titulo: string;
+  unidad?: string;
+  pista?: string;
+  marcador?: string;
+  /** Por defecto sí: son pocos y de ellos depende todo lo demás. */
+  requerido?: boolean;
+};
+
+/**
+ * Cifra que resume el bloque. El resultado del taller.
+ *
+ * Un indicador que solo usa parámetros y constantes es **de cabecera**: se
+ * calcula antes de recorrer las filas y las fórmulas de las columnas pueden
+ * apoyarse en él. Es lo que hace posible el takt time: tiempo disponible
+ * entre demanda es una sola cifra para toda la planta, y cada estación se
+ * compara contra ella. Como columna se teclearía repetida en cada fila, y
+ * entonces cada estación tendría su propio takt.
+ */
+export type IndicadorCalculo = {
+  id: string;
+  titulo: string;
+  pista?: string;
+  calculada: Operacion;
+  formato?: FormatoCifra;
+  decimales?: number;
+  unidad?: string;
+  /** Lo destaca: es la cifra por la que existe el taller. */
+  principal?: boolean;
+  /**
+   * Paso intermedio que no se muestra.
+   *
+   * Las operaciones no se anidan —a propósito: una fórmula anidada en JSONB
+   * no se puede leer—, así que un cálculo de tres pasos se escribe como tres
+   * indicadores. El OEE necesita «tiempo operando» y «producción ideal» para
+   * llegar a sus tres factores, y ninguno de los dos se lleva a una reunión.
+   */
+  oculto?: boolean;
+};
+
+/**
+ * Lo que el bloque concluye, en una frase.
+ *
+ * `umbral` compara un indicador contra tramos —un OEE de 48 % no dice nada
+ * a quien lo ve por primera vez; «por debajo de lo que se considera
+ * aceptable» sí—. `fila_maxima` nombra la fila que manda: el cuello de
+ * botella no es un número, es una estación con nombre.
+ *
+ * En los textos, `{valor}` se reemplaza por la cifra y `{fila}` por el
+ * nombre de la fila.
+ */
+export type VeredictoCalculado =
+  | {
+      tipo: "umbral";
+      indicador: string;
+      tramos: { hasta?: number; color: ColorEscala; texto: string }[];
+    }
+  | {
+      tipo: "fila_maxima";
+      /** Columna numérica que decide cuál fila manda. */
+      columna: string;
+      /** Columna de texto que da nombre a la fila. */
+      nombre: string;
+      texto: string;
+    };
+
+/**
+ * Tabla con parámetros, columnas derivadas e indicadores de resumen.
+ *
+ * Es el bloque que sostiene siete talleres del programa Lean: el OEE, el
+ * takt time, el porcentaje de valor agregado del flujo, el costo anual del
+ * desperdicio, el tiempo convertible de un cambio de referencia, los
+ * kilómetros caminados y la nivelación de la demanda. Los siete son la misma
+ * cosa —datos que la empresa tiene sueltos y una aritmética que nadie hace—
+ * y cada uno como tipo propio habrían sido siete implementaciones del mismo
+ * bucle.
+ *
+ * La aritmética importa más que la interfaz. Una empresa que cree que su OEE
+ * es del 85 % porque la máquina «casi no para» decide distinto cuando ve
+ * 48 % en pantalla; y ese número no se puede pedir como dato, porque si se
+ * pide, se estima. Por eso lo que se teclea son los insumos y lo que se
+ * calcula nunca es un campo.
+ */
+export type BloqueTablaCalculada = Base & {
+  tipo: "tabla_calculada";
+  parametros?: ParametroCalculo[];
+  /** Puede ir vacío: el OEE son solo parámetros e indicadores. */
+  columnas: ColumnaCalculada[];
+  filasIniciales?: number;
+  filasMinimas?: number;
+  sugerencias?: string[];
+  textoAgregar?: string;
+  indicadores?: IndicadorCalculo[];
+  veredicto?: VeredictoCalculado;
+};
+
 /** Etiquetas que se agregan y se quitan. Los procesos del Taller 7. */
 export type BloqueChipsAgregables = Base & {
   tipo: "chips_agregables";
@@ -282,6 +432,7 @@ export type Bloque =
   | BloqueMatrizPriorizacion
   | BloqueCronograma
   | BloqueFlujoCaja
+  | BloqueTablaCalculada
   | BloqueChipsAgregables
   | BloqueLineaTiempo
   | BloqueCuadrantes;

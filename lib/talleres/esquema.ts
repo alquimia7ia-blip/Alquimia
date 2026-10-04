@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ESCALAS } from "./escalas";
+import { cabecerasDe } from "./calculo";
 import type { Definicion } from "./tipos";
 
 /**
@@ -38,6 +39,37 @@ const columna = z.object({
   marcador: z.string().optional(),
   requerida: z.boolean().optional(),
   origen: z.boolean().optional(),
+});
+
+const formato = z.enum(["numero", "pesos", "porcentaje"]);
+
+/** Un operando de una fórmula. Qué refs son legales depende de dónde viva. */
+const refCalculo = z.discriminatedUnion("de", [
+  z.object({ de: z.literal("columna"), id: identificador }),
+  z.object({ de: z.literal("parametro"), id: identificador }),
+  z.object({ de: z.literal("total"), columna: identificador }),
+  z.object({ de: z.literal("promedio"), columna: identificador }),
+  z.object({ de: z.literal("indicador"), id: identificador }),
+  z.object({ de: z.literal("constante"), valor: z.number() }),
+]);
+
+const operacion = z.discriminatedUnion("op", [
+  // Uno solo es legal y se usa: es la forma de sacar el total de una columna
+  // como indicador sin inventar una operación «identidad».
+  z.object({ op: z.literal("suma"), de: z.array(refCalculo).min(1) }),
+  z.object({ op: z.literal("producto"), de: z.array(refCalculo).min(1) }),
+  z.object({ op: z.literal("resta"), de: z.tuple([refCalculo, refCalculo]) }),
+  z.object({ op: z.literal("division"), de: z.tuple([refCalculo, refCalculo]) }),
+  z.object({ op: z.literal("porcentaje"), de: z.tuple([refCalculo, refCalculo]) }),
+]);
+
+const columnaCalculada = columna.extend({
+  unidad: z.string().optional(),
+  pista: z.string().optional(),
+  calculada: operacion.optional(),
+  formato: formato.optional(),
+  decimales: z.number().int().min(0).max(4).optional(),
+  total: z.boolean().optional(),
 });
 
 const bloque = z.discriminatedUnion("tipo", [
@@ -168,6 +200,69 @@ const bloque = z.discriminatedUnion("tipo", [
 
   z.object({
     ...base,
+    tipo: z.literal("tabla_calculada"),
+    parametros: z
+      .array(
+        z.object({
+          id: identificador,
+          titulo: z.string().min(1),
+          unidad: z.string().optional(),
+          pista: z.string().optional(),
+          marcador: z.string().optional(),
+          requerido: z.boolean().optional(),
+        }),
+      )
+      .optional(),
+    // Vacío es legal: el OEE son cinco parámetros y cuatro indicadores, sin
+    // tabla. Lo que no es legal es un bloque sin nada que teclear, y eso lo
+    // comprueba el superRefine de abajo.
+    columnas: z.array(columnaCalculada),
+    filasIniciales: z.number().int().min(0).max(50).optional(),
+    filasMinimas: z.number().int().min(0).max(50).optional(),
+    sugerencias: z.array(z.string()).optional(),
+    textoAgregar: z.string().optional(),
+    indicadores: z
+      .array(
+        z.object({
+          id: identificador,
+          titulo: z.string().min(1),
+          pista: z.string().optional(),
+          calculada: operacion,
+          formato: formato.optional(),
+          decimales: z.number().int().min(0).max(4).optional(),
+          unidad: z.string().optional(),
+          principal: z.boolean().optional(),
+          oculto: z.boolean().optional(),
+        }),
+      )
+      .optional(),
+    veredicto: z
+      .discriminatedUnion("tipo", [
+        z.object({
+          tipo: z.literal("umbral"),
+          indicador: identificador,
+          tramos: z
+            .array(
+              z.object({
+                hasta: z.number().optional(),
+                color,
+                texto: z.string().min(1),
+              }),
+            )
+            .min(2),
+        }),
+        z.object({
+          tipo: z.literal("fila_maxima"),
+          columna: identificador,
+          nombre: identificador,
+          texto: z.string().min(1),
+        }),
+      ])
+      .optional(),
+  }),
+
+  z.object({
+    ...base,
     tipo: z.literal("chips_agregables"),
     etiqueta: z.string().optional(),
     descripcion: z.string().optional(),
@@ -255,6 +350,119 @@ export const definicionSchema = z
                 code: z.ZodIssueCode.custom,
                 message: `bloque "${b.id}": la columna "${col.id}" choca con la fecha`,
               });
+            }
+          }
+        }
+
+        // La tabla calculada es el único bloque cuya definición lleva
+        // fórmulas, y una fórmula mal escrita no falla: devuelve «—» en
+        // silencio. Estas comprobaciones existen para que el error aparezca
+        // al sembrar el contenido y no delante de una empresa.
+        if (b.tipo === "tabla_calculada") {
+          const col = new Map(b.columnas.map((c) => [c.id, c]));
+          const entradas = b.columnas.filter((c) => !c.calculada);
+          const indicadores = b.indicadores ?? [];
+          const falla = (m: string) =>
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: `bloque "${b.id}": ${m}` });
+
+          if (col.size !== b.columnas.length) falla("hay columnas con el mismo id");
+          if (new Set(indicadores.map((i) => i.id)).size !== indicadores.length) {
+            falla("hay indicadores con el mismo id");
+          }
+          // «parametros» es el segundo segmento que usa `campo.parametro`.
+          if (col.has("parametros")) falla('la columna "parametros" choca con los parámetros');
+          if (entradas.length === 0 && (b.parametros ?? []).length === 0) {
+            falla("no hay nada que teclear: solo columnas calculadas");
+          }
+          if (indicadores.filter((i) => i.principal).length > 1) {
+            falla("dos indicadores marcados como principal");
+          }
+
+          const parametros = new Set((b.parametros ?? []).map((p) => p.id));
+          const refParametro = (r: { de: string; id?: string }) =>
+            r.de === "parametro" && !parametros.has(r.id ?? "")
+              ? falla(`la fórmula usa el parámetro "${r.id}", que no existe`)
+              : undefined;
+
+          // Dentro de una fila no existen los totales: se calculan después,
+          // cuando ya están todas las filas. Sí existen los indicadores de
+          // cabecera, que solo miran parámetros —el takt time—.
+          const cabecera = cabecerasDe(b);
+          const vistas = new Set<string>();
+          for (const c of b.columnas) {
+            if (!c.calculada) {
+              vistas.add(c.id);
+              continue;
+            }
+            if (c.origen) falla(`la columna calculada "${c.id}" no puede llevar origen`);
+            for (const r of c.calculada.de) {
+              refParametro(r);
+              if (r.de === "total" || r.de === "promedio") {
+                falla(`la columna "${c.id}" usa "${r.de}", que no existe dentro de una fila`);
+              }
+              if (r.de === "indicador" && !cabecera.has(r.id)) {
+                // Si dependiera de las filas, la fila necesitaría el total y
+                // el total necesitaría la fila.
+                falla(
+                  `la columna "${c.id}" usa el indicador "${r.id}", que depende de la tabla`,
+                );
+              }
+              if (r.de === "columna") {
+                const origen = col.get(r.id);
+                if (!origen) falla(`la columna "${c.id}" usa "${r.id}", que no existe`);
+                else if (!origen.numerica && !origen.calculada) {
+                  falla(`la columna "${c.id}" opera sobre "${r.id}", que no es numérica`);
+                } else if (!vistas.has(r.id)) {
+                  // Se evalúan en orden de declaración: una columna no puede
+                  // apoyarse en otra que todavía no se ha calculado.
+                  falla(`la columna "${c.id}" usa "${r.id}", declarada después`);
+                }
+              }
+            }
+            vistas.add(c.id);
+          }
+
+          const listos = new Set<string>();
+          for (const ind of indicadores) {
+            for (const r of ind.calculada.de) {
+              refParametro(r);
+              if (r.de === "columna") {
+                falla(`el indicador "${ind.id}" usa una columna suelta; usa total o promedio`);
+              }
+              if ((r.de === "total" || r.de === "promedio") && !col.has(r.columna)) {
+                falla(`el indicador "${ind.id}" suma "${r.columna}", que no existe`);
+              }
+              if (r.de === "indicador" && !listos.has(r.id)) {
+                falla(`el indicador "${ind.id}" usa "${r.id}", declarado después`);
+              }
+            }
+            listos.add(ind.id);
+          }
+
+          const v = b.veredicto;
+          if (v?.tipo === "umbral") {
+            if (!indicadores.some((i) => i.id === v.indicador)) {
+              falla(`el veredicto mira el indicador "${v.indicador}", que no existe`);
+            }
+            // El último tramo es el que recoge todo lo que quedó por encima;
+            // sin él, un valor alto no tendría veredicto.
+            v.tramos.forEach((t, i) => {
+              const ultimo = i === v.tramos.length - 1;
+              if (!ultimo && t.hasta == null) falla("solo el último tramo puede no tener tope");
+              const previo = v.tramos[i - 1]?.hasta;
+              if (t.hasta != null && previo != null && t.hasta <= previo) {
+                falla("los tramos del veredicto no van de menor a mayor");
+              }
+            });
+          }
+          if (v?.tipo === "fila_maxima") {
+            const medida = col.get(v.columna);
+            if (!medida || (!medida.numerica && !medida.calculada)) {
+              falla(`el veredicto ordena por "${v.columna}", que no es una columna numérica`);
+            }
+            const nombre = col.get(v.nombre);
+            if (!nombre || nombre.calculada || nombre.numerica) {
+              falla(`el veredicto nombra la fila con "${v.nombre}", que no es texto que se teclee`);
             }
           }
         }

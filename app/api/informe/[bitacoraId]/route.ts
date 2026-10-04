@@ -32,7 +32,7 @@ export async function GET(
 
   const { data: bitacora } = await supabase
     .from("bitacoras")
-    .select("id, modulo_id, empresas(nombre), modulos(numero, pregunta, titulo)")
+    .select("id, modulo_id, empresas(nombre), modulos(numero, pregunta, titulo, programas(nombre))")
     .eq("id", bitacoraId)
     .maybeSingle();
   if (!bitacora) return new NextResponse("No encontrado", { status: 404 });
@@ -47,7 +47,10 @@ export async function GET(
   ]);
 
   const empresa = (bitacora.empresas as unknown as { nombre: string } | null)?.nombre ?? "";
-  const mod = bitacora.modulos as unknown as { numero: number; pregunta: string; titulo: string };
+  const mod = bitacora.modulos as unknown as {
+    numero: number; pregunta: string; titulo: string;
+    programas: { nombre: string } | null;
+  };
   const nombreModulo = `Módulo ${mod.numero} · ${mod.titulo}`;
 
   const mapaRespuestas = new Map<string, ValorCampo>(
@@ -81,7 +84,7 @@ export async function GET(
   let pdf: Buffer;
   try {
     pdf = await informePdf(documentoInforme({
-      empresa, modulo: nombreModulo, talleres: lista,
+      empresa, modulo: nombreModulo, programa: mod.programas?.nombre, talleres: lista,
       respuestas: mapaRespuestas, filas: listaFilas, avance,
     }));
   } catch (error) {

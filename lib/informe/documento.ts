@@ -5,6 +5,7 @@ import {
   MESES, puntaje, puestos, type NotasFila,
 } from "@/lib/talleres/priorizacion";
 import { calcularFlujo, cifra, pesos, rotuloMes } from "@/lib/talleres/flujo";
+import { calcularTabla, formatear, visiblesDe } from "@/lib/talleres/calculo";
 import type { Bloque, ColorEscala, Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
 
 /**
@@ -32,6 +33,16 @@ export type DatosInforme = {
   respuestas: Map<string, ValorCampo>;
   filas: Fila[];
   avance: { resueltos: number; total: number; fraccion: number };
+  /**
+   * Nombre del programa, para la portada.
+   *
+   * Estuvo escrito aquí como constante mientras hubo un solo programa. Con
+   * dos, la constante convertía el informe en un documento falso: el taller
+   * de Lean Manufacturing se habría entregado con el encabezado del programa
+   * de la Cámara. Lo trae quien llama, que sí sabe de qué programa es la
+   * bitácora.
+   */
+  programa?: string;
 };
 
 // ---------------------------------------------------------------------
@@ -63,6 +74,7 @@ export type Documento = {
   talleres: TallerInforme[];
 };
 
+/** Solo para una bitácora que no diga de qué programa es. */
 const PROGRAMA = "Empresas con Propósito MEGA";
 
 // ---------------------------------------------------------------------
@@ -233,6 +245,55 @@ function bloqueANodos(b: Bloque, d: DatosInforme, tallerId: string): Nodo[] {
       ];
     }
 
+    // El informe lleva el resultado antes de los datos: quien lo lee quiere
+    // saber cuánto es el OEE, no cómo se teclearon las cinco cifras que lo
+    // produjeron. Esas van después, para poder auditar el número.
+    case "tabla_calculada": {
+      const r = calcularTabla(b, filasDe(b.id), (id) => v(id));
+      if (r.vacia) return [{ tipo: "vacio" }];
+
+      const nodos: Nodo[] = [];
+      if (r.veredicto) nodos.push({ tipo: "parrafo", texto: r.veredicto.texto });
+
+      const indicadores = visiblesDe(b)
+        .map((ind) => [ind.titulo, formatear(r.indicadores.get(ind.id) ?? null, ind)])
+        .filter((f) => f[1] !== "—");
+      if (indicadores.length) nodos.push(tabla(["Indicador", "Resultado"], indicadores));
+
+      const parametros = (b.parametros ?? [])
+        .map((p) => {
+          const n = r.parametros.get(p.id);
+          return n == null ? "" : `${p.titulo}: ${formatear(n, p)}`;
+        })
+        .filter((t) => t !== "");
+      if (parametros.length) {
+        nodos.push({ tipo: "rotulo", texto: "Datos de partida" });
+        nodos.push(lista(parametros));
+      }
+
+      if (b.columnas.length > 0) {
+        const cuerpo = r.filas
+          .filter((f) => !f.vacia)
+          .map((f) =>
+            b.columnas.map((c) =>
+              c.calculada || c.numerica
+                ? formatear(f.valores.get(c.id) ?? null, c)
+                : (f.textos.get(c.id) ?? ""),
+            ),
+          );
+        if (b.columnas.some((c) => c.total) && cuerpo.length > 0) {
+          cuerpo.push(
+            b.columnas.map((c) =>
+              c.total ? formatear(r.totales.get(c.id) ?? null, c) : "",
+            ),
+          );
+        }
+        nodos.push(tabla(b.columnas.map((c) => c.titulo), cuerpo));
+      }
+
+      return nodos;
+    }
+
     case "cronograma": {
       const filas = filasDe(b.id)
         .map((f) => {
@@ -286,7 +347,7 @@ export function documentoInforme(d: DatosInforme): Documento {
   return {
     empresa: d.empresa || "Empresa sin nombre",
     modulo: d.modulo,
-    programa: PROGRAMA,
+    programa: d.programa?.trim() || PROGRAMA,
     fecha: new Date().toLocaleDateString("es-CO", {
       day: "numeric", month: "long", year: "numeric",
     }),

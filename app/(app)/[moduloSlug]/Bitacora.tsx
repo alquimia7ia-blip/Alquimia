@@ -20,7 +20,7 @@ type Props = {
   empresa: string;
   moduloTitulo: string;
   moduloSlug: string;
-  modulos: { numero: number; slug: string; titulo: string }[];
+  modulos: { numero: number; slug: string; titulo: string; programa?: string }[];
   presentacion: DatosPresentacion | null;
   /** Quién soy, para anunciarme en el canal de la cohorte. */
   presencia: Omit<Presente, "perfilId">  & { cohorteId: string };

@@ -13,7 +13,7 @@
     "cohorte": "tsx scripts/cargar-cohorte.ts",
     "db:local": "bash scripts/db-local.sh",
     "test:rls": "bash scripts/db-local.sh test",
-    "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts && tsx scripts/verificar-lecturas.ts && pnpm verify:edicion && pnpm verify:presentacion && pnpm verify:guardado && pnpm verify:plan",
+    "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts && tsx scripts/verificar-lecturas.ts && pnpm verify:edicion && pnpm verify:presentacion && pnpm verify:guardado && pnpm verify:plan && pnpm verify:lean",
     "verify:edicion": "tsx --tsconfig tsconfig.scripts.json scripts/verificar-edicion.mts",
     "comercial": "node scripts/comercial/propuesta.js && node scripts/comercial/sustentacion.js",
     "verify:comercial": "python3 scripts/comercial/verificar.py",
@@ -23,7 +23,8 @@
     "exportar:html": "node scripts/exportar-html.mjs",
     "ejemplo": "tsx scripts/generar-ejemplo.ts",
     "verify:guardado": "tsx --tsconfig tsconfig.scripts.json scripts/verificar-guardado.mts",
-    "verify:plan": "tsx scripts/verificar-plan-de-accion.ts"
+    "verify:plan": "tsx scripts/verificar-plan-de-accion.ts",
+    "verify:lean": "tsx scripts/verificar-lean.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",

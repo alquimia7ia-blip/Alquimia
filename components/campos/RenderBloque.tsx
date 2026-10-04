@@ -8,8 +8,10 @@ import {
 import {
   calcularFlujo, cifra, pesos, rotuloMes, type Flujo,
 } from "@/lib/talleres/flujo";
+import { calcularTabla, entradasDe, formatear, visiblesDe } from "@/lib/talleres/calculo";
 import type {
   Bloque, ColorEscala, CriterioPriorizacion, Fila,
+  IndicadorCalculo, ParametroCalculo,
 } from "@/lib/talleres/tipos";
 import { useBitacora, conNegritas } from "./contexto";
 import { Texto } from "./Texto";
@@ -162,6 +164,82 @@ function Veredicto({ flujo, mesInicial }: { flujo: Flujo; mesInicial?: number })
       El punto más bajo es {rotuloMes(valle?.indice ?? 0, mesInicial)}, con{" "}
       ${pesos(valle?.saldo ?? 0)}. O consigues ${pesos(Math.abs(valle?.saldo ?? 0))} antes
       de ese mes, o mueves proyectos del cronograma. El plan como está no se puede pagar.
+    </div>
+  );
+}
+
+/**
+ * Los datos globales de una tabla calculada.
+ *
+ * Van arriba y aparte de la tabla porque no son una fila más: el tiempo
+ * disponible del turno y la demanda del cliente no describen una estación,
+ * la gobiernan. Puestos como columna se teclearían repetidos en cada fila,
+ * y entonces cada fila tendría su propio takt time.
+ */
+function Parametros({
+  bloqueId, parametros,
+}: { bloqueId: string; parametros: ParametroCalculo[] }) {
+  if (parametros.length === 0) return null;
+  return (
+    <div className="card calc-params">
+      {parametros.map((p) => (
+        <div className="calc-param" key={p.id}>
+          <span className="lbl">
+            {p.titulo}
+            {p.unidad && <i className="calc-unidad"> · {p.unidad}</i>}
+          </span>
+          {p.pista && <span className="calc-pista">{p.pista}</span>}
+          <Texto campoId={campo.parametro(bloqueId, p.id)} marcador={p.marcador ?? "0"}
+                 multilinea={false} numerica />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Las cifras que resumen el bloque.
+ *
+ * Es el entregable del taller: lo que la empresa no tenía antes de abrirlo.
+ * Se muestran grandes y con la unidad, y el principal se destaca —en el OEE
+ * hay cuatro cifras y solo una se lleva a la reunión—.
+ */
+function Indicadores({
+  indicadores, valores,
+}: { indicadores: IndicadorCalculo[]; valores: Map<string, number | null> }) {
+  if (indicadores.length === 0) return null;
+  return (
+    <div className="calc-inds">
+      {indicadores.map((ind) => (
+        <div className={`calc-ind ${ind.principal ? "principal" : ""}`} key={ind.id}>
+          <span className="calc-ind-t">{ind.titulo}</span>
+          <b>{formatear(valores.get(ind.id) ?? null, ind)}</b>
+          {ind.pista && <span className="calc-pista">{ind.pista}</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Lo que la tabla concluye, en una frase.
+ *
+ * Un OEE del 48 % no significa nada para quien lo ve por primera vez. «Por
+ * debajo del mínimo con el que una planta se considera gestionada» sí, y es
+ * la diferencia entre un número y una decisión.
+ */
+function Dictamen({
+  dictamen, vacia, textoVacio,
+}: {
+  dictamen: { texto: string; color: ColorEscala } | null;
+  vacia: boolean;
+  textoVacio: string;
+}) {
+  if (vacia) return <div className="hint">{textoVacio}</div>;
+  if (!dictamen) return null;
+  return (
+    <div className="hint" style={{ borderLeftColor: tokenColor(dictamen.color) }}>
+      {conNegritas(dictamen.texto)}
     </div>
   );
 }
@@ -687,6 +765,103 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
               </tfoot>
             </table>
           </div>
+        </div>
+      );
+    }
+
+    case "tabla_calculada": {
+      const filas = bit.filas(b.id);
+      const r = calcularTabla(b, filas, (campoId) => bit.valor(campoId));
+      const entradas = entradasDe(b);
+      const conTotal = b.columnas.filter((c) => c.total);
+      // La primera columna de texto: es donde entran las sugerencias y donde
+      // el pie de la tabla pone la palabra «Total».
+      const primera = entradas.find((c) => !c.numerica) ?? entradas[0];
+
+      return (
+        <div className="stack">
+          <Ayuda texto={b.ayuda} />
+          <Parametros bloqueId={b.id} parametros={b.parametros ?? []} />
+          <Indicadores indicadores={visiblesDe(b)} valores={r.indicadores} />
+          <Dictamen
+            dictamen={r.veredicto}
+            vacia={r.vacia}
+            textoVacio="Llena los datos y aquí aparecerá el resultado."
+          />
+
+          {b.columnas.length > 0 && (
+            <>
+              <div className="tw">
+                <table style={{
+                  minWidth: b.columnas.reduce(
+                    (n, c) => n + (c.numerica || c.calculada ? 142 : 224), 0) + 56,
+                }}>
+                  <thead>
+                    <tr>
+                      {b.columnas.map((c) => (
+                        <th key={c.id} className={c.calculada ? "calc-th" : undefined}>
+                          {c.titulo}
+                          {c.unidad && <i className="calc-unidad"> · {c.unidad}</i>}
+                          {c.pista && <span className="pri-ayuda">{c.pista}</span>}
+                        </th>
+                      ))}
+                      {!bit.soloLectura && <th />}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {r.filas.map((fc) => (
+                      <tr key={fc.id}>
+                        {b.columnas.map((c) =>
+                          c.calculada ? (
+                            <td key={c.id} className="flujo-calc">
+                              {formatear(fc.valores.get(c.id) ?? null, c)}
+                            </td>
+                          ) : (
+                            <td key={c.id}>
+                              <Texto campoId={campo.fila(b.id, fc.id, c.id)} marcador={c.marcador}
+                                     multilinea={c.multilinea ?? false} numerica={c.numerica}
+                                     filas={c.multilinea ? 2 : 1} />
+                              {c.origen && <Origen campoId={campo.origen(b.id, fc.id, c.id)} />}
+                            </td>
+                          ),
+                        )}
+                        {!bit.soloLectura && (
+                          <td>
+                            <button className="del" type="button" title="Eliminar"
+                              onClick={() => bit.eliminarFila(fc.id)}>×</button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                  {conTotal.length > 0 && (
+                    <tfoot>
+                      <tr>
+                        {b.columnas.map((c) => (
+                          <td key={c.id}
+                              className={c.total ? "flujo-calc fuerte" : "calc-pie"}>
+                            {c.total
+                              ? formatear(r.totales.get(c.id) ?? null, c)
+                              : c.id === primera?.id ? "Total" : ""}
+                          </td>
+                        ))}
+                        {!bit.soloLectura && <td />}
+                      </tr>
+                    </tfoot>
+                  )}
+                </table>
+              </div>
+              {!bit.soloLectura && (
+                <button className="padd" type="button" onClick={() => bit.agregarFila(b.id)}>
+                  {b.textoAgregar ?? "+ Fila en blanco"}
+                </button>
+              )}
+              {primera && (
+                <Sugerencias bloqueId={b.id} columna={primera.id}
+                             textos={b.sugerencias} filas={filas} />
+              )}
+            </>
+          )}
         </div>
       );
     }

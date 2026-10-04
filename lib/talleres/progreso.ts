@@ -135,6 +135,26 @@ function camposDeBloque(b: Bloque, filas: Fila[]): CampoEsperado[] {
         ),
       ];
 
+    // Ni las columnas derivadas ni los indicadores son campos: no se guardan
+    // y no cuentan. Lo que cuenta es lo que la empresa teclea —los parámetros
+    // y las columnas de entrada—, que es de donde sale todo lo demás.
+    case "tabla_calculada": {
+      const parametros = (b.parametros ?? []).map((p) =>
+        c(campo.parametro(b.id, p.id), (p.requerido ?? true) && req),
+      );
+      const celdas = filasDe(filas, b.id).flatMap((f) =>
+        b.columnas
+          .filter((col) => !col.calculada)
+          .flatMap((col) => {
+            const celda = c(campo.fila(b.id, f.id, col.id), (col.requerida ?? true) && req);
+            return col.origen
+              ? [celda, c(campo.origen(b.id, f.id, col.id), false)]
+              : [celda];
+          }),
+      );
+      return [...parametros, ...celdas];
+    }
+
     case "cronograma":
       return filasDe(filas, b.id).flatMap((f) => [
         ...b.columnas.map((col) =>
