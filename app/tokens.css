@@ -1,0 +1,60 @@
+/*
+ * Tokens de color y tipografía — Brújula empresarial.
+ *
+ * Paleta corporativa: azul profundo sobre grises fríos. Sin morados ni
+ * dorados saturados; el color solo aparece donde comunica algo (estado,
+ * acción primaria, alerta). Todo texto sobre su fondo pasa 4.5:1.
+ *
+ * Tres estados de tema, no dos: la preferencia explícita marca data-theme
+ * en la raíz, y el ajuste "sistema" no marca nada — ahí solo
+ * prefers-color-scheme separa claro de oscuro. Por eso :root define la
+ * paleta clara completa y los otros dos bloques solo redefinen tokens.
+ */
+
+:root{
+  --ground:#F1F4F8; --surface:#FFFFFF; --surface-2:#F6F9FC; --line:#D5DCE5; --line-2:#E6EBF1;
+  --text:#0F1B2D; --muted:#48566B; --faint:#68748A;
+  --accent:#14497E; --accent-2:#1B6AB5; --accent-soft:#E9F0F8; --accent-line:#BBD1E8;
+  --gold:#8A5A16; --gold-soft:#FAF2E5; --gold-line:#E4D2B4;
+  --fav:#1C7A4B; --fav-soft:#E6F2EB; --fav-line:#B2D8C3;
+  --med:#8A6206; --med-soft:#FAF1DC; --med-line:#E5D2A2;
+  --des:#B3261E; --des-soft:#FBE9E7; --des-line:#EFBFBA;
+  --na:#68748A;  --na-soft:#EDF0F5;  --na-line:#D5DBE4;
+  /* Turquesa: color exclusivo de la ayuda. No puede ser verde, ámbar ni rojo
+     porque esos tres ya significan favorable, medio y alerta en las escalas. */
+  --pista:#0C7A6F; --pista-soft:#E4F6F3; --pista-line:#A2DCD4;
+  --shadow-sm:0 1px 2px rgba(15,27,45,.06);
+  --shadow:0 1px 2px rgba(15,27,45,.06), 0 12px 30px -18px rgba(15,27,45,.4);
+  --radius:12px;
+  --display:"Inter Tight","Inter",system-ui,"Segoe UI",Arial,sans-serif;
+  --body:"Inter",system-ui,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1119; --surface:#141A24; --surface-2:#1A212C; --line:#2A323E; --line-2:#222933;
+    --text:#E9EEF5; --muted:#A6B1C0; --faint:#7C8798;
+    --accent:#82B4EB; --accent-2:#A7CBF3; --accent-soft:#152436; --accent-line:#2C4562;
+    --gold:#D5A660; --gold-soft:#2A2114; --gold-line:#4A3B23;
+    --fav:#5EC08B; --fav-soft:#11251A; --fav-line:#274935;
+    --med:#D8B357; --med-soft:#292312; --med-line:#4B4023;
+    --des:#EE857A; --des-soft:#2D1A18; --des-line:#54302C;
+    --na:#8E98A8;  --na-soft:#1E242E;  --na-line:#323A46;
+    --pista:#2DD4BF; --pista-soft:#0E2A2B; --pista-line:#1F5E5A;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 14px 34px -20px rgba(0,0,0,.95);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1119; --surface:#141A24; --surface-2:#1A212C; --line:#2A323E; --line-2:#222933;
+  --text:#E9EEF5; --muted:#A6B1C0; --faint:#7C8798;
+  --accent:#82B4EB; --accent-2:#A7CBF3; --accent-soft:#152436; --accent-line:#2C4562;
+  --gold:#D5A660; --gold-soft:#2A2114; --gold-line:#4A3B23;
+  --fav:#5EC08B; --fav-soft:#11251A; --fav-line:#274935;
+  --med:#D8B357; --med-soft:#292312; --med-line:#4B4023;
+  --des:#EE857A; --des-soft:#2D1A18; --des-line:#54302C;
+  --na:#8E98A8;  --na-soft:#1E242E;  --na-line:#323A46;
+  --pista:#2DD4BF; --pista-soft:#0E2A2B; --pista-line:#1F5E5A;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 14px 34px -20px rgba(0,0,0,.95);
+}
