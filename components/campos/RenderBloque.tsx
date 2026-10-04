@@ -5,6 +5,9 @@ import { opcion } from "@/lib/talleres/escalas";
 import {
   MESES, puntaje, puestos, puntajeMaximo, type NotasFila,
 } from "@/lib/talleres/priorizacion";
+import {
+  calcularFlujo, cifra, pesos, rotuloMes, type Flujo,
+} from "@/lib/talleres/flujo";
 import type {
   Bloque, ColorEscala, CriterioPriorizacion, Fila,
 } from "@/lib/talleres/tipos";
@@ -67,6 +70,44 @@ function Formula({
   );
 }
 
+/**
+ * De dónde viene el número de esta celda.
+ *
+ * Tres estados y un cuarto implícito —sin marcar—, que es el que tiene todo
+ * hoy. No se exige: quien no sepa qué poner deja la celda como está y el
+ * taller sigue contando igual.
+ */
+const ORIGENES = [
+  { v: "dato", etiqueta: "Dato", titulo: "Medido: sale de un registro, una factura o un informe" },
+  { v: "estimacion", etiqueta: "Estimación", titulo: "Calculado a partir de algo que sí se midió" },
+  { v: "opinion", etiqueta: "Opinión", titulo: "Lo que creemos, sin medición detrás" },
+] as const;
+
+function Origen({ campoId }: { campoId: string }) {
+  const { valor, escribir, soloLectura } = useBitacora();
+  const actual = valor(campoId);
+  if (soloLectura && typeof actual !== "string") return null;
+
+  return (
+    <div className="origen" role="group" aria-label="Origen del dato">
+      {ORIGENES.map((o) => (
+        <button
+          key={o.v}
+          type="button"
+          className="origen-op"
+          data-o={o.v}
+          aria-pressed={actual === o.v}
+          disabled={soloLectura}
+          title={o.titulo}
+          onClick={() => escribir(campoId, actual === o.v ? "" : o.v, { inmediato: true })}
+        >
+          {o.etiqueta}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /** Textos que se insertan de un clic en la primera columna de una tabla. */
 function Sugerencias({
   bloqueId, columna, textos, filas,
@@ -86,6 +127,41 @@ function Sugerencias({
             }}>{s}</button>
         ))}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Lo que el flujo de caja quiere decir, en una frase.
+ *
+ * El valle y no el saldo final: un plan que cierra el año con diez millones
+ * y pasa por menos cero en mayo quiebra en mayo. La tabla sola deja ese
+ * dato enterrado entre doce columnas.
+ */
+function Veredicto({ flujo, mesInicial }: { flujo: Flujo; mesInicial?: number }) {
+  if (flujo.meses.every((m) => m.entradas === 0 && m.salidas === 0)) {
+    return (
+      <div className="hint">
+        Llena las filas mes a mes y aquí aparecerá el mes más apretado del plan.
+      </div>
+    );
+  }
+  const valle = flujo.valle;
+  if (flujo.primerMesEnRojo === null) {
+    return (
+      <div className="hint" style={{ borderLeftColor: "var(--fav)" }}>
+        <b>La caja aguanta el horizonte completo.</b>{" "}
+        El mes más apretado es {rotuloMes(valle?.indice ?? 0, mesInicial)}, con{" "}
+        ${pesos(valle?.saldo ?? 0)} de saldo.
+      </div>
+    );
+  }
+  return (
+    <div className="hint" style={{ borderLeftColor: "var(--des)" }}>
+      <b>La caja se vuelve negativa en {rotuloMes(flujo.primerMesEnRojo, mesInicial)}.</b>{" "}
+      El punto más bajo es {rotuloMes(valle?.indice ?? 0, mesInicial)}, con{" "}
+      ${pesos(valle?.saldo ?? 0)}. O consigues ${pesos(Math.abs(valle?.saldo ?? 0))} antes
+      de ese mes, o mueves proyectos del cronograma. El plan como está no se puede pagar.
     </div>
   );
 }
@@ -420,6 +496,7 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
                         <Texto campoId={campo.fila(b.id, f.id, c.id)} marcador={c.marcador}
                                multilinea={c.multilinea ?? false} numerica={c.numerica}
                                filas={c.multilinea ? 2 : 1} />
+                        {c.origen && <Origen campoId={campo.origen(b.id, f.id, c.id)} />}
                       </td>
                     ))}
                     {!bit.soloLectura && (
@@ -533,6 +610,83 @@ export function RenderBloque({ bloque: b }: { bloque: Bloque }) {
           )}
           <Sugerencias bloqueId={b.id} columna={b.columnas[0]!.id}
                        textos={b.sugerencias} filas={filas} />
+        </div>
+      );
+    }
+
+    case "flujo_caja": {
+      const celda = (conceptoId: string, mes: number) =>
+        campo.matriz(b.id, conceptoId, String(mes));
+      const serie = Array.from({ length: b.meses }, (_, m) => ({
+        entradas: b.entradas.reduce((s, con) => s + cifra(bit.valor(celda(con.id, m))), 0),
+        salidas: b.salidas.reduce((s, con) => s + cifra(bit.valor(celda(con.id, m))), 0),
+      }));
+      const f = calcularFlujo(cifra(bit.valor(campo.simple(`${b.id}.inicial`))), serie);
+      const meses = Array.from({ length: b.meses }, (_, m) => m);
+
+      const fila = (
+        con: { id: string; titulo: string }, clase: string,
+      ) => (
+        <tr key={con.id}>
+          <th scope="row" className="flujo-concepto">{con.titulo}</th>
+          {meses.map((m) => (
+            <td key={m} className={clase}>
+              <Texto campoId={celda(con.id, m)} marcador="0" multilinea={false} numerica />
+            </td>
+          ))}
+        </tr>
+      );
+
+      return (
+        <div className="stack">
+          <Ayuda texto={b.ayuda} />
+          <div className="flujo-inicial">
+            <span className="lbl" style={{ marginBottom: 0 }}>
+              {b.etiquetaInicial ?? "Con cuánta caja arrancas"}
+            </span>
+            <Texto campoId={campo.simple(`${b.id}.inicial`)} marcador="0"
+                   multilinea={false} numerica />
+          </div>
+
+          <Veredicto flujo={f} mesInicial={b.mesInicial} />
+
+          <div className="tw">
+            <table className="flujo" style={{ minWidth: 220 + b.meses * 104 }}>
+              <thead>
+                <tr>
+                  <th />
+                  {meses.map((m) => (
+                    <th key={m} className={f.primerMesEnRojo === m ? "flujo-rojo" : ""}>
+                      {rotuloMes(m, b.mesInicial)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {b.entradas.map((con) => fila(con, "flujo-entra"))}
+                {b.salidas.map((con) => fila(con, "flujo-sale"))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th scope="row" className="flujo-concepto">Saldo del mes</th>
+                  {f.meses.map((m) => (
+                    <td key={m.indice} className={`flujo-calc ${m.neto < 0 ? "neg" : ""}`}>
+                      {pesos(m.neto)}
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <th scope="row" className="flujo-concepto">Saldo acumulado</th>
+                  {f.meses.map((m) => (
+                    <td key={m.indice}
+                        className={`flujo-calc fuerte ${m.acumulado < 0 ? "neg" : ""}`}>
+                      {pesos(m.acumulado)}
+                    </td>
+                  ))}
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       );
     }

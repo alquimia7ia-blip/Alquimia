@@ -14,6 +14,8 @@ import type { Bloque, Definicion } from "./tipos";
  *   <bloque>.<item>.<subcampo>      fichas, ranking
  *   <bloque>.<grupo>.<fila>         matriz
  *   <bloque>.<fila_uuid>.<columna>  tabla, línea de tiempo
+ *   <bloque>.<fila>.<columna>.origen  procedencia del dato de una celda
+ *   <bloque>.<concepto>.<mes>       flujo de caja
  *   <bloque>.<cuadrante>.<indice>   cuadrantes
  */
 
@@ -24,6 +26,10 @@ export const campo = {
   matriz: (bloque: string, grupo: string, fila: string) => `${bloque}.${grupo}.${fila}`,
   fila: (bloque: string, filaId: string, columna: string) => `${bloque}.${filaId}.${columna}`,
   encabezado: (bloque: string, columna: string) => `${bloque}.encabezados.${columna}`,
+  /** De dónde viene el dato de una celda: cuarto segmento, no tercero, para
+   *  no poder chocar nunca con el id de una columna. */
+  origen: (bloque: string, filaId: string, columna: string) =>
+    `${bloque}.${filaId}.${columna}.origen`,
   cuadrante: (bloque: string, cuadrante: string, i: number) => `${bloque}.${cuadrante}.${i}`,
 };
 

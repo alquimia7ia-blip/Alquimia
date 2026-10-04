@@ -17,7 +17,9 @@ export function sugerenciasDelModulo(
   respuestas: Map<string, ValorCampo>,
   limitePorRol = 10,
 ): Sugerencias {
-  const salida: Sugerencias = { oportunidad: [], amenaza: [] };
+  const salida: Sugerencias = {
+    oportunidad: [], amenaza: [], fortaleza: [], debilidad: [],
+  };
 
   const anotar = (rol: Sugerencia | undefined, texto: string) => {
     if (!rol || !texto) return;
@@ -51,8 +53,10 @@ export function sugerenciasDelModulo(
     }
   }
 
-  return {
-    oportunidad: salida.oportunidad.slice(0, limitePorRol),
-    amenaza: salida.amenaza.slice(0, limitePorRol),
-  };
+  // Un recorte por rol y no uno global: si el entorno aportó treinta
+  // oportunidades, las cuatro debilidades del diagnóstico no deben quedar
+  // fuera por llegar después.
+  return Object.fromEntries(
+    (Object.keys(salida) as Sugerencia[]).map((rol) => [rol, salida[rol].slice(0, limitePorRol)]),
+  ) as Sugerencias;
 }

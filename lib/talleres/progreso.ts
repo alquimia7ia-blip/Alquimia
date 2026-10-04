@@ -102,7 +102,14 @@ function camposDeBloque(b: Bloque, filas: Fila[]): CampoEsperado[] {
         c(campo.encabezado(b.id, col.id), false),
       );
       const celdas = filasDe(filas, b.id).flatMap((f) =>
-        b.columnas.map((col) => c(campo.fila(b.id, f.id, col.id), (col.requerida ?? true) && req)),
+        b.columnas.flatMap((col) => {
+          const celda = c(campo.fila(b.id, f.id, col.id), (col.requerida ?? true) && req);
+          // El origen del dato nunca es requerido: es una anotación sobre la
+          // respuesta, y exigirla duplicaría el denominador del taller.
+          return col.origen
+            ? [celda, c(campo.origen(b.id, f.id, col.id), false)]
+            : [celda];
+        }),
       );
       return [...encabezados, ...celdas];
     }
@@ -117,6 +124,16 @@ function camposDeBloque(b: Bloque, filas: Fila[]): CampoEsperado[] {
         ),
         ...b.criterios.map((cr) => c(campo.fila(b.id, f.id, cr.id))),
       ]);
+
+    // El saldo y el acumulado se calculan: no son campos.
+    case "flujo_caja":
+      return [
+        c(campo.simple(`${b.id}.inicial`)),
+        ...[...b.entradas, ...b.salidas].flatMap((con) =>
+          Array.from({ length: b.meses }, (_, m) =>
+            c(campo.matriz(b.id, con.id, String(m)))),
+        ),
+      ];
 
     case "cronograma":
       return filasDe(filas, b.id).flatMap((f) => [

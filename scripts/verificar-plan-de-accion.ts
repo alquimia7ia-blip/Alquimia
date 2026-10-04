@@ -15,6 +15,9 @@
  *   5. Que el informe exporta la matriz ya ordenada.
  */
 import { MODULO_4 } from "../supabase/seed/modulo-4";
+import { MODULO_5 } from "../supabase/seed/modulo-5";
+import { calcularFlujo, cifra, rotuloMes } from "../lib/talleres/flujo";
+import { sugerenciasDelModulo } from "../lib/talleres/sugerencias";
 import { puntaje, puestos, puntajeMaximo, MESES } from "../lib/talleres/priorizacion";
 import { camposEsperados } from "../lib/talleres/progreso";
 import { buscarBloque } from "../lib/talleres/rutas";
@@ -174,9 +177,89 @@ afirmar(
 );
 afirmar(MESES[5] === "junio", "el mes 5 es junio: el índice es base cero");
 
+
+// ===================================================================
+// Módulo 5 · Profundización
+// ===================================================================
+console.log("\nMódulo 5 · flujo de caja");
+
+// Un plan que cierra el año bien y revienta a mitad de camino: el caso que
+// el saldo final esconde y que es la razón de ser del bloque.
+const caja = calcularFlujo(5_000_000, [
+  { entradas: 10_000_000, salidas: 9_000_000 },   // +1.000.000 → 6.000.000
+  { entradas: 10_000_000, salidas: 20_000_000 },  // −10.000.000 → −4.000.000
+  { entradas: 30_000_000, salidas: 9_000_000 },   // +21.000.000 → 17.000.000
+]);
+
+afirmar(caja.saldoFinal === 17_000_000, "el saldo final acumula bien");
+afirmar(caja.primerMesEnRojo === 1, "detecta el mes en que la caja se vuelve negativa");
+afirmar(caja.valle?.saldo === -4_000_000, "el valle es el punto más bajo, no el final");
+afirmar(
+  caja.saldoFinal > 0 && caja.primerMesEnRojo !== null,
+  "un plan puede cerrar en positivo y aun así quebrar en el camino: eso es lo que avisa",
+);
+
+const sinRojo = calcularFlujo(1_000_000, [{ entradas: 5, salidas: 4 }]);
+afirmar(sinRojo.primerMesEnRojo === null, "sin mes en rojo no inventa uno");
+
+afirmar(cifra("1.500.000") === 1500000, "lee los miles con punto, como se escribe en Colombia");
+afirmar(cifra("$ 2,300,000") === 2300000, "y con coma, y con el signo de pesos");
+afirmar(cifra("") === 0 && cifra("abc") === 0, "lo vacío o ilegible vale cero, no NaN");
+afirmar(rotuloMes(13, 0) === "feb", "el rótulo da la vuelta al año");
+
+console.log("\nMódulo 5 · el diagnóstico alimenta el cruce DOFA");
+
+const t5madurez = MODULO_5.talleres[0]!;
+const sug = sugerenciasDelModulo(
+  [t5madurez.definicion],
+  new Map<string, ValorCampo>([
+    ["madurez.finanzas.caja", "no"],        // debilidad
+    ["madurez.comercial.metas", "medido"],  // fortaleza
+    ["madurez.mercadeo.promesa", "informal"], // ni una ni otra
+  ]),
+);
+
+afirmar(
+  sug.debilidad.length === 1 && sug.debilidad[0]!.includes("caja"),
+  "un área sin método entra como debilidad",
+);
+afirmar(
+  sug.fortaleza.length === 1 && sug.fortaleza[0]!.includes("meta de venta"),
+  "un área medida entra como fortaleza",
+);
+afirmar(
+  sug.oportunidad.length === 0 && sug.amenaza.length === 0,
+  "y nada se cuela a las casillas del entorno, que son del Módulo 1",
+);
+
+const cruce = MODULO_5.talleres[1]!;
+const dofa = buscarBloque(cruce.definicion, "dofa");
+afirmar(
+  dofa?.tipo === "cuadrantes"
+    && dofa.alimentadoPor?.fortaleza === "f" && dofa.alimentadoPor?.debilidad === "d"
+    && dofa.alimentadoPor?.oportunidad === undefined,
+  "el cruce declara solo los dos cuadrantes que puede llenar solo",
+);
+
+console.log("\nMódulo 5 · el origen del dato no infla el progreso");
+
+const t5flujo = MODULO_5.talleres[4]!;
+const filaCrit: Fila[] = [{ id: "c1", bloqueId: "criticos", tallerId: "t5", orden: 0 }];
+const camposT5 = camposEsperados(t5flujo.definicion, filaCrit);
+const origenes = camposT5.filter((c) => c.campoId.endsWith(".origen"));
+
+afirmar(origenes.length === 1, "la columna marcada genera su campo de origen");
+afirmar(origenes.every((c) => !c.requerido), "y no cuenta al denominador del taller");
+afirmar(
+  camposT5.some((c) => c.campoId === "flujo.ventas.11"),
+  "el flujo pide los doce meses de cada concepto",
+);
+afirmar(
+  !camposT5.some((c) => c.campoId.includes("acumulado") || c.campoId.includes("saldo")),
+  "el saldo no es un campo: se calcula",
+);
+
 console.log(
-  fallos === 0
-    ? "\nMódulo 4: la aritmética y el progreso son correctos."
-    : `\n${fallos} comprobación(es) fallaron.`,
+  fallos === 0 ? "\nMódulos 4 y 5: correctos." : `\n${fallos} comprobación(es) fallaron.`,
 );
 process.exit(fallos === 0 ? 0 : 1);

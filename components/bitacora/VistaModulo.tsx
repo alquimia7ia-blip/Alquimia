@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { camposEsperados, progresoTaller, progresoModulo, nivel, xp } from "@/lib/talleres/progreso";
-import { sugerenciasDelModulo } from "@/lib/talleres/sugerencias";
+import { sugerenciasDelModulo, type Sugerencias } from "@/lib/talleres/sugerencias";
 import { campo, bloques } from "@/lib/talleres/rutas";
-import type { Bloque, Definicion, ValorCampo } from "@/lib/talleres/tipos";
+import type { Bloque, Definicion, Sugerencia, ValorCampo } from "@/lib/talleres/tipos";
 import { useBitacora } from "@/components/campos/contexto";
 import { RenderBloque } from "@/components/campos/RenderBloque";
 import { AnilloProgreso } from "@/components/gamificacion/AnilloProgreso";
@@ -279,12 +279,17 @@ function PanelSugerencias({
   destinos, lineas, sugerencias, onInsertar,
 }: {
   bloqueId: string;
-  destinos: Partial<Record<"oportunidad" | "amenaza", string>>;
+  destinos: Partial<Record<Sugerencia, string>>;
   lineas: Record<string, number>;
-  sugerencias: { oportunidad: string[]; amenaza: string[] };
+  sugerencias: Sugerencias;
   onInsertar: (cuadranteId: string, texto: string, lineas: number) => void;
 }) {
+  // Los cuatro, en el orden del DOFA. Un cuadrante sin destino declarado o
+  // sin nada que sugerir no se dibuja, así que el DOFA del Módulo 1 —que
+  // solo declara los dos externos— se ve exactamente igual que antes.
   const grupos = ([
+    ["fortaleza", "Hacia fortalezas", "var(--fav)"],
+    ["debilidad", "Hacia debilidades", "var(--des)"],
     ["oportunidad", "Hacia oportunidades", "var(--fav)"],
     ["amenaza", "Hacia amenazas", "var(--des)"],
   ] as const).filter(([rol]) => destinos[rol] && sugerencias[rol].length > 0);

@@ -522,3 +522,44 @@ th.pri-puesto{font-size:13.2px; color:var(--faint)}
   .crono-franja{display:none}
   .crono-sel{min-width:150px; flex-direction:column}
 }
+
+/* ---------- origen del dato · Módulo 5 ---------- */
+.origen{display:flex; gap:3px; margin-top:4px}
+.origen-op{
+  flex:1 1 0; padding:2px 4px; cursor:pointer; border-radius:6px;
+  background:transparent; border:1px solid var(--line); color:var(--faint);
+  font-size:10.6px; font-weight:600; letter-spacing:.02em; transition:.16s ease;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.origen-op:hover{border-color:var(--accent-line); color:var(--muted)}
+.origen-op[aria-pressed="true"]{color:#fff; border-color:transparent}
+.origen-op[data-o="dato"][aria-pressed="true"]{background:var(--fav)}
+.origen-op[data-o="estimacion"][aria-pressed="true"]{background:var(--med)}
+.origen-op[data-o="opinion"][aria-pressed="true"]{background:var(--des)}
+.origen-op:disabled{cursor:default}
+
+/* ---------- flujo de caja · Módulo 5 ---------- */
+.flujo-inicial{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.flujo-inicial .lbl{flex:0 0 auto}
+.flujo-inicial input.f{max-width:200px}
+.flujo th{white-space:nowrap}
+.flujo-concepto{
+  text-align:left; font-weight:500; font-size:14.6px; color:var(--muted);
+  position:sticky; left:0; background:var(--surface); z-index:1; min-width:200px;
+}
+.flujo-rojo{color:var(--des)}
+.flujo-entra input.f{color:var(--fav)}
+.flujo-sale input.f{color:var(--des)}
+.flujo-calc{
+  font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:14.6px;
+  text-align:right; padding:7px 10px; color:var(--muted);
+}
+.flujo-calc.fuerte{font-weight:700; font-size:15.6px; color:var(--text)}
+/* El saldo en rojo se ve de lejos: es el único número de la tabla que pide
+   una decisión antes de seguir. */
+.flujo-calc.neg{color:var(--des)}
+.flujo-calc.fuerte.neg{background:var(--des-soft)}
+
+@media (max-width:720px){
+  .flujo-concepto{position:static; min-width:150px}
+}

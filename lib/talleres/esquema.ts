@@ -37,6 +37,7 @@ const columna = z.object({
   numerica: z.boolean().optional(),
   marcador: z.string().optional(),
   requerida: z.boolean().optional(),
+  origen: z.boolean().optional(),
 });
 
 const bloque = z.discriminatedUnion("tipo", [
@@ -147,6 +148,16 @@ const bloque = z.discriminatedUnion("tipo", [
 
   z.object({
     ...base,
+    tipo: z.literal("flujo_caja"),
+    meses: z.number().int().min(3).max(36),
+    mesInicial: z.number().int().min(0).max(11).optional(),
+    etiquetaInicial: z.string().optional(),
+    entradas: z.array(z.object({ id: identificador, titulo: z.string().min(1) })).min(1),
+    salidas: z.array(z.object({ id: identificador, titulo: z.string().min(1) })).min(1),
+  }),
+
+  z.object({
+    ...base,
     tipo: z.literal("cronograma"),
     columnas: z.array(columna).min(1),
     anios: z.array(z.number().int().min(2000).max(2100)).min(1).max(10),
@@ -188,7 +199,12 @@ const bloque = z.discriminatedUnion("tipo", [
       )
       .min(2),
     alimentadoPor: z
-      .object({ oportunidad: z.string().optional(), amenaza: z.string().optional() })
+      .object({
+        oportunidad: z.string().optional(),
+        amenaza: z.string().optional(),
+        fortaleza: z.string().optional(),
+        debilidad: z.string().optional(),
+      })
       .optional(),
   }),
 ]);

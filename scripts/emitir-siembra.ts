@@ -12,6 +12,7 @@ import { MODULO_1, MODULOS_PENDIENTES } from "../supabase/seed/modulo-1";
 import { MODULO_2 } from "../supabase/seed/modulo-2";
 import { MODULO_3 } from "../supabase/seed/modulo-3";
 import { MODULO_4 } from "../supabase/seed/modulo-4";
+import { MODULO_5 } from "../supabase/seed/modulo-5";
 import { validarDefinicion } from "../lib/talleres/esquema";
 import { camposEsperados } from "../lib/talleres/progreso";
 import { bloques } from "../lib/talleres/rutas";
@@ -53,6 +54,9 @@ const modulos = [
   // empresa lo ve cuando se le crea la suya. Así se puede revisar el módulo
   // con una empresa antes de abrirlo a las demás.
   { ...MODULO_4, publicado: true },
+  // El 5 es profundización de ALQUIMIA, no del programa de la Cámara. Mismo
+  // trato que el 4: publicado, pero con bitácora solo para quien lo revise.
+  { ...MODULO_5, publicado: true },
   ...MODULOS_PENDIENTES.map((m) => ({ ...m, publicado: false, talleres: [] as TallerSemilla[] })),
 ];
 

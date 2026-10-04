@@ -17,8 +17,15 @@ export type ValorEscala = string;
  * Rol semántico de una opción, para alimentar bloques posteriores.
  * Marcar una tendencia como favorable la propone luego como oportunidad
  * en el DOFA, sin que el DOFA sepa nada de tendencias.
+ *
+ * Los cuatro roles son las cuatro casillas del DOFA. Al principio solo
+ * existían los dos externos, porque los únicos bloques que alimentaban algo
+ * eran del entorno —tendencias, PESTEL, fuerzas—. El diagnóstico de madurez
+ * por área mira hacia dentro: un área sin método es una debilidad, no una
+ * amenaza, y meterla en la casilla equivocada le enseñaría el DOFA al revés
+ * a quien lo está aprendiendo.
  */
-export type Sugerencia = "oportunidad" | "amenaza";
+export type Sugerencia = "oportunidad" | "amenaza" | "fortaleza" | "debilidad";
 
 /** Color de la escala; se resuelve contra los tokens CSS del tema. */
 export type ColorEscala = "fav" | "med" | "des" | "na" | "acento";
@@ -115,6 +122,16 @@ export type ColumnaTabla = {
   marcador?: string;
   /** Si es false, la columna no cuenta al progreso. Por defecto true. */
   requerida?: boolean;
+  /**
+   * Añade a la celda un selector de *dato · estimación · opinión*.
+   *
+   * En el informe final una cifra contable y una corazonada se ven
+   * exactamente igual, y sobre las dos se toman decisiones iguales. Marcar
+   * el origen es la forma más barata de que la empresa —y el tutor— sepan
+   * cuánto peso aguanta cada número. Nunca cuenta al progreso: es una
+   * anotación, no una respuesta que se exige.
+   */
+  origen?: boolean;
 };
 
 /** Tabla de filas dinámicas. Competidores, indicadores, valores. */
@@ -188,6 +205,32 @@ export type BloqueCronograma = Base & {
   sugerencias?: string[];
 };
 
+/**
+ * Flujo de caja de un plan, mes a mes, con el saldo calculado.
+ *
+ * El Módulo 4 pide un presupuesto por actividad, pero nadie suma esos
+ * presupuestos contra la plata que hay. Por eso los planes de microempresa
+ * se mueren en el mes cuatro: no porque el proyecto fuera malo, sino porque
+ * la caja no aguantó el mes en que coincidieron tres pagos. Este bloque hace
+ * visible ese mes antes de que llegue.
+ *
+ * El saldo no es un campo: se calcula. Pedirlo como dato invitaría a
+ * cuadrarlo a mano, que es justo lo que se quiere evitar.
+ */
+export type BloqueFlujoCaja = Base & {
+  tipo: "flujo_caja";
+  /** Cuántos meses se proyectan. */
+  meses: number;
+  /** Mes en que arranca el horizonte, 0 = enero. Solo rotula las columnas. */
+  mesInicial?: number;
+  /** Etiqueta del saldo con que se abre el horizonte. */
+  etiquetaInicial?: string;
+  /** Lo que entra: ventas esperadas, aportes, créditos. */
+  entradas: { id: string; titulo: string }[];
+  /** Lo que sale: los presupuestos del plan y la operación corriente. */
+  salidas: { id: string; titulo: string }[];
+};
+
 /** Etiquetas que se agregan y se quitan. Los procesos del Taller 7. */
 export type BloqueChipsAgregables = Base & {
   tipo: "chips_agregables";
@@ -238,6 +281,7 @@ export type Bloque =
   | BloqueTabla
   | BloqueMatrizPriorizacion
   | BloqueCronograma
+  | BloqueFlujoCaja
   | BloqueChipsAgregables
   | BloqueLineaTiempo
   | BloqueCuadrantes;

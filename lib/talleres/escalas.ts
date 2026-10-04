@@ -38,6 +38,25 @@ export const ESCALAS: Record<string, Escala> = {
       { valor: "bajo", etiqueta: "Bajo", color: "fav", sugiere: "oportunidad" },
     ],
   },
+  // Módulo 5 · diagnóstico de madurez por área.
+  //
+  // Cuatro niveles y no cinco: los modelos de madurez de cinco escalones
+  // separan «medido» de «optimizado», una distinción que en una empresa de
+  // ocho personas no se puede sostener con evidencia. Y cuatro caben en los
+  // colores del tema sin inventar tonos intermedios.
+  //
+  // Los dos extremos alimentan el cruce DOFA del mismo módulo: un área con
+  // método medido es una fortaleza, una sin nada es una debilidad.
+  madurez: {
+    id: "madurez",
+    opciones: [
+      { valor: "no", etiqueta: "No existe", color: "des", sugiere: "debilidad" },
+      { valor: "informal", etiqueta: "Se hace, sin método", color: "med" },
+      { valor: "definido", etiqueta: "Definido y escrito", color: "acento" },
+      { valor: "medido", etiqueta: "Definido y medido", color: "fav", sugiere: "fortaleza" },
+      { valor: "na", etiqueta: "No aplica", color: "na" },
+    ],
+  },
 };
 
 export function escala(id: string): Escala {

@@ -4,6 +4,7 @@ import { lleno, camposEsperados, progresoTaller } from "@/lib/talleres/progreso"
 import {
   MESES, puntaje, puestos, type NotasFila,
 } from "@/lib/talleres/priorizacion";
+import { calcularFlujo, cifra, pesos, rotuloMes } from "@/lib/talleres/flujo";
 import type { Bloque, ColorEscala, Definicion, Fila, ValorCampo } from "@/lib/talleres/tipos";
 
 /**
@@ -194,6 +195,42 @@ function bloqueANodos(b: Bloque, d: DatosInforme, tallerId: string): Nodo[] {
         ["#", ...b.columnas.map((c) => c.titulo), ...b.criterios.map((c) => c.titulo), "Puntaje"],
         filas,
       )];
+    }
+
+    // El informe lleva el saldo calculado y, antes de la tabla, el veredicto:
+    // el mes del valle. Es lo que decide si el plan se ejecuta como está.
+    case "flujo_caja": {
+      const serie = Array.from({ length: b.meses }, (_, m) => ({
+        entradas: b.entradas.reduce(
+          (s, con) => s + cifra(texto(campo.matriz(b.id, con.id, String(m)))), 0),
+        salidas: b.salidas.reduce(
+          (s, con) => s + cifra(texto(campo.matriz(b.id, con.id, String(m)))), 0),
+      }));
+      const vacio = serie.every((m) => m.entradas === 0 && m.salidas === 0);
+      if (vacio) return [{ tipo: "vacio" }];
+
+      const f = calcularFlujo(cifra(texto(campo.simple(`${b.id}.inicial`))), serie);
+      const rotulos = f.meses.map((m) => rotuloMes(m.indice, b.mesInicial));
+
+      const veredicto = f.primerMesEnRojo === null
+        ? `La caja aguanta el horizonte completo. Saldo más bajo: $${pesos(f.valle?.saldo ?? 0)}`
+          + ` en ${rotulos[f.valle?.indice ?? 0]}.`
+        : `La caja se vuelve negativa en ${rotulos[f.primerMesEnRojo]}.`
+          + ` Hace falta conseguir $${pesos(Math.abs(f.valle?.saldo ?? 0))} antes de ese mes,`
+          + " o mover proyectos del cronograma.";
+
+      return [
+        { tipo: "parrafo", texto: veredicto },
+        tabla(["Concepto", ...rotulos], [
+          ...[...b.entradas, ...b.salidas].map((con) => [
+            con.titulo,
+            ...f.meses.map((m) =>
+              pesos(cifra(texto(campo.matriz(b.id, con.id, String(m.indice)))))),
+          ]),
+          ["Saldo del mes", ...f.meses.map((m) => pesos(m.neto))],
+          ["Saldo acumulado", ...f.meses.map((m) => pesos(m.acumulado))],
+        ]),
+      ];
     }
 
     case "cronograma": {
