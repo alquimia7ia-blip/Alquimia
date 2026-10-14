@@ -160,6 +160,17 @@ Ya con la URL que Vercel asignó (en el despliegue de la Cámara fue
    segunda queda por los correos enviados antes de este cambio, que apuntan directo a
    la pantalla.
 
+   **Los dos ajustes son uno solo.** Si el destino que pide la aplicación no está en
+   esa lista, Supabase no falla con un mensaje claro: lo descarta en silencio y manda
+   el enlace al **Site URL**. Con el Site URL todavía en `http://localhost:3000` —el
+   valor con que nace un proyecto— el correo lleva a una pantalla de «no se puede
+   acceder a este sitio», que no dice nada y parece un fallo de la aplicación. Se
+   reconoce por la barra de direcciones: `localhost:3000/?error=access_denied…`.
+   Si además desarrollas en local, agrega también
+   `http://localhost:3000/auth/confirmar` a la lista.
+
+   Los enlaces enviados antes de corregir esto ya no sirven: hay que pedir uno nuevo.
+
 ### 4.7 Que el enlace del correo sirva en el celular
 
 Este paso es opcional y decide algo que se nota: si quien olvidó la contraseña puede

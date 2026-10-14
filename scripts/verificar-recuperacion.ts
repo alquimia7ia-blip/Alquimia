@@ -141,9 +141,14 @@ afirmar(
   pedir.includes("/auth/confirmar") && !pedir.includes("/invitacion"),
   "`/recuperar` manda el enlace al canje de servidor, no a la invitación",
 );
+const medio = fuente("lib/supabase/middleware.ts");
 afirmar(
-  fuente("lib/supabase/middleware.ts").includes('"/auth", "/clave-nueva"'),
+  medio.includes('"/auth", "/clave-nueva"'),
   "el canje y la pantalla de clave nueva son públicas: si no, el enlace rebota",
+);
+afirmar(
+  medio.includes("avisoDeEnlaceFallido") && medio.indexOf("avisoDeEnlaceFallido(peticion)") < medio.indexOf("hayConfiguracion()"),
+  "un enlace ya rechazado por Supabase se recoge en cualquier ruta, antes que nada",
 );
 
 const canje = fuente("app/auth/confirmar/route.ts");
