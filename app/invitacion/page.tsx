@@ -1,14 +1,24 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { clienteNavegador } from "@/lib/supabase/cliente";
+import {
+  DESTINOS, mensajeDeEnlace, mensajeDeGuardado, problemaDeClave,
+} from "@/lib/auth/recuperacion";
 
 const VERSION_POLITICA = "2026-09-01";
 
+/**
+ * Esta pantalla es solo para la primera entrada: define la clave **y** recoge
+ * los dos consentimientos de datos. Recuperar una contraseña olvidada pasa
+ * por `/clave-nueva`, que no vuelve a pedir permisos ya firmados ni duplica
+ * las filas de `consentimientos`.
+ */
 function Formulario() {
   const router = useRouter();
+  const parametros = useSearchParams();
   const [sesion, setSesion] = useState<"cargando" | "lista" | "sin-enlace">("cargando");
   const [clave, setClave] = useState("");
   const [repetida, setRepetida] = useState("");
@@ -17,25 +27,42 @@ function Formulario() {
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
-  // El enlace del correo trae la sesión en el fragmento de la URL; el cliente
-  // de Supabase la canjea solo al cargarse.
+  const recuperando = parametros.get("modo") === "recuperar"
+    || parametros.get("type") === "recovery";
+
+  // Los correos de recuperación que ya se enviaron apuntan aquí con
+  // `?modo=recuperar`, y esta pantalla ignoraba ese parámetro: pedía los dos
+  // consentimientos otra vez. Se reenvían a su pantalla con `location`, no
+  // con el router, porque hay que arrastrar el fragmento `#access_token=…`
+  // —ahí viene la sesión en las plantillas antiguas— y el router lo descarta.
   useEffect(() => {
+    if (!recuperando) return;
+    const { search, hash } = window.location;
+    window.location.replace(`${DESTINOS.recuperacion}${search}${hash}`);
+  }, [recuperando]);
+
+  // El enlace del correo trae la sesión en el fragmento de la URL; el cliente
+  // de Supabase la canjea solo al cargarse. Si vino por `/auth/confirmar`, ya
+  // está en las cookies y `getSession()` la encuentra de entrada.
+  useEffect(() => {
+    if (recuperando) return;
     const supabase = clienteNavegador();
+    let vivo = true;
     supabase.auth.getSession().then(({ data }) => {
-      setSesion(data.session ? "lista" : "sin-enlace");
+      if (vivo) setSesion(data.session ? "lista" : "sin-enlace");
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_, s) => {
       if (s) setSesion("lista");
     });
-    return () => sub.subscription.unsubscribe();
-  }, []);
+    return () => { vivo = false; sub.subscription.unsubscribe(); };
+  }, [recuperando]);
 
   async function definir(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
-    if (clave.length < 8) return setError("La contraseña necesita al menos 8 caracteres.");
-    if (clave !== repetida) return setError("Las dos contraseñas no coinciden.");
+    const problema = problemaDeClave(clave, repetida);
+    if (problema) return setError(problema);
     if (!tratamiento || !transferencia) {
       return setError("Para continuar hay que autorizar ambos tratamientos de datos.");
     }
@@ -44,7 +71,11 @@ function Formulario() {
     const supabase = clienteNavegador();
     const { data: usuario, error: errClave } = await supabase.auth.updateUser({ password: clave });
     if (errClave || !usuario.user) {
-      setError("No se pudo guardar la contraseña. Pide una invitación nueva.");
+      // Decir por qué: «pide una invitación nueva» es el consejo equivocado
+      // cuando el problema es que la clave es la misma o demasiado débil.
+      setError(errClave
+        ? mensajeDeGuardado(errClave)
+        : "No se pudo guardar la contraseña. Pide una invitación nueva.");
       setEnviando(false);
       return;
     }
@@ -62,17 +93,23 @@ function Formulario() {
     router.refresh();
   }
 
-  if (sesion === "cargando") {
+  if (recuperando || sesion === "cargando") {
     return <div className="tarjeta-sesion"><p className="sub">Validando el enlace…</p></div>;
   }
 
   if (sesion === "sin-enlace") {
     return (
       <div className="tarjeta-sesion">
-        <h1>Este enlace ya no sirve</h1>
+        <h1>No pudimos abrir el enlace</h1>
         <p className="sub">
-          Los enlaces de invitación caducan. Pídele uno nuevo a quien coordina el programa,
-          o recupera tu contraseña si ya tenías cuenta.
+          {parametros.get("aviso")
+            ?? mensajeDeEnlace({
+              error: parametros.get("error"),
+              error_code: parametros.get("error_code"),
+              error_description: parametros.get("error_description"),
+            })
+            ?? "Los enlaces de invitación caducan. Pídele uno nuevo a quien coordina el "
+               + "programa, o recupera tu contraseña si ya tenías cuenta."}
         </p>
         <div className="pie-sesion">
           <Link href="/recuperar">Recuperar contraseña</Link>

@@ -63,7 +63,9 @@ export async function POST(peticion: Request) {
 
   // Se invita; si la persona ya tenía cuenta, se busca para darle la membresía.
   const { data: invitacion, error } = await servicio.auth.admin.inviteUserByEmail(correo, {
-    redirectTo: `${sitio}/invitacion`,
+    // Pasa por el canje de servidor: así la invitación también se puede
+    // abrir en un dispositivo distinto al que la pidió.
+    redirectTo: `${sitio}/auth/confirmar?siguiente=/invitacion`,
   });
 
   let perfilId = invitacion?.user?.id;

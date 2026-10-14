@@ -2,7 +2,11 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hayConfiguracion } from "./configuracion";
 
+// `/auth` es el canje del enlace del correo y `/clave-nueva` la pantalla a la
+// que lleva: las dos tienen que ser públicas o el enlace de recuperación
+// rebotaría a `/entrar` justo antes de abrir la sesión que trae.
 const PUBLICAS = ["/entrar", "/registro", "/recuperar", "/invitacion", "/estilos",
+                  "/auth", "/clave-nueva",
                   "/tablero", "/politica-de-datos", "/configuracion"];
 
 // Rutas que ni siquiera necesitan Supabase: el taller sobre bitácora local,

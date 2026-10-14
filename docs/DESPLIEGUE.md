@@ -148,17 +148,54 @@ Ya con la URL que Vercel asignó (en el despliegue de la Cámara fue
    (**Deployments → ⋯ → Redeploy**). Sin esto, los enlaces de invitación que salen por
    correo apuntan a `localhost`.
 2. **En Supabase**, ve a **Authentication → URL Configuration** y pon esa misma URL en
-   **Site URL**; en **Redirect URLs** agrega `https://tu-url.vercel.app/invitacion`.
-   Sin esto, Supabase rechaza el enlace del correo por venir de un destino no autorizado.
+   **Site URL**; en **Redirect URLs** agrega estas dos:
 
-### 4.7 Si la URL pide iniciar sesión en Vercel
+   ```
+   https://tu-url.vercel.app/auth/confirmar
+   https://tu-url.vercel.app/invitacion
+   ```
+
+   Sin esto, Supabase rechaza el enlace del correo por venir de un destino no autorizado.
+   La primera es la que usan hoy la invitación y la recuperación de contraseña; la
+   segunda queda por los correos enviados antes de este cambio, que apuntan directo a
+   la pantalla.
+
+### 4.7 Que el enlace del correo sirva en el celular
+
+Este paso es opcional y decide algo que se nota: si quien olvidó la contraseña puede
+pedirla en el computador y abrir el correo en el teléfono.
+
+Supabase manda por omisión un código **PKCE**, cuyo verificador queda guardado en el
+navegador que pidió el enlace. Abrirlo en otro dispositivo falla siempre, y no hay
+nada que la aplicación pueda hacer salvo explicarlo. El token de un solo uso
+(`{{ .TokenHash }}`) no tiene ese problema: se valida contra el servidor de Supabase
+desde cualquier parte.
+
+En **Authentication → Emails → Templates**, en las plantillas **Reset Password** y
+**Invite user**, reemplaza el enlace por:
+
+```html
+<a href="{{ .SiteURL }}/auth/confirmar?token_hash={{ .TokenHash }}&type=recovery">
+  Definir mi contraseña
+</a>
+```
+
+En la plantilla de invitación, `type=invite` en vez de `type=recovery`.
+
+La aplicación acepta las tres formas —`token_hash`, `code` y el fragmento
+`#access_token` de las plantillas viejas—, así que cambiar la plantilla no rompe los
+correos ya enviados. Mientras no se cambie, quien abra el correo en otro dispositivo
+verá un aviso que le dice exactamente eso, en lugar del «este enlace ya no sirve» que
+mandaba a pedir correos nuevos que fallaban igual.
+
+### 4.8 Si la URL pide iniciar sesión en Vercel
 
 Los proyectos nuevos heredan la protección de despliegue del equipo. Si al abrir la URL
 aparece una pantalla de Vercel pidiendo autenticación, ve a
 **Settings → Deployment Protection** y desactiva **Vercel Authentication** para producción.
 De lo contrario nadie de la Cámara podrá abrirla.
 
-### 4.8 Plan
+### 4.9 Plan
 
 El equipo está hoy en **Hobby**, cuyos términos **prohíben el uso comercial**. Sirve para
 probar y para mostrar. En el momento en que se le facture a la Cámara, hay que pasar a
