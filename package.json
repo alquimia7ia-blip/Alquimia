@@ -16,6 +16,7 @@
     "verify": "tsx scripts/verificar-progreso.ts && tsx scripts/verificar-importador.ts && tsx scripts/verificar-consultas.ts && tsx scripts/verificar-lecturas.ts && pnpm verify:edicion && pnpm verify:presentacion && pnpm verify:guardado && pnpm verify:plan && pnpm verify:lean && pnpm verify:clave",
     "verify:edicion": "tsx --tsconfig tsconfig.scripts.json scripts/verificar-edicion.mts",
     "comercial": "node scripts/comercial/propuesta.js && node scripts/comercial/sustentacion.js",
+    "comercial:comparativo": "node scripts/comercial/capturas.mjs && node scripts/comercial/comparativo.mjs",
     "verify:comercial": "python3 scripts/comercial/verificar.py",
     "verify:presentacion": "tsx --tsconfig tsconfig.scripts.json scripts/verificar-presentacion.mts",
     "check": "tsc --noEmit && next build",
