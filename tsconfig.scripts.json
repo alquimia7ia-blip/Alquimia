@@ -1,0 +1,5 @@
+{
+  "//": "Next compila el JSX con el runtime automático; `jsx: preserve` del tsconfig principal se lo deja a él. Los scripts de verificación cargan los mismos componentes fuera de Next, así que aquí se nombra el runtime explícitamente.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "jsx": "react-jsx" }
+}

@@ -1,5 +1,47 @@
 # Alquimia
 
+## Bitácora MEGA
+
+Plataforma de los talleres del programa **Empresas con Propósito MEGA** de la Cámara de
+Comercio del Aburrá Sur. Nace del prototipo `docs/taller-mega-modulo-1.html`, que
+convertía el PowerPoint del Módulo 1 en una experiencia guiada pero servía a una sola
+persona sin identidad ni aislamiento.
+
+| | |
+|---|---|
+| Cómo montarla | **[`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md)** — cuentas, esquema, cohorte y costos |
+| Probar el motor sin cuentas | `bash scripts/db-local.sh test && pnpm seed && pnpm dev`, y abrir `/estilos` |
+| Prototipo original | [`docs/taller-mega-modulo-1.html`](docs/taller-mega-modulo-1.html), conservado como referencia |
+
+### Cómo está armada
+
+- **Los talleres son datos, no código.** Cada taller es un documento de bloques en
+  `talleres.definicion`; nueve tipos cubren los once del Módulo 1. Publicar los módulos
+  2 a 4 será insertar filas, no escribir funciones de render.
+- **Una fila por campo, no un blob.** Es lo que permite que varias personas de la misma
+  empresa editen a la vez sin borrarse el trabajo. Las filas dinámicas tienen
+  identificador propio, así que agregar un competidor en paralelo no colisiona.
+- **El aislamiento vive en Postgres.** Row Level Security decide qué ve cada quien: el
+  equipo de la empresa lo suyo, el facilitador su cohorte en lectura más comentarios, y
+  nadie alcanza otra cohorte. `supabase/tests/rls.test.sql` lo prueba con 21 afirmaciones.
+
+```
+app/          páginas · lib/talleres  motor de talleres · lib/datos  guardado por campo
+components/   campos y gamificación   · supabase/  migraciones, pruebas y semilla
+scripts/      base local, siembra, carga de cohorte y verificaciones
+```
+
+### Verificaciones
+
+```bash
+pnpm check    # tipos y compilación
+pnpm test:rls # aislamiento entre empresas y entre cohortes
+pnpm verify   # el progreso de TypeScript coincide con el de SQL; el importador cae en campos reales
+```
+
+---
+
+
 Empresa de tecnología con base en Medellín, Colombia. Enfoque: resolver problemas
 reales con software, como especialista en un ultranicho vertical y no como
 generalista.

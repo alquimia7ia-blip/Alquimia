@@ -7,3 +7,18 @@ dist/
 build/
 .venv/
 __pycache__/
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Entorno
+.env
+.env.local
+.env*.local
+
+# Vista previa del comparativo: se regenera con `pnpm comercial:comparativo`.
+# El entregable es el PDF; el HTML pesa lo mismo con las capturas incrustadas.
+docs/comercial/comparativo-plataforma.html
