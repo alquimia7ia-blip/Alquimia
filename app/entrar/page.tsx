@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { Route } from "next";
 import Link from "next/link";
 import { clienteNavegador } from "@/lib/supabase/cliente";
+import { CampoClave } from "@/components/ui/CampoClave";
 
 function Formulario() {
   const router = useRouter();
@@ -61,11 +62,8 @@ function Formulario() {
         <input id="correo" type="email" value={correo} autoComplete="email" required
                onChange={(e) => setCorreo(e.target.value)} />
       </div>
-      <div className="campo-sesion">
-        <label htmlFor="clave">Contraseña</label>
-        <input id="clave" type="password" value={clave} autoComplete="current-password" required
-               onChange={(e) => setClave(e.target.value)} />
-      </div>
+      <CampoClave id="clave" etiqueta="Contraseña" valor={clave} onChange={setClave}
+                  autoComplete="current-password" />
 
       <button className="btn pri btn-ancho" type="submit" disabled={enviando}>
         {enviando ? "Entrando…" : "Entrar"}
