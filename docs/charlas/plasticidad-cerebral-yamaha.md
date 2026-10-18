@@ -1,10 +1,13 @@
 # Plasticidad cerebral frente a los nuevos retos tecnológicos
 
 Charla de 60 minutos, en formato TED, para directivos y operarios de Yamaha, dentro
-de su Jornada de Innovación. Conferencista: profesor Álvaro Guarín.
+de su Jornada de Innovación. Conferencista: Álvaro Guarín, Doctor en Ingeniería de
+Producción, Universidad EAFIT.
 
-Presentación (25 diapositivas con notas del orador):
-https://claude.ai/artifact/3GtBKPNGCSPKuVZTkQWyUk
+Presentaciones (25 diapositivas cada una, mismas notas del orador):
+
+- Opción 1, sobria: https://claude.ai/artifact/3GtBKPNGCSPKuVZTkQWyUk
+- Opción 2, gráfica (ilustraciones e íconos): https://claude.ai/artifact/G5j6xeBBSXAmxQKyuegc4M
 
 ## Mensaje central
 
@@ -44,8 +47,8 @@ es saber preguntar.
 
 ## Pendientes por confirmar
 
-- Cargo o institución del profesor Álvaro Guarín (portada).
 - Correo y LinkedIn para la diapositiva final.
+- Fotos reales opcionales para la opción 2 (retrato de Cajal, la YA-1, la planta de Yamaha), si la organización las facilita.
 - Un hito reciente de Yamaha en Colombia para la línea de tiempo (o eliminar la cuarta columna).
 - Revisar con la organización el uso del nombre Yamaha en el material proyectado.
 
