@@ -4,14 +4,17 @@ Charla de 60 minutos, en formato TED, para directivos y operarios de Yamaha, den
 de su Jornada de Innovación. Conferencista: Álvaro Guarín, Doctor en Ingeniería de
 Producción, Universidad EAFIT.
 
-Presentaciones (25 diapositivas cada una, mismas notas del orador):
+Presentación principal (25 diapositivas con notas del orador, versión revisada):
+https://claude.ai/artifact/3GtBKPNGCSPKuVZTkQWyUk
 
-- Opción 1, sobria: https://claude.ai/artifact/3GtBKPNGCSPKuVZTkQWyUk
-- Opción 2, gráfica (ilustraciones e íconos): https://claude.ai/artifact/G5j6xeBBSXAmxQKyuegc4M
+Versión gráfica anterior (no incluye la última revisión):
+https://claude.ai/artifact/G5j6xeBBSXAmxQKyuegc4M
 
 ## Mensaje central
 
-> **El cerebro cambia con lo que repites. La empresa, con lo que conversa.**
+> **Tu cerebro cambia con lo que repites. Tu empresa, con lo que conversa.**
+>
+> Las personas son las neuronas de una empresa; las conversaciones, sus conexiones.
 
 Hilo conductor: el cerebro se reconfigura según lo que repetimos (plasticidad), los
 sesgos cognitivos son los frenos de ese cambio, y la conversación (las buenas
@@ -23,10 +26,10 @@ es saber preguntar.
 | Minuto | Bloque | Diapositivas | Recurso de impacto |
 |---|---|---|---|
 | 0–6 | Apertura | Portada, brazos cruzados, pregunta inicial, recorrido | Cruzar los brazos al revés; «¿cuándo cambiaste de opinión?» |
-| 6–22 | Acto I · El cerebro que se esculpe | Cajal, definición, taxistas, malabares, Hebb, hábito, Yamaha | Taxistas de Londres; 21 vs. 66 días; de órganos a motocicletas |
-| 22–45 | Acto II · Los frenos invisibles | Atajos, falso consenso, 2-4-6, confirmación, apuesta, Kodak, retrospectivo, resumen | Juego 2-4-6 en vivo; apuesta de la moneda; Kodak |
-| 45–54 | Acto III · La conversación que transforma | Conversación, tipos de pregunta, IA | Ejercicio en parejas: de pregunta cerrada a poderosa |
-| 54–60 | Cierre | Reto de 66 días, frase final, gracias | Tarjeta con la pregunta personal; brazos al revés otra vez |
+| 6–21 | Acto I · El cerebro que se esculpe | Cajal, definición (con ejemplos), taxistas, malabares, Hebb (con tres ejemplos), hábito | Manejar moto, números de teléfono, abuelos en videollamada; taxistas de Londres; 21 vs. 66 días |
+| 21–44 | Acto II · Los frenos invisibles | Atajos, falso consenso, clásico paisa, confirmación, ganar vs. perder, BlackBerry, retrospectivo, resumen | Votación de la pizza con piña; penalti dudoso; billete encontrado vs. perdido; BlackBerry; cine y lote defectuoso |
+| 44–54 | Acto III · La conversación que transforma | Conversación, tipos de pregunta, la tecnología nos cambia, IA | Pulgar del celular, GPS, cirujanos y videojuegos |
+| 54–60 | Cierre | Compromiso personal, frase final, gracias | «¿Qué vas a hacer mañana, o dejar de hacer, para mejorar tu calidad de vida?»; brazos al revés otra vez |
 
 ## Los cuatro sesgos y su pregunta antídoto
 
@@ -39,17 +42,14 @@ es saber preguntar.
 
 ## Logística
 
-- [ ] Tarjetas o post-its para cada asistente (o un QR a un formulario) para el reto de 66 días.
-- [ ] Rotafolio o tablero para anotar las secuencias del juego 2-4-6.
+- [ ] Tarjetas o post-its para cada asistente (o un QR a un formulario) para el compromiso final.
 - [ ] Tres pelotas para la historia de los malabares (opcional).
-- [ ] Ejemplo de IA (pregunta cerrada vs. poderosa) preparado sin depender de internet (opcional).
-- [ ] Mezclar directivos y operarios en el ejercicio de parejas.
+- [ ] Ajustar el clásico de fútbol a la región del público si no es Medellín.
 
 ## Pendientes por confirmar
 
 - Correo y LinkedIn para la diapositiva final.
-- Fotos reales opcionales para la opción 2 (retrato de Cajal, la YA-1, la planta de Yamaha), si la organización las facilita.
-- Un hito reciente de Yamaha en Colombia para la línea de tiempo (o eliminar la cuarta columna).
+- Fotos reales opcionales: retrato de Cajal (dominio público), un BlackBerry clásico y una foto del público o la planta para el cierre.
 - Revisar con la organización el uso del nombre Yamaha en el material proyectado.
 
 ## Fuentes
@@ -61,8 +61,11 @@ es saber preguntar.
 - Hebb, D. O. (1949). *The Organization of Behavior*.
 - Lally, P., et al. (2010). How are habits formed: modelling habit formation in the real world. *European Journal of Social Psychology*.
 - Ross, L., Greene, D., y House, P. (1977). The “false consensus effect”. *Journal of Experimental Social Psychology*.
-- Wason, P. C. (1960). On the failure to eliminate hypotheses in a conceptual task. *Quarterly Journal of Experimental Psychology*.
+- Hastorf, A. H., y Cantril, H. (1954). They saw a game: a case study. *Journal of Abnormal and Social Psychology*.
+- Gindrat, A.-D., et al. (2015). Use-dependent cortical processing from fingertips in touchscreen phone users. *Current Biology*.
+- Dahmani, L., y Bohbot, V. D. (2020). Habitual use of GPS negatively impacts spatial memory during self-guided navigation. *Scientific Reports*.
+- Rosser, J. C., et al. (2007). The impact of video games on training surgeons in the 21st century. *Archives of Surgery*.
 - Kahneman, D., y Tversky, A. (1979). Prospect theory. *Econometrica*.
 - Fischhoff, B. (1975). Hindsight ≠ foresight. *Journal of Experimental Psychology: Human Perception and Performance*.
 - Klein, G. (2007). Performing a project premortem. *Harvard Business Review*.
-- Historia de Yamaha (1887, 1897, 1955) y de Kodak (1975, 2012): fuentes corporativas y de prensa públicas; verificar fechas antes de imprimir material.
+- Historia de BlackBerry (2007, 2016): fuentes corporativas y de prensa públicas; verificar fechas antes de imprimir material.
